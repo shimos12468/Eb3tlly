@@ -9,6 +9,7 @@
     android:visibility="visible"
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark"
     tools:context=".About">
+
     <include
         android:id="@+id/toolbar_home"
         layout="@layout/toolbar"
@@ -88,7 +89,18 @@
         android:text="App version : "
         android:textColor="#FFFFFF"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/imgFacebook"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgFacebook"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_facebook" />
 </androidx.constraintlayout.widget.ConstraintLayout>
