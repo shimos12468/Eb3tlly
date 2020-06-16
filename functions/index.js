@@ -4,18 +4,16 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-exports.onNotifTugas = functions.database.ref('Pickly/users/{user_id}').onCreate((snapshot, context) => {
-	post.ppURL = sanitize(post.ppURL);
-	snapshot.ref.parent.child('ppURL').set("none");
-	console.log('fix this shit');
-	
-});
-
 exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{user_id}/{notification_id}').onWrite((change, context) => {
+
+  let noti = event.data.current.val();
+  let from = noti.from;
+  let to = noti.to;
+  let statue = noti.statue;
+  let orderid = noti.orderid;
 
   const user_id = context.params.user_id;
   const notification_id = context.params.notification_id;
-
   console.log('We have a notification from : ', user_id);
 
   const fromUser = admin.database().ref(`Pickly/notificationRequests/${user_id}/${notification_id}`).once('value');
@@ -27,29 +25,33 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
     console.log('You have new notification from  : ', from_user_id);
 
 
-	const userQuery = admin.database().ref(`Pickly/users/${from_user_id}/name`).once('value');
-    const deviceToken = admin.database().ref(`Pickly/users/${user_id}/device_token`).once('value');
+	const sendName = admin.database().ref(`Pickly/users/${from}/name`).once('value');
+    const deviceToken = admin.database().ref(`Pickly/users/${to}/device_token`).once('value');
+    const orderTo = admin.database().ref(`Pickly/orders/${orderid}/DName`).once('value');
 
-    return Promise.all([userQuery, deviceToken]).then(result => {
-
+    return Promise.all([sendName, deviceToken]).then(result => {
       const userName = result[0].val();
       const token_id = result[1].val();
+      console.log('notifying ' + to + ' about ' + statue + ' from ' + userName + '  ' + from + ' order id ' + orderid );
 
+    var badgeCount = 1;
       const payload = {
         notification: {
-          title : userName,
-          body: 'has delivered your order',
+          title : sendName,
+          body: sendName + 'has ' + statue + ' your order',
           icon: "default",
-          click_action : "com.armjld.eb3tly_TARGET_NOTIFICATION"
+          click_action : "com.armjld.eb3tly_TARGET_NOTIFICATION",
+          badge: badgeCount.toString()
         },
         data : {
-          from_user_id : from_user_id
+          from : from,
+          'title': sendName,
+          'body' : sendName + 'has ' + statue + ' your order'
         }
       };
-
+    badgeCount++;
 
       return admin.messaging().sendToDevice(token_id, payload).then(response => {
-
         console.log('This was the notification Feature');
 		return null;
       });

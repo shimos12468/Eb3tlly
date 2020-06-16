@@ -19,6 +19,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import java.util.Map;
+
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -29,6 +31,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         sendNotification("تم توصيل الاوردر الخاص بك","تم توصيل الاوردر");
         if (remoteMessage.getData().size() > 0) {
+            Map<String, String> data = remoteMessage.getData();
+            String title = data.get("title").toString() ;
+
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             if (true) {
                 scheduleJob();
