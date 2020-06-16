@@ -126,6 +126,7 @@ public class Signup extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                Toast.makeText(this, "تم اختيار صورة البطاقة بنجاح", Toast.LENGTH_SHORT).show();
                 handleUpload2(ssnBitmap);
             }
             
