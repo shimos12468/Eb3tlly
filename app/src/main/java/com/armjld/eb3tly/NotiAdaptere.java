@@ -1,22 +1,14 @@
 package com.armjld.eb3tly;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,10 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -41,11 +30,11 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
     Context context, context1;
     long count;
-    notiData [] notiData;
+    notiData[] notiData;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private ArrayList datalist,filterList;
-    private DatabaseReference mDatabase,uDatabase,nDatabase;
+    private ArrayList datalist, filterList;
+    private DatabaseReference mDatabase, uDatabase, nDatabase;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     private String TAG = "Notification Adapter";
 
@@ -68,7 +57,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view  = inflater.inflate(R.layout.card_notification,parent,false);
+        View view = inflater.inflate(R.layout.card_notification, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -81,6 +70,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         String OrderID = notiData[position].getOrderid();
 
         holder.setBody(From, Statue, OrderID, To);
+        holder.setDate(Datee);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -92,32 +82,21 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
     private void refresh() {
         new Handler() {
-            public void postDelayed(Runnable runnable, int i) {
-            }
-
+            public void postDelayed(Runnable runnable, int i) { }
             @Override
-            public void publish(LogRecord record) {
-
-            }
-
+            public void publish(LogRecord record) { }
             @Override
-            public void flush() {
-
-            }
-
+            public void flush() { }
             @Override
-            public void close() throws SecurityException {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
+            public void close() throws SecurityException { mSwipeRefreshLayout.setRefreshing(false); }
         }.postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 NotiAdaptere.this.notifyDataSetChanged();
                 Log.i(TAG, "Data Refreshed");
 
             }
-        },3000);
+        }, 3000);
         NotiAdaptere.this.notifyDataSetChanged();
         Log.i(TAG, "Data Refreshed");
         mSwipeRefreshLayout.setRefreshing(false);
@@ -137,10 +116,10 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            myview=itemView;
+            myview = itemView;
         }
 
-        public void setBody(String sendby, String message, String OrderID, String To){
+        public void setBody(String sendby, String message, String OrderID, String To) {
             txtBody = myview.findViewById(R.id.txtBody);
             imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
 
@@ -163,7 +142,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                                     break;
                                 }
                                 case "deleted": {
-                                    if(ToType.equals("Supplier")) {
+                                    if (ToType.equals("Supplier")) {
                                         body = "قام" + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة";
                                     } else {
                                         body = "قام" + nameFrom + " بالغاء الاوردر";
@@ -187,12 +166,16 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                         }
 
                         @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }});
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
+                @Override public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
+        }
+
+        public void setDate(String date) {
+            txtNotidate = myview.findViewById(R.id.txtNotidate);
+            txtNotidate.setText(date);
+        }
+
     }
 }
