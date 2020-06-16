@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "146413958165",
+    "firebase_url": "https://pickly-ed2f4.firebaseio.com",
+    "project_id": "pickly-ed2f4",
+    "storage_bucket": "pickly-ed2f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146413958165:android:353ab413849077bddd0a1c",
+        "android_client_info": {
+          "package_name": "com.armjld.eb3tly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146413958165-8oeq2p8vrrcskgcco723msafkrhan0lm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.armjld.eb3tly",
+            "certificate_hash": "35946193004f80966da0b1108eeee225c470a376"
+          }
+        },
+        {
+          "client_id": "146413958165-sbkblck37dmldfvq99q7ovujmpajaeeb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6cmFWL0bo97x2yU-6-Jq3sgcGi9M4Nhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146413958165-sbkblck37dmldfvq99q7ovujmpajaeeb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

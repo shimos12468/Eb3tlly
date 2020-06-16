@@ -1,0 +1,361 @@
+<resources>
+    <string name="app_name">Eb3tly</string>
+    <string name="default_notification_channel_id">defult</string>
+
+    <string-array name="txtStates">
+        <item>القاهرة</item>
+        <item>الجيزة</item>
+        <item>الأسكندرية</item>
+        <item>مترو</item>
+        <item>القليوبية</item>
+        <item>الشرقية</item>
+        <item>الدقهلية</item>
+        <item>اسويط</item>
+        <item>اسوان</item>
+        <item>المنوفية</item>
+    </string-array>
+    <string-array name="txtCairoRegion">
+        <item>الازبكية</item>
+        <item>الزمالك</item>
+        <item>الزيتون</item>
+        <item>التجمع الاول</item>
+        <item>التجمع الثالث</item>
+        <item>التجمع الخامس</item>
+        <item>الجزيرة</item>
+        <item>الرحاب</item>
+        <item>الفجالة</item>
+        <item>القبة</item>
+        <item>الشروق</item>
+        <item>المرج</item>
+        <item>المطرية</item>
+        <item>المعادي</item>
+        <item>المنيل</item>
+        <item>باب اللوق</item>
+        <item>جاردن سيتي</item>
+        <item>شبرا الخيمة</item>
+        <item>شبرا مصر</item>
+        <item>عباسيه</item>
+        <item>عزبة الهجانه</item>
+        <item>عزبة النخل</item>
+        <item>عين شمس</item>
+        <item>هيليوبلس</item>
+        <item>مدينة نصر</item>
+        <item>وسط البلد</item>
+        <item>مدينتي</item>
+        <item>مصر القديمة</item>
+    </string-array>
+    <string-array name="filterCairo">
+        <item>كل المناطق</item>
+        <item>الازبكية</item>
+        <item>الزمالك</item>
+        <item>الزيتون</item>
+        <item>التجمع الاول</item>
+        <item>التجمع الثالث</item>
+        <item>التجمع الخامس</item>
+        <item>الجزيرة</item>
+        <item>الرحاب</item>
+        <item>الفجالة</item>
+        <item>القبة</item>
+        <item>الشروق</item>
+        <item>المرج</item>
+        <item>المطرية</item>
+        <item>المعادي</item>
+        <item>المنيل</item>
+        <item>باب اللوق</item>
+        <item>جاردن سيتي</item>
+        <item>شبرا الخيمة</item>
+        <item>شبرا مصر</item>
+        <item>عباسيه</item>
+        <item>عزبة الهجانه</item>
+        <item>عزبة النخل</item>
+        <item>عين شمس</item>
+        <item>هيليوبلس</item>
+        <item>مدينة نصر</item>
+        <item>وسط البلد</item>
+        <item>مدينتي</item>
+        <item>مصر القديمة</item>
+    </string-array>
+    <string-array name="txtGizaRegion">
+        <item>6 اكتوبر</item>
+        <item>امبابة</item>
+        <item>اطفيح</item>
+        <item>البدرشين</item>
+        <item>الجيزة</item>
+        <item>الحوامدية</item>
+        <item>الدقي</item>
+        <item>الشيخ زايد</item>
+        <item>العجوزة</item>
+        <item>العمرانية</item>
+        <item>العياط</item>
+        <item>الصف</item>
+        <item>الهرم</item>
+        <item>الواحات</item>
+        <item>الوراق</item>
+        <item>اوسيم</item>
+        <item>بولاق الدكرور</item>
+        <item>فيصل</item>
+        <item>كرداسه</item>
+    </string-array>
+    <string-array name="filterGize">
+        <item>كل المناطق</item>
+        <item>6 اكتوبر</item>
+        <item>امبابة</item>
+        <item>اطفيح</item>
+        <item>البدرشين</item>
+        <item>الجيزة</item>
+        <item>الحوامدية</item>
+        <item>الدقي</item>
+        <item>الشيخ زايد</item>
+        <item>العجوزة</item>
+        <item>العمرانية</item>
+        <item>العياط</item>
+        <item>الصف</item>
+        <item>الهرم</item>
+        <item>الواحات</item>
+        <item>الوراق</item>
+        <item>اوسيم</item>
+        <item>بولاق الدكرور</item>
+        <item>فيصل</item>
+        <item>كرداسه</item>
+    </string-array>
+    <string-array name="txtAlexRegion">
+        <item>ابيس</item>
+        <item>الازاريطة</item>
+        <item>الابراهيميه</item>
+        <item>الحضرة</item>
+        <item>الدخيله</item>
+        <item>السيوف</item>
+        <item>الشاطبي</item>
+        <item>الصالحيه</item>
+        <item>الظاهريه</item>
+        <item>العصافرة</item>
+        <item>العطارين</item>
+        <item>العوايد</item>
+        <item>القباري</item>
+        <item>اللبان</item>
+        <item>المعمورة</item>
+        <item>المكس</item>
+        <item>المندرة</item>
+        <item>المنشيه</item>
+        <item>الورديان</item>
+        <item>باكوس</item>
+        <item>بحري</item>
+        <item>بولكلي</item>
+        <item>جلم</item>
+        <item>جانكلس</item>
+        <item>المنتزه</item>
+        <item>راس التين</item>
+        <item>زيزينا</item>
+        <item>سابا باشا</item>
+        <item>سان ستيفانو</item>
+        <item>ستانلي</item>
+        <item>سموحه</item>
+        <item>سيدي بشر</item>
+        <item>سيدي جابر</item>
+        <item>النخيل</item>
+        <item>العامرية</item>
+        <item>فلمنج</item>
+        <item>فيكتوريا</item>
+        <item>كامب شيراز</item>
+        <item>كرموز</item>
+        <item>كفر عبده</item>
+        <item>كوم الدكه</item>
+        <item>لوران</item>
+        <item>محرم بيك</item>
+        <item>محطه الرمل</item>
+        <item>مساكن طوسون</item>
+        <item>مينا البصل</item>
+    </string-array>
+    <string-array name="filterAlex">
+        <item>كل المناطق</item>
+        <item>ابيس</item>
+        <item>الازاريطة</item>
+        <item>الابراهيميه</item>
+        <item>الحضرة</item>
+        <item>الدخيله</item>
+        <item>السيوف</item>
+        <item>الشاطبي</item>
+        <item>الصالحيه</item>
+        <item>الظاهريه</item>
+        <item>العصافرة</item>
+        <item>العطارين</item>
+        <item>العوايد</item>
+        <item>القباري</item>
+        <item>اللبان</item>
+        <item>المعمورة</item>
+        <item>المكس</item>
+        <item>المندرة</item>
+        <item>المنشيه</item>
+        <item>الورديان</item>
+        <item>باكوس</item>
+        <item>بحري</item>
+        <item>بولكلي</item>
+        <item>جلم</item>
+        <item>جانكلس</item>
+        <item>المنتزه</item>
+        <item>راس التين</item>
+        <item>زيزينا</item>
+        <item>سابا باشا</item>
+        <item>سان ستيفانو</item>
+        <item>ستانلي</item>
+        <item>سموحه</item>
+        <item>سيدي بشر</item>
+        <item>سيدي جابر</item>
+        <item>النخيل</item>
+        <item>العامرية</item>
+        <item>فلمنج</item>
+        <item>فيكتوريا</item>
+        <item>كامب شيراز</item>
+        <item>كرموز</item>
+        <item>كفر عبده</item>
+        <item>كوم الدكه</item>
+        <item>لوران</item>
+        <item>محرم بيك</item>
+        <item>محطه الرمل</item>
+        <item>مساكن طوسون</item>
+        <item>مينا البصل</item>
+    </string-array>
+    <string-array name="txtMetroRegion">
+        <item>حلوان</item>
+        <item>عين حلوان</item>
+        <item>جامعة حلوان</item>
+        <item>وادي حو</item>
+        <item>حدائق حلوان</item>
+        <item>المعصرة</item>
+        <item>طرة الأسمنت</item>
+        <item>كوتسيكا</item>
+        <item>طرة البلد</item>
+        <item>ثكنات المعادي</item>
+        <item>المعادي</item>
+        <item>حدائق المعادي</item>
+        <item>دار السلام</item>
+        <item>الزهراء</item>
+        <item>مار جرجس</item>
+        <item>الملك الصالح</item>
+        <item>السيدة زينب</item>
+        <item>سعد زغلول</item>
+        <item>السادات</item>
+        <item>ناصر</item>
+        <item>عرابي</item>
+        <item>الشهداء</item>
+        <item>غمرة</item>
+        <item>الدمرداش</item>
+        <item>منشية الصدر</item>
+        <item>كوبري القبة</item>
+        <item>حمامات القبة</item>
+        <item>سراي القبة</item>
+        <item>حدائق الزيتون</item>
+        <item>حلمية الزيتون</item>
+        <item>المطرية</item>
+        <item>عين شمس</item>
+        <item>عزبة النخل</item>
+        <item>المرج</item>
+        <item>المرج الجديدة</item>
+        <item>المنيب</item>
+        <item>ساقية مكي</item>
+        <item>أم المصريين</item>
+        <item>الجيزة</item>
+        <item>فيصل</item>
+        <item>جامعة القاهرة</item>
+        <item>البحوث</item>
+        <item>الدقي</item>
+        <item>الأوبرا</item>
+        <item>محمد نجيب</item>
+        <item>العتبة</item>
+        <item>مسرة</item>
+        <item>روض الفرج</item>
+        <item>سانتا تريزا</item>
+        <item>الخلفاوي</item>
+        <item>المظلات</item>
+        <item>كلية الزراعة</item>
+        <item>شبرا الخيمة</item>
+        <item>نادي الشمس</item>
+        <item>ألف مسكن</item>
+        <item>ميدان هليوبوليس</item>
+        <item>هارون</item>
+        <item>الأهرام</item>
+        <item>كلية البنات</item>
+        <item>ستاد القاهرة</item>
+        <item>أرض المعارض</item>
+        <item>العباسية</item>
+        <item>عبده باشا</item>
+        <item>الجيش</item>
+        <item>باب الشعرية</item>
+    </string-array>
+    <string-array name="filterMetro">
+        <item>كل المناطق</item>
+        <item>حلوان</item>
+        <item>عين حلوان</item>
+        <item>جامعة حلوان</item>
+        <item>وادي حو</item>
+        <item>حدائق حلوان</item>
+        <item>المعصرة</item>
+        <item>طرة الأسمنت</item>
+        <item>كوتسيكا</item>
+        <item>طرة البلد</item>
+        <item>ثكنات المعادي</item>
+        <item>المعادي</item>
+        <item>حدائق المعادي</item>
+        <item>دار السلام</item>
+        <item>الزهراء</item>
+        <item>مار جرجس</item>
+        <item>الملك الصالح</item>
+        <item>السيدة زينب</item>
+        <item>سعد زغلول</item>
+        <item>السادات</item>
+        <item>ناصر</item>
+        <item>عرابي</item>
+        <item>الشهداء</item>
+        <item>غمرة</item>
+        <item>الدمرداش</item>
+        <item>منشية الصدر</item>
+        <item>كوبري القبة</item>
+        <item>حمامات القبة</item>
+        <item>سراي القبة</item>
+        <item>حدائق الزيتون</item>
+        <item>حلمية الزيتون</item>
+        <item>المطرية</item>
+        <item>عين شمس</item>
+        <item>عزبة النخل</item>
+        <item>المرج</item>
+        <item>المرج الجديدة</item>
+        <item>المنيب</item>
+        <item>ساقية مكي</item>
+        <item>أم المصريين</item>
+        <item>الجيزة</item>
+        <item>فيصل</item>
+        <item>جامعة القاهرة</item>
+        <item>البحوث</item>
+        <item>الدقي</item>
+        <item>الأوبرا</item>
+        <item>محمد نجيب</item>
+        <item>العتبة</item>
+        <item>مسرة</item>
+        <item>روض الفرج</item>
+        <item>سانتا تريزا</item>
+        <item>الخلفاوي</item>
+        <item>المظلات</item>
+        <item>كلية الزراعة</item>
+        <item>شبرا الخيمة</item>
+        <item>نادي الشمس</item>
+        <item>ألف مسكن</item>
+        <item>ميدان هليوبوليس</item>
+        <item>هارون</item>
+        <item>الأهرام</item>
+        <item>كلية البنات</item>
+        <item>ستاد القاهرة</item>
+        <item>أرض المعارض</item>
+        <item>العباسية</item>
+        <item>عبده باشا</item>
+        <item>الجيش</item>
+        <item>باب الشعرية</item>
+    </string-array>
+    <string-array name="justAll">
+        <item>كل المناطق</item>
+    </string-array>
+
+
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+</resources>

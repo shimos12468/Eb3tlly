@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="7dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="100dp"
+    android:elevation="100dp"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="2"
+            android:background="@color/colorAccent">
+
+            <LinearLayout
+                android:id="@+id/lin1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtStatue"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_bad"
+                    android:text="الغاء الاوردر"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:visibility="visible" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="بيانات الاوردر"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="تعديل الاوردر"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lin1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnRecived"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_good"
+                    android:text="تم تسليم الاوردر للمندوب"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnDelivered"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_good"
+                    android:text="تم توصيل الاوردر"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lin2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnRate"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="تقييم الاوردر"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtUsername"
+                android:layout_width="148dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="125dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="125dp"
+                android:text="Username"
+                android:textAlignment="center"
+                android:textColor="#FFEB3B"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/fees"
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="-1dp"
+                android:layout_marginEnd="274dp"
+                android:background="#000000"
+                android:text="50 ج"
+                android:textAlignment="center"
+                android:textColor="#4CAF50"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ordercash"
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="273dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="#000000"
+                android:text="50 ج"
+                android:textAlignment="center"
+                android:textColor="#F44336"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/OrderFrom"
+                android:layout_width="187dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtPostDate"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:text="From"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/orderto"
+                android:layout_width="177dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtPostDate"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/toArrow"
+                android:text="To"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/OrderFrom"
+                android:layout_alignEnd="@+id/OrderFrom"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="0dp"
+                app:srcCompat="@drawable/ic_date" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="88dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/OrderFrom"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toStartOf="@+id/imageView9"
+                android:text="20/5/2020"
+                android:textAlignment="viewEnd"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/icnCar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/orderto"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="97dp"
+                android:layout_toStartOf="@+id/date"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_car" />
+
+            <ImageView
+                android:id="@+id/icnMetro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/orderto"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/icnTrans"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_metro" />
+
+            <ImageView
+                android:id="@+id/icnTrans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/orderto"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/icnCar"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_bus" />
+
+            <ImageView
+                android:id="@+id/icnMotor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/orderto"
+                android:layout_marginTop="5dp"
+                android:layout_toStartOf="@+id/icnMetro"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_motorcycle" />
+
+            <TextView
+                android:id="@+id/txtPostDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtUsername"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="128dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="128dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="#FBFBFB"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/toArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtPostDate"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/OrderFrom"
+                app:srcCompat="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:id="@+id/txtStatue"
+                android:layout_width="324dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/icnTrans"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="#FFFCFC"
+                android:textStyle="bold"
+                android:visibility="visible" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
