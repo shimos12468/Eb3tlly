@@ -1,6 +1,7 @@
 package com.armjld.eb3tly;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,6 +70,13 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
         holder.setBody(From, Statue, OrderID, To);
         holder.setDate(Datee);
+
+        holder.myview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, profile.class));
+            }
+        });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +27,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
+
 import Model.notiData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
@@ -131,6 +135,20 @@ public class Notifications extends AppCompatActivity {
                 drawer.closeDrawer(Gravity.LEFT);
                 return true;
             }
+        });
+
+        // ------------------ Show or Hide Buttons depending on the User Type
+        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
+                if (uType.equals("Supplier")) {
+                    Menu nav_menu = navigationView.getMenu();
+                    nav_menu.findItem(R.id.nav_timeline).setVisible(false);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
         });
         
         

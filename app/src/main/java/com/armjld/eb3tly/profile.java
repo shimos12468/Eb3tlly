@@ -302,7 +302,6 @@ public class profile extends AppCompatActivity {
                 String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                 if (uType.equals("Supplier")) {
                     btnAdd.setVisibility(View.VISIBLE);
-
                     Menu nav_menu = navigationView.getMenu();
                     nav_menu.findItem(R.id.nav_timeline).setVisible(false);
                     btnNavbarProfile.setVisibility(View.VISIBLE);
