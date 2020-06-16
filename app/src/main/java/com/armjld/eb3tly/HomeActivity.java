@@ -77,7 +77,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
     //Recycler view
     private RecyclerView recyclerView;
-
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
 
