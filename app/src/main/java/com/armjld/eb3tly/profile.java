@@ -66,6 +66,7 @@ import java.util.Objects;
 import java.util.Objects;
 import Model.rateData;
 import Model.Data;
+import Model.notiData;
 
 import static com.google.firebase.database.FirebaseDatabase.*;
 
@@ -685,12 +686,9 @@ public class profile extends AppCompatActivity {
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             setOrderCount("Supplier", mUser.getUid());
 
-                                                            HashMap<String, String> notiHash = new HashMap<>();
-                                                            notiHash.put("from", mUser.getUid().toString());
-                                                            notiHash.put("to", idAccepted);
-                                                            notiHash.put("orderid", orderID);
-                                                            notiHash.put("statue", "deleted");
-                                                            nDatabase.child(idAccepted).push().setValue(notiHash);
+                                                            // --------------------------- Send Notifications ---------------------//
+                                                            notiData Noti = new notiData(mUser.getUid().toString(), idAccepted,orderID,"deleted",datee);
+                                                            nDatabase.child(idAccepted).push().setValue(Noti);
                                                         }
 
                                                         @Override
@@ -1083,13 +1081,9 @@ public class profile extends AppCompatActivity {
                                             mDatabase.child(id).setValue(data);
                                             mDatabase.child(id).child("lastedit").setValue(datee);
 
-                                            // --- Send Notification
-                                            HashMap<String, String> notiHash = new HashMap<>();
-                                            notiHash.put("from", mUser.getUid().toString());
-                                            notiHash.put("to", uAccepted);
-                                            notiHash.put("orderid", orderID);
-                                            notiHash.put("statue", "edited");
-                                            nDatabase.child(uAccepted).push().setValue(notiHash);
+                                            // --------------------------- Send Notifications ---------------------//
+                                            notiData Noti = new notiData(mUser.getUid().toString(), uAccepted,orderID,"edited",datee);
+                                            nDatabase.child(uAccepted).push().setValue(Noti);
 
                                             Toast.makeText(profile.this, "تم تعديل بيانات الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
@@ -1393,13 +1387,9 @@ public class profile extends AppCompatActivity {
                                         }
                                     });
 
-                                    // Send notification to server
-                                    HashMap<String, String> notiHash = new HashMap<>();
-                                    notiHash.put("from", DID);
-                                    notiHash.put("to", SID);
-                                    notiHash.put("orderid", orderID);
-                                    notiHash.put("statue", STATUE);
-                                    nDatabase.child(SID).push().setValue(notiHash);
+                                    // --------------------------- Send Notifications ---------------------//
+                                    notiData Noti = new notiData(mUser.getUid().toString(), SID,orderID,"delivered",datee);
+                                    nDatabase.child(SID).push().setValue(Noti);
 
                                     Toast.makeText(getApplicationContext(), "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
                                 }
@@ -1505,13 +1495,9 @@ public class profile extends AppCompatActivity {
                                                             mDatabase.child(DorderID).child("acceptTime").setValue("");
                                                             mDatabase.child(DorderID).child("statue").setValue("placed");
 
-                                                            // --- Send Notification
-                                                            HashMap<String, String> notiHash = new HashMap<>();
-                                                            notiHash.put("from", mUser.getUid().toString());
-                                                            notiHash.put("to", owner);
-                                                            notiHash.put("orderid", orderID);
-                                                            notiHash.put("statue", "deleted");
-                                                            nDatabase.child(owner).push().setValue(notiHash);
+                                                            // --------------------------- Send Notifications ---------------------//
+                                                            notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",datee);
+                                                            nDatabase.child(owner).push().setValue(Noti);
 
                                                             adapter.notifyDataSetChanged();
                                                             setOrderCount("Delivery Worker", mUser.getUid());

@@ -68,33 +68,19 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view  = inflater.inflate(R.layout.item_data,parent,false);
+        View view  = inflater.inflate(R.layout.card_notification,parent,false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        holder.setDate(notiData[position].getDDate());
-        holder.setUsername(notiData[position].getuId());
-        holder.setOrdercash(notiData[position].getGMoney());
-        holder.setOrderFrom(notiData[position].reStateP());
-        holder.setOrderto(notiData[position].reStateD());
-        holder.setFee(notiData[position].getGGet().toString());
-        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
-        holder.setType(notiData[position].getIsCar(), notiData[position].getIsMotor(), notiData[position].getIsMetro(), notiData[position].getIsTrans());
+        String From = notiData[position].getFrom();
+        String To = notiData[position].getTo();
+        String Datee = notiData[position].getDatee();
+        String Statue = notiData[position].getStatue();
+        String OrderID = notiData[position].getOrderid();
 
-        //Hide this order Button
-        holder.btnHide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Still working on this", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        String PAddress =notiData[position].getmPAddress();
-        String DAddress = notiData[position].getDAddress();
-        String rateUID = notiData[position].getuId();
-        String notes = notiData[position].getNotes();
+        holder.setBody(From, Statue, OrderID, To);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -102,107 +88,6 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                 refresh();
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        int Count = (int) count;
-        return Count;
-    }
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        View myview;
-        Button btnAccept, btnHide, btnMore ;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            myview=itemView;
-            btnAccept = myview.findViewById(R.id.btnAccept);
-            btnHide = myview.findViewById(R.id.btnHide);
-            btnMore = myview.findViewById(R.id.btnMore);
-        }
-
-        void setUsername(String userID){
-            uDatabase.child(userID).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String mName = snapshot.child("name").getValue().toString();
-                    TextView mtitle = myview.findViewById(R.id.txtUsername);
-                    mtitle.setText(mName);
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        }
-
-        public void setOrderFrom(String orderFrom){
-            TextView mtitle=myview.findViewById(R.id.OrderFrom);
-            mtitle.setText(orderFrom);
-        }
-        public void setOrderto(String orderto){
-            TextView mtitle=myview.findViewById(R.id.orderto);
-            mtitle.setText(orderto);
-        }
-
-        public void setDate (String date){
-            TextView mdate= myview.findViewById(R.id.date);
-            mdate.setText(date);
-        }
-        public void setOrdercash(String ordercash){
-            TextView mtitle=myview.findViewById(R.id.ordercash);
-            mtitle.setText(ordercash + " ج");
-        }
-        public void setFee(String fees) {
-            TextView mtitle=myview.findViewById(R.id.fees);
-            mtitle.setText(fees + " ج");
-        }
-
-        public void setType(String car, String motor, String metro, String trans) {
-            ImageView icnCar = myview.findViewById(R.id.icnCar);
-            ImageView icnMotor = myview.findViewById(R.id.icnMotor);
-            ImageView icnMetro = myview.findViewById(R.id.icnMetro);
-            ImageView icnTrans = myview.findViewById(R.id.icnTrans);
-            if (car.equals("سياره")) {
-                icnCar.setVisibility(View.VISIBLE);
-            } else {
-                icnCar.setVisibility(View.INVISIBLE);
-            }
-
-            if(motor.equals("موتسكل")) {
-                icnMotor.setVisibility(View.VISIBLE);
-            } else {
-                icnMotor.setVisibility(View.INVISIBLE);
-            }
-
-            if(metro.equals("مترو")) {
-                icnMetro.setVisibility(View.VISIBLE);
-            } else {
-                icnMetro.setVisibility(View.INVISIBLE);
-            }
-
-            if (trans.equals("مواصلات")) {
-                icnTrans.setVisibility(View.VISIBLE);
-            } else {
-                icnTrans.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        public void setPostDate(int dS, int dM, int dH, int dD) {
-            String finalDate = "";
-            TextView mtitle = myview.findViewById(R.id.txtPostDate);
-            if (dS < 60) {
-                finalDate = "منذ " + String.valueOf(dS) + " ثوان";
-            } else if (dS > 60 && dS < 3600) {
-                finalDate = "منذ " + String.valueOf(dM) + " دقيقة";
-            } else if (dS > 3600 && dS < 86400) {
-                finalDate = "منذ " + String.valueOf(dH) + " ساعات";
-            } else if (dS > 86400) {
-                finalDate = "منذ " + String.valueOf(dD) + " ايام";
-            }
-            mtitle.setText(finalDate);
-        }
     }
 
     private void refresh() {
@@ -236,5 +121,78 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         NotiAdaptere.this.notifyDataSetChanged();
         Log.i(TAG, "Data Refreshed");
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public int getItemCount() {
+        int Count = (int) count;
+        return Count;
+    }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        View myview;
+        TextView txtBody, txtNotidate;
+        ImageView imgEditPhoto;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            myview=itemView;
+        }
+
+        public void setBody(String sendby, String message, String OrderID, String To){
+            txtBody = myview.findViewById(R.id.txtBody);
+            imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
+
+            uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String nameFrom = dataSnapshot.child(sendby).child("name").getValue().toString();
+                    String URL = dataSnapshot.child(sendby).child("ppURL").getValue().toString();
+                    String ToType = dataSnapshot.child(To).child("accountType").getValue().toString();
+                    Picasso.get().load(Uri.parse(URL)).into(imgEditPhoto);
+
+                    mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String orderTo = dataSnapshot.child("DName").getValue().toString();
+                            String body = "";
+                            switch (message) {
+                                case "edited": {
+                                    body = "قام" + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته";
+                                    break;
+                                }
+                                case "deleted": {
+                                    if(ToType.equals("Supplier")) {
+                                        body = "قام" + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة";
+                                    } else {
+                                        body = "قام" + nameFrom + " بالغاء الاوردر";
+                                    }
+                                    break;
+                                }
+                                case "delivered": {
+                                    body = "قام" + nameFrom + " بتوصيل اوردر" + orderTo;
+                                    break;
+                                }
+                                case "accepted": {
+                                    body = "قام" + nameFrom + " بقبول اوردر" + orderTo;
+                                    break;
+                                }
+                                case "recived": {
+                                    body = "قام" + nameFrom + " بتسليمك الاوردر";
+                                    break;
+                                }
+                            }
+                            txtBody.setText(body);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
     }
 }
