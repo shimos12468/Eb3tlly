@@ -167,9 +167,12 @@ public class Admin extends Activity {
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         int userCount = (int) dataSnapshot.getChildrenCount();
                                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                                            String userID = ds.child("id").getValue().toString();
-                                            uDatabase.child(userID).child("canceled").setValue("0");
-                                            Toast.makeText(Admin.this, "Counter Reseted for : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+                                            String isCompleted = ds.child("completed").getValue().toString();
+                                            if(isCompleted.equals("true")) {
+                                                String userID = ds.child("id").getValue().toString();
+                                                uDatabase.child(userID).child("canceled").setValue("0");
+                                                Toast.makeText(Admin.this, "Counter Reseted for : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
                                     @Override
