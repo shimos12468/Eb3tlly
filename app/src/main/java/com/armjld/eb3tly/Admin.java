@@ -429,7 +429,7 @@ public class Admin extends Activity {
                 if(usedUsers != 0) {
                     forEach = profitCount / usedUsers;
                 }
-                txtAllUsersCount.setText("Users Count : " + allUsers + " Not Completed : " + notCompleted);
+                txtAllUsersCount.setText("Users Count : " + allUsers + " | Completed" + (allUsers - notCompleted) + " | Not Completed : " + notCompleted);
                 txtAllProfit.setText("Total Profit = " + profitCount + " EGP | " + forEach + " EGP For Each Active Delivery User");
                 txtAllSupCount.setText("Suppliers Count : " + supCount);
                 txtAllDevCount.setText("Delivery Workers Count : " + devCount + " | Active Count : " + usedUsers);
