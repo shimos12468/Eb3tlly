@@ -73,37 +73,38 @@ public class ForgetPass extends Activity {
             @Override
             public void onClick(View v) {
                 String mobile = editTextMobile.getText().toString().trim();
-                if(mobile.length() != 11){
+                String firstFourChars = mobile.substring(0, 2);
+                if(mobile.length() != 11 && !firstFourChars.equals("01")){
                     editTextMobile.setError("ادخل رقم هاتف صحيح");
                     editTextMobile.requestFocus();
                     return;
-                } else {
-                    final String getMobile = mobile;
-                    FirebaseDatabase.getInstance().getReference().child("Pickly").child("users")
-                            .orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()) {
-                                if (snapshot.getValue() != null) {
-                                    txtViewPhone.setText("ضع الرمز المرسل اليك");
-                                    linerPhone.setVisibility(View.GONE);
-                                    linerPass.setVisibility(View.GONE);
-                                    linerVerf.setVisibility(View.VISIBLE);
-                                    Toast.makeText(ForgetPass.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
-                                    sendVerificationCode(getMobile);
-                                } else {
-                                    Toast.makeText(ForgetPass.this, "رقم الهاتف غير مسجل", Toast.LENGTH_SHORT).show();
-                                }
+                }
+
+                final String getMobile = mobile;
+                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users")
+                        .orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            if (snapshot.getValue() != null) {
+                                txtViewPhone.setText("ضع الرمز المرسل اليك");
+                                linerPhone.setVisibility(View.GONE);
+                                linerPass.setVisibility(View.GONE);
+                                linerVerf.setVisibility(View.VISIBLE);
+                                Toast.makeText(ForgetPass.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
+                                sendVerificationCode(getMobile);
                             } else {
                                 Toast.makeText(ForgetPass.this, "رقم الهاتف غير مسجل", Toast.LENGTH_SHORT).show();
                             }
-
+                        } else {
+                            Toast.makeText(ForgetPass.this, "رقم الهاتف غير مسجل", Toast.LENGTH_SHORT).show();
                         }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
 
-                        }});
-                }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }});
             }});
 
         btnConfirmCode.setOnClickListener(new View.OnClickListener() {
@@ -114,9 +115,8 @@ public class ForgetPass extends Activity {
                     editTextCode.setError("ادخل كود صحيح");
                     editTextCode.requestFocus();
                     return;
-                } else {
-                    verifyVerificationCode(code);
                 }
+                    verifyVerificationCode(code);
             }
         });
 
