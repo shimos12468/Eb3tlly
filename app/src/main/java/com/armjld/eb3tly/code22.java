@@ -116,7 +116,7 @@ public class code22 extends AppCompatActivity {
             public void onClick(View v) {
                 String mobile = editTextMobile.getText().toString().trim();
                 String firstFourChars = mobile.substring(0, 2);
-                if(mobile.length() != 11 && !firstFourChars.equals("01")){
+                if(mobile.length() != 11 || mobile.isEmpty()||mobile.charAt(0)!='0'||mobile.charAt(1)!='1'){
                     editTextMobile.setError("ادخل رقم هاتف صحيح");
                     editTextMobile.requestFocus();
                     return;
