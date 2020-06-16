@@ -141,15 +141,14 @@ public class code22 extends AppCompatActivity {
                                         if(timerRunning==false){
                                             sendVerificationCode(getMobile);
                                             startTimer();
-                                        }
-                                        else{
-                                            Toast.makeText(code22.this, "الرجا انتظار رمز التاكيد", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(code22.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
+                                        } else{
+                                            Toast.makeText(code22.this, "ارجاء الانتظار قليلا", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                             }
-                        }
-                        else {
+                        } else {
                             txtViewPhone.setText("ضع الرمز المرسل اليك");
                             linerPhone.setVisibility(View.GONE);
                             linerVerf.setVisibility(View.VISIBLE);
@@ -180,9 +179,8 @@ public class code22 extends AppCompatActivity {
                     editTextCode.setError("ادخل كود صحيح");
                     editTextCode.requestFocus();
                     return;
-                } else {
-                    verifyVerificationCode(code);
                 }
+                verifyVerificationCode(code);
             }
         });
 
@@ -251,7 +249,6 @@ public class code22 extends AppCompatActivity {
                     DatabaseReference uDatabase = getInstance().getReference().child("Pickly").child("users");
                     uDatabase.child(mAuth.getCurrentUser().getUid()).child("completed").setValue("false");
                     uDatabase.child(mAuth.getCurrentUser().getUid()).child("id").setValue(mAuth.getCurrentUser().getUid());
-                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("phone").setValue(editTextMobile.getText().toString());
                     uDatabase.child(mAuth.getCurrentUser().getUid()).child("ppURL").setValue("https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f");
                     Toast.makeText(code22.this, "تم تاكيد رقم الهاتف الرجاء استكمال البيانات", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(code22.this, Signup.class);
