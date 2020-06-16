@@ -50,7 +50,7 @@ public class code22 extends AppCompatActivity {
     private String TAG = "Phone Auth";
     private CountDownTimer Timer;
     private long timeleft = 60000;
-    private Boolean timerRunning;
+    private Boolean timerRunning = false;
 
 
     public void UpdateTimer(){
@@ -58,7 +58,6 @@ public class code22 extends AppCompatActivity {
     int seconds = (int)timeleft%60000/1000;
     String time;
     time = " "+minutes+":";
-
     if(seconds<10)time+="0";
     time+=seconds;
     timer.setText(time);
@@ -89,7 +88,6 @@ public class code22 extends AppCompatActivity {
         Timer.cancel();
         timerRunning = false;
         timeleft = 60000;
-        UpdateTimer();
     }
 
 
@@ -97,7 +95,7 @@ public class code22 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code22);
-        UpdateTimer();
+
         mAuth = FirebaseAuth.getInstance();
         editTextCode = findViewById(R.id.txtVerfCode);
         editTextMobile = findViewById(R.id.txtPhoneNumb);
@@ -124,7 +122,7 @@ public class code22 extends AppCompatActivity {
                     editTextMobile.requestFocus();
                     return;
                 }
-
+                UpdateTimer();
                 final String getMobile = mobile;
                 FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -141,9 +139,12 @@ public class code22 extends AppCompatActivity {
                                 btnResendCode.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        startTimer();
                                         if(timerRunning==false){
                                             sendVerificationCode(getMobile);
+                                            startTimer();
+                                        }
+                                        else{
+                                            Toast.makeText(code22.this, "الرجا انتظار رمز التاكيد", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
