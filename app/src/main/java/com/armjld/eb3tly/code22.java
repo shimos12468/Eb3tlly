@@ -2,6 +2,7 @@ package com.armjld.eb3tly;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,17 +44,60 @@ public class code22 extends AppCompatActivity {
     private String mVerificationId;
     private FirebaseAuth mAuth;
     private EditText editTextMobile, editTextCode;
-    private Button btnConfirmCode, btnConfirmPhone;
-    private TextView txtViewPhone, btnReType;
+    private Button btnConfirmCode, btnConfirmPhone,btnResendCode;
+    private TextView txtViewPhone, btnReType,timer;
     private ConstraintLayout linerVerf, linerPhone;
     private String TAG = "Phone Auth";
+    private CountDownTimer Timer;
+    private long timeleft = 60000;
+    private Boolean timerRunning;
+
+
+    public void UpdateTimer(){
+    int minutes = (int)timeleft/60000;
+    int seconds = (int)timeleft%60000/1000;
+    String time;
+    time = " "+minutes+":";
+
+    if(seconds<10)time+="0";
+    time+=seconds;
+    timer.setText(time);
+    }
+
+    public void startTimer(){
+    Timer = new CountDownTimer(timeleft , 1000) {
+        @Override
+        public void onTick(long l) {
+            timeleft = l;
+            if(timeleft<=0){
+                stopTimer();
+            }
+            UpdateTimer();
+
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
+        }.start();
+    timerRunning = true;
+
+    }
+
+    public void stopTimer(){
+        Timer.cancel();
+        timerRunning = false;
+        timeleft = 60000;
+        UpdateTimer();
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code22);
-
+        UpdateTimer();
         mAuth = FirebaseAuth.getInstance();
         editTextCode = findViewById(R.id.txtVerfCode);
         editTextMobile = findViewById(R.id.txtPhoneNumb);
@@ -61,10 +105,10 @@ public class code22 extends AppCompatActivity {
         btnConfirmPhone = findViewById(R.id.btnConfirmPhone);
         txtViewPhone = findViewById(R.id.txtViewPhone);
         btnReType = findViewById(R.id.btnReType);
-
+        btnResendCode = findViewById(R.id.btnResendCode);
         linerVerf = findViewById(R.id.linerVerf);
         linerPhone = findViewById(R.id.linerPhone);
-
+        timer = findViewById(R.id.timer);
         linerVerf.setVisibility(View.GONE);
 
         txtViewPhone.setText("ادخل رقم الهاتف");
@@ -94,13 +138,33 @@ public class code22 extends AppCompatActivity {
                                 linerVerf.setVisibility(View.VISIBLE);
                                 Toast.makeText(code22.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
                                 sendVerificationCode(getMobile);
+                                btnResendCode.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        startTimer();
+                                        if(timerRunning==false){
+                                            sendVerificationCode(getMobile);
+                                        }
+                                    }
+                                });
                             }
-                        } else {
+                        }
+                        else {
                             txtViewPhone.setText("ضع الرمز المرسل اليك");
                             linerPhone.setVisibility(View.GONE);
                             linerVerf.setVisibility(View.VISIBLE);
                             Toast.makeText(code22.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
                             sendVerificationCode(getMobile);
+                            btnResendCode.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    startTimer();
+                                    if(timerRunning==false){
+                                        sendVerificationCode(getMobile);
+                                    }
+                                }
+                            });
+
                         }
                     }
                     @Override
