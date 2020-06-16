@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,16 +28,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import Model.notiData;
 
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
+
 public class Notifications extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private DatabaseReference rDatabase;
+    private DatabaseReference nDatabase;
     private FirebaseAuth mAuth;
     private ImageView btnNavBar;
     private notiData[] mm;
     private long count;
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
+    String TAG = "Notifications";
 
     @Override
     public void onBackPressed() {}
@@ -47,12 +51,17 @@ public class Notifications extends AppCompatActivity {
         setContentView(R.layout.activity_notifications);
         
         mAuth = FirebaseAuth.getInstance();
-        rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         count =0;
         mm = new notiData[1000000];
+        txtNoOrders.setVisibility(View.GONE);
+
+        //Title Bar
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("الاشعارات");
 
         //Recycler
         recyclerView = findViewById(R.id.recycler);
@@ -127,11 +136,13 @@ public class Notifications extends AppCompatActivity {
         
 
         // ---------------------- GET ALL THE ORDERS -------------------//
-        rDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
+                        int noticount = (int) ds.getChildrenCount();
+                        Log.i(TAG, "noticount : " + noticount);
                         notiData notiDB = ds.getValue(notiData.class);
                         mm[(int) count] = notiDB;
                         count++;
@@ -143,11 +154,12 @@ public class Notifications extends AppCompatActivity {
                         }
                         recyclerView.setAdapter(orderAdapter);
                     }
+                } else {
+                    Log.i(TAG, "No Data");
                 }
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
     }
 }

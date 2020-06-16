@@ -81,7 +81,7 @@ public class profile extends AppCompatActivity {
     private ArrayList datalist;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     private String user_type = "";
-    private ImageView btnNavbarProfile, imgSetPP;
+    private ImageView btnNavbarProfile, imgSetPP, btnOpenNoti;
     private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
     private CheckBox chkMetro, chkTrans, chkCar, chkMotor;
     private Spinner spPState, spPRegion, spDState, spDRegion;
@@ -129,6 +129,7 @@ public class profile extends AppCompatActivity {
 
         //btnSettings = findViewById(R.id.btnSettings);
         btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
+        btnOpenNoti = findViewById(R.id.btnOpenNoti);
         datalist = new ArrayList<Data>();
         uName = findViewById(R.id.txtUsername);
         txtUserDate = findViewById(R.id.txtUserDate);
@@ -139,6 +140,8 @@ public class profile extends AppCompatActivity {
         //Title Bar
         tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("الملف الشخصي");
+
+        txtNoOrders.setVisibility(View.GONE);
 
         // NAV BAR
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -156,6 +159,14 @@ public class profile extends AppCompatActivity {
                 } else {
                     drawer.openDrawer(Gravity.LEFT);
                 }
+            }
+        });
+
+        btnOpenNoti.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(profile.this, Notifications.class));
             }
         });
 
