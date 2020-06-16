@@ -34,10 +34,13 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import Model.Data;
+
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
@@ -47,7 +50,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
      SwipeRefreshLayout mSwipeRefreshLayout;
      private ArrayList datalist,filterList;
-     private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase;
+     private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase,nDatabase;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
      private String TAG = "My Adapter";
 
@@ -71,6 +74,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
         vDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("values");
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
     }
 
     @NonNull
@@ -258,6 +262,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         //Accept Order Button
         final String orderID = filtersData[position].getId();
+        final String owner = filtersData[position].getuId();
         holder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,6 +288,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         mDatabase.child(orderID).child("statue").setValue("accepted");
                                                         mDatabase.child(orderID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
                                                         mDatabase.child(orderID).child("acceptedTime").setValue(datee);
+
+                                                        // Send notification to server
+                                                        HashMap<String, String> notiHash = new HashMap<>();
+                                                        notiHash.put("from", mAuth.getUid().toString());
+                                                        notiHash.put("to", owner);
+                                                        notiHash.put("orderid", orderID);
+                                                        notiHash.put("statue", "accepted");
+                                                        nDatabase.child(owner).push().setValue(notiHash);
+
                                                         Toast.makeText(context, "تم قبول الاوردر", Toast.LENGTH_SHORT).show();
                                                         context.startActivity(new Intent(context, profile.class));
                                                         break;

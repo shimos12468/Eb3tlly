@@ -677,12 +677,20 @@ public class profile extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case DialogInterface.BUTTON_POSITIVE:
-                                                    mDatabase.child(orderID).addValueEventListener(new ValueEventListener() {
+                                                    mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                             snapshot.getRef().removeValue();
+                                                            String idAccepted = snapshot.child("uAccepted").getValue().toString();
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             setOrderCount("Supplier", mUser.getUid());
+
+                                                            HashMap<String, String> notiHash = new HashMap<>();
+                                                            notiHash.put("from", mUser.getUid().toString());
+                                                            notiHash.put("to", idAccepted);
+                                                            notiHash.put("orderid", orderID);
+                                                            notiHash.put("statue", "deleted");
+                                                            nDatabase.child(idAccepted).push().setValue(notiHash);
                                                         }
 
                                                         @Override
@@ -1074,6 +1082,15 @@ public class profile extends AppCompatActivity {
                                                     mDPhone, mDName, mGMoney, mGGet, orderDate, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, acceptedTime, "", mNote);
                                             mDatabase.child(id).setValue(data);
                                             mDatabase.child(id).child("lastedit").setValue(datee);
+
+                                            // --- Send Notification
+                                            HashMap<String, String> notiHash = new HashMap<>();
+                                            notiHash.put("from", mUser.getUid().toString());
+                                            notiHash.put("to", uAccepted);
+                                            notiHash.put("orderid", orderID);
+                                            notiHash.put("statue", "edited");
+                                            nDatabase.child(uAccepted).push().setValue(notiHash);
+
                                             Toast.makeText(profile.this, "تم تعديل بيانات الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
@@ -1356,7 +1373,6 @@ public class profile extends AppCompatActivity {
                                     final String DID = data.getuAccepted();
                                     String STATUE = data.getStatue();
                                     String SID = data.getuId();
-                                    HashMap<String, String> notiHash = new HashMap<>();
 
                                     // Changing the values in the orders db
                                     mDatabase.child(orderID).child("statue").setValue("delivered");
@@ -1378,9 +1394,13 @@ public class profile extends AppCompatActivity {
                                     });
 
                                     // Send notification to server
+                                    HashMap<String, String> notiHash = new HashMap<>();
                                     notiHash.put("from", DID);
+                                    notiHash.put("to", SID);
+                                    notiHash.put("orderid", orderID);
                                     notiHash.put("statue", STATUE);
                                     nDatabase.child(SID).push().setValue(notiHash);
+
                                     Toast.makeText(getApplicationContext(), "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -1467,6 +1487,8 @@ public class profile extends AppCompatActivity {
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             String lastedit = data.getLastedit().toString();
                                                             String acceptedDate = data.getAcceptedTime();
+                                                            String owner = data.getuId();
+
                                                             String now = datee;
                                                             int cancelledCount =  Integer.parseInt(dataSnapshot.child("canceled").getValue().toString());
                                                             int finalCount = (cancelledCount + 1);
@@ -1476,13 +1498,21 @@ public class profile extends AppCompatActivity {
                                                                 uDatabase.child(uID).child("canceled").setValue(String.valueOf(finalCount));
                                                                 Log.i(TAG, "Remining tries : " + reminCount);
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
-
                                                             } else {
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             }
                                                             mDatabase.child(DorderID).child("uAccepted").setValue("");
                                                             mDatabase.child(DorderID).child("acceptTime").setValue("");
                                                             mDatabase.child(DorderID).child("statue").setValue("placed");
+
+                                                            // --- Send Notification
+                                                            HashMap<String, String> notiHash = new HashMap<>();
+                                                            notiHash.put("from", mUser.getUid().toString());
+                                                            notiHash.put("to", owner);
+                                                            notiHash.put("orderid", orderID);
+                                                            notiHash.put("statue", "deleted");
+                                                            nDatabase.child(owner).push().setValue(notiHash);
+
                                                             adapter.notifyDataSetChanged();
                                                             setOrderCount("Delivery Worker", mUser.getUid());
                                                         }
