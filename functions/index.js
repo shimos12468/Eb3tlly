@@ -14,7 +14,7 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
 
   const user_id = context.params.user_id;
   const notification_id = context.params.notification_id;
-  console.log('We have a notification from : ', user_id);
+  console.log('We have a notification to : ', user_id);
 
   const fromUser = admin.database().ref(`Pickly/notificationRequests/${user_id}/${notification_id}`).once('value');
 
