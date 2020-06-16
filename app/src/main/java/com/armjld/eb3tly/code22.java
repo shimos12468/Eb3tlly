@@ -60,7 +60,7 @@ public class code22 extends AppCompatActivity {
     time = " "+minutes+":";
     if(seconds<10)time+="0";
     time+=seconds;
-    timer.setText(time);
+    timer.setText("اعادة ارسال الرمز ؟ بعد " + time);
     }
 
     public void startTimer(){
@@ -72,7 +72,6 @@ public class code22 extends AppCompatActivity {
                 stopTimer();
             }
             UpdateTimer();
-
         }
 
         @Override
