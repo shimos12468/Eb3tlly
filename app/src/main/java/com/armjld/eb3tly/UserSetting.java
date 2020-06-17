@@ -84,11 +84,12 @@ public class UserSetting extends AppCompatActivity {
             try {
                 uri = Uri.parse(getFilePath(UserSetting.this, photoUri));
                 Log.i(TAG,"uri : " + uri.toString());
-            } catch (URISyntaxException e) {
+            }
+            catch (URISyntaxException e) {
                 e.printStackTrace();
             }
             if(uri != null) {
-                bitmap = rotateImage(bitmap , uri);
+                bitmap = rotateImage(bitmap , uri ,photoUri);
             }
             UserImage.setImageBitmap(bitmap);
         }
@@ -158,9 +159,12 @@ public class UserSetting extends AppCompatActivity {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    private Bitmap rotateImage(Bitmap bitmap , Uri uri){
+    private Bitmap rotateImage(Bitmap bitmap , Uri uri , Uri photouri){
         ExifInterface exifInterface =null;
         try {
+            if(uri==null){
+                return bitmap;
+            }
             exifInterface = new ExifInterface(String.valueOf(uri));
         }
         catch (IOException e){

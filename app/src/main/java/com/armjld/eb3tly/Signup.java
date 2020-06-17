@@ -71,8 +71,8 @@ import static com.armjld.eb3tly.R.layout.activity_signup;
 
 public class Signup extends AppCompatActivity {
 
-    private EditText user,email,pass,con_password,txtSNN;
-    private Button btnreg, ADDSSNIMG;
+    private EditText user,email,pass,con_password;
+    private Button btnreg;
     private TextView logintxt;
     private ImageView imgSetPP;
 
@@ -111,13 +111,14 @@ public class Signup extends AppCompatActivity {
                 Uri uri = null;
                 try {
                     uri = Uri.parse(getFilePath(Signup.this, photoUri));
-                    if(uri != null) {
-                        bitmap = rotateImage(bitmap , uri);
-                    }
-                    Log.i(TAG,"uri : " + uri.toString());
-                } catch (URISyntaxException e) {
+                }
+                catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
+                if(uri != null) {
+                    bitmap = rotateImage(bitmap , uri , photoUri);
+                }
+                Log.i(TAG,"uri : " + uri.toString());
                 imgSetPP.setImageBitmap(bitmap);
                 handleUpload(bitmap);
             } else if (requestCode == SSN_IMAGE) {
@@ -198,9 +199,12 @@ public class Signup extends AppCompatActivity {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    private Bitmap rotateImage(Bitmap bitmap , Uri uri){
+    private Bitmap rotateImage(Bitmap bitmap , Uri uri , Uri photoUri){
         ExifInterface exifInterface =null;
         try {
+            if(uri==null){
+                return bitmap;
+            }
             exifInterface = new ExifInterface(String.valueOf(uri));
         }
        catch (IOException e){
@@ -310,9 +314,6 @@ public class Signup extends AppCompatActivity {
         btnreg = findViewById(R.id.btnEditInfo);
         logintxt = findViewById(R.id.signup_text);
         imgSetPP = findViewById(R.id.imgEditPhoto);
-        txtSNN = findViewById(R.id.txtSNN);
-        ADDSSNIMG = findViewById(R.id.SSNIMG);
-
         uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -345,17 +346,8 @@ public class Signup extends AppCompatActivity {
             }
         });
 
-        // -------------------------- SSD Image ---------------------------//
-        ADDSSNIMG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if(intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, SSN_IMAGE);
-                }
-            }
-        });
+
+
 
         //Set PP
         imgSetPP.setOnClickListener(new View.OnClickListener() {
@@ -377,7 +369,6 @@ public class Signup extends AppCompatActivity {
         final String mphone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().toString();
         final String egyPhone = mphone.substring(mphone.length() - 11);
         final String mpass = pass.getText().toString().trim();
-        final String SNN = txtSNN.getText().toString().trim();
         final String con_pass = con_password.getText().toString().trim();
 
         // Check For empty fields
@@ -393,10 +384,6 @@ public class Signup extends AppCompatActivity {
             pass.setError("يجب ادخال كلمه المرور");
         }
         //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
-        if(SNN.length()<14||SNN.length()<14){
-            txtSNN.setError("يجب كتابه الرقم القومي صحيح");
-            return;
-        }
         if(!mpass.equals(con_pass)){
             con_password.setError("تاكد ان كلمه المرور نفسها");
             return;
@@ -415,11 +402,11 @@ public class Signup extends AppCompatActivity {
             mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful()&&mAuth.getCurrentUser() != null) {
                         Log.d(TAG, "linkWithCredential:success");
                         FirebaseUser user = task.getResult().getUser();
                         datee = DateFormat.getDateInstance().format(new Date());
-                        userData data= new userData(muser, egyPhone, memail, datee, id, accountType, ppURL,ssnURL, mpass, SNN, "0");
+                        userData data= new userData(muser, egyPhone, memail, datee, id, accountType, ppURL, mpass, "0");
                         uDatabase.child(id).setValue(data);
                         uDatabase.child(id).child("completed").setValue("true");
                         uDatabase.child(id).child("profit").setValue("0");

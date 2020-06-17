@@ -28,6 +28,7 @@ public class introSup extends AppIntro {
     @Override
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -43,6 +44,11 @@ public class introSup extends AppIntro {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+        else {
+            // will say that there is no user please register or sign in again
+            // intent to registration page
+        }
 
     }
 

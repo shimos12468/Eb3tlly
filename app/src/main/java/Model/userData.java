@@ -18,8 +18,8 @@ public class userData {
     public userData(){ }
 
     public userData(String name, String phone, String email,
-                    String date, String id, String accountType, String ppURL, String ssnURL,
-                    String mpass, String ssnNum, String canceled) {
+                    String date, String id, String accountType, String ppURL,
+                    String mpass, String canceled) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -29,8 +29,6 @@ public class userData {
         this.ppURL = ppURL;
         this.canceled = canceled;
         this.mpass = mpass;
-        this.ssnURL = ssnURL;
-        this.ssnNum = ssnNum;
     }
 
     public String getCanceled() {

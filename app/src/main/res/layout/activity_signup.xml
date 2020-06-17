@@ -78,24 +78,6 @@
         app:layout_constraintTop_toBottomOf="@+id/txtEditPassword"
         tools:ignore="MissingConstraints" />
 
-    <EditText
-        android:id="@+id/txtSNN"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="ادخل الرقم القومي"
-        android:inputType="none|text"
-        android:textAlignment="textStart"
-        android:textColor="#FFFFFF"
-        android:textColorHint="@android:color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditPassword2"
-        tools:ignore="MissingConstraints" />
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnEditInfo"
         android:layout_width="200dp"
@@ -110,9 +92,10 @@
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.125"
         tools:ignore="MissingConstraints" />
 
     <EditText
@@ -136,11 +119,10 @@
         android:id="@+id/radioGroup"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SSNIMG">
+        app:layout_constraintTop_toBottomOf="@+id/txtEditPassword2">
 
         <RadioGroup
             android:id="@+id/rdAccountType"
@@ -155,27 +137,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
+                android:buttonTint="#FFFFFF"
                 android:checked="true"
                 android:shadowColor="#FFFFFF"
                 android:text="مندوب"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#FFFFFF"
-                android:textColorLink="#FFFFFF"
-                android:buttonTint="#FFFFFF"/>
+                android:textColorLink="#FFFFFF" />
 
             <RadioButton
                 android:id="@+id/rdSupplier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:buttonTint="#FFFFFF"
                 android:shadowColor="#FFFFFF"
                 android:text="موزع"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#FFFFFF"
-                android:textColorLink="#FFFFFF"
-                android:buttonTint="#FFFFFF"/>
+                android:textColorLink="#FFFFFF" />
         </RadioGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -197,14 +179,4 @@
             app:srcCompat="@mipmap/ic_launcher" />
     </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/SSNIMG"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="اختار صورة وجه البطاقة"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSNN" />
 </androidx.constraintlayout.widget.ConstraintLayout>

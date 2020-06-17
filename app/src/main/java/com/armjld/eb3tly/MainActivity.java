@@ -113,11 +113,12 @@ public class MainActivity extends AppCompatActivity {
                                         FirebaseDatabase.getInstance().getReference("Pickly").child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String isCompleted = snapshot.child("completed").getValue().toString();
-                                                if(isCompleted.equals("true")) {
+                                                if (snapshot.exists() && mAuth.getCurrentUser() != null){
+                                                    String isCompleted = snapshot.child("completed").getValue().toString();
+                                                if (isCompleted.equals("true")) {
                                                     String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                                                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-                                                    if(isActive.equals("true")) { // Check if the account is Disabled
+                                                    if (isActive.equals("true")) { // Check if the account is Disabled
                                                         // --------------------- check account types and send each type to it's activity --------------//
                                                         switch (uType) {
                                                             case "Supplier":
@@ -137,7 +138,12 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     Toast.makeText(MainActivity.this, "Please clear the app data and signon again", Toast.LENGTH_SHORT).show();
                                                 }
+                                            }
 
+                                                else{
+                                                    //u do not have account please sign up.
+                                                    //go to signup.
+                                                }
                                             }
                                             @Override
                                             public void onCancelled(DatabaseError databaseError) {
