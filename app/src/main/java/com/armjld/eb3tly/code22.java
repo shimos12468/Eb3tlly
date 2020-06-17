@@ -157,7 +157,6 @@ public class code22 extends AppCompatActivity {
                             timer.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    startTimer();
                                     if(!timerRunning){
                                         sendVerificationCode(getMobile);
                                         startTimer();
