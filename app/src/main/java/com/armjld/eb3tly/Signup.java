@@ -388,10 +388,7 @@ public class Signup extends AppCompatActivity {
             con_password.setError("تاكد ان كلمه المرور نفسها");
             return;
         }
-        if(ssnBitmap == null) {
-            Toast.makeText(Signup.this, "الرجاء اختيار صورة البطاقة", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
 
         mdialog.setMessage("جاري انشاء حسابك..");
         mdialog.show();

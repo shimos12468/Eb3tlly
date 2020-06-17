@@ -67,9 +67,9 @@ public class ChangePassword extends Activity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pass = password.getText().toString().trim();
-                con_pass = con_password.getText().toString().trim();
-                oldd = old_pass.getText().toString().trim();
+                pass = password.getText().toString();
+                con_pass = con_password.getText().toString();
+                oldd = old_pass.getText().toString();
 
                 if(TextUtils.isEmpty(con_pass)){
                     con_password.setError("يجب اعاده ادخال كلمه المرور");
@@ -90,19 +90,24 @@ public class ChangePassword extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // ------------------- Code for changing the password -------------//
-                            mAuth.getCurrentUser().updatePassword(password.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(password.getText().toString().trim());
-                                        Log.i(TAG, "pass Updated : " + password.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
-                                        finish();
-                                        startActivity(new Intent(getApplicationContext(), profile.class));
-                                    } else {
-                                        Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
-                                    }
+                        if (!pass.isEmpty()) {
+                        mAuth.getCurrentUser().updatePassword(pass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(password.getText().toString().trim());
+                                    Log.i(TAG, "pass Updated : " + password.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
+                                    finish();
+                                    startActivity(new Intent(getApplicationContext(), profile.class));
+                                } else {
+                                    Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            }
+                        });
+                    }
+                        else{
+                            Toast.makeText(ChangePassword.this, "a7oo ezay", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }

@@ -60,7 +60,7 @@ public class code22 extends AppCompatActivity {
     time = " "+minutes+":";
     if(seconds<10)time+="0";
     time+=seconds;
-    timer.setText("اعادة ارسال الرمز ؟ بعد " + time);
+    timer.setText("يمكنك الضغط هنا لاعادة ارسال الرمز ؟ بعد " + time);
     }
 
     public void startTimer(){
@@ -68,10 +68,12 @@ public class code22 extends AppCompatActivity {
         @Override
         public void onTick(long l) {
             timeleft = l;
-            if(timeleft<=0){
+            timerRunning = true;
+            UpdateTimer();
+            if(timeleft<1000){
                 stopTimer();
             }
-            UpdateTimer();
+
         }
 
         @Override
@@ -79,7 +81,7 @@ public class code22 extends AppCompatActivity {
 
         }
         }.start();
-    timerRunning = true;
+
     }
 
     public void stopTimer(){
@@ -119,7 +121,7 @@ public class code22 extends AppCompatActivity {
                     editTextMobile.requestFocus();
                     return;
                 }
-                UpdateTimer();
+
                 startTimer();
                 final String getMobile = mobile;
                 FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -161,7 +163,7 @@ public class code22 extends AppCompatActivity {
                                         startTimer();
                                         Toast.makeText(code22.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(code22.this, "ارجاء الانتظار قليلا", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(code22.this,"ارجاء الانتظار قليلا  ", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
