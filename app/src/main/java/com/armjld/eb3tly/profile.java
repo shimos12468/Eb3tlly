@@ -67,6 +67,7 @@ import java.util.Objects;
 import Model.rateData;
 import Model.Data;
 import Model.notiData;
+import Model.userData;
 
 import static com.google.firebase.database.FirebaseDatabase.*;
 
@@ -613,7 +614,6 @@ public class profile extends AppCompatActivity {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         userRecycler.setLayoutManager(layoutManager);
-
         uDatabase.child(uID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
