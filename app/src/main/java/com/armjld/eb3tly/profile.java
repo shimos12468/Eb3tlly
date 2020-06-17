@@ -107,6 +107,12 @@ public class profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            return;
+        }
+
         // ---------------------- Database Access
         mDatabase = getInstance().getReference("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
@@ -118,12 +124,6 @@ public class profile extends AppCompatActivity {
         assert mUser != null;
         String uId = mUser.getUid();
         final String uID = uId;
-
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            return;
-        }
 
         // -------------------- intalize
         btnAdd = findViewById(R.id.btnAdd);

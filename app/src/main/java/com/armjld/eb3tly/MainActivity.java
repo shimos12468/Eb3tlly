@@ -113,25 +113,31 @@ public class MainActivity extends AppCompatActivity {
                                         FirebaseDatabase.getInstance().getReference("Pickly").child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
-                                                String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-                                                if(isActive.equals("true")) { // Check if the account is Disabled
-                                                    // --------------------- check account types and send each type to it's activity --------------//
-                                                    switch (uType) {
-                                                        case "Supplier":
-                                                            startActivity(new Intent(getApplicationContext(), profile.class));
-                                                            break;
-                                                        case "Delivery Worker":
-                                                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                                                            break;
-                                                        case "Admin":
-                                                            startActivity(new Intent(getApplicationContext(), Admin.class));
-                                                            break;
+                                                String isCompleted = snapshot.child("completed").getValue().toString();
+                                                if(isCompleted.equals("true")) {
+                                                    String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
+                                                    String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
+                                                    if(isActive.equals("true")) { // Check if the account is Disabled
+                                                        // --------------------- check account types and send each type to it's activity --------------//
+                                                        switch (uType) {
+                                                            case "Supplier":
+                                                                startActivity(new Intent(getApplicationContext(), profile.class));
+                                                                break;
+                                                            case "Delivery Worker":
+                                                                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                                                                break;
+                                                            case "Admin":
+                                                                startActivity(new Intent(getApplicationContext(), Admin.class));
+                                                                break;
+                                                        }
+                                                    } else {
+                                                        Toast.makeText(MainActivity.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
+                                                        mAuth.signOut();
                                                     }
                                                 } else {
-                                                    Toast.makeText(MainActivity.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
-                                                    mAuth.signOut();
+                                                    Toast.makeText(MainActivity.this, "Please clear the app data and signon again", Toast.LENGTH_SHORT).show();
                                                 }
+
                                             }
                                             @Override
                                             public void onCancelled(DatabaseError databaseError) {

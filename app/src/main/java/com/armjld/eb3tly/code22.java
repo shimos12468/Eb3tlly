@@ -80,7 +80,6 @@ public class code22 extends AppCompatActivity {
         }
         }.start();
     timerRunning = true;
-
     }
 
     public void stopTimer(){
