@@ -1,6 +1,7 @@
 package com.armjld.eb3tly;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,9 +34,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     notiData[] notiData;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private ArrayList datalist, filterList;
     private DatabaseReference mDatabase, uDatabase, nDatabase;
-    private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     private String TAG = "Notification Adapter";
 
     public NotiAdaptere(SwipeRefreshLayout mSwipeRefreshLayout) {
@@ -71,6 +70,13 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
         holder.setBody(From, Statue, OrderID, To);
         holder.setDate(Datee);
+
+        holder.myview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, profile.class));
+            }
+        });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -134,27 +140,27 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                     mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String orderTo = dataSnapshot.child("DName").getValue().toString();
+                            String orderTo = dataSnapshot.child("dname").getValue().toString();
                             String body = "";
                             switch (message) {
                                 case "edited": {
-                                    body = "قام" + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته";
+                                    body = " قام " + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته ";
                                     break;
                                 }
                                 case "deleted": {
                                     if (ToType.equals("Supplier")) {
-                                        body = "قام" + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة";
+                                        body = " قام " + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة ";
                                     } else {
-                                        body = "قام" + nameFrom + " بالغاء الاوردر";
+                                        body = " قام " + nameFrom + " بالغاء الاوردر ";
                                     }
                                     break;
                                 }
                                 case "delivered": {
-                                    body = "قام" + nameFrom + " بتوصيل اوردر" + orderTo;
+                                    body = " قام " + nameFrom + " بتوصيل اوردر " + orderTo;
                                     break;
                                 }
                                 case "accepted": {
-                                    body = "قام" + nameFrom + " بقبول اوردر" + orderTo;
+                                    body = " قام " + nameFrom + " بقبول اوردر " + orderTo;
                                     break;
                                 }
                                 case "recived": {
