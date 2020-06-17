@@ -44,7 +44,7 @@ public class code22 extends AppCompatActivity {
     private String mVerificationId;
     private FirebaseAuth mAuth;
     private EditText editTextMobile, editTextCode;
-    private Button btnConfirmCode, btnConfirmPhone,btnResendCode;
+    private Button btnConfirmCode, btnConfirmPhone;
     private TextView txtViewPhone, btnReType,timer;
     private ConstraintLayout linerVerf, linerPhone;
     private String TAG = "Phone Auth";
@@ -102,7 +102,6 @@ public class code22 extends AppCompatActivity {
         btnConfirmPhone = findViewById(R.id.btnConfirmPhone);
         txtViewPhone = findViewById(R.id.txtViewPhone);
         btnReType = findViewById(R.id.btnReType);
-        btnResendCode = findViewById(R.id.btnResendCode);
         linerVerf = findViewById(R.id.linerVerf);
         linerPhone = findViewById(R.id.linerPhone);
         timer = findViewById(R.id.timer);
@@ -122,6 +121,7 @@ public class code22 extends AppCompatActivity {
                     return;
                 }
                 UpdateTimer();
+                startTimer();
                 final String getMobile = mobile;
                 FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -135,10 +135,10 @@ public class code22 extends AppCompatActivity {
                                 linerVerf.setVisibility(View.VISIBLE);
                                 Toast.makeText(code22.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
                                 sendVerificationCode(getMobile);
-                                btnResendCode.setOnClickListener(new View.OnClickListener() {
+                                timer.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        if(timerRunning==false){
+                                        if(!timerRunning){
                                             sendVerificationCode(getMobile);
                                             startTimer();
                                             Toast.makeText(code22.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
@@ -154,12 +154,16 @@ public class code22 extends AppCompatActivity {
                             linerVerf.setVisibility(View.VISIBLE);
                             Toast.makeText(code22.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
                             sendVerificationCode(getMobile);
-                            btnResendCode.setOnClickListener(new View.OnClickListener() {
+                            timer.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     startTimer();
-                                    if(timerRunning==false){
+                                    if(!timerRunning){
                                         sendVerificationCode(getMobile);
+                                        startTimer();
+                                        Toast.makeText(code22.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(code22.this, "ارجاء الانتظار قليلا", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
