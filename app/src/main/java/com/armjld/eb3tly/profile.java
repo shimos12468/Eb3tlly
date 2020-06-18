@@ -1699,12 +1699,10 @@ public class profile extends AppCompatActivity {
                             String mName = snapshot.child("name").getValue().toString();
                             if(getStatue.equals("recived")) {
                                 txtGetStat.setText("تم استلام اوردرك من : " + mName);
-                                txtGetStat.setTextColor(Color.YELLOW);
                             } else {
                                 txtGetStat.setText("تم قبول اوردرك من : " + mName);
-                                txtGetStat.setTextColor(Color.YELLOW);
                             }
-
+                            txtGetStat.setTextColor(Color.YELLOW);
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) { }
@@ -1785,6 +1783,8 @@ public class profile extends AppCompatActivity {
                                 btnDelivered.setVisibility(View.GONE);
                                 btnInfo.setVisibility(View.VISIBLE);
                                 txtGetStat.setVisibility(View.GONE);
+                                txtGetStat.setText("تواصل مع التاجر لاستلام الاوردر");
+                                txtGetStat.setTextColor(Color.RED);
                                 break;
                             }
                             case "recived" : {
@@ -1792,6 +1792,8 @@ public class profile extends AppCompatActivity {
                                 btnDelete.setVisibility(View.GONE);
                                 btnDelivered.setVisibility(View.VISIBLE);
                                 btnInfo.setVisibility(View.VISIBLE);
+                                txtGetStat.setText("تم استلام الاوردر من التاجر");
+                                txtGetStat.setTextColor(Color.YELLOW);
                                 break;
                             }
                             case "delivered" : {
