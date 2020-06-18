@@ -12,7 +12,6 @@
       layout="@layout/toolbar"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
@@ -21,6 +20,7 @@
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="0dp"
+      android:focusableInTouchMode="true"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -29,30 +29,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
-
-      <TextView
-          android:id="@+id/textView15"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="20dp"
-          android:layout_marginTop="30dp"
-          android:layout_marginRight="20dp"
-          android:text="لاضافة اوردر"
-          android:textAlignment="center"
-          android:textColor="#FFFFFF"
-          android:textSize="24sp" />
 
       <TextView
           android:id="@+id/textView16"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginLeft="20dp"
-          android:layout_marginTop="10dp"
+          android:layout_marginTop="20dp"
           android:layout_marginRight="20dp"
           android:text="1- الذهاب الي الملف الشخصي"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <TextView
           android:id="@+id/textView17"
@@ -63,7 +53,8 @@
           android:layout_marginRight="20dp"
           android:text="2- الضغط علي زر اضافة (+)"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <TextView
           android:id="@+id/textView18"
@@ -74,7 +65,8 @@
           android:layout_marginRight="20dp"
           android:text="3 - ملئ البيانات المطلوبة بحرص"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <TextView
           android:id="@+id/textView19"
@@ -83,15 +75,17 @@
           android:layout_marginLeft="20dp"
           android:layout_marginTop="10dp"
           android:layout_marginRight="20dp"
-          android:text="4 - الضغط علي زر الحفظ"
+          android:text="4 - الضغط علي زر (اضافه اوردر)"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <ImageView
           android:id="@+id/imageView5"
           android:layout_width="match_parent"
           android:layout_height="40dp"
           android:layout_marginTop="10dp"
+          app:srcCompat="@drawable/sup_how_4"
           tools:srcCompat="@drawable/sup_how_4" />
 
       <TextView
@@ -103,13 +97,15 @@
           android:layout_marginRight="20dp"
           android:text="5 - سيظهر الاوردر في ملفك الشخصي"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <ImageView
           android:id="@+id/imageView8"
           android:layout_width="match_parent"
           android:layout_height="400dp"
           android:layout_marginTop="10dp"
+          app:srcCompat="@drawable/sup_how_7"
           tools:srcCompat="@drawable/sup_how_7" />
 
       <TextView
@@ -121,14 +117,16 @@
           android:layout_marginRight="20dp"
           android:text="6 - عند قبول الاوردر الخاص بك من احد مناديب الشحن سيظهر لك بيانات التواصل معه عند الضغط علي اسمه و تقييمات المندوب السابقه"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <ImageView
           android:id="@+id/imageView4"
           android:layout_width="match_parent"
           android:layout_height="300dp"
           android:layout_marginTop="10dp"
-          app:srcCompat="@drawable/sup_how_2" />
+          app:srcCompat="@drawable/sup_how_2"
+          tools:srcCompat="@drawable/sup_how_2" />
 
       <TextView
           android:id="@+id/textView10"
@@ -139,14 +137,16 @@
           android:layout_marginRight="20dp"
           android:text="7 - عند تسليم الاوردر للمندوب يجب عليك الضغط علي زر تم التسليم"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <ImageView
           android:id="@+id/imageView6"
           android:layout_width="match_parent"
           android:layout_height="200dp"
           android:layout_marginTop="10dp"
-          app:srcCompat="@drawable/sup_how_1" />
+          app:srcCompat="@drawable/sup_how_1"
+          tools:srcCompat="@drawable/sup_how_1" />
 
       <TextView
           android:id="@+id/textView20"
@@ -157,7 +157,8 @@
           android:layout_marginRight="20dp"
           android:text="8 - عندما يسلم المندوب الاوردر للعميل لا تنسي تقييم المندوب و كتابه تعليق عنه"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF" />
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
 
       <ImageView
           android:id="@+id/imageView7"
@@ -165,40 +166,9 @@
           android:layout_height="400dp"
           android:layout_marginTop="10dp"
           android:layout_marginBottom="40dp"
-          app:srcCompat="@drawable/sup_how_6" />
+          app:srcCompat="@drawable/sup_how_6"
+          tools:srcCompat="@drawable/sup_how_6" />
     </LinearLayout>
   </ScrollView>
-
-  <androidx.drawerlayout.widget.DrawerLayout
-      android:id="@+id/drawer_layout"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:fitsSystemWindows="true"
-      android:layout_gravity="left"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
-      tools:openDrawer="start">
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
-        app:menu="@menu/activity_main_drawer" />
-  </androidx.drawerlayout.widget.DrawerLayout>
-
-  <ImageView
-      android:id="@+id/btnNavBar"
-      android:layout_width="40dp"
-      android:layout_height="40dp"
-      android:layout_marginStart="15dp"
-      android:layout_marginTop="10dp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/toolbar_home"
-      app:srcCompat="@drawable/ic_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
