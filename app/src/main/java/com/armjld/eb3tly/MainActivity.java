@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                         String deviceToken = instanceIdResult.getToken();
                                         Log.i("Token : ", deviceToken);
                                         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("device_token").setValue(deviceToken);
+                                        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("mpass").setValue(mpass);
                                         FirebaseDatabase.getInstance().getReference("Pickly").child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -138,9 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                                 } else {
                                                     Toast.makeText(MainActivity.this, "Please clear the app data and signon again", Toast.LENGTH_SHORT).show();
                                                 }
-                                            }
-
-                                                else{
+                                            } else{
                                                     //u do not have account please sign up.
                                                     //go to signup.
                                                 }

@@ -56,6 +56,13 @@ public class Admin extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخزل", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");

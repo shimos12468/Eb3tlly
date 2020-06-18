@@ -53,6 +53,12 @@ public class Notifications extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
+
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            return;
+        }
         
         mAuth = FirebaseAuth.getInstance();
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");

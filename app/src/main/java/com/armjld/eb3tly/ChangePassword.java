@@ -52,6 +52,12 @@ public class ChangePassword extends Activity {
         old_pass = findViewById(R.id.txtOldPassword);
         confirm = findViewById(R.id.btnEditInfo);
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            return;
+        }
+
         uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

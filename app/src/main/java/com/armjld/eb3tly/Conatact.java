@@ -38,6 +38,13 @@ public class Conatact extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conatact);
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخزل", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تواصل معنا");
 
