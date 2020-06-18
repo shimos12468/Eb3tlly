@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -60,6 +61,7 @@ public class UserSetting extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase;
     private Bitmap bitmap;
+    private ProgressDialog mdialog;
     private String ppURL = "";
     String oldPass = "";
     String TAG = "User Settings";
@@ -172,10 +174,9 @@ public class UserSetting extends AppCompatActivity {
         }
         assert exifInterface != null;
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
-        if(orintation==6||orintation==3||orintation==8) {
-            Log.i(TAG, "Orign: " + String.valueOf(orintation));
-            Matrix matrix = new Matrix();
 
+        if(orintation == 6 || orintation == 3 || orintation == 8) {
+            Matrix matrix = new Matrix();
             if (orintation == 6) {
                 matrix.postRotate(90);
             } else if (orintation == 3) {
@@ -183,10 +184,11 @@ public class UserSetting extends AppCompatActivity {
             } else if (orintation == 8) {
                 matrix.postRotate(270);
             }
-            bitmap= Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+            return rotatedmap;
+        } else {
             return bitmap;
         }
-        return bitmap;
     }
 
     private void handleUpload (Bitmap bitmap) {
@@ -218,6 +220,10 @@ public class UserSetting extends AppCompatActivity {
             public void onSuccess(Uri uri) {
                 Log.i("Sign UP", " add Profile URL");
                 uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
+                mdialog.dismiss();
+                Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(new Intent(getApplicationContext(), profile.class));
                 ppURL = uri.toString();
             }
         });
@@ -241,6 +247,7 @@ public class UserSetting extends AppCompatActivity {
         UserImage = findViewById(R.id.imgEditPhoto);
         name = findViewById(R.id.txtEditName);
         Email = findViewById(R.id.txtEditEmail);
+        mdialog = new ProgressDialog(this);
         confirm = findViewById(R.id.btnEditInfo);
 
 
@@ -323,13 +330,15 @@ public class UserSetting extends AppCompatActivity {
 
                 if(bitmap != null) {
                     handleUpload(bitmap);
+                    mdialog.setMessage("جاري تحديث الصور الشخصيةة ...");
+                    mdialog.show();
                     Log.i(TAG, "Photo Updated and current user is : " + mAuth.getInstance().getCurrentUser());
                 } else {
                     Log.i(TAG, "no Photo to update.");
+                    Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), profile.class));
                 }
-                Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
-                startActivity(new Intent(getApplicationContext(), profile.class));
             }
         });
     }

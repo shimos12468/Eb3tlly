@@ -1,0 +1,17 @@
+[debug] [2020-06-18T13:19:36.296Z] ----------------------------------------------------------------------
+[debug] [2020-06-18T13:19:36.299Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Marko Awad\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2020-06-18T13:19:36.299Z] CLI Version:   8.4.3
+[debug] [2020-06-18T13:19:36.300Z] Platform:      win32
+[debug] [2020-06-18T13:19:36.300Z] Node Version:  v14.3.0
+[debug] [2020-06-18T13:19:36.301Z] Time:          Thu Jun 18 2020 15:19:36 GMT+0200 (Eastern European Standard Time)
+[debug] [2020-06-18T13:19:36.301Z] ----------------------------------------------------------------------
+[debug] [2020-06-18T13:19:36.301Z] 
+[debug] [2020-06-18T13:19:36.347Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-06-18T13:19:36.348Z] > authorizing via signed-in user
+[debug] [2020-06-18T13:19:36.348Z] [iam] checking project pickly-ed2f4 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-06-18T13:19:36.352Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/pickly-ed2f4:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2020-06-18T13:19:37.705Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Jun 2020 13:19:37 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=627","alt-svc":"h3-28=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-06-18T13:19:37.707Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/pickly-ed2f4/serviceAccounts/pickly-ed2f4@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2020-06-18T13:19:38.945Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Jun 2020 13:19:38 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-28=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}

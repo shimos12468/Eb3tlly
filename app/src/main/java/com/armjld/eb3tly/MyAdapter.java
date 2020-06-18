@@ -39,6 +39,7 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import Model.Data;
+import Model.notiData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
@@ -289,13 +290,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         mDatabase.child(orderID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
                                                         mDatabase.child(orderID).child("acceptedTime").setValue(datee);
 
-                                                        // Send notification to server
-                                                        HashMap<String, String> notiHash = new HashMap<>();
-                                                        notiHash.put("from", mAuth.getUid().toString());
-                                                        notiHash.put("to", owner);
-                                                        notiHash.put("orderid", orderID);
-                                                        notiHash.put("statue", "accepted");
-                                                        nDatabase.child(owner).push().setValue(notiHash);
+                                                        // --------------------------- Send Notifications ---------------------//
+                                                        notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
+                                                        nDatabase.child(owner).push().setValue(Noti);
 
                                                         Toast.makeText(context, "تم قبول الاوردر", Toast.LENGTH_SHORT).show();
                                                         context.startActivity(new Intent(context, profile.class));

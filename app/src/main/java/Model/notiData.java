@@ -2,7 +2,7 @@ package Model;
 
 public class notiData {
 
-    String from, to, orderid, statue,datee;
+    String from, to, orderid, statue,datee,isRead;
     public notiData () {};
 
     public String getFrom() {
@@ -45,11 +45,20 @@ public class notiData {
         this.datee = datee;
     }
 
-    public notiData(String from, String to, String orderid, String statue, String datee) {
+    public String getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(String isRead) {
+        this.isRead = isRead;
+    }
+
+    public notiData(String from, String to, String orderid, String statue, String datee, String isRead) {
         this.from = from;
         this.orderid = orderid;
         this.statue = statue;
         this.to = to;
         this.datee = datee;
+        this.isRead = isRead;
     }
 }
