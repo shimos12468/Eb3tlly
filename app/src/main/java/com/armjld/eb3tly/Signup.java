@@ -223,8 +223,8 @@ public class Signup extends AppCompatActivity {
             } else if (orintation == 8) {
                 matrix.postRotate(270);
             }
-            Bitmap rotatedmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            return rotatedmap;
+            bitmap= Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            return bitmap;
         }
         return bitmap;
     }
