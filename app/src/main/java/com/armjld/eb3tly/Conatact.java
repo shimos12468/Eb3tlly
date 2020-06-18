@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -76,6 +78,14 @@ public class Conatact extends AppCompatActivity {
                     return;
                 }
 
+                String version = "";
+                try {
+                    PackageInfo pInfo = Conatact.this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                    version = pInfo.versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
                 String id = cDatabase.push().getKey().toString();
                 cDatabase.child(userID).child(id).child("name").setValue(strName);
                 cDatabase.child(userID).child(id).child("email").setValue(strEmail);
@@ -83,6 +93,7 @@ public class Conatact extends AppCompatActivity {
                 cDatabase.child(userID).child(id).child("message").setValue(txtContact.getText().toString().trim());
                 cDatabase.child(userID).child(id).child("timestamp").setValue(datee);
                 cDatabase.child(userID).child(id).child("statue").setValue("opened");
+                cDatabase.child(userID).child(id).child("currentVersion").setValue(version);
 
                 Toast.makeText(Conatact.this, "شكرا لك تم استلام رسالتك و سيتم الرد عليك في اقرب وقوت", Toast.LENGTH_SHORT).show();
 
