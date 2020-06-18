@@ -153,7 +153,7 @@
                 android:layout_weight="1"
                 android:buttonTint="#FFFFFF"
                 android:shadowColor="#FFFFFF"
-                android:text="موزع"
+                android:text="تاجر"
                 android:textColor="#FFFFFF"
                 android:textColorHighlight="#FFFFFF"
                 android:textColorHint="#FFFFFF"
