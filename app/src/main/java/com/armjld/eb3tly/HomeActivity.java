@@ -2,55 +2,37 @@ package com.armjld.eb3tly;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-
-import java.lang.reflect.Array;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import Model.Data;
@@ -204,11 +186,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             count++;
                         }
                         MyAdapter orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
-                        if(mm.length == 0) {
-                            txtNoOrders.setVisibility(View.VISIBLE);
-                        } else {
-                            txtNoOrders.setVisibility(View.GONE);
-                        }
                         recyclerView.setAdapter(orderAdapter);
                     }
                 }
@@ -380,11 +357,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                         }
                                     }
                                     MyAdapter filterAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
-                                    if(mm.length == 0) {
-                                        txtNoOrders.setVisibility(View.VISIBLE);
-                                    } else {
-                                        txtNoOrders.setVisibility(View.GONE);
-                                    }
                                     recyclerView.setAdapter(filterAdapter);
                                 }
                             }
@@ -410,15 +382,33 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     @Override
     protected void onStart() {
         super.onStart();
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String isPlaced = ds.child("statue").getValue().toString();
+                        if (isPlaced.equals("placed")) {
+                            txtNoOrders.setVisibility(View.GONE);
+                        } else {
+                            txtNoOrders.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } else {
+                    txtNoOrders.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-    }
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) { }
 }
