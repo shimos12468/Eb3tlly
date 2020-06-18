@@ -170,10 +170,10 @@ public class UserSetting extends AppCompatActivity {
         catch (IOException e){
             e.printStackTrace();
         }
+        assert exifInterface != null;
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
-        Log.i(TAG, "Orign: " + String.valueOf(orintation));
-        Matrix matrix = new Matrix();
 
+        Matrix matrix = new Matrix();
         if (orintation == 6) {
             matrix.postRotate(90);
         }

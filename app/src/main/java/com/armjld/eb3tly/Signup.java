@@ -65,9 +65,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import Model.notiData;
 import Model.userData;
 
 import static com.armjld.eb3tly.R.layout.activity_signup;
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class Signup extends AppCompatActivity {
 
@@ -78,7 +80,7 @@ public class Signup extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private ProgressDialog mdialog;
-    private DatabaseReference uDatabase;
+    private DatabaseReference uDatabase,nDatabase;
 
     private RadioGroup rdAccountType;
     private RadioButton rdDlivery,rdSupplier;
@@ -210,6 +212,8 @@ public class Signup extends AppCompatActivity {
        catch (IOException e){
             e.printStackTrace();
        }
+
+        assert exifInterface != null;
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
         Log.i(TAG, "Orign: " + String.valueOf(orintation));
         Matrix matrix = new Matrix();
@@ -300,6 +304,7 @@ public class Signup extends AppCompatActivity {
         setContentView(activity_signup);
         mAuth=FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         if(mAuth.getCurrentUser() == null) {
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -409,6 +414,11 @@ public class Signup extends AppCompatActivity {
                         uDatabase.child(id).child("profit").setValue("0");
                         uDatabase.child(id).child("active").setValue("true");
                         Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
+
+                        // ------------- Welcome message in Notfications----------------------//
+                        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"","welcome",datee);
+                        nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
                         if (accountType.equals("Supplier")) {
                             startActivity(new Intent(getApplicationContext(), introSup.class));
                         } else if (accountType.equals("Delivery Worker")) {

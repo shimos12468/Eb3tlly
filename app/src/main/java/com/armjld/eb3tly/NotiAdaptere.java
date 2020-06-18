@@ -167,6 +167,10 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                                     body = "قام" + nameFrom + " بتسليمك الاوردر";
                                     break;
                                 }
+                                case "welcome": {
+                                    body = "اهلا بيك في برنامج ابعتلي, اول منصة مهمتها توصيل التاجر بمندوب الشحن";
+                                    break;
+                                }
                             }
                             txtBody.setText(body);
                         }

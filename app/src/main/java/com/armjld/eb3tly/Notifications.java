@@ -47,7 +47,10 @@ public class Notifications extends AppCompatActivity {
     String TAG = "Notifications";
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(Notifications.this, profile.class));
+    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,22 +162,23 @@ public class Notifications extends AppCompatActivity {
         
         
 
-        // ---------------------- GET ALL THE ORDERS -------------------//
+        // ---------------------- GET ALL THE Notifications -------------------//
         nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         int noticount = (int) ds.getChildrenCount();
-                        Log.i(TAG, "noticount : " + noticount);
+                        Log.i(TAG, "The user has : " + noticount + " Notfications");
                         notiData notiDB = ds.getValue(notiData.class);
                         mm[(int) count] = notiDB;
                         count++;
                         NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                        nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
                         recyclerView.setAdapter(orderAdapter);
                     }
                 } else {
-                    Log.i(TAG, "No Data");
+                    Log.i(TAG, "No Notifications for this user");
                 }
             }
             @Override

@@ -612,6 +612,7 @@ public class profile extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
         mDatabase = getInstance().getReference("Pickly").child("orders");
         uDatabase = getInstance().getReference("Pickly").child("users");
         mAuth = FirebaseAuth.getInstance();
@@ -625,6 +626,46 @@ public class profile extends AppCompatActivity {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         userRecycler.setLayoutManager(layoutManager);
+
+        uDatabase.child(uID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final String uType = snapshot.child("accountType").getValue().toString();
+                if (uType.equals("Supplier")) {
+                    mDatabase.orderByChild("uId").equalTo(uID).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()) {
+                                txtNoOrders.setVisibility(View.GONE);
+                            } else {
+                                txtNoOrders.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    });
+                } else {
+                    mDatabase.orderByChild("uAccepted").equalTo(uID).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()) {
+                                txtNoOrders.setVisibility(View.GONE);
+                            } else {
+                                txtNoOrders.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         uDatabase.child(uID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1229,10 +1270,7 @@ public class profile extends AppCompatActivity {
                         }
                     };
                     if (datalist.isEmpty()) {
-                        txtNoOrders.setVisibility(View.VISIBLE);
                         userRecycler.setAdapter(adapter);
-                    } else {
-                        txtNoOrders.setVisibility(View.GONE);
                     }
                 } else { // ------------------------------ Get orders accepted by the Dilvery worker
                     adapter = new FirebaseRecyclerAdapter<Data, myviewholder>(
@@ -1531,10 +1569,7 @@ public class profile extends AppCompatActivity {
                         }
                     };
                     if (datalist.isEmpty()) {
-                        txtNoOrders.setVisibility(View.VISIBLE);
                         userRecycler.setAdapter(adapter);
-                    } else {
-                        txtNoOrders.setVisibility(View.GONE);
                     }
                 }
             }
