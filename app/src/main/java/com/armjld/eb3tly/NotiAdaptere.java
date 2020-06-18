@@ -136,7 +136,6 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                     String URL = Objects.requireNonNull(dataSnapshot.child(sendby).child("ppURL").getValue()).toString();
                     String ToType = Objects.requireNonNull(dataSnapshot.child(To).child("accountType").getValue()).toString();
                     Picasso.get().load(Uri.parse(URL)).into(imgEditPhoto);
-
                     mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

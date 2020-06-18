@@ -294,7 +294,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
                                                         nDatabase.child(owner).push().setValue(Noti);
 
-                                                        Toast.makeText(context, "تم قبول الاوردر", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_SHORT).show();
                                                         context.startActivity(new Intent(context, profile.class));
                                                         break;
                                                     case DialogInterface.BUTTON_NEGATIVE:
