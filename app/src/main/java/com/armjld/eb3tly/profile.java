@@ -738,7 +738,7 @@ public class profile extends AppCompatActivity {
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             setOrderCount("Supplier", mUser.getUid());
                                                             // --------------------------- Send Notifications ---------------------//
-                                                            notiData Noti = new notiData(mUser.getUid().toString(), idAccepted,orderID,"deleted",datee);
+                                                            notiData Noti = new notiData(mUser.getUid().toString(), idAccepted,orderID,"deleted",datee,"false");
                                                             nDatabase.child(idAccepted).push().setValue(Noti);
                                                         }
 
@@ -1133,7 +1133,7 @@ public class profile extends AppCompatActivity {
                                             mDatabase.child(id).child("lastedit").setValue(datee);
 
                                             // --------------------------- Send Notifications ---------------------//
-                                            notiData Noti = new notiData(mUser.getUid().toString(), uAccepted,orderID,"edited",datee);
+                                            notiData Noti = new notiData(mUser.getUid().toString(), uAccepted,orderID,"edited",datee,"false");
                                             nDatabase.child(uAccepted).push().setValue(Noti);
 
                                             Toast.makeText(profile.this, "تم تعديل بيانات الاوردر بنجاح", Toast.LENGTH_SHORT).show();
@@ -1436,7 +1436,7 @@ public class profile extends AppCompatActivity {
                                     });
 
                                     // --------------------------- Send Notifications ---------------------//
-                                    notiData Noti = new notiData(mUser.getUid().toString(), SID,orderID,"delivered",datee);
+                                    notiData Noti = new notiData(mUser.getUid().toString(), SID,orderID,"delivered",datee,"false");
                                     nDatabase.child(SID).push().setValue(Noti);
 
                                     Toast.makeText(getApplicationContext(), "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
@@ -1544,7 +1544,7 @@ public class profile extends AppCompatActivity {
                                                             mDatabase.child(DorderID).child("statue").setValue("placed");
 
                                                             // --------------------------- Send Notifications ---------------------//
-                                                            notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",datee);
+                                                            notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",datee,"false");
                                                             nDatabase.child(owner).push().setValue(Noti);
 
                                                             adapter.notifyDataSetChanged();
