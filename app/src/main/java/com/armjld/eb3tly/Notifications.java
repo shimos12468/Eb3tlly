@@ -171,15 +171,27 @@ public class Notifications extends AppCompatActivity {
                         mm[(int) count] = notiDB;
                         count++;
                         NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
-                        if(mm.length == 0) {
-                            txtNoOrders.setVisibility(View.VISIBLE);
-                        } else {
-                            txtNoOrders.setVisibility(View.GONE);
-                        }
                         recyclerView.setAdapter(orderAdapter);
                     }
                 } else {
                     Log.i(TAG, "No Data");
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
+
+    @Override
+    protected void onStart () {
+        super.onStart();
+        nDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    txtNoOrders.setVisibility(View.GONE);
+                } else {
+                    txtNoOrders.setVisibility(View.VISIBLE);
                 }
             }
             @Override

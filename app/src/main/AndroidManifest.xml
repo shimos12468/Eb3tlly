@@ -21,7 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".Notifications"></activity>
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -74,6 +73,9 @@
             android:name=".intro2"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Notifications"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".StartUp"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -86,7 +88,6 @@
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:launchMode="standard"
             tools:replace="android:launchMode" />
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

@@ -239,6 +239,7 @@ public class code22 extends AppCompatActivity {
 
     private void verifyVerificationCode(String code) {
         Log.i(TAG, "Verfied");
+        Log.i(TAG, "verf : " + mVerificationId + " code : " + code);
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
         signInWithPhoneAuthCredential(credential);
     }
@@ -267,5 +268,6 @@ public class code22 extends AppCompatActivity {
             }
         });
     }
+
 
 }

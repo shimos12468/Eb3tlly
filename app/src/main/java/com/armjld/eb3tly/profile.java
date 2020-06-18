@@ -696,7 +696,6 @@ public class profile extends AppCompatActivity {
                                                             String idAccepted = snapshot.child("uAccepted").getValue().toString();
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             setOrderCount("Supplier", mUser.getUid());
-
                                                             // --------------------------- Send Notifications ---------------------//
                                                             notiData Noti = new notiData(mUser.getUid().toString(), idAccepted,orderID,"deleted",datee);
                                                             nDatabase.child(idAccepted).push().setValue(Noti);
