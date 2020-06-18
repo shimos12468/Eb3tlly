@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -110,8 +111,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
     @Override
     public int getItemCount() {
-        int Count = (int) count;
-        return Count;
+        return (int) count;
     }
 
 
@@ -132,15 +132,16 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String nameFrom = dataSnapshot.child(sendby).child("name").getValue().toString();
-                    String URL = dataSnapshot.child(sendby).child("ppURL").getValue().toString();
-                    String ToType = dataSnapshot.child(To).child("accountType").getValue().toString();
+                    String nameFrom = Objects.requireNonNull(dataSnapshot.child(sendby).child("name").getValue()).toString();
+                    String URL = Objects.requireNonNull(dataSnapshot.child(sendby).child("ppURL").getValue()).toString();
+                    String ToType = Objects.requireNonNull(dataSnapshot.child(To).child("accountType").getValue()).toString();
                     Picasso.get().load(Uri.parse(URL)).into(imgEditPhoto);
 
                     mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String orderTo = dataSnapshot.child("dname").getValue().toString();
+                            if (dataSnapshot.exists()){
+                                String orderTo = Objects.requireNonNull(dataSnapshot.child("dname").getValue()).toString();
                             String body = "";
                             switch (message) {
                                 case "edited": {
@@ -172,7 +173,9 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                                     break;
                                 }
                             }
+
                             txtBody.setText(body);
+                        }
                         }
 
                         @Override
