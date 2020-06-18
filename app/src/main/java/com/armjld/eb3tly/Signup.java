@@ -64,11 +64,12 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
+import Model.notiData;
 import Model.userData;
 
 import static com.armjld.eb3tly.R.layout.activity_signup;
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class Signup extends AppCompatActivity {
 
@@ -79,7 +80,7 @@ public class Signup extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private ProgressDialog mdialog;
-    private DatabaseReference uDatabase;
+    private DatabaseReference uDatabase,nDatabase;
 
     private RadioGroup rdAccountType;
     private RadioButton rdDlivery,rdSupplier;
@@ -211,30 +212,32 @@ public class Signup extends AppCompatActivity {
        catch (IOException e){
             e.printStackTrace();
        }
+
         assert exifInterface != null;
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
         Log.i(TAG, "Orign: " + String.valueOf(orintation));
-
-        if(orintation==6||orintation==3||orintation==8) {
+        if(orintation == 6 || orintation == 3 || orintation == 8) {
             Matrix matrix = new Matrix();
-
             if (orintation == 6) {
                 matrix.postRotate(90);
-            } else if (orintation == 3) {
+            }
+            else if (orintation == 3) {
                 matrix.postRotate(180);
-            } else if (orintation == 8) {
+            }
+            else if (orintation == 8) {
                 matrix.postRotate(270);
             }
-            bitmap= Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+            return rotatedmap;
+        } else {
             return bitmap;
         }
-        return bitmap;
     }
     private void handleUpload (Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
 
-        String uID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("ppUsers").child(uID + ".jpeg");
         final String did = uID;
@@ -304,6 +307,7 @@ public class Signup extends AppCompatActivity {
         setContentView(activity_signup);
         mAuth=FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         if(mAuth.getCurrentUser() == null) {
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -413,6 +417,11 @@ public class Signup extends AppCompatActivity {
                         uDatabase.child(id).child("profit").setValue("0");
                         uDatabase.child(id).child("active").setValue("true");
                         Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
+
+                        // ------------- Welcome message in Notfications----------------------//
+                        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"","welcome",datee);
+                        nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
                         if (accountType.equals("Supplier")) {
                             startActivity(new Intent(getApplicationContext(), introSup.class));
                         } else if (accountType.equals("Delivery Worker")) {

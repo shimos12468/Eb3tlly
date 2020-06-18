@@ -172,10 +172,9 @@ public class UserSetting extends AppCompatActivity {
         }
         assert exifInterface != null;
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
-        if(orintation==6||orintation==3||orintation==8) {
-            Log.i(TAG, "Orign: " + String.valueOf(orintation));
-            Matrix matrix = new Matrix();
 
+        if(orintation == 6 || orintation == 3 || orintation == 8) {
+            Matrix matrix = new Matrix();
             if (orintation == 6) {
                 matrix.postRotate(90);
             } else if (orintation == 3) {
@@ -183,10 +182,11 @@ public class UserSetting extends AppCompatActivity {
             } else if (orintation == 8) {
                 matrix.postRotate(270);
             }
-            bitmap= Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+            return rotatedmap;
+        } else {
             return bitmap;
         }
-        return bitmap;
     }
 
     private void handleUpload (Bitmap bitmap) {

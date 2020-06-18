@@ -42,7 +42,7 @@
                     android:id="@+id/imgEditPhoto"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:srcCompat="@mipmap/ic_launcher" />
+                    app:srcCompat="@color/colorWhite" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -54,7 +54,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="100dp"
                 android:layout_marginBottom="10dp"
-                android:text="20/5/2020"
                 android:textAlignment="viewEnd"
                 android:textColor="#9E9C9C"
                 android:textSize="14sp"
@@ -71,7 +70,6 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_toStartOf="@+id/cardView"
-                android:text="قام علي بتوصيل اوردرك"
                 android:textAlignment="viewEnd"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
