@@ -137,7 +137,7 @@
           android:layout_marginLeft="20dp"
           android:layout_marginTop="10dp"
           android:layout_marginRight="20dp"
-          android:text="7- عند استلام المندوب للاوردر يجب عليك الضغط علي زرار تم التسليم"
+          android:text="7 - عند تسليم الاوردر للمندوب يجب عليك الضغط علي زر تم التسليم"
           android:textAlignment="viewEnd"
           android:textColor="#FFFFFF" />
 
@@ -155,7 +155,7 @@
           android:layout_marginLeft="20dp"
           android:layout_marginTop="10dp"
           android:layout_marginRight="20dp"
-          android:text="8 - عندما يسلم المندوب الاوردر للعميل لا تسني تقييم المندوب و كتابه تعليق عنه"
+          android:text="8 - عندما يسلم المندوب الاوردر للعميل لا تنسي تقييم المندوب و كتابه تعليق عنه"
           android:textAlignment="viewEnd"
           android:textColor="#FFFFFF" />
 
@@ -168,5 +168,37 @@
           app:srcCompat="@drawable/sup_how_6" />
     </LinearLayout>
   </ScrollView>
+
+  <androidx.drawerlayout.widget.DrawerLayout
+      android:id="@+id/drawer_layout"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:fitsSystemWindows="true"
+      android:layout_gravity="left"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
+      tools:openDrawer="start">
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
+        app:menu="@menu/activity_main_drawer" />
+  </androidx.drawerlayout.widget.DrawerLayout>
+
+  <ImageView
+      android:id="@+id/btnNavBar"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_marginStart="15dp"
+      android:layout_marginTop="10dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/toolbar_home"
+      app:srcCompat="@drawable/ic_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

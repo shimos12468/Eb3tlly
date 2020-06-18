@@ -200,6 +200,9 @@ public class profile extends AppCompatActivity {
                 if (id == R.id.nav_contact) {
                     startActivity(new Intent(getApplicationContext(), Conatact.class));
                 }
+                if (id == R.id.nav_how) {
+                    startActivity(new Intent(getApplicationContext(), HowTo.class));
+                }
                 if (id == R.id.nav_changepass) {
                     startActivity(new Intent(getApplicationContext(), ChangePassword.class));
                 }

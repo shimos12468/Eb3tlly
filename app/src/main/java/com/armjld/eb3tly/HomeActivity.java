@@ -150,6 +150,9 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     startActivity(new Intent(getApplicationContext(), UserSetting.class));
 
                 }
+                if (id == R.id.nav_how) {
+                    startActivity(new Intent(getApplicationContext(), HowTo.class));
+                }
                 if (id==R.id.nav_signout){
                     finish();
                     startActivity(new Intent(HomeActivity.this, MainActivity.class));
