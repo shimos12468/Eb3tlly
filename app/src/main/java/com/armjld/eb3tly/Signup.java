@@ -419,7 +419,7 @@ public class Signup extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
 
                         // ------------- Welcome message in Notfications----------------------//
-                        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"","welcome",datee);
+                        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"","welcome",datee, "false");
                         nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
 
                         if (accountType.equals("Supplier")) {
