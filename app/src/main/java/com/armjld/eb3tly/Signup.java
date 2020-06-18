@@ -212,19 +212,21 @@ public class Signup extends AppCompatActivity {
        }
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
         Log.i(TAG, "Orign: " + String.valueOf(orintation));
-        Matrix matrix = new Matrix();
 
-        if (orintation == 6) {
-            matrix.postRotate(90);
+        if(orintation==6||orintation==3||orintation==8) {
+            Matrix matrix = new Matrix();
+
+            if (orintation == 6) {
+                matrix.postRotate(90);
+            } else if (orintation == 3) {
+                matrix.postRotate(180);
+            } else if (orintation == 8) {
+                matrix.postRotate(270);
+            }
+            Bitmap rotatedmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            return rotatedmap;
         }
-        else if (orintation == 3) {
-            matrix.postRotate(180);
-        }
-        else if (orintation == 8) {
-            matrix.postRotate(270);
-        }
-        Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-        return rotatedmap;
+        return bitmap;
     }
     private void handleUpload (Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
