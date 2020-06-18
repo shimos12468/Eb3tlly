@@ -87,6 +87,13 @@
           android:textAlignment="viewEnd"
           android:textColor="#FFFFFF" />
 
+      <ImageView
+          android:id="@+id/imageView5"
+          android:layout_width="match_parent"
+          android:layout_height="40dp"
+          android:layout_marginTop="10dp"
+          tools:srcCompat="@drawable/sup_how_4" />
+
       <TextView
           android:id="@+id/textView21"
           android:layout_width="match_parent"
@@ -97,6 +104,13 @@
           android:text="5 - سيظهر الاوردر في ملفك الشخصي"
           android:textAlignment="viewEnd"
           android:textColor="#FFFFFF" />
+
+      <ImageView
+          android:id="@+id/imageView8"
+          android:layout_width="match_parent"
+          android:layout_height="400dp"
+          android:layout_marginTop="10dp"
+          tools:srcCompat="@drawable/sup_how_7" />
 
       <TextView
           android:id="@+id/textView22"
@@ -112,8 +126,46 @@
       <ImageView
           android:id="@+id/imageView4"
           android:layout_width="match_parent"
+          android:layout_height="300dp"
+          android:layout_marginTop="10dp"
+          app:srcCompat="@drawable/sup_how_2" />
+
+      <TextView
+          android:id="@+id/textView10"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          tools:src="@tools:sample/avatars" />
+          android:layout_marginLeft="20dp"
+          android:layout_marginTop="10dp"
+          android:layout_marginRight="20dp"
+          android:text="7- عند استلام المندوب للاوردر يجب عليك الضغط علي زرار تم التسليم"
+          android:textAlignment="viewEnd"
+          android:textColor="#FFFFFF" />
+
+      <ImageView
+          android:id="@+id/imageView6"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:layout_marginTop="10dp"
+          app:srcCompat="@drawable/sup_how_1" />
+
+      <TextView
+          android:id="@+id/textView20"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="20dp"
+          android:layout_marginTop="10dp"
+          android:layout_marginRight="20dp"
+          android:text="8 - عندما يسلم المندوب الاوردر للعميل لا تسني تقييم المندوب و كتابه تعليق عنه"
+          android:textAlignment="viewEnd"
+          android:textColor="#FFFFFF" />
+
+      <ImageView
+          android:id="@+id/imageView7"
+          android:layout_width="match_parent"
+          android:layout_height="400dp"
+          android:layout_marginTop="10dp"
+          android:layout_marginBottom="40dp"
+          app:srcCompat="@drawable/sup_how_6" />
     </LinearLayout>
   </ScrollView>
 
