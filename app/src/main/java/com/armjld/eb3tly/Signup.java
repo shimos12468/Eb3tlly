@@ -3,6 +3,7 @@ package com.armjld.eb3tly;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -20,6 +21,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -36,11 +38,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskExecutors;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,6 +71,7 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import Model.notiData;
 import Model.userData;
@@ -73,20 +81,23 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class Signup extends AppCompatActivity {
 
-    private EditText user,email,pass,con_password;
-    private Button btnreg;
-    private TextView logintxt;
-    private ImageView imgSetPP;
 
+    private SOMEUSERDATAPROVIDER impdata;
+    private EditText user,email,pass,con_password , phoneNum,editTextCode;
+    private Button btnreg;
+    private TextView logintxt ,timer,txtViewPhone;
+    private ImageView imgSetPP;
+    private String mVerificationId;
     private FirebaseAuth mAuth;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase,nDatabase;
-
+    private ConstraintLayout linerVerf, linersignUp;
     private RadioGroup rdAccountType;
     private RadioButton rdDlivery,rdSupplier;
     private String accountType;
     private Bitmap bitmap, ssnBitmap;
     private String ssnURL = "none";
+    Button btnConfirmCode;
     private String ppURL = "https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f";
     private String TAG = "Sign Up Activity";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
@@ -96,6 +107,48 @@ public class Signup extends AppCompatActivity {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
+
+    private CountDownTimer Timer;
+    private long timeleft = 60000;
+    private Boolean timerRunning = false;
+
+
+    public void UpdateTimer(){
+        int minutes = (int)timeleft/60000;
+        int seconds = (int)timeleft%60000/1000;
+        String time;
+        time = " "+minutes+":";
+        if(seconds<10)time+="0";
+        time+=seconds;
+        timer.setText("يمكنك الضغط هنا لاعادة ارسال الرمز ؟ بعد " + time);
+    }
+
+    public void startTimer(){
+        Timer = new CountDownTimer(timeleft , 1000) {
+            @Override
+            public void onTick(long l) {
+                timeleft = l;
+                timerRunning = true;
+                UpdateTimer();
+                if(timeleft<1000){
+                    stopTimer();
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
+
+    }
+
+    public void stopTimer(){
+        Timer.cancel();
+        timerRunning = false;
+        timeleft = 60000;
+    }
 
     public Signup() { }
 
@@ -308,6 +361,10 @@ public class Signup extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
+        linersignUp = findViewById(R.id.linearsignUp);
+        linerVerf = findViewById(R.id.linerVerf);
+        logintxt = findViewById(R.id.signup_text);
+        linerVerf.setVisibility(View.GONE);
         tbTitle.setText("تسجيل حساب جديد");
 
 
@@ -325,8 +382,14 @@ public class Signup extends AppCompatActivity {
         pass = findViewById(R.id.txtEditPassword);
         con_password = findViewById(R.id.txtEditPassword2);
         btnreg = findViewById(R.id.btnEditInfo);
-        logintxt = findViewById(R.id.signup_text);
+
         imgSetPP = findViewById(R.id.imgEditPhoto);
+        phoneNum = findViewById(R.id.phoneNumber);
+        timer = findViewById(R.id.timer);
+        txtViewPhone = findViewById(R.id.txtViewPhone);
+        editTextCode = findViewById(R.id.txtVerfCode);
+        btnConfirmCode = findViewById(R.id.btnConfirmCode);
+
         uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -379,11 +442,9 @@ public class Signup extends AppCompatActivity {
     public void onClick(View view) {
         final String muser = user.getText().toString().trim();
         final String memail = email.getText().toString().trim();
-        final String mphone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().toString();
-        final String egyPhone = mphone.substring(mphone.length() - 11);
         final String mpass = pass.getText().toString().trim();
         final String con_pass = con_password.getText().toString().trim();
-
+        final String phone = phoneNum.getText().toString().trim();
         // Check For empty fields
         if(TextUtils.isEmpty(muser)){
        user.setError("يجب ادخال اسم المستخدم");
@@ -395,54 +456,89 @@ public class Signup extends AppCompatActivity {
         }
         if(TextUtils.isEmpty(mpass)){
             pass.setError("يجب ادخال كلمه المرور");
+            return;
         }
         //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
         if(!mpass.equals(con_pass)){
             con_password.setError("تاكد ان كلمه المرور نفسها");
             return;
         }
+        if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
+            phoneNum.setError("ادخل رقم هاتف صحيح");
+            phoneNum.requestFocus();
+            return;
+        }
+        impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
 
-
-        mdialog.setMessage("جاري انشاء حسابك..");
-        mdialog.show();
-        final String id = mAuth.getCurrentUser().getUid().toString();
-
-        if(mAuth.getCurrentUser() != null) {
-            AuthCredential credential = EmailAuthProvider.getCredential(memail, mpass);
-            mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()&&mAuth.getCurrentUser() != null) {
-                        Log.d(TAG, "linkWithCredential:success");
-                        FirebaseUser user = task.getResult().getUser();
-                        datee = DateFormat.getDateInstance().format(new Date());
-                        userData data= new userData(muser, egyPhone, memail, datee, id, accountType, ppURL, mpass, "0");
-                        uDatabase.child(id).setValue(data);
-                        uDatabase.child(id).child("completed").setValue("true");
-                        uDatabase.child(id).child("profit").setValue("0");
-                        uDatabase.child(id).child("active").setValue("true");
-                        Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
-
-                        // ------------- Welcome message in Notfications----------------------//
-                        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"","welcome",datee, "false");
-                        nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-
-                        if (accountType.equals("Supplier")) {
-                            startActivity(new Intent(getApplicationContext(), introSup.class));
-                        } else if (accountType.equals("Delivery Worker")) {
-                            startActivity(new Intent(getApplicationContext(), intro2.class));
-                        }
+        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    if (snapshot.getValue() != null) {
+                        Toast.makeText(Signup.this, "رقم الهاتف بالفعل مسجل", Toast.LENGTH_SHORT).show();
                     } else {
-                        String ERROR = task.getException().getMessage();
-                        Log.w(TAG, "linkWithCredential:failure : " + ERROR + " Code : " + task.getException().getCause());
-                        Toast.makeText(getApplicationContext(), "فشل في تسجيل البيانات حاول مجددا", Toast.LENGTH_SHORT).show();
+                        startTimer();
+                        linersignUp.setVisibility(View.GONE);
+                        linerVerf.setVisibility(View.VISIBLE);
+                        //txtViewPhone.setText("ضع الرمز المرسل اليك");
+                        txtViewPhone.setText("ضع الرمز المرسل اليك");
+                        Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
+                        sendVerificationCode(phone);
+                        timer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(!timerRunning){
+                                    sendVerificationCode(phone);
+                                    startTimer();
+                                    Toast.makeText(Signup.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
+                                } else{
+                                    Toast.makeText(Signup.this, "ارجاء الانتظار قليلا", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
                 }
-            });
-        } else {
-            Toast.makeText(getApplicationContext(), "YOU ARE LOGGED OUT", Toast.LENGTH_SHORT).show();
-        }
-        mdialog.dismiss();
+                else {
+                    startTimer();
+                    linersignUp.setVisibility(View.GONE);
+                    linerVerf.setVisibility(View.VISIBLE);
+                    txtViewPhone.setText("ضع الرمز المرسل اليك");
+                    Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
+                    sendVerificationCode(phone);
+                    timer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(!timerRunning){
+                                sendVerificationCode(phone);
+                                startTimer();
+                                Toast.makeText(Signup.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Signup.this,"ارجاء الانتظار قليلا  ", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }});
+
+        btnConfirmCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String code = editTextCode.getText().toString().trim();
+                if (code.length() != 6) {
+                    editTextCode.setError("ادخل كود صحيح");
+                    editTextCode.requestFocus();
+                    return;
+                }
+                verifyVerificationCode(code);
+
+
+            }
+        });
+
     }});
     }
 
@@ -463,6 +559,114 @@ public class Signup extends AppCompatActivity {
                 Toast.makeText(Signup.this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void sendVerificationCode(String mobile) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                "+2" + mobile,
+                60,
+                TimeUnit.SECONDS,
+                TaskExecutors.MAIN_THREAD,
+                mCallbacks);
+        Log.i(TAG, "Send Verfication Code fun to : +2" + mobile);
+    }
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            String code = phoneAuthCredential.getSmsCode();
+            Log.i(TAG, "Message Detected " + code);
+            if (code != null) {
+                editTextCode.setText(code);
+                verifyVerificationCode(code);
+            }
+        }
+
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            Toast.makeText(Signup.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.i(TAG, "Failed to verfiy");
+        }
+
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            Log.i(TAG, "onCodeSent : " + s);
+            mVerificationId = s;
+        }
+    };
+
+        private void verifyVerificationCode(String code) {
+            Log.i(TAG, "Verfied");
+            Log.i(TAG, "verf : " + mVerificationId + " code : " + code);
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+            signInWithPhoneAuthCredential(credential);
+        }
+
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        Log.i(TAG, "Signed Up via phone");
+        mAuth.signInWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    DatabaseReference uDatabase = getInstance().getReference().child("Pickly").child("users");
+                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("completed").setValue("false");
+                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("id").setValue(mAuth.getCurrentUser().getUid());
+                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("ppURL").setValue("https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f");
+                    Toast.makeText(Signup.this, "تم تاكيد رقم الهاتف الرجاء استكمال البيانات", Toast.LENGTH_LONG).show();
+                    mdialog.setMessage("جاري انشاء حسابك..");
+                    mdialog.show();
+                    final String id = mAuth.getCurrentUser().getUid().toString();
+                    final  String memail = impdata.getMail();
+                    final  String mpass  = impdata.getPassword();
+                    final String muser = impdata.getPhone();
+                    final  String phone = impdata.getPhone();
+                    if(mAuth.getCurrentUser() != null) {
+                        AuthCredential credential = EmailAuthProvider.getCredential(memail, mpass);
+                        mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()&&mAuth.getCurrentUser() != null) {
+                                    Log.d(TAG, "linkWithCredential:success");
+                                    FirebaseUser user = task.getResult().getUser();
+                                    datee = DateFormat.getDateInstance().format(new Date());
+                                    userData data= new userData(muser, phone, memail, datee, id, accountType, ppURL, mpass, "0");
+                                    uDatabase.child(id).setValue(data);
+                                    uDatabase.child(id).child("completed").setValue("true");
+                                    uDatabase.child(id).child("profit").setValue("0");
+                                    uDatabase.child(id).child("active").setValue("true");
+                                    Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
+
+                                    // ------------- Welcome message in Notfications----------------------//
+                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"","welcome",datee, "false");
+                                    nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
+                                    if (accountType.equals("Supplier")) {
+                                        startActivity(new Intent(getApplicationContext(), introSup.class));
+                                    } else if (accountType.equals("Delivery Worker")) {
+                                        startActivity(new Intent(getApplicationContext(), intro2.class));
+                                    }
+                                } else {
+                                    String ERROR = task.getException().getMessage();
+                                    Log.w(TAG, "linkWithCredential:failure : " + ERROR + " Code : " + task.getException().getCause());
+                                    Toast.makeText(getApplicationContext(), "فشل في تسجيل البيانات حاول مجددا", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getApplicationContext(), "YOU ARE LOGGED OUT", Toast.LENGTH_SHORT).show();
+                    }
+                    mdialog.dismiss();
+                }
+                else {
+                    String message = "Somthing is wrong, we will fix it soon...";
+                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        message = "Invalid code entered...";
+                    }
+                    Toast.makeText(Signup.this, message, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
 

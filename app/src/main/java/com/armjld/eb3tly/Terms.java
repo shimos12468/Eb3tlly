@@ -116,7 +116,8 @@ public class Terms extends AppCompatActivity {
         btnCont.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), code22.class));
+                finish();
+                startActivity(new Intent(getApplicationContext(), Signup.class));
             }
         });
     }

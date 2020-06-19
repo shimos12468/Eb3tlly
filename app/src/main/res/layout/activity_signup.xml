@@ -7,176 +7,284 @@
     android:background="@color/colorBack"
     tools:context="com.armjld.eb3tly.Signup">
 
-    <include
-        android:id="@+id/addToolbar"
-        layout="@layout/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/txtEditName"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="الاسم"
-        android:inputType="textPersonName"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        tools:ignore="MissingConstraints" />
-
-    <EditText
-        android:id="@+id/txtEditPassword"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="كلمة المرور"
-        android:inputType="textPassword"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditEmail"
-        tools:ignore="MissingConstraints" />
-
-    <EditText
-        android:id="@+id/txtEditPassword2"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="اعد كتابة كلمة السر"
-        android:inputType="textPassword"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditPassword"
-        tools:ignore="MissingConstraints" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEditInfo"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/btn_defult"
-        android:text="تسجيل الحساب"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@android:color/white"
-
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.125"
-        tools:ignore="MissingConstraints" />
-
-    <EditText
-        android:id="@+id/txtEditEmail"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="البريد ألالكتروني"
-        android:inputType="textEmailAddress"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditName" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/radioGroup"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditPassword2">
+        android:id="@+id/linearsignUp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <RadioGroup
-            android:id="@+id/rdAccountType"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/addToolbar"
+            layout="@layout/toolbar"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/txtEditName"
+            android:layout_width="280dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="الاسم"
+            android:inputType="textPersonName"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/txtEditPassword"
+            android:layout_width="280dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="كلمة المرور"
+            android:inputType="textPassword"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEmail"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/txtEditPassword2"
+            android:layout_width="280dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="اعد كتابة كلمة السر"
+            android:inputType="textPassword"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditPassword"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="280dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="284dp"
+            android:ems="10"
+            android:hint="رقم الهاتف"
+            android:inputType="number"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.541"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnEditInfo"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/btn_defult"
+            android:text="تسجيل الحساب"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white"
+
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.507"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints">
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+            app:layout_constraintVertical_bias="0.196"
+            tools:ignore="MissingConstraints" />
 
-            <RadioButton
-                android:id="@+id/rdDlivery"
+        <EditText
+            android:id="@+id/txtEditEmail"
+            android:layout_width="280dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="البريد ألالكتروني"
+            android:inputType="textEmailAddress"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditName" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/radioGroup"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="84dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditPassword2">
+
+            <RadioGroup
+                android:id="@+id/rdAccountType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:buttonTint="#000000"
-                android:checked="true"
-                android:shadowColor="#000000"
-                android:text="مندوب"
-                android:textColor="#000000"
-                android:textColorHighlight="#000000"
-                android:textColorHint="#000000"
-                android:textColorLink="#000000"
-                android:textSize="24sp" />
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints">
 
-            <RadioButton
-                android:id="@+id/rdSupplier"
+                <RadioButton
+                    android:id="@+id/rdDlivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:buttonTint="#000000"
+                    android:checked="true"
+                    android:shadowColor="#000000"
+                    android:text="مندوب"
+                    android:textColor="#000000"
+                    android:textColorHighlight="#000000"
+                    android:textColorHint="#000000"
+                    android:textColorLink="#000000"
+                    android:textSize="24sp" />
+
+                <RadioButton
+                    android:id="@+id/rdSupplier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="#000000"
+                    android:shadowColor="#000000"
+                    android:text="تاجر"
+                    android:textColor="#000000"
+                    android:textColorHighlight="#000000"
+                    android:textColorHint="#000000"
+                    android:textColorLink="#000000"
+                    android:textSize="24sp" />
+            </RadioGroup>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="60dp"
+            app:cardCornerRadius="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addToolbar">
+
+            <ImageView
+                android:id="@+id/imgEditPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@color/colorWhite" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linerVerf"
+            android:layout_width="223dp"
+            android:layout_height="392dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/addToolbar"
+            app:layout_constraintVertical_bias="0.279">
+
+            <EditText
+                android:id="@+id/txtVerfCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:buttonTint="#000000"
-                android:shadowColor="#000000"
-                android:text="تاجر"
+                android:layout_marginTop="164dp"
+                android:ems="10"
+                android:hint="123 456"
+                android:inputType="number"
+                android:textAlignment="center"
                 android:textColor="#000000"
-                android:textColorHighlight="#000000"
-                android:textColorHint="#000000"
-                android:textColorLink="#000000"
-                android:textSize="24sp" />
-        </RadioGroup>
+                android:textColorHint="#7A7A7A"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnConfirmCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/btn_defult"
+                android:text="تأكيد الرمز"
+                android:textSize="18sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtVerfCode" />
+
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="اعادة ارسال الرمز ؟ بعد"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.506"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnConfirmCode" />
+
+            <TextView
+                android:id="@+id/btnReType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="اعادة ادخال رقم الهاتف ؟"
+                android:textColor="#000000"
+                android:textColorHint="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.505"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timer" />
+
+            <TextView
+                android:id="@+id/txtViewPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="108dp"
+                android:text="ادخل رقم الهالتف"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.493"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="60dp"
-        app:cardCornerRadius="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addToolbar">
-
-        <ImageView
-            android:id="@+id/imgEditPhoto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@color/colorWhite" />
-    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
