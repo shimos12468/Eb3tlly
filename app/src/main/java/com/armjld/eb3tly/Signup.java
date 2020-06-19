@@ -595,9 +595,9 @@ public class Signup extends AppCompatActivity {
                         }
                     });
                 } else {
-                    String message = "Somthing is wrong, we will fix it soon...";
+                    String message = "حدث خطأ ما";
                     if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        message = "Invalid code entered...";
+                        message = "الكود خطأ";
                         Toast.makeText(Signup.this, message, Toast.LENGTH_SHORT).show();
                     }
                     Toast.makeText(Signup.this, message, Toast.LENGTH_LONG).show();
