@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,17 +27,24 @@ import java.util.Objects;
 
 public class HowTo extends AppCompatActivity {
 
-    private ImageView btnNavBar;
-    private AppBarConfiguration mAppBarConfiguration;
-    private FirebaseAuth mAuth;
-
+    private Button btnGoToProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_how_to);
 
+        btnGoToProfile = findViewById(R.id.btnGoToProfile);
+
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("طريقة استعمال البرنامج");
+
+        btnGoToProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(HowTo.this, profile.class));
+            }
+        });
     }
 }

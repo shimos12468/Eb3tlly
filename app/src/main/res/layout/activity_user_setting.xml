@@ -4,26 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorBack"
     tools:context="com.armjld.eb3tly.UserSetting">
 
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="تعديل بيانات الحساب"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
+    <include
+        android:id="@+id/addToolbar"
+        layout="@layout/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/txtEditName"
@@ -35,8 +27,8 @@
         android:hint="الاسم"
         android:inputType="textPersonName"
         android:textAlignment="textStart"
-        android:textColor="#FFFFFF"
-        android:textColorHint="@android:color/white"
+        android:textColor="#000000"
+        android:textColorHint="@android:color/tertiary_text_light"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -68,8 +60,8 @@
         android:hint="البريد ألالكتروني"
         android:inputType="textEmailAddress"
         android:textAlignment="textStart"
-        android:textColor="#FFFFFF"
-        android:textColorHint="@android:color/white"
+        android:textColor="#000000"
+        android:textColorHint="@android:color/tertiary_text_light"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -80,12 +72,12 @@
         android:id="@+id/cardView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         app:cardCornerRadius="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/addToolbar">
 
         <ImageView
             android:id="@+id/imgEditPhoto"

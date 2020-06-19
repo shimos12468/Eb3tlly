@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorBack"
     tools:context=".Notifications">
 
     <include
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="لا يوجد اشعارات في الوقت الحالي"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,8 +35,8 @@
         android:id="@+id/drawer_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fitsSystemWindows="true"
         android:layout_gravity="left"
+        android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,19 +52,20 @@
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
                 android:padding="0dp"
                 android:paddingStart="0dp"
-                android:paddingTop="0dp"
-                android:layout_gravity="left"/>
+                android:paddingTop="0dp" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         <TextView
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:visibility="gone"
-            android:text="لا يوجد اوردرات متاحة ف الوقت الحالي" />
+            android:text="لا يوجد اوردرات متاحة ف الوقت الحالي"
+            android:visibility="gone" />
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"

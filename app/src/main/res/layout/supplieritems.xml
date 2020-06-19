@@ -62,7 +62,7 @@
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
+                    android:background="@drawable/btn_bad"
                     android:text="تعديل الاوردر"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
@@ -84,7 +84,7 @@
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_weight="0.5"
-                    android:background="@drawable/btn_good"
+                    android:background="@drawable/btn_defult"
                     android:text="تم تسليم الاوردر للمندوب"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
@@ -95,7 +95,7 @@
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_weight="0.5"
-                    android:background="@drawable/btn_good"
+                    android:background="@drawable/btn_defult"
                     android:text="تم توصيل الاوردر"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />

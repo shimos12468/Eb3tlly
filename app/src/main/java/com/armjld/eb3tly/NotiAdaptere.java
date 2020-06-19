@@ -139,8 +139,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                     mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()){
-                                String orderTo = Objects.requireNonNull(dataSnapshot.child("dname").getValue()).toString();
+                            String orderTo = Objects.requireNonNull(dataSnapshot.child("dname").getValue()).toString();
                             String body = "";
                             switch (message) {
                                 case "edited": {
@@ -172,11 +171,8 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                                     break;
                                 }
                             }
-
                             txtBody.setText(body);
                         }
-                        }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }});
                 }

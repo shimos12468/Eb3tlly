@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,9 @@ public class ChangePassword extends Activity {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             return;
         }
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("تغيير الرقم السري");
 
         uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

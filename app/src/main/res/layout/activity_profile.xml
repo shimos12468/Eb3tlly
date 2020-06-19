@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorBack"
     tools:context="com.armjld.eb3tly.profile">
 
     <include
@@ -44,13 +44,13 @@
         android:id="@+id/drawer_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_gravity="left"
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
-        android:layout_gravity="left"
         tools:openDrawer="start">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,7 +66,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:text="مجموع عدد الاوردرات :"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -130,7 +130,7 @@
                 android:layout_marginEnd="5dp"
                 android:text="Orders Count"
                 android:textAlignment="viewEnd"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/textView8"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -143,10 +143,10 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="28dp"
                 android:background="@drawable/btndesign"
-                android:backgroundTint="#FFFFFF"
+                android:backgroundTint="@color/ic_profile_background"
                 android:cropToPadding="false"
                 android:src="@drawable/ic_add"
-                app:backgroundTint="#000000"
+                app:backgroundTint="#FFFFFF"
                 app:ensureMinTouchTargetSize="false"
                 app:fabCustomSize="50dp"
                 app:fabSize="auto"
@@ -154,22 +154,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.956"
                 app:layout_constraintStart_toStartOf="parent"
-                app:rippleColor="#000000" />
-
-            <TextView
-                android:id="@+id/empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="لا يوجد اوردرات متاحة ف الوقت الحالي"
-                android:visibility="gone" />
+                app:rippleColor="#FFFFFF" />
 
             <TextView
                 android:id="@+id/txtNoOrders"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="لم تقبل اي اوردر حتي الان"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -181,14 +173,14 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_below="@+id/cardView"
+                android:layout_gravity="left"
                 android:layout_marginTop="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rbProfile"
-                app:layout_constraintVertical_bias="1.0"
-                android:layout_gravity="left"/>
+                app:layout_constraintVertical_bias="1.0" />
 
             <RatingBar
                 android:id="@+id/rbProfile"
@@ -212,7 +204,7 @@
                 android:layout_marginTop="10dp"
                 android:text="TextView"
                 android:textAlignment="center"
-                android:textColor="#4CAF50"
+                android:textColor="#000000"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

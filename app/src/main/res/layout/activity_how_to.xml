@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
     tools:context=".HowTo">
 
   <include
@@ -41,7 +40,7 @@
           android:layout_marginRight="20dp"
           android:text="1- الذهاب الي الملف الشخصي"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <TextView
@@ -53,7 +52,7 @@
           android:layout_marginRight="20dp"
           android:text="2- الضغط علي زر اضافة (+)"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <TextView
@@ -65,7 +64,7 @@
           android:layout_marginRight="20dp"
           android:text="3 - ملئ البيانات المطلوبة بحرص"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <TextView
@@ -77,7 +76,7 @@
           android:layout_marginRight="20dp"
           android:text="4 - الضغط علي زر (اضافه اوردر)"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <ImageView
@@ -97,7 +96,7 @@
           android:layout_marginRight="20dp"
           android:text="5 - سيظهر الاوردر في ملفك الشخصي"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <ImageView
@@ -117,7 +116,7 @@
           android:layout_marginRight="20dp"
           android:text="6 - عند قبول الاوردر الخاص بك من احد مناديب الشحن سيظهر لك بيانات التواصل معه عند الضغط علي اسمه و تقييمات المندوب السابقه"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <ImageView
@@ -137,7 +136,7 @@
           android:layout_marginRight="20dp"
           android:text="7 - عند تسليم الاوردر للمندوب يجب عليك الضغط علي زر تم التسليم"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <ImageView
@@ -157,7 +156,7 @@
           android:layout_marginRight="20dp"
           android:text="8 - عندما يسلم المندوب الاوردر للعميل لا تنسي تقييم المندوب و كتابه تعليق عنه"
           android:textAlignment="viewEnd"
-          android:textColor="#FFFFFF"
+          android:textColor="#000000"
           android:textSize="18sp" />
 
       <ImageView
@@ -168,6 +167,15 @@
           android:layout_marginBottom="40dp"
           app:srcCompat="@drawable/sup_how_6"
           tools:srcCompat="@drawable/sup_how_6" />
+
+      <Button
+          android:id="@+id/btnGoToProfile"
+          android:layout_width="332dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginTop="40dp"
+          android:gravity="center"
+          android:text="الذهاب للملف الشخصي" />
     </LinearLayout>
   </ScrollView>
 

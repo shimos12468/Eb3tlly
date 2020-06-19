@@ -34,7 +34,7 @@ public class introSup extends AppIntro {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String uType = snapshot.child("accountType").getValue().toString();
                 if (uType.equals("Supplier")) {
-                    startActivity(new Intent(getApplicationContext(), profile.class));
+                    startActivity(new Intent(getApplicationContext(), HowTo.class));
                 } else if (uType.equals("Delivery Worker")) {
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 }
@@ -60,7 +60,7 @@ public class introSup extends AppIntro {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String uType = snapshot.child("accountType").getValue().toString();
                 if (uType.equals("Supplier")) {
-                    startActivity(new Intent(getApplicationContext(), profile.class));
+                    startActivity(new Intent(getApplicationContext(), HowTo.class));
                 } else if (uType.equals("Delivery Worker")) {
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 }

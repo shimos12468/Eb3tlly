@@ -306,6 +306,11 @@ public class Signup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(activity_signup);
         mAuth=FirebaseAuth.getInstance();
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("تسجيل حساب جديد");
+
+
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         if(mAuth.getCurrentUser() == null) {

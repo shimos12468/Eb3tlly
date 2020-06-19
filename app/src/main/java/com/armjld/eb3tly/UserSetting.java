@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -241,6 +242,9 @@ public class UserSetting extends AppCompatActivity {
             Toast.makeText(this, "الرجاء تسجيل الدخزل", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("تغيير بيانات الحساب");
 
         mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");

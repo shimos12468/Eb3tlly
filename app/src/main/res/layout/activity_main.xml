@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorWhite"
     tools:context="com.armjld.eb3tly.MainActivity">
 
 
@@ -12,17 +12,17 @@
         android:id="@+id/textView"
         android:layout_width="240dp"
         android:layout_height="50dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="150dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="تسجيل الدخول"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <EditText
@@ -37,8 +37,8 @@
         android:hint="البريد الالكتروني"
         android:inputType="textEmailAddress"
         android:textAlignment="textStart"
-        android:textColor="#FFFFFF"
-        android:textColorHint="@android:color/darker_gray"
+        android:textColor="#000000"
+        android:textColorHint="@android:color/tertiary_text_light"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -57,8 +57,8 @@
         android:hint="    كلمه المرور"
         android:inputType="textPassword"
         android:textAlignment="textEnd"
-        android:textColor="#FFFFFF"
-        android:textColorHint="@android:color/darker_gray"
+        android:textColor="#000000"
+        android:textColorHint="@android:color/tertiary_text_light"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -93,7 +93,7 @@
         android:text="لا تمتلك حساب ؟ قم بالتسجيل من هنا"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -111,23 +111,13 @@
         android:text="نسيت كلمه المرور ؟"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signup_text"
         tools:ignore="MissingConstraints,RtlCompat" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
