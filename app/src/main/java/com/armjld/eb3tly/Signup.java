@@ -390,22 +390,25 @@ public class Signup extends AppCompatActivity {
         final String phone = phoneNum.getText().toString().trim();
         // Check For empty fields
         if(TextUtils.isEmpty(muser)){
-       user.setError("يجب ادخال اسم المستخدم");
-       return;
+            user.setError("يجب ادخال اسم المستخدم");
+            return;
         }
+
         if(TextUtils.isEmpty(memail)){
             email.setError("يجب ادخال البريد ألالكتروني");
             return;
         }
+
         if(TextUtils.isEmpty(mpass)){
             pass.setError("يجب ادخال كلمه المرور");
             return;
         }
-        //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
+
         if(!mpass.equals(con_pass)){
             con_password.setError("تاكد ان كلمه المرور نفسها");
             return;
         }
+
         if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
             phoneNum.setError("ادخل رقم هاتف صحيح");
             phoneNum.requestFocus();
@@ -413,7 +416,6 @@ public class Signup extends AppCompatActivity {
         }
 
         impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
-
         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -552,10 +554,10 @@ public class Signup extends AppCompatActivity {
                     mdialog.setMessage("جاري انشاء حسابك..");
                     mdialog.show();
                     final String id = mAuth.getCurrentUser().getUid().toString();
-                    final  String memail = impdata.getMail();
-                    final  String mpass  = impdata.getPassword();
+                    final String memail = impdata.getMail();
+                    final String mpass  = impdata.getPassword();
                     final String muser = impdata.getPhone();
-                    final  String phone = impdata.getPhone();
+                    final String phone = impdata.getPhone();
                     AuthCredential credential = EmailAuthProvider.getCredential(memail, mpass);
                     mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -596,6 +598,7 @@ public class Signup extends AppCompatActivity {
                     String message = "Somthing is wrong, we will fix it soon...";
                     if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                         message = "Invalid code entered...";
+                        Toast.makeText(Signup.this, message, Toast.LENGTH_SHORT).show();
                     }
                     Toast.makeText(Signup.this, message, Toast.LENGTH_LONG).show();
                 }

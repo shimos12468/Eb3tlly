@@ -139,39 +139,41 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                     mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String orderTo = Objects.requireNonNull(dataSnapshot.child("dname").getValue()).toString();
-                            String body = "";
-                            switch (message) {
-                                case "edited": {
-                                    body = " قام " + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته ";
-                                    break;
-                                }
-                                case "deleted": {
-                                    if (ToType.equals("Supplier")) {
-                                        body = " قام " + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة ";
-                                    } else {
-                                        body = " قام " + nameFrom + " بالغاء الاوردر ";
+                            if(dataSnapshot.exists()) {
+                                String orderTo = Objects.requireNonNull(dataSnapshot.child("dname").getValue()).toString();
+                                String body = "";
+                                switch (message) {
+                                    case "edited": {
+                                        body = " قام " + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته ";
+                                        break;
                                     }
-                                    break;
+                                    case "deleted": {
+                                        if (ToType.equals("Supplier")) {
+                                            body = " قام " + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة ";
+                                        } else {
+                                            body = " قام " + nameFrom + " بالغاء الاوردر ";
+                                        }
+                                        break;
+                                    }
+                                    case "delivered": {
+                                        body = " قام " + nameFrom + " بتوصيل اوردر " + orderTo;
+                                        break;
+                                    }
+                                    case "accepted": {
+                                        body = " قام " + nameFrom + " بقبول اوردر " + orderTo;
+                                        break;
+                                    }
+                                    case "recived": {
+                                        body = "قام" + nameFrom + " بتسليمك الاوردر";
+                                        break;
+                                    }
+                                    case "welcome": {
+                                        body = "اهلا بيك في برنامج ابعتلي, اول منصة مهمتها توصيل التاجر بمندوب الشحن";
+                                        break;
+                                    }
                                 }
-                                case "delivered": {
-                                    body = " قام " + nameFrom + " بتوصيل اوردر " + orderTo;
-                                    break;
-                                }
-                                case "accepted": {
-                                    body = " قام " + nameFrom + " بقبول اوردر " + orderTo;
-                                    break;
-                                }
-                                case "recived": {
-                                    body = "قام" + nameFrom + " بتسليمك الاوردر";
-                                    break;
-                                }
-                                case "welcome": {
-                                    body = "اهلا بيك في برنامج ابعتلي, اول منصة مهمتها توصيل التاجر بمندوب الشحن";
-                                    break;
-                                }
+                                txtBody.setText(body);
                             }
-                            txtBody.setText(body);
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }});
