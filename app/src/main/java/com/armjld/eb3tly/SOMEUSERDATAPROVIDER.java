@@ -6,7 +6,7 @@ public class SOMEUSERDATAPROVIDER {
 
     String mail ,password,phone ,user;
 
-    public SOMEUSERDATAPROVIDER(String mail, String password, String phone, String user) {
+    public SOMEUSERDATAPROVIDER(String mail, String password, String user, String  phone) {
         this.mail = mail;
         this.password = password;
         this.phone = phone;

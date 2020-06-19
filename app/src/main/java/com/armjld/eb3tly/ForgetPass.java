@@ -72,13 +72,17 @@ public class ForgetPass extends Activity {
         btnConfirmPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String mobile = editTextMobile.getText().toString().trim();
-                String firstFourChars = mobile.substring(0, 2);
-                if(mobile.length() != 11 && !firstFourChars.equals("01")){
-                    editTextMobile.setError("ادخل رقم هاتف صحيح");
-                    editTextMobile.requestFocus();
-                    return;
+                if(!mobile.isEmpty()) {
+                    String firstFourChars = mobile.substring(0, 2);
+                    if (mobile.length() != 11 && !firstFourChars.equals("01")) {
+                        editTextMobile.setError("ادخل رقم هاتف صحيح");
+                        editTextMobile.requestFocus();
+                        return;
+                    }
                 }
+                else return;
 
                 final String getMobile = mobile;
                 FirebaseDatabase.getInstance().getReference().child("Pickly").child("users")

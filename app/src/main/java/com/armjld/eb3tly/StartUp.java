@@ -53,9 +53,6 @@ public class StartUp extends AppCompatActivity {
                             Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
                         }
-                    } else if (isComplete.equals("false")) {
-                        startActivity(new Intent(StartUp.this, code22.class));
-                        Toast.makeText(StartUp.this, "ادخل رقم هاتفك مجددا لاستكمال التسجيل", Toast.LENGTH_SHORT).show();
                     }
                 }
 

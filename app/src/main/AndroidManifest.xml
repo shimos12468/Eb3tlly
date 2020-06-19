@@ -33,9 +33,6 @@
         </service>
 
         <activity
-            android:name=".code22"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".profile"
             android:screenOrientation="portrait" />
         <activity
