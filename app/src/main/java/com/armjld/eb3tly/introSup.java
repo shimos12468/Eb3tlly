@@ -15,6 +15,9 @@ import com.google.firebase.database.ValueEventListener;
 public class introSup extends AppIntro {
 
     @Override
+    public void onBackPressed() { }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // sup
@@ -44,8 +47,7 @@ public class introSup extends AppIntro {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-    }
-        else {
+    } else {
             // will say that there is no user please register or sign in again
             // intent to registration page
         }

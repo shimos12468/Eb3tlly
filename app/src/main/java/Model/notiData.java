@@ -46,7 +46,7 @@ public class notiData {
     }
 
     public String getIsRead() {
-        return isRead;
+        return isRead.toString();
     }
 
     public void setIsRead(String isRead) {
@@ -59,6 +59,6 @@ public class notiData {
         this.statue = statue;
         this.to = to;
         this.datee = datee;
-        this.isRead = isRead;
+        this.isRead = isRead.toString();
     }
 }

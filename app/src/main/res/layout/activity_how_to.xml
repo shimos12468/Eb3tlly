@@ -168,10 +168,12 @@
           app:srcCompat="@drawable/sup_how_6"
           tools:srcCompat="@drawable/sup_how_6" />
 
-      <Button
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/btnGoToProfile"
           android:layout_width="332dp"
           android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:background="@drawable/btn_defult"
           android:layout_gravity="center"
           android:layout_marginTop="40dp"
           android:gravity="center"

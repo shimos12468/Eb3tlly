@@ -30,6 +30,12 @@ public class HowTo extends AppCompatActivity {
     private Button btnGoToProfile;
 
     @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(HowTo.this, profile.class));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_how_to);
