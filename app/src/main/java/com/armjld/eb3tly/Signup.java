@@ -580,7 +580,7 @@ public class Signup extends AppCompatActivity {
                                 }
 
                                 // ------------- Welcome message in Notfications----------------------//
-                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"","welcome",datee, "false");
+                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(),"-M9z6ArQZAr9snFyM_mR","welcome",datee, "false");
                                 nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
 
                                 if (accountType.equals("Supplier")) {
@@ -598,7 +598,6 @@ public class Signup extends AppCompatActivity {
                     String message = "حدث خطأ ما";
                     if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                         message = "الكود خطأ";
-                        Toast.makeText(Signup.this, message, Toast.LENGTH_SHORT).show();
                     }
                     Toast.makeText(Signup.this, message, Toast.LENGTH_LONG).show();
                 }
