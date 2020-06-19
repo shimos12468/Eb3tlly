@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorBack"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     android:visibility="visible"
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark"
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
         android:text="ادخل رقم الهالتف"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="24sp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,27 +32,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtViewPhone">
 
-        <EditText
-            android:id="@+id/txtVerfCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="123 456"
-            android:inputType="number"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#7A7A7A"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnConfirmCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:background="@drawable/btn_good"
+            android:background="@drawable/btn_defult"
             android:text="تأكيد الرمز"
             android:textSize="18sp"
             android:visibility="visible"
@@ -67,7 +52,7 @@
             android:layout_marginTop="20dp"
             android:text="اعادة ادخال رقم الهاتف ؟"
             android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
+            android:textColorHint="@android:color/tertiary_text_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnConfirmCode" />
@@ -82,26 +67,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtViewPhone">
 
-        <EditText
-            android:id="@+id/txtPhoneNumb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="0100 123 4567"
-            android:inputType="number"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#7A7A7A"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnConfirmPhone"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_good"
+            android:background="@drawable/btn_defult"
             android:text="ارسال رمز التفعيل"
             android:textSize="18sp"
             android:visibility="visible"
@@ -120,12 +90,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtViewPhone">
 
+        <EditText
+            android:id="@+id/txtVerfCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="123 456"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:visibility="visible"
+            tools:layout_editor_absoluteY="20dp" />
+
+        <EditText
+            android:id="@+id/txtPhoneNumb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="0100 123 4567"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:visibility="visible"
+            tools:layout_editor_absoluteY="20dp" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSetPass"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_good"
+            android:background="@drawable/btn_defult"
             android:text="تغير الرقم السري"
             android:textSize="18sp"
             android:visibility="visible"
@@ -143,6 +139,7 @@
             android:hint="اعادة كلمة المرور"
             android:inputType="number"
             android:textAlignment="center"
+            android:textColorHint="@android:color/tertiary_text_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newPass1" />
@@ -155,6 +152,7 @@
             android:hint="كلمه المرور"
             android:inputType="number"
             android:textAlignment="center"
+            android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -168,7 +168,6 @@ public class Notifications extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        if(ds.exists()) {
                             int noticount = (int) ds.getChildrenCount();
                             Log.i(TAG, "The user has : " + noticount + " Notfications");
                             notiData notiDB = ds.getValue(notiData.class);
@@ -177,7 +176,6 @@ public class Notifications extends AppCompatActivity {
                             NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
                             nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
                             recyclerView.setAdapter(orderAdapter);
-                        }
                     }
                 } else {
                     Log.i(TAG, "No Notifications for this user");
