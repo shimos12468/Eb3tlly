@@ -43,7 +43,7 @@ public class StartUp extends AppCompatActivity {
                                     startActivity(new Intent(StartUp.this, profile.class));
                                     break;
                                 case "Delivery Worker":
-                                    startActivity(new Intent(StartUp.this, HomeActivity.class));
+                                    startActivity(new Intent(StartUp.this, MainActivity.class));
                                     break;
                                 case "Admin":
                                     startActivity(new Intent(StartUp.this, Admin.class));
