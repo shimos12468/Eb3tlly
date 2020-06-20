@@ -19,7 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -37,6 +40,8 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     SwipeRefreshLayout mSwipeRefreshLayout;
     private DatabaseReference mDatabase, uDatabase, nDatabase;
     private String TAG = "Notification Adapter";
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+    String datee = sdf.format(new Date());
 
     public NotiAdaptere(SwipeRefreshLayout mSwipeRefreshLayout) {
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
@@ -169,6 +174,10 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                                     }
                                     case "welcome": {
                                         body = "اهلا بيك في برنامج ابعتلي, اول منصة مهمتها توصيل التاجر بمندوب الشحن";
+                                        break;
+                                    }
+                                    default: {
+                                        body = message;
                                         break;
                                     }
                                 }

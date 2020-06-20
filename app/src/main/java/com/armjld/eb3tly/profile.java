@@ -259,8 +259,13 @@ public class profile extends AppCompatActivity {
                                 total = total + rating;
                             }
                             double average = (double) total / dataSnapshot.getChildrenCount();
+                            Log.i(TAG, "Average Before : " + String.valueOf(average));
+                            if(String.valueOf(average).equals("NaN")) {
+                               average = 5;
+                               Log.i(TAG, "Average Midel : " + String.valueOf(average));
+                            }
+                            Log.i(TAG, "Average Final : " + String.valueOf(average));
                             rbProfile.setRating((int) average);
-                            Log.i(TAG, String.valueOf(average));
                         }
 
                         @Override
@@ -281,8 +286,10 @@ public class profile extends AppCompatActivity {
                                 total = total + rating;
                             }
                             double average = (double) total / dataSnapshot.getChildrenCount();
+                            if(String.valueOf(average).equals("NaN")) {
+                                average = 5;
+                            }
                             rbProfile.setRating((int) average);
-                            Log.i(TAG, String.valueOf(average));
                         }
 
                         @Override
@@ -906,6 +913,7 @@ public class profile extends AppCompatActivity {
                                     final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
                                     final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
                                     final ImageView dPP = dialogMore.findViewById(R.id.dPP);
+                                    final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
 
                                     ddPhone.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -950,7 +958,10 @@ public class profile extends AppCompatActivity {
                                                 total = total + rating;
                                             }
                                             double average = (double) total / dataSnapshot.getChildrenCount();
-                                                ddRate.setRating((int) average);
+                                            if(String.valueOf(average).equals("NaN")) {
+                                                average = 5;
+                                            }
+                                            ddRate.setRating((int) average);
                                         }
 
                                         @Override
@@ -998,6 +1009,12 @@ public class profile extends AppCompatActivity {
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
                                         }
                                     });
+
+                                    if(mArraylistSectionLessons.isEmpty()) {
+                                        txtNodsComments.setVisibility(View.VISIBLE);
+                                    } else {
+                                        txtNodsComments.setVisibility(View.GONE);
+                                    }
                                 }
                             });
                             datalist.add(data);
@@ -1141,7 +1158,7 @@ public class profile extends AppCompatActivity {
                             });
 
 
-                            // -----------------------   Set ORDER as Delivered (Crashes after updating the data)
+                            // -----------------------   Set ORDER as Delivered
                             final String orderID = data.getId();
                             myviewholder.btnDelivered.setOnClickListener(new View.OnClickListener() {
                                 @Override

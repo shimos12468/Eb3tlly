@@ -564,7 +564,7 @@ public class Signup extends AppCompatActivity {
                     final String id = mAuth.getCurrentUser().getUid().toString();
                     final  String memail = impdata.getMail();
                     final  String mpass  = impdata.getPassword();
-                    final String muser = impdata.getPhone();
+                    final String muser = impdata.getUser();
                     final  String phone = impdata.getPhone();
                     AuthCredential credential = EmailAuthProvider.getCredential(memail, mpass);
                     mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {

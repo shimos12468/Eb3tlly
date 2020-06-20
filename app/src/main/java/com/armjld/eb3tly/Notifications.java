@@ -44,6 +44,7 @@ public class Notifications extends AppCompatActivity {
     private long count;
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     String TAG = "Notifications";
 
     @Override
@@ -65,7 +66,7 @@ public class Notifications extends AppCompatActivity {
         
         mAuth = FirebaseAuth.getInstance();
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-        SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         count =0;
@@ -159,34 +160,7 @@ public class Notifications extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) { }
         });
-        
-        
 
-        // ---------------------- GET ALL THE Notifications -------------------//
-        nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        if(ds.exists()) {
-                            int noticount = (int) ds.getChildrenCount();
-                            Log.i(TAG, "The user has : " + noticount + " Notfications");
-                            Log.i(TAG, " NotiData : " + ds.getValue().toString());
-                            notiData notiDB = ds.getValue(notiData.class);
-                            mm[(int) count] = notiDB;
-                            count++;
-                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
-                            nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
-                            recyclerView.setAdapter(orderAdapter);
-                        }
-                    }
-                } else {
-                    Log.i(TAG, "No Notifications for this user");
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
     }
 
     @Override
@@ -199,6 +173,31 @@ public class Notifications extends AppCompatActivity {
                     txtNoOrders.setVisibility(View.GONE);
                 } else {
                     txtNoOrders.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
+        // ---------------------- GET ALL THE Notifications -------------------//
+        nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if(ds.exists()) {
+                            int noticount = (int) ds.getChildrenCount();
+                            notiData notiDB = ds.getValue(notiData.class);
+                            mm[(int) count] = notiDB;
+                            count++;
+                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                            nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
+                            recyclerView.setAdapter(orderAdapter);
+                            orderAdapter.notifyDataSetChanged();
+                        }
+                    }
+                } else {
+                    Log.i(TAG, "No Notifications for this user");
                 }
             }
             @Override

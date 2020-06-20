@@ -1,6 +1,7 @@
 package com.armjld.eb3tly;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,6 +32,7 @@ public class ChangePassword extends Activity {
     String pass , con_pass,oldd;
     private FirebaseAuth mAuth;
     String oldPass = "";
+    private ProgressDialog mdialog;
     String TAG = "Change Password";
     private DatabaseReference uDatabase;
 
@@ -52,12 +54,7 @@ public class ChangePassword extends Activity {
         con_password = findViewById(R.id.txtEditPassword2);
         old_pass = findViewById(R.id.txtOldPassword);
         confirm = findViewById(R.id.btnEditInfo);
-
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            return;
-        }
+        mdialog = new ProgressDialog(this);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تغيير الرقم السري");
@@ -94,6 +91,8 @@ public class ChangePassword extends Activity {
                     old_pass.setText("");
                     return;
                 }
+                mdialog.setMessage("جاري تحديث الصور الشخصيةة ...");
+                mdialog.show();
 
                 AuthCredential credential2 = EmailAuthProvider.getCredential(mAuth.getCurrentUser().getEmail(),oldPass); // Current Login Credentials \\
                 mAuth.getCurrentUser().reauthenticate(credential2).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -107,15 +106,16 @@ public class ChangePassword extends Activity {
                                 if (task.isSuccessful()) {
                                     uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(password.getText().toString().trim());
                                     Log.i(TAG, "pass Updated : " + password.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
+                                    mdialog.dismiss();
                                     finish();
                                     startActivity(new Intent(getApplicationContext(), profile.class));
                                 } else {
+                                    mdialog.dismiss();
                                     Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
-                    }
-                        else{
+                    } else{
                             Toast.makeText(ChangePassword.this, "a7oo ezay", Toast.LENGTH_SHORT).show();
                         }
                     }

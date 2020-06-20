@@ -48,6 +48,16 @@
             app:layout_constraintTop_toBottomOf="@+id/btnAdding" />
 
         <Button
+            android:id="@+id/btnDeleteUser"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Delete Non Completed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnResetCounter" />
+
+        <Button
             android:id="@+id/btnReports"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -60,6 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Button"
+            app:layout_constraintEnd_toStartOf="@+id/btnAccepting"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnReports" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -68,7 +79,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtAllProfit">
@@ -97,6 +108,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
+            android:id="@+id/btnMessages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check Messages"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnAddToComments" />
+
+        <Button
             android:id="@+id/btnAddToUsers"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -120,7 +140,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Add New Child to All Comments"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnAddToOrders" />

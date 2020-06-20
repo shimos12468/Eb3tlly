@@ -38,7 +38,8 @@ public class Admin extends Activity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,vDatabase;
     private EditText txtChild,txtValue;
     private TextView txtAllOrdersCount,txtAllUsersCount,txtAllDevCount,txtAllSupCount,txtAllProfit;
-    private Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments;
+    private Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments,btnDeleteUser;
+    private Button btnMessages;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     int supCount = 0;
     int devCount = 0;
@@ -84,6 +85,8 @@ public class Admin extends Activity {
         btnAdminSignOut = findViewById(R.id.btnAdminSignOut);
         btnReports = findViewById(R.id.btnReports);
         btnAddToComments = findViewById(R.id.btnAddToComments);
+        btnDeleteUser = findViewById(R.id.btnDeleteUser);
+        btnMessages = findViewById(R.id.btnMessages);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("Admin Panel");
@@ -136,6 +139,33 @@ public class Admin extends Activity {
             }
         });
 
+        // ------------------------- Delete Non Completed ---------------------------//
+        btnDeleteUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                            String isCompleted = ds.child("completed").getValue().toString();
+                            int deletedCount = 0;
+                            if(isCompleted.equals("false")) {
+                                ++deletedCount;
+                                Log.i(TAG, " Users to Remove : " + ds.getValue());
+                                ds.getRef().removeValue();
+                            }
+                            Toast.makeText(Admin.this, "Deleted Non Completed : " + deletedCount + " Users", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
         // -------------------------- Signing Out of Admin Account -------------------------//
         btnAdminSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +187,14 @@ public class Admin extends Activity {
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(Admin.this);
                 builder.setMessage("Are you sure you want to Sign Out ?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        btnMessages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(Admin.this, ReplyByAdmin.class));
             }
         });
 
@@ -403,7 +441,7 @@ public class Admin extends Activity {
         super.onStart();
 
         // -------------------------------------- Get users Counts --------------------------//
-        uDatabase.addValueEventListener(new ValueEventListener() {
+        uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -450,7 +488,7 @@ public class Admin extends Activity {
         });
 
         // ----------------------------------------- Get orders Counts --------------------------------//
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -466,7 +504,7 @@ public class Admin extends Activity {
         });
 
         // --------------------------------------- Changing Button name Depending on Values ---------------------------//
-        vDatabase.addValueEventListener(new ValueEventListener() {
+        vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

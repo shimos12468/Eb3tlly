@@ -21,8 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".AddOrders"></activity>
-        <activity android:name=".HowTo"></activity>
+        <activity android:name=".ReplyByAdmin"></activity>
+        <activity android:name=".AddOrders" />
+        <activity android:name=".HowTo" />
 
         <service
             android:name=".MyFirebaseMessagingService"
