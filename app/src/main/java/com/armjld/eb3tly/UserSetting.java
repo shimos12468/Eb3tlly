@@ -236,13 +236,6 @@ public class UserSetting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_setting);
 
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            Toast.makeText(this, "الرجاء تسجيل الدخزل", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تغيير بيانات الحساب");
 
@@ -309,14 +302,14 @@ public class UserSetting extends AppCompatActivity {
                 uDatabase.child(id).child("name").setValue(name.getText().toString().trim());
 
                 // -------------- Get auth credentials from the user for re-authentication
-                AuthCredential credential = EmailAuthProvider.getCredential(mAuth.getCurrentUser().getEmail(),oldPass); // Current Login Credentials \\
-                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.i(TAG, "Auth Success");
-                        Log.i(TAG, "Prev Email " + FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
-                        //----------------Code for Changing Email Address----------\\
-                        if(!Email.getText().equals(mAuth.getCurrentUser().getEmail())) {
+                if(!Email.getText().equals(mAuth.getCurrentUser().getEmail())) {
+                    AuthCredential credential = EmailAuthProvider.getCredential(mAuth.getCurrentUser().getEmail(), oldPass); // Current Login Credentials \\
+                    user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.i(TAG, "Auth Success");
+                            Log.i(TAG, "Prev Email " + FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
+                            //----------------Code for Changing Email Address----------\\
                             mAuth.getCurrentUser().updateEmail(Email.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -326,11 +319,11 @@ public class UserSetting extends AppCompatActivity {
                                     }
                                 }
                             });
-                        } else {
-                            Log.i(TAG, "Email is the same.");
                         }
-                    }
-                });
+                    });
+                } else {
+                    Log.i(TAG, "The Email is the same no need to re auth");
+                }
 
                 if(bitmap != null) {
                     handleUpload(bitmap);

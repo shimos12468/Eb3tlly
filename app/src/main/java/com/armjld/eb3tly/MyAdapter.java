@@ -164,6 +164,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 final ImageView supPP = dialogMore.findViewById(R.id.supPP);
                 final RatingBar rbUser = dialogMore.findViewById(R.id.ddRate);
                 final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
+                final TextView txtNoddComments = dialogMore.findViewById(R.id.txtNoddComments);
+
 
                 // Get posted orders count
                 int pos = position;
@@ -228,8 +230,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                             total = total + rating;
                         }
                         double average = (double) total / dataSnapshot.getChildrenCount();
+                        if(String.valueOf(average).equals("NaN")) {
+                            average = 5;
+                        }
                         rbUser.setRating((int) average);
-
                     }
 
                     @Override
@@ -258,6 +262,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 });
+
+                if(mArraylistSectionLessons.isEmpty()) {
+                    txtNoddComments.setVisibility(View.VISIBLE);
+                } else {
+                    txtNoddComments.setVisibility(View.GONE);
+                }
+
             }
         });
 

@@ -24,6 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import Model.notiData;
+import Model.replyAdmin;
+
 public class Conatact extends AppCompatActivity {
 
     Button btnSend;
@@ -87,15 +90,10 @@ public class Conatact extends AppCompatActivity {
                 }
 
                 String id = cDatabase.push().getKey().toString();
-                cDatabase.child(userID).child(id).child("name").setValue(strName);
-                cDatabase.child(userID).child(id).child("email").setValue(strEmail);
-                cDatabase.child(userID).child(id).child("phone").setValue(strPhone);
-                cDatabase.child(userID).child(id).child("message").setValue(txtContact.getText().toString().trim());
-                cDatabase.child(userID).child(id).child("timestamp").setValue(datee);
-                cDatabase.child(userID).child(id).child("statue").setValue("opened");
-                cDatabase.child(userID).child(id).child("currentVersion").setValue(version);
+                replyAdmin Noti = new replyAdmin(strEmail,txtContact.getText().toString().trim(),strName,strPhone,"opened",datee,id,version,mAuth.getCurrentUser().getUid());
+                cDatabase.child(userID).child(id).setValue(Noti);
 
-                Toast.makeText(Conatact.this, "شكرا لك تم استلام رسالتك و سيتم الرد عليك في اقرب وقوت", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Conatact.this, "شكرا لك تم استلام رسالتك و سيتم الرد عليك في اقرب وقت", Toast.LENGTH_LONG).show();
 
                 finish();
                 startActivity(new Intent(Conatact.this, profile.class));

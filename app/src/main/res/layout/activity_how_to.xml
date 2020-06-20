@@ -168,14 +168,18 @@
           app:srcCompat="@drawable/sup_how_6"
           tools:srcCompat="@drawable/sup_how_6" />
 
-      <Button
+      <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/btnGoToProfile"
           android:layout_width="332dp"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:layout_marginTop="40dp"
+          android:layout_marginBottom="20dp"
+          android:background="@drawable/btn_defult"
           android:gravity="center"
-          android:text="الذهاب للملف الشخصي" />
+          android:text="الذهاب للملف الشخصي"
+          android:textColor="#FFFFFF"
+          android:textSize="18sp" />
     </LinearLayout>
   </ScrollView>
 

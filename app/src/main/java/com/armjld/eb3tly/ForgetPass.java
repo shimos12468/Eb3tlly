@@ -44,6 +44,12 @@ public class ForgetPass extends Activity {
     private DatabaseReference uDatabase;
 
     @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget1);
@@ -66,13 +72,13 @@ public class ForgetPass extends Activity {
 
         linerVerf.setVisibility(View.GONE);
         linerPass.setVisibility(View.GONE);
+        linerPhone.setVisibility(View.VISIBLE);
 
         txtViewPhone.setText("ادخل رقم الهاتف");
 
         btnConfirmPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String mobile = editTextMobile.getText().toString().trim();
                 if(!mobile.isEmpty()) {
                     String firstFourChars = mobile.substring(0, 2);
@@ -212,6 +218,7 @@ public class ForgetPass extends Activity {
                                         uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(newPass1.getText().toString().trim());
                                         Log.i(TAG, "Pass Updated : " + newPass1.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
                                         mAuth.signOut();
+                                        Toast.makeText(ForgetPass.this, "تم تغيير الرقم السري بنجاح", Toast.LENGTH_SHORT).show();
                                         finish();
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                     } else {

@@ -259,8 +259,13 @@ public class profile extends AppCompatActivity {
                                 total = total + rating;
                             }
                             double average = (double) total / dataSnapshot.getChildrenCount();
+                            Log.i(TAG, "Average Before : " + String.valueOf(average));
+                            if(String.valueOf(average).equals("NaN")) {
+                               average = 5;
+                               Log.i(TAG, "Average Midel : " + String.valueOf(average));
+                            }
+                            Log.i(TAG, "Average Final : " + String.valueOf(average));
                             rbProfile.setRating((int) average);
-                            Log.i(TAG, String.valueOf(average));
                         }
 
                         @Override
@@ -281,8 +286,10 @@ public class profile extends AppCompatActivity {
                                 total = total + rating;
                             }
                             double average = (double) total / dataSnapshot.getChildrenCount();
+                            if(String.valueOf(average).equals("NaN")) {
+                                average = 5;
+                            }
                             rbProfile.setRating((int) average);
-                            Log.i(TAG, String.valueOf(average));
                         }
 
                         @Override
@@ -331,277 +338,8 @@ public class profile extends AppCompatActivity {
                             Toast.makeText(profile.this, "عذرا لا يمكنك اضافه اوردرات في الةقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
                             return;
                         } else {
-                            AlertDialog.Builder mydialog = new AlertDialog.Builder(profile.this);
-                            LayoutInflater inflater = LayoutInflater.from(profile.this);
-                            View myview = inflater.inflate(R.layout.cusominputfield, null);
-                            mydialog.setView(myview);
-                            final AlertDialog dialog = mydialog.create();
-                            dialog.show();
-
-                            // Toolbar
-                            TextView toolbar_title = myview.findViewById(R.id.toolbar_title);
-                            toolbar_title.setText("اضافة اوردر جديد");
-                            ImageView btnClose = myview.findViewById(R.id.btnClose);
-
-                            btnClose.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            // Texts
-                            PAddress = myview.findViewById(R.id.txtPAddress);
-                            PShop = myview.findViewById(R.id.txtPShop);
-                            DAddress = myview.findViewById(R.id.txtDAddress);
-                            DDate = myview.findViewById(R.id.txtDDate);
-                            DPhone = myview.findViewById(R.id.txtDPhone);
-                            DName = myview.findViewById(R.id.txtDName);
-                            GMoney = myview.findViewById(R.id.txtGMoney);
-                            GGet = myview.findViewById(R.id.txtGGet);
-                            txtNotes = myview.findViewById(R.id.txtNotes);
-
-                            //Check Boxes
-                            chkMetro = myview.findViewById(R.id.chkMetro);
-                            chkCar = myview.findViewById(R.id.chkCar);
-                            chkMotor = myview.findViewById(R.id.chkMotor);
-                            chkTrans = myview.findViewById(R.id.chkTrans);
-
-                            //Spinners
-                            spPState = (Spinner) myview.findViewById(R.id.txtPState);
-                            spPRegion = (Spinner) myview.findViewById(R.id.txtPRegion);
-                            spDState = (Spinner) myview.findViewById(R.id.txtDState);
-                            spDRegion = (Spinner) myview.findViewById(R.id.txtDRegion);
-
-                            Button btnsave = myview.findViewById(R.id.btnSave);
-
-                            // Pick up Government Spinner
-                            ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(profile.this, R.array.txtStates, R.layout.color_spinner_layout);
-                            adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPState.setPrompt("اختار المحافظة");
-                            spPState.setAdapter(adapter2);
-                            // Get the Government Regions
-                            spPState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    int itemSelected = spPState.getSelectedItemPosition();
-                                    if (itemSelected == 0) {
-                                        ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(profile.this, R.array.txtCairoRegion, R.layout.color_spinner_layout);
-                                        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spPRegion.setPrompt("اختار منطقة محافظة القاهرة");
-                                        spPRegion.setAdapter(adapter4);
-                                    } else if (itemSelected == 1) {
-                                        ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(profile.this, R.array.txtGizaRegion, R.layout.color_spinner_layout);
-                                        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spPRegion.setPrompt("اختار منطقة محافظة الجيزة");
-                                        spPRegion.setAdapter(adapter4);
-                                    } else if (itemSelected == 2) {
-                                        ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(profile.this, R.array.txtAlexRegion, R.layout.color_spinner_layout);
-                                        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spPRegion.setPrompt("اختار منطقة محافظة الاسكندرية");
-                                        spPRegion.setAdapter(adapter4);
-                                    } else if (itemSelected == 3) {
-                                        ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(profile.this, R.array.txtMetroRegion, R.layout.color_spinner_layout);
-                                        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spPRegion.setPrompt("اختار محطة المترو");
-                                        spPRegion.setAdapter(adapter4);
-                                    } else {
-                                        ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(profile.this, R.array.justAll, R.layout.color_spinner_layout);
-                                        adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spPRegion.setPrompt("لم يتم تسجيل اي مناطق لتلك المحافظة");
-                                        spPRegion.setAdapter(adapter4);
-                                    }
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-                                }
-                            });
-
-                            // Drop Government Spinner
-                            ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(profile.this, R.array.txtStates, R.layout.color_spinner_layout);
-                            adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDState.setPrompt("اختار المحافظة");
-                            spDState.setAdapter(adapter3);
-                            // Get the Government Regions
-                            spDState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    int itemSelected = spDState.getSelectedItemPosition();
-                                    if (itemSelected == 0) {
-                                        ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(profile.this, R.array.txtCairoRegion, R.layout.color_spinner_layout);
-                                        adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spDRegion.setPrompt("اختار منطقة محافظة القاهرة");
-                                        spDRegion.setAdapter(adapter5);
-                                    } else if (itemSelected == 1) {
-                                        ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(profile.this, R.array.txtGizaRegion, R.layout.color_spinner_layout);
-                                        adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spDRegion.setPrompt("اختار منطقة محافظة الجيزة");
-                                        spDRegion.setAdapter(adapter5);
-                                    } else if (itemSelected == 2) {
-                                        ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(profile.this, R.array.txtAlexRegion, R.layout.color_spinner_layout);
-                                        adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spDRegion.setPrompt("اختار منطقة محافظة الاسكندرية");
-                                        spDRegion.setAdapter(adapter5);
-                                    } else if (itemSelected == 3) {
-                                        ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(profile.this, R.array.txtMetroRegion, R.layout.color_spinner_layout);
-                                        adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spDRegion.setPrompt("اختار محطة المترو");
-                                        spDRegion.setAdapter(adapter5);
-                                    } else {
-                                        spDRegion.setPrompt("لم يتم تسجيل اي مناطق لتلك المحافظة");
-                                        ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(profile.this, R.array.justAll, R.layout.color_spinner_layout);
-                                        adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spDRegion.setAdapter(adapter5);
-                                    }
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-                                }
-                            });
-
-                            // ---------------------------------- Date Picker
-                            final Calendar myCalendar = Calendar.getInstance();
-                            final DatePickerDialog.OnDateSetListener pdate = new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker dateView, int year, int monthOfYear, int dayOfMonth) {
-                                    myCalendar.set(Calendar.YEAR, year);
-                                    myCalendar.set(Calendar.MONTH, monthOfYear);
-                                    myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                                    updateLabel();
-                                }
-
-                                private void updateLabel() {
-                                    String dFormat = "yyyy-MM-dd";
-                                    SimpleDateFormat sDF = new SimpleDateFormat(dFormat, Locale.US);
-                                    DDate.setText(sDF.format(myCalendar.getTime()));
-                                }
-                            };
-
-                            DDate.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    DatePickerDialog dpd = new DatePickerDialog(profile.this, pdate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                                            myCalendar.get(Calendar.DAY_OF_MONTH));
-                                    DatePicker dp = dpd.getDatePicker();
-                                    dp.setMinDate(myCalendar.getTimeInMillis() - 100); // disable all the previos dates
-                                    dpd.show();
-                                }
-                            });
-
-                            // SAVE BUTTON
-                            btnsave.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // Txt Fields Strings
-                                    final String mPAddress = PAddress.getText().toString();
-                                    final String mNote = txtNotes.getText().toString();
-                                    final String mPShop = PShop.getText().toString();
-                                    final String mDAddress = DAddress.getText().toString();
-                                    final String mDDate = DDate.getText().toString();
-                                    final String mDPhone = DPhone.getText().toString();
-                                    final String mDName = DName.getText().toString();
-                                    final String mGMoney = GMoney.getText().toString();
-                                    final String mGGet = GGet.getText().toString();
-
-                                    // Checkboxes Strings
-                                    String isTrans = "";
-                                    String isMotor = "";
-                                    String isMetro = "";
-                                    String isCar = "";
-
-                                    //DEFULT ORDER States ON ADD
-                                    final String states = "placed";
-                                    final String uAccepted = "";
-
-                                    // Check if Empty
-                                    if (TextUtils.isEmpty(mPAddress) && !spPState.getSelectedItem().toString().equals("مترو")) {
-                                        PAddress.setError("الرجاء ادخال البيانات");
-                                        return;
-                                    }
-                                    if (TextUtils.isEmpty(mDAddress) && !spDState.getSelectedItem().toString().equals("مترو")) {
-                                        DAddress.setError("الرجاء ادخال البيانات");
-                                        return;
-                                    }
-                                    if (TextUtils.isEmpty(mDDate)) {
-                                        DDate.setError("الرجاء ادخال البيانات");
-                                        return;
-                                    }
-                                    if (TextUtils.isEmpty(mDPhone)) {
-                                        DPhone.setError("الرجاء ادخال البيانات");
-                                        return;
-                                    }
-                                    if (TextUtils.isEmpty(mDName)) {
-                                        DName.setError("الرجاء ادخال البيانات");
-                                        return;
-                                    }
-                                    if (TextUtils.isEmpty(mGMoney)) {
-                                        GMoney.setError("الرجاء ادخال البيانات");
-                                        return;
-                                    }
-                                    if (TextUtils.isEmpty(mGGet)) {
-                                        GGet.setError("الرجاء ادخال البيانات");
-                                        return;
-                                    }
-
-                                    // Check the way of transportation
-                                    if (chkTrans.isChecked()) {
-                                        isTrans = "مواصلات";
-                                    } else {
-                                        isTrans = "";
-                                    }
-                                    if (chkMetro.isChecked()) {
-                                        isMetro = "مترو";
-                                    } else {
-                                        isMetro = "";
-                                    }
-                                    if (chkCar.isChecked()) {
-                                        isCar = "سياره";
-                                    } else {
-                                        isCar = "";
-                                    }
-                                    if (chkMotor.isChecked()) {
-                                        isMotor = "موتسكل";
-                                    } else {
-                                        isMotor = "";
-                                    }
-
-                                    final String finalIsMetro = isMetro;
-                                    final String finalIsTrans = isTrans;
-                                    final String finalIsMotor = isMotor;
-                                    final String finalIsCar = isCar;
-                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface confirmDailog, int which) {
-                                            switch (which) {
-                                                case DialogInterface.BUTTON_POSITIVE:
-                                                    String id = mDatabase.push().getKey().toString(); // create Order ID
-                                                    String srate = "false";
-                                                    String srateid = "";
-                                                    String drate = "false";
-                                                    String drateid = "";
-                                                    // Send order to Data Base using the DATA MODEL
-                                                    Data data = new Data(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), mPAddress, mPShop, spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                                            mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
-                                                    mDatabase.child(id).setValue(data);
-                                                    mDatabase.child(id).child("lastedit").setValue(datee);
-                                                    Toast.makeText(profile.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_SHORT).show();
-                                                    dialog.dismiss();
-                                                    break;
-                                                case DialogInterface.BUTTON_NEGATIVE:
-                                                    //No button clicked
-                                                    break;
-                                            }
-                                        }
-                                    };
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(profile.this);
-                                    builder.setMessage("هل انت متاكد من صحه البيانات و انك تريد اضافة الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-                                    setOrderCount("Supplier", uID);
-                                }
-                            });
+                            finish();
+                            startActivity(new Intent(profile.this, AddOrders.class));
                         }
                     }
                     @Override
@@ -1175,6 +913,7 @@ public class profile extends AppCompatActivity {
                                     final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
                                     final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
                                     final ImageView dPP = dialogMore.findViewById(R.id.dPP);
+                                    final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
 
                                     ddPhone.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -1219,7 +958,10 @@ public class profile extends AppCompatActivity {
                                                 total = total + rating;
                                             }
                                             double average = (double) total / dataSnapshot.getChildrenCount();
-                                                ddRate.setRating((int) average);
+                                            if(String.valueOf(average).equals("NaN")) {
+                                                average = 5;
+                                            }
+                                            ddRate.setRating((int) average);
                                         }
 
                                         @Override
@@ -1267,6 +1009,12 @@ public class profile extends AppCompatActivity {
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
                                         }
                                     });
+
+                                    if(mArraylistSectionLessons.isEmpty()) {
+                                        txtNodsComments.setVisibility(View.VISIBLE);
+                                    } else {
+                                        txtNodsComments.setVisibility(View.GONE);
+                                    }
                                 }
                             });
                             datalist.add(data);
@@ -1410,7 +1158,7 @@ public class profile extends AppCompatActivity {
                             });
 
 
-                            // -----------------------   Set ORDER as Delivered (Crashes after updating the data)
+                            // -----------------------   Set ORDER as Delivered
                             final String orderID = data.getId();
                             myviewholder.btnDelivered.setOnClickListener(new View.OnClickListener() {
                                 @Override

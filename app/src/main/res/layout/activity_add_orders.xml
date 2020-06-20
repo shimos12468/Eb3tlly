@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBack">
+    android:background="@color/colorBack"
+    tools:context="com.armjld.eb3tly.AddOrders">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constChecks"
@@ -349,41 +350,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addToolbar" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnSave"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="38dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/btn_defult"
-        android:text="اضافة الاوردر"
-        android:textColor="#FFFFFF"
-        android:theme="@style/Widget.AppCompat.Button"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtNotes" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNotes"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSaveAdd"
+            android:layout_width="150dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/btn_bad"
+            android:text="تسجيل و اضافة اوردر اخر"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:theme="@style/Widget.AppCompat.Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnSave"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSave"
+            android:layout_width="150dp"
+            android:layout_height="38dp"
+            android:background="@drawable/btn_defult"
+            android:text="تسجيل الاوردر"
+            android:textColor="#FFFFFF"
+            android:theme="@style/Widget.AppCompat.Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         android:id="@+id/addToolbar"
         layout="@layout/toolbar"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/btnClose"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="7dp"
-        app:layout_constraintEnd_toEndOf="@+id/addToolbar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close" />
 
     <EditText
         android:id="@+id/txtNotes"
@@ -393,7 +406,7 @@
         android:ems="10"
         android:hint="الملاحظات"
         android:inputType="textLongMessage"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textColorHint="#9A9A9A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

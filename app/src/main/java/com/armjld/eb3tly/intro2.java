@@ -15,6 +15,9 @@ import com.google.firebase.database.ValueEventListener;
 public class intro2 extends AppIntro {
 
     @Override
+    public void onBackPressed() { }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addSlide(AppIntroFragment.newInstance( "سهولة اختيار الاوردرات", " سيظهر لك جميع الاوردرات المتاحة و مواعيد التسليم الخاصة بها ومقدم الشحن واجر التوصيل حيث يتاح لك قبول اي اوردر مناسبا لك",R.drawable.ic_intro1 ));
