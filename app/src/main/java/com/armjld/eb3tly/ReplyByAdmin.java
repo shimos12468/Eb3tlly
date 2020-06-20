@@ -18,8 +18,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
+import Model.Data;
 import Model.notiData;
 import Model.replyAdmin;
 import Model.replyAdmin;
@@ -30,7 +32,7 @@ public class ReplyByAdmin extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private DatabaseReference cDatabase;
-    private static replyAdmin[] mm;
+    private static ArrayList<replyAdmin> mm;
     private long count;
     private RecyclerView recyclerView;
     String TAG = "ReplyByAdmin";
@@ -49,7 +51,7 @@ public class ReplyByAdmin extends AppCompatActivity {
         tbTitle.setText("Reply to Messages");
 
         count =0;
-        mm = new replyAdmin[1000000];
+        mm = new ArrayList<replyAdmin>();
 
         //Recycler
         recyclerView = findViewById(R.id.recyclerView);
@@ -75,7 +77,7 @@ public class ReplyByAdmin extends AppCompatActivity {
                         if(snap.child("statue").getValue().toString().equals("opened")) {
                             Log.i(TAG, " Message " + snap.getValue().toString());
                             replyAdmin replyAdmins = snap.getValue(replyAdmin.class);
-                            mm[(int) count] = replyAdmins;
+                            mm.add((int) count, replyAdmins);
                             count++;
                             replyAdapter rep = new replyAdapter(ReplyByAdmin.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(rep);

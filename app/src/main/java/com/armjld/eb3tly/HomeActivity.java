@@ -198,14 +198,14 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 assert orderData != null;
                 if (orderData.getStatue().equals("placed")) {
                     for(int i = 0;i<count;i++){
-                        if(mm.get(i).getId().equals(orderData.getId())) {
+                        if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
                             a7a = orderData;
                             indexmm = i;
                             orderAdapter.addItem(indexmm ,a7a,(int)count);
                         }
                     }
-                }
-                else{
+                } else if (orderData.getStatue().equals("accepted")) {
+                    // ----------------- CRASHES ---------------- //
                     int indexs = -1;
                     for(int i = 0;i<mm.size();i++){
                         if(mm.get(i).getId().equals(orderData.getId())){
@@ -213,7 +213,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         }
                     }
                     mm.remove(indexs);
-                    recyclerView.removeViewAt(indexs);
+                    orderAdapter.removeItem(indexs);
                     orderAdapter.notifyItemRemoved(indexs);
                     orderAdapter.notifyItemRangeChanged(indexs, mm.size());
                 }
@@ -221,19 +221,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                final Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                int ind = -1;
-                for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())){
-                        ind = i;
-                    }
-                }
-                mm.remove(ind);
-                recyclerView.removeViewAt(ind);
-                orderAdapter.notifyItemRemoved(ind);
-                orderAdapter.notifyItemRangeChanged(ind, mm.size());
-
+                // ----------------- CRASHES ---------------- //
+                orderAdapter.notifyAll();
             }
 
             @Override
@@ -469,37 +458,22 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
     }
 
-    private void insertItem(int position) {
-
-    }
-    private void removeitem(int position){
-
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.orderByChild("statue").equalTo("placed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        String isPlaced = ds.child("statue").getValue().toString();
-                        if (isPlaced.equals("placed")) {
-                            txtNoOrders.setVisibility(View.GONE);
-                        } else {
-                            txtNoOrders.setVisibility(View.VISIBLE);
-                        }
-                    }
+                if(snapshot.exists()) {
+                    txtNoOrders.setVisibility(View.GONE);
                 } else {
                     txtNoOrders.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
