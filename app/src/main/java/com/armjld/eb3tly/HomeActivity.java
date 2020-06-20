@@ -213,11 +213,11 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             indexs = i;
                         }
                     }
-                    //mm.remove(indexs);
-                    orderAdapter.removeItem(indexs);
-                    //orderAdapter.notifyItemRemoved(indexs);
-                    orderAdapter.notifyItemRangeChanged(indexs, mm.size());
 
+                    orderAdapter.removeItem(indexs);
+                    orderAdapter.notifyItemRemoved(indexs);
+                    //orderAdapter.notifyItemRangeChanged(indexs, mm.size());
+                    //mm.remove(indexs);
                 }
             }
 
@@ -233,9 +233,9 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         indexs = i;
                     }
                 }
-                //mm.remove(indexs);
+                mm.remove(indexs);
                 orderAdapter.removeItem(indexs);
-                //orderAdapter.notifyItemRemoved(indexs);
+                orderAdapter.notifyItemRemoved(indexs);
                 orderAdapter.notifyItemRangeChanged(indexs, mm.size());
 
             }
