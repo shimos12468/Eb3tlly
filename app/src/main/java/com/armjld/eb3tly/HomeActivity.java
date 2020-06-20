@@ -187,7 +187,9 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         mDatabase.orderByChild("ddate").startAt(datee).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                final Data orderData = dataSnapshot.getValue(Data.class);
+                assert orderData != null;
+                mm.add(orderData);
             }
 
             @Override
@@ -203,10 +205,34 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         }
                     }
                 }
+                else{
+                    int indexs = -1;
+                    for(int i = 0;i<mm.size();i++){
+                        if(mm.get(i).getId().equals(orderData.getId())){
+                            indexs = i;
+                        }
+                    }
+                    mm.remove(indexs);
+                    recyclerView.removeViewAt(indexs);
+                    orderAdapter.notifyItemRemoved(indexs);
+                    orderAdapter.notifyItemRangeChanged(indexs, mm.size());
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                final Data orderData = dataSnapshot.getValue(Data.class);
+                assert orderData != null;
+                int ind = -1;
+                for(int i = 0;i<mm.size();i++){
+                    if(mm.get(i).getId().equals(orderData.getId())){
+                        ind = i;
+                    }
+                }
+                mm.remove(ind);
+                recyclerView.removeViewAt(ind);
+                orderAdapter.notifyItemRemoved(ind);
+                orderAdapter.notifyItemRangeChanged(ind, mm.size());
 
             }
 
