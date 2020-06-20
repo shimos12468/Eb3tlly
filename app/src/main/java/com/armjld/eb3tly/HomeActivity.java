@@ -208,15 +208,18 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         }
                     }
                 } else if (orderData.getStatue().equals("accepted")) {
-                    // ----------------- CRASHES ---------------- //
                     int indexs = 0;
                     for(int i = 0;i<mm.size();i++){
                         if(mm.get(i).getId().equals(orderData.getId())){
                             indexs = i;
+                            Log.i("home", "Deleting orders at mm index:" + i);
+                            orderAdapter.removeItem(indexs);
+                            mm.remove(indexs-1);
+                            mm.trimToSize();
                         }
                     }
-                    orderAdapter.removeItem(indexs);
-                    mm.remove(indexs);
+
+
                     //orderAdapter.notifyItemRemoved(indexs);
                     //orderAdapter.notifyItemRangeChanged(indexs, mm.size());
                 }
@@ -233,11 +236,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         indexs = i;
                     }
                 }
-                //mm.remove(indexs);
                 orderAdapter.removeItem(indexs);
-                //orderAdapter.notifyItemRemoved(indexs);
-                orderAdapter.notifyItemRangeChanged(indexs, mm.size());
-
+                mm.remove(indexs);
             }
 
             @Override
@@ -450,8 +450,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                             }
                                         }
                                     }
-                                    MyAdapter filterAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
-                                    recyclerView.setAdapter(filterAdapter);
+                                    orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                                    recyclerView.setAdapter(orderAdapter);
                                 }
                             }
                             @Override
