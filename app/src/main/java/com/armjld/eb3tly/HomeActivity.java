@@ -204,25 +204,40 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             orderAdapter.addItem(indexmm ,a7a,(int)count);
                         }
                     }
-                } else if (orderData.getStatue().equals("accepted")) {
+                }
+                else if (orderData.getStatue().equals("accepted")) {
                     // ----------------- CRASHES ---------------- //
-                    int indexs = -1;
+                    int indexs = 0;
                     for(int i = 0;i<mm.size();i++){
                         if(mm.get(i).getId().equals(orderData.getId())){
                             indexs = i;
                         }
                     }
-                    mm.remove(indexs);
+                    //mm.remove(indexs);
                     orderAdapter.removeItem(indexs);
-                    orderAdapter.notifyItemRemoved(indexs);
+                    //orderAdapter.notifyItemRemoved(indexs);
                     orderAdapter.notifyItemRangeChanged(indexs, mm.size());
+
                 }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 // ----------------- CRASHES ---------------- //
-                orderAdapter.notifyAll();
+
+                final Data orderData = dataSnapshot.getValue(Data.class);
+                assert orderData != null;
+                int indexs = 0;
+                for(int i = 0;i<mm.size();i++){
+                    if(mm.get(i).getId().equals(orderData.getId())){
+                        indexs = i;
+                    }
+                }
+                //mm.remove(indexs);
+                orderAdapter.removeItem(indexs);
+                //orderAdapter.notifyItemRemoved(indexs);
+                orderAdapter.notifyItemRangeChanged(indexs, mm.size());
+
             }
 
             @Override
