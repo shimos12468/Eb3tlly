@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
     private ImageView filtrs_btn,btnNavBar;
-    private Data [] mm;
+    private static Data [] mm;
     private long count;
     private String FTAG = "Filters ";
 
