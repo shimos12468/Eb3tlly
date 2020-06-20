@@ -45,9 +45,11 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
+     private int Sposition;
      Context context , context1;
      long count;
-     Data [] filtersData;
+     //Data [] filtersData;
+     ArrayList<Data>filtersData;
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
      SwipeRefreshLayout mSwipeRefreshLayout;
      private ArrayList datalist,filterList;
@@ -65,12 +67,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
     }
 
-    public MyAdapter(Context context, Data[] filtersData, Context context1, long count, SwipeRefreshLayout mSwipeRefreshLayout) {
+    public void addItem(int position , Data data , int count){
+        filtersData.add(position,data);
+        filtersData.remove(position+1);
+        notifyDataSetChanged();
+    }
+    public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count, SwipeRefreshLayout mSwipeRefreshLayout ) {
         this.count = count;
         this.context = context;
         this.filtersData = filtersData;
         this.context1 = context1;
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
+
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
@@ -90,7 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         // Get Post Date
-        String startDate = filtersData[position].getDate();
+        String startDate = filtersData.get(position).getDate();
         String stopDate = datee;
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         Date d1 = null;
@@ -111,15 +119,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffMinutes = (int) diffMinutes;
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
-
-        holder.setDate(filtersData[position].getDDate());
-        holder.setUsername(filtersData[position].getuId());
-        holder.setOrdercash(filtersData[position].getGMoney());
-        holder.setOrderFrom(filtersData[position].reStateP());
-        holder.setOrderto(filtersData[position].reStateD());
-        holder.setFee(filtersData[position].getGGet().toString());
+        holder.setDate(filtersData.get(position).getDDate());
+        holder.setUsername(filtersData.get(position).getuId());
+        holder.setOrdercash(filtersData.get(position).getGMoney());
+        holder.setOrderFrom(filtersData.get(position).reStateP());
+        holder.setOrderto(filtersData.get(position).reStateD());
+        holder.setFee(filtersData.get(position).getGGet().toString());
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
-        holder.setType(filtersData[position].getIsCar(), filtersData[position].getIsMotor(), filtersData[position].getIsMetro(), filtersData[position].getIsTrans());
+        holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
 
         //Hide this order Button
         holder.btnHide.setOnClickListener(new View.OnClickListener() {
@@ -129,10 +136,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-        final String PAddress =filtersData[position].getmPAddress();
-        final String DAddress = filtersData[position].getDAddress();
-        final String rateUID = filtersData[position].getuId();
-        final String notes = filtersData[position].getNotes();
+        final String PAddress = filtersData.get(position).getmPAddress();
+        final String DAddress = filtersData.get(position).getDAddress();
+        final String rateUID = filtersData.get(position).getuId();
+        final String notes = filtersData.get(position).getNotes();
 
         //More Info Button
         holder.btnMore.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +176,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                 // Get posted orders count
                 int pos = position;
-                mDatabase.orderByChild("uId").equalTo(filtersData[pos].getuId()).addListenerForSingleValueEvent (new ValueEventListener() {
+                mDatabase.orderByChild("uId").equalTo(filtersData.get(pos).getuId()).addListenerForSingleValueEvent (new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
@@ -273,8 +280,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
         //Accept Order Button
-        final String orderID = filtersData[position].getId();
-        final String owner = filtersData[position].getuId();
+        final String orderID = filtersData.get(position).getId();
+        final String owner = filtersData.get(position).getuId();
         holder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

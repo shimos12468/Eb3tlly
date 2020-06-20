@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import Model.Data;
@@ -43,14 +44,16 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
     private ImageView filtrs_btn,btnNavBar;
-    private static Data [] mm;
+    private static ArrayList<Data> mm;
     private long count;
     private String FTAG = "Filters ";
-
+    Data a7a = new Data();
+    int index = 0;
+    boolean flag = false;
     // import firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase,rDatabase,uDatabase;
-
+    int indexmm = -1;
     private Spinner spPState,spPRegion,spDState,spDRegion;
     private Button btnApplyFilters;
     private EditText txtFilterMoney;
@@ -83,7 +86,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
         //Find View
         count =0;
-        mm = new Data[1000000];
+        mm = new ArrayList<Data>();
         toolbar = findViewById(R.id.toolbar_home);
         filtrs_btn = findViewById(R.id.filters_btn);
         btnNavBar = findViewById(R.id.btnNavBar);
@@ -177,6 +180,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             }
         });
 
+
         // ---------------------- GET ALL THE ORDERS -------------------//
         mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
             @Override
@@ -185,14 +189,32 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         final Data orderData = ds.getValue(Data.class);
                         if (orderData.getStatue().equals("placed")) {
-                            mm[(int) count] = orderData;
-                            count++;
+
+                            for(int i = 0;i<count;i++){
+                             if(mm.get(i).getId()==orderData.getId()) {
+                                 a7a = orderData;
+                                 flag = true;
+                                 indexmm = i;
+                             }
+                            }
+                            if(!flag){
+                                mm.add((int) count, orderData);
+                                count++;
+                            }
+
                         }
-                        MyAdapter orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
-                        recyclerView.setAdapter(orderAdapter);
+                        MyAdapter  orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                        if(!flag){
+                            recyclerView.setAdapter(orderAdapter);
+                        }
+                        else{
+                            Toast.makeText(HomeActivity.this, "now I know it is working", Toast.LENGTH_LONG).show();
+                            orderAdapter.addItem(indexmm ,a7a,(int)count);
+                        }
+                        flag = false;
                     }
                 }
-                count = 0;
+                //count = 0;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -335,26 +357,26 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                         if(spPState.getSelectedItem().toString().equals("كل المناطق")) {
                                             if(spDState.getSelectedItem().toString().equals("كل المناطق")) {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue ) {
-                                                    mm[(int)count]= filterData;
+                                                    mm.add((int) count, filterData);
                                                     count++;
                                                 }
                                             } else {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtDState().equals(spDState.getSelectedItem().toString()) ) {
-                                                    mm[(int)count]= filterData;
+                                                    mm.add((int) count, filterData);
                                                     count++;
                                                 }
                                             }
                                         } else {
                                             if(spDState.getSelectedItem().toString().equals("كل المناطق")) {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtPState().equals(spPState.getSelectedItem().toString())) {
-                                                    mm[(int)count]= filterData;
+                                                    mm.add((int) count, filterData);
                                                     count++;
                                                 }
                                             } else {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue &&
                                                         filterData.getTxtPState().equals(spPState.getSelectedItem().toString()) &&
                                                         filterData.getTxtDState().equals(spDState.getSelectedItem().toString()) ) {
-                                                    mm[(int)count]= filterData;
+                                                    mm.add((int) count, filterData);
                                                     count++;
                                                 }
                                             }
@@ -380,6 +402,13 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 });
             }
         });
+
+    }
+
+    private void insertItem(int position) {
+
+    }
+    private void removeitem(int position){
 
     }
 

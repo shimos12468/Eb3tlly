@@ -68,6 +68,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+
         String From = notiData[position].getFrom();
         String To = notiData[position].getTo();
         String Datee = notiData[position].getDatee();
