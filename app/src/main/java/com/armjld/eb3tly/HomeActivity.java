@@ -202,10 +202,12 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             a7a = orderData;
                             indexmm = i;
                             orderAdapter.addItem(indexmm ,a7a,(int)count);
+                        } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
+                            // dh el code lma 7d y3ml cancel ll order b3d ma 3ml accept
+                            // we need to add the order again kda
                         }
                     }
-                }
-                else if (orderData.getStatue().equals("accepted")) {
+                } else if (orderData.getStatue().equals("accepted")) {
                     // ----------------- CRASHES ---------------- //
                     int indexs = 0;
                     for(int i = 0;i<mm.size();i++){
@@ -213,18 +215,16 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             indexs = i;
                         }
                     }
-                    //mm.remove(indexs);
                     orderAdapter.removeItem(indexs);
+                    mm.remove(indexs);
                     //orderAdapter.notifyItemRemoved(indexs);
-                    orderAdapter.notifyItemRangeChanged(indexs, mm.size());
-
+                    //orderAdapter.notifyItemRangeChanged(indexs, mm.size());
                 }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 // ----------------- CRASHES ---------------- //
-
                 final Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
                 int indexs = 0;
