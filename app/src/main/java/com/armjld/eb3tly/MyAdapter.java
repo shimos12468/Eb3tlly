@@ -76,7 +76,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public void removeItem(int position){
         filtersData.remove(position);
-        notifyItemRemoved(position);
+        notifyItemChanged(position);
+        //notifyItemRemoved(position);
     }
     public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count, SwipeRefreshLayout mSwipeRefreshLayout ) {
         this.count = count;
