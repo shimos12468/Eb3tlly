@@ -327,7 +327,7 @@ public class UserSetting extends AppCompatActivity {
 
                 if(bitmap != null) {
                     handleUpload(bitmap);
-                    mdialog.setMessage("جاري تحديث الصور الشخصيةة ...");
+                    mdialog.setMessage("جاري تحديث الصور الشخصية ...");
                     mdialog.show();
                     Log.i(TAG, "Photo Updated and current user is : " + mAuth.getInstance().getCurrentUser());
                 } else {

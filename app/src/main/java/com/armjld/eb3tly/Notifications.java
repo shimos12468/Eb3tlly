@@ -44,7 +44,6 @@ public class Notifications extends AppCompatActivity {
     private long count;
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     String TAG = "Notifications";
 
     @Override
@@ -66,7 +65,6 @@ public class Notifications extends AppCompatActivity {
         
         mAuth = FirebaseAuth.getInstance();
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         count =0;
@@ -180,7 +178,7 @@ public class Notifications extends AppCompatActivity {
         });
 
         // ---------------------- GET ALL THE Notifications -------------------//
-        nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
+        nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -190,7 +188,7 @@ public class Notifications extends AppCompatActivity {
                             notiData notiDB = ds.getValue(notiData.class);
                             mm[(int) count] = notiDB;
                             count++;
-                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count);
                             nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
                             recyclerView.setAdapter(orderAdapter);
                         }

@@ -96,7 +96,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         TextView tbTitle = findViewById(R.id.toolbar_title);
-        tbTitle.setText("الاوردرات المتاحة");
+        tbTitle.setText("جميع الاوردرات المتاحة");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
 
