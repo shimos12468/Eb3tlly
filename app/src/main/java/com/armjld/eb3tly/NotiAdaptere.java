@@ -43,16 +43,11 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
 
-    public NotiAdaptere(SwipeRefreshLayout mSwipeRefreshLayout) {
-        this.mSwipeRefreshLayout = mSwipeRefreshLayout;
-    }
-
-    public NotiAdaptere(Context context, notiData[] notiData, Context context1, long count, SwipeRefreshLayout mSwipeRefreshLayout) {
+    public NotiAdaptere(Context context, notiData[] notiData, Context context1, long count) {
         this.count = count;
         this.context = context;
         this.notiData = notiData;
         this.context1 = context1;
-        this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
@@ -84,36 +79,8 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                 context.startActivity(new Intent(context, profile.class));
             }
         });
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
     }
 
-    private void refresh() {
-        new Handler() {
-            public void postDelayed(Runnable runnable, int i) { }
-            @Override
-            public void publish(LogRecord record) { }
-            @Override
-            public void flush() { }
-            @Override
-            public void close() throws SecurityException { mSwipeRefreshLayout.setRefreshing(false); }
-        }.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                NotiAdaptere.this.notifyDataSetChanged();
-                Log.i(TAG, "Data Refreshed");
-
-            }
-        }, 3000);
-        NotiAdaptere.this.notifyDataSetChanged();
-        Log.i(TAG, "Data Refreshed");
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
 
     @Override
     public int getItemCount() {

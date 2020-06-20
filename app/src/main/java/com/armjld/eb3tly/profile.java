@@ -141,7 +141,7 @@ public class profile extends AppCompatActivity {
 
         //Title Bar
         tbTitle = findViewById(R.id.toolbar_title);
-        tbTitle.setText("الملف الشخصي");
+        tbTitle.setText("اوردراتي");
 
         txtNoOrders.setVisibility(View.GONE);
 

@@ -297,7 +297,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     int cancelledCount =  Integer.parseInt(dataSnapshot.child("canceled").getValue().toString());
                                     if(cancelledCount >= 3) { // Number of allowed canceled orders
-                                        Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الشهر, لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الشهر, لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
                                     } else {
                                         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                             @Override
@@ -312,7 +312,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
                                                         nDatabase.child(owner).push().setValue(Noti);
 
-                                                        Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
                                                         context.startActivity(new Intent(context, profile.class));
                                                         break;
                                                     case DialogInterface.BUTTON_NEGATIVE:
