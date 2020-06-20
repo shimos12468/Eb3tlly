@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                             if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
                                 final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
                                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
+
                                     @Override
                                     public void onSuccess(InstanceIdResult instanceIdResult) {
                                         String deviceToken = instanceIdResult.getToken();

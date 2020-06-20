@@ -463,7 +463,7 @@ public class profile extends AppCompatActivity {
 
                             // Delete Order for Supplier
                             final String orderID = data.getId();
-                            myviewholder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                                myviewholder.btnDelete.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

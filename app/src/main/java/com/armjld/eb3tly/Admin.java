@@ -441,7 +441,7 @@ public class Admin extends Activity {
         super.onStart();
 
         // -------------------------------------- Get users Counts --------------------------//
-        uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -488,7 +488,7 @@ public class Admin extends Activity {
         });
 
         // ----------------------------------------- Get orders Counts --------------------------------//
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -504,7 +504,7 @@ public class Admin extends Activity {
         });
 
         // --------------------------------------- Changing Button name Depending on Values ---------------------------//
-        vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        vDatabase.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

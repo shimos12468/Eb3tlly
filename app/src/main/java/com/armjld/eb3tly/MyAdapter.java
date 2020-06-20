@@ -68,9 +68,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     public void addItem(int position , Data data , int count){
-        filtersData.add(position,data);
-        filtersData.remove(position+1);
-        notifyDataSetChanged();
+        filtersData.set(position,data);
+        //filtersData.remove(position+1);
+        notifyItemChanged(position);
+        //notifyAll();
     }
     public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count, SwipeRefreshLayout mSwipeRefreshLayout ) {
         this.count = count;
@@ -91,7 +92,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view  = inflater.inflate(R.layout.item_data,parent,false);
-
         return new MyViewHolder(view);
     }
 

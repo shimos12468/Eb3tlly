@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,6 +62,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private EditText txtFilterMoney;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView txtNoOrders;
+    private MyAdapter orderAdapter;
 
     //Recycler view
     private RecyclerView recyclerView;
@@ -180,18 +184,54 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             }
         });
 
+        mDatabase.orderByChild("ddate").startAt(datee).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                final Data orderData = dataSnapshot.getValue(Data.class);
+                assert orderData != null;
+                if (orderData.getStatue().equals("placed")) {
+                    for(int i = 0;i<count;i++){
+                        if(mm.get(i).getId().equals(orderData.getId())) {
+                            a7a = orderData;
+                            indexmm = i;
+                            orderAdapter.addItem(indexmm ,a7a,(int)count);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         // ---------------------- GET ALL THE ORDERS -------------------//
-        mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
+        mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         final Data orderData = ds.getValue(Data.class);
+                        assert orderData != null;
                         if (orderData.getStatue().equals("placed")) {
-
                             for(int i = 0;i<count;i++){
-                             if(mm.get(i).getId()==orderData.getId()) {
+                                Log.i("HOME", "the i : " + i);
+                             if(mm.get(i).getId().equals(orderData.getId())) {
                                  a7a = orderData;
                                  flag = true;
                                  indexmm = i;
@@ -203,12 +243,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             }
 
                         }
-                        MyAdapter  orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                        orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
                         if(!flag){
                             recyclerView.setAdapter(orderAdapter);
-                        }
-                        else{
-                            Toast.makeText(HomeActivity.this, "now I know it is working", Toast.LENGTH_LONG).show();
+                        } else{
                             orderAdapter.addItem(indexmm ,a7a,(int)count);
                         }
                         flag = false;
