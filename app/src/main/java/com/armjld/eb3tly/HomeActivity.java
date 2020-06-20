@@ -190,9 +190,9 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         }
                         MyAdapter orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
                         recyclerView.setAdapter(orderAdapter);
-                        count = 0;
                     }
                 }
+                count = 0;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

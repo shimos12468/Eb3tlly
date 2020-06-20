@@ -40,7 +40,7 @@ public class Notifications extends AppCompatActivity {
     private DatabaseReference nDatabase;
     private FirebaseAuth mAuth;
     private ImageView btnNavBar;
-    private notiData[] mm;
+    private static notiData[] mm;
     private long count;
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
@@ -193,12 +193,12 @@ public class Notifications extends AppCompatActivity {
                             NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
                             nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
                             recyclerView.setAdapter(orderAdapter);
-                            orderAdapter.notifyDataSetChanged();
                         }
                     }
                 } else {
                     Log.i(TAG, "No Notifications for this user");
                 }
+                count = 0;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) { }

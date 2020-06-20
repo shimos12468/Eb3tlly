@@ -30,7 +30,7 @@ public class ReplyByAdmin extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private DatabaseReference cDatabase;
-    private replyAdmin[] mm;
+    private static replyAdmin[] mm;
     private long count;
     private RecyclerView recyclerView;
     String TAG = "ReplyByAdmin";
@@ -82,6 +82,7 @@ public class ReplyByAdmin extends AppCompatActivity {
                         }
                     }
                 }
+                count = 0;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) { }
