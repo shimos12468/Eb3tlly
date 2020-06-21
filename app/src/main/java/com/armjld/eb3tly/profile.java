@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -1418,6 +1419,7 @@ public class profile extends AppCompatActivity {
                 }
 
         //Get Order Satues in Profile
+        @SuppressLint("ResourceAsColor")
         public void setStatue(final String getStatue, final String uAccepted, String ddate){
             String valid_until = ddate;
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -1454,7 +1456,7 @@ public class profile extends AppCompatActivity {
                             } else {
                                 txtGetStat.setText("تم قبول اوردرك من : " + mName);
                             }
-                            txtGetStat.setTextColor(Color.YELLOW);
+                            txtGetStat.setTextColor(Color.parseColor("#ffc922"));
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) { }
@@ -1465,7 +1467,7 @@ public class profile extends AppCompatActivity {
                     txtGetStat.setEnabled(false);
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setText("تم توصيل اوردرك");
-                    txtGetStat.setTextColor(Color.GREEN);
+                    txtGetStat.setTextColor(Color.parseColor("#4CAF50"));
                     break;
                 }
             }
@@ -1497,6 +1499,7 @@ public class profile extends AppCompatActivity {
 
         public void setDilveredButton(final String state) {
             FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
+                @SuppressLint("ResourceAsColor")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String uType = snapshot.child("accountType").getValue().toString();
@@ -1545,7 +1548,7 @@ public class profile extends AppCompatActivity {
                                 btnDelivered.setVisibility(View.VISIBLE);
                                 btnInfo.setVisibility(View.VISIBLE);
                                 txtGetStat.setText("تم استلام الاوردر من التاجر");
-                                txtGetStat.setTextColor(Color.YELLOW);
+                                txtGetStat.setTextColor(Color.parseColor("#ffc922"));
                                 break;
                             }
                             case "delivered" : {
@@ -1553,7 +1556,7 @@ public class profile extends AppCompatActivity {
                                 btnDelete.setVisibility(View.GONE);
                                 btnInfo.setVisibility(View.GONE);
                                 txtGetStat.setText("تم توصيل الاوردر بنجاح");
-                                txtGetStat.setTextColor(Color.GREEN);
+                                txtGetStat.setTextColor(Color.parseColor("#4CAF50"));
                                 break;
                             }
                         }
