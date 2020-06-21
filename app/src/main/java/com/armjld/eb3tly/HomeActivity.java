@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private Toolbar toolbar;
     private ImageView filtrs_btn,btnNavBar;
     private static ArrayList<Data> mm;
-    private long count;
+    private long count,count2;
     private String FTAG = "Filters ";
     Data a7a = new Data();
     int index = 0;
@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase,rDatabase,uDatabase;
     int indexmm = -1;
+    int indexs = 0;
     private Spinner spPState,spPRegion,spDState,spDRegion;
     private Button btnApplyFilters;
     private EditText txtFilterMoney;
@@ -90,6 +91,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
         //Find View
         count =0;
+        count2 = 0;
         mm = new ArrayList<Data>();
         toolbar = findViewById(R.id.toolbar_home);
         filtrs_btn = findViewById(R.id.filters_btn);
@@ -187,56 +189,55 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         mDatabase.orderByChild("ddate").startAt(datee).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                final Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                mm.add(orderData);
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
-                if (orderData.getStatue().equals("placed")) {
+                if (orderData.getStatue().equals("placed") || orderData.getStatue().equals("accepted")) {
                     for(int i = 0;i<count;i++){
-                        if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
-                            a7a = orderData;
-                            indexmm = i;
-                            orderAdapter.addItem(indexmm ,a7a,(int)count);
-                        } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
-                            // dh el code lma 7d y3ml cancel ll order b3d ma 3ml accept
-                            // we need to add the order again kda
+                        if(i != 0) {
+                            if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
+                                a7a = orderData;
+                                indexmm = i;
+                                orderAdapter.addItem(indexmm ,a7a,(int)count);
+                            } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
+                                a7a = orderData;
+                                indexmm = i;
+                                orderAdapter.addItem(indexmm ,a7a,(int)count);
+                            }
                         }
                     }
-                } else if (orderData.getStatue().equals("accepted")) {
-                    int indexs = 0;
-                    for(int i = 0;i<mm.size();i++){
-                        if(mm.get(i).getId().equals(orderData.getId())){
+                }
+
+                    /*for(int i = 0;i<count;i++){
+                        if(mm.get(i).getId().equals(dataSnapshot.getKey()) && mm.get(i).getStatue().equals("placed")){
                             indexs = i;
-                            Log.i("home", "Deleting orders at mm index:" + i);
-                            orderAdapter.removeItem(indexs);
-                            mm.remove(indexs-1);
+                            mm.remove(indexs);
                             mm.trimToSize();
+                            break;
                         }
                     }
-
-
-                    //orderAdapter.notifyItemRemoved(indexs);
-                    //orderAdapter.notifyItemRangeChanged(indexs, mm.size());
+                    orderAdapter.notifyItemRemoved(indexs);
+                    orderAdapter.notifyItemRangeChanged(indexs, mm.size());
+                    orderAdapter.update(mm);*/
+                else {
+                    // ------------ Do Nothing
                 }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                // ----------------- CRASHES ---------------- //
                 final Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
                 int indexs = 0;
                 for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())){
+                    if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")){
                         indexs = i;
                     }
                 }
-                orderAdapter.removeItem(indexs);
+                orderAdapter.removeItem(indexs, mm.size());
                 mm.remove(indexs);
             }
 
@@ -250,39 +251,24 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
             }
         });
+
         // ---------------------- GET ALL THE ORDERS -------------------//
         mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                orderAdapter = null;
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        final Data orderData = ds.getValue(Data.class);
+                        Data orderData = ds.getValue(Data.class);
                         assert orderData != null;
                         if (orderData.getStatue().equals("placed")) {
-                            for(int i = 0;i<count;i++){
-                                Log.i("HOME", "the i : " + i);
-                             if(mm.get(i).getId().equals(orderData.getId())) {
-                                 a7a = orderData;
-                                 flag = true;
-                                 indexmm = i;
-                             }
-                            }
-                            if(!flag){
-                                mm.add((int) count, orderData);
-                                count++;
-                            }
-
+                            mm.add((int) count, orderData);
+                            count++;
                         }
                         orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
-                        if(!flag){
-                            recyclerView.setAdapter(orderAdapter);
-                        } else{
-                            orderAdapter.addItem(indexmm ,a7a,(int)count);
-                        }
-                        flag = false;
+                        recyclerView.setAdapter(orderAdapter);
                     }
                 }
-                //count = 0;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

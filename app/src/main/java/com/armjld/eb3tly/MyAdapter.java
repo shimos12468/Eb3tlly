@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -74,11 +75,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //notifyAll();
     }
 
-    public void removeItem(int position){
+    public void removeItem(int position, int size){
         filtersData.remove(position);
-        notifyItemChanged(position);
-        //notifyItemRemoved(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, size);
     }
+
+    public void update(ArrayList<Data> data){
+        this.filtersData = data;
+        notifyDataSetChanged();
+    }
+
     public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count, SwipeRefreshLayout mSwipeRefreshLayout ) {
         this.count = count;
         this.context = context;
@@ -91,6 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
         vDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+
     }
 
     @NonNull
@@ -134,6 +142,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
 
+        if(!filtersData.get(position).getStatue().equals("placed")) {
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setVisibility(View.VISIBLE);
+        } else {
+            holder.lin1.setVisibility(View.VISIBLE);
+            holder.txtWarning.setVisibility(View.GONE);
+        }
+
         //Hide this order Button
         holder.btnHide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +162,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         final String DAddress = filtersData.get(position).getDAddress();
         final String rateUID = filtersData.get(position).getuId();
         final String notes = filtersData.get(position).getNotes();
+
 
         //More Info Button
         holder.btnMore.setOnClickListener(new View.OnClickListener() {
@@ -297,45 +314,44 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         if (dataSnapshot.child("accepting").getValue().toString().equals("false")) {
                             Toast.makeText(context, "لا يمكن قبول اي اوردرات الان حاول بعد قليل", Toast.LENGTH_LONG).show();
                             return;
-                        } else {
-                            uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    int cancelledCount =  Integer.parseInt(dataSnapshot.child("canceled").getValue().toString());
-                                    if(cancelledCount >= 3) { // Number of allowed canceled orders
-                                        Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الشهر, لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switch (which){
-                                                    case DialogInterface.BUTTON_POSITIVE:
-                                                        mDatabase.child(orderID).child("statue").setValue("accepted");
-                                                        mDatabase.child(orderID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
-                                                        mDatabase.child(orderID).child("acceptedTime").setValue(datee);
-
-                                                        // --------------------------- Send Notifications ---------------------//
-                                                        notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
-                                                        nDatabase.child(owner).push().setValue(Noti);
-
-                                                        Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
-                                                        context.startActivity(new Intent(context, profile.class));
-                                                        break;
-                                                    case DialogInterface.BUTTON_NEGATIVE:
-                                                        break;
-                                                }
-                                            }
-                                        };
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setMessage("هل انت متاكد من انك تريد استلام الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
                         }
+                        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                int cancelledCount =  Integer.parseInt(dataSnapshot.child("canceled").getValue().toString());
+                                if(cancelledCount >= 3) { // Number of allowed canceled orders
+                                    Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الشهر, لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
+                                } else {
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case DialogInterface.BUTTON_POSITIVE:
+                                                    mDatabase.child(orderID).child("statue").setValue("accepted");
+                                                    mDatabase.child(orderID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
+                                                    mDatabase.child(orderID).child("acceptedTime").setValue(datee);
+
+                                                    // --------------------------- Send Notifications ---------------------//
+                                                    notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
+                                                    nDatabase.child(owner).push().setValue(Noti);
+
+                                                    Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
+                                                    context.startActivity(new Intent(context, profile.class));
+                                                    break;
+                                                case DialogInterface.BUTTON_NEGATIVE:
+                                                    break;
+                                            }
+                                        }
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                    builder.setMessage("هل انت متاكد من انك تريد استلام الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -366,7 +382,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         View myview;
-        Button btnAccept, btnHide, btnMore ;
+        Button btnAccept, btnHide, btnMore;
+        TextView txtWarning;
+        LinearLayout lin1;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -374,6 +392,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             btnAccept = myview.findViewById(R.id.btnAccept);
             btnHide = myview.findViewById(R.id.btnHide);
             btnMore = myview.findViewById(R.id.btnMore);
+            lin1 = myview.findViewById(R.id.lin1);
+            txtWarning = myview.findViewById(R.id.txtWarning);
         }
 
         void setUsername(String userID){
