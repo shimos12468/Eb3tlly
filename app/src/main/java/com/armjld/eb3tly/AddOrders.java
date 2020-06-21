@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class AddOrders extends AppCompatActivity {
     private String uID;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
+    private ImageView btnClose;
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
@@ -85,6 +87,9 @@ public class AddOrders extends AppCompatActivity {
         spPRegion = (Spinner) findViewById(R.id.txtPRegion);
         spDState = (Spinner) findViewById(R.id.txtDState);
         spDRegion = (Spinner) findViewById(R.id.txtDRegion);
+
+        btnClose = findViewById(R.id.btnClose);
+        btnClose.setVisibility(View.GONE);
 
         btnsave = findViewById(R.id.btnSave);
         btnSaveAdd = findViewById(R.id.btnSaveAdd);

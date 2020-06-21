@@ -1191,7 +1191,6 @@ public class profile extends AppCompatActivity {
                                     // --------------------------- Send Notifications ---------------------//
                                     notiData Noti = new notiData(mUser.getUid().toString(), SID,orderID,"delivered",notiDate,"false");
                                     nDatabase.child(SID).push().setValue(Noti);
-
                                     Toast.makeText(getApplicationContext(), "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -1466,7 +1465,7 @@ public class profile extends AppCompatActivity {
                     txtGetStat.setEnabled(false);
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setText("تم توصيل اوردرك");
-                    txtGetStat.setTextColor(Color.GREEN);
+                    txtGetStat.setTextColor(Integer.parseInt("#4CAF50"));
                     break;
                 }
             }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="7dp"
-    android:background="@color/colorWhite"
+    android:background="@color/colorBack"
     android:elevation="100dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="100dp">
@@ -12,16 +12,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
+        android:background="@color/colorBack"
         android:orientation="horizontal">
 
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_weight="2"
-            android:background="@color/colorAccent">
+            android:background="@color/colorBack">
 
             <TextView
                 android:id="@+id/txtUsername"
@@ -35,7 +34,7 @@
                 android:layout_marginEnd="125dp"
                 android:text="Username"
                 android:textAlignment="center"
-                android:textColor="#FFEB3B"
+                android:textColor="@color/ic_profile_background"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -49,9 +48,10 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="-1dp"
                 android:layout_marginEnd="274dp"
+                android:background="#4CAF50"
                 android:text="50 ج"
                 android:textAlignment="center"
-                android:textColor="#4CAF50"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -65,9 +65,11 @@
                 android:layout_marginStart="273dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="0dp"
+                android:background="#FF0000"
+                android:backgroundTint="#FF0000"
                 android:text="50 ج"
                 android:textAlignment="center"
-                android:textColor="#F44336"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -81,7 +83,7 @@
                 android:layout_marginEnd="0dp"
                 android:text="From"
                 android:textAlignment="center"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -97,7 +99,7 @@
                 android:layout_toStartOf="@+id/toArrow"
                 android:text="To"
                 android:textAlignment="center"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -121,7 +123,7 @@
                 android:layout_toStartOf="@+id/imageView9"
                 android:text="20/5/2020"
                 android:textAlignment="viewEnd"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -180,7 +182,7 @@
                 android:layout_marginEnd="127dp"
                 android:text="TextView"
                 android:textAlignment="center"
-                android:textColor="#FBFBFB"
+                android:textColor="#000000"
                 android:textSize="10sp" />
 
             <ImageView

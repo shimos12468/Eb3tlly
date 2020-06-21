@@ -145,17 +145,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setText("الاوردر تم قبولة بالفعل من مندوب اخر");
             holder.txtWarning.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             holder.lin1.setVisibility(View.VISIBLE);
             holder.txtWarning.setVisibility(View.GONE);
         }
+
         if(filtersData.get(position).getRemoved().equals("true")){
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
             holder.txtWarning.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else{
             holder.lin1.setVisibility(View.VISIBLE);
             holder.txtWarning.setVisibility(View.GONE);
         }

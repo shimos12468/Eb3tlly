@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@color/colorBack"
     tools:context="com.armjld.eb3tly.MainActivity">
 
 
@@ -34,6 +34,7 @@
         android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
+        android:gravity="left"
         android:hint="البريد الالكتروني"
         android:inputType="textEmailAddress"
         android:textAlignment="textStart"
@@ -54,6 +55,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
+        android:gravity="left"
         android:hint="    كلمه المرور"
         android:inputType="textPassword"
         android:textAlignment="textEnd"
