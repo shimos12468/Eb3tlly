@@ -3,7 +3,6 @@ package com.armjld.eb3tly;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,14 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-
 import Model.notiData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
@@ -37,7 +30,6 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     long count;
     notiData[] notiData;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    SwipeRefreshLayout mSwipeRefreshLayout;
     private DatabaseReference mDatabase, uDatabase, nDatabase;
     private String TAG = "Notification Adapter";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");

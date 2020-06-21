@@ -69,7 +69,7 @@
         android:maxLines="5"
         android:minLines="1"
         android:textAlignment="viewEnd"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textColorHint="#757575"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
