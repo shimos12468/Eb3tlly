@@ -71,13 +71,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public void addItem(int position , Data data , int count){
         filtersData.set(position,data);
-        //filtersData.remove(position+1);
         notifyItemChanged(position);
         //notifyAll();
     }
 
-    public void removeItem(int position, int size){
-      filtersData.get(position).setRemoved("true");
+    public void removeItem(int position, int size, Data data){
+        filtersData.set(position,data);
+        notifyItemChanged(position);
     }
 
     public void update(ArrayList<Data> data){
@@ -154,7 +154,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
             holder.txtWarning.setVisibility(View.VISIBLE);
-        } else{
+        } else if (filtersData.get(position).getRemoved() == null){
             holder.lin1.setVisibility(View.VISIBLE);
             holder.txtWarning.setVisibility(View.GONE);
         }

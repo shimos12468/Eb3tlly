@@ -1465,7 +1465,7 @@ public class profile extends AppCompatActivity {
                     txtGetStat.setEnabled(false);
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setText("تم توصيل اوردرك");
-                    txtGetStat.setTextColor(Integer.parseInt("#4CAF50"));
+                    txtGetStat.setTextColor(Color.GREEN);
                     break;
                 }
             }

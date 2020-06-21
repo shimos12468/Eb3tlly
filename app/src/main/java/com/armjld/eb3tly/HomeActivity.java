@@ -197,13 +197,11 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 assert orderData != null;
                 if (orderData.getStatue().equals("placed") || orderData.getStatue().equals("accepted")) {
                     for(int i = 0;i<mm.size();i++){
-
                         if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
                                 a7a = orderData;
                                 indexmm = i;
                                 orderAdapter.addItem(indexmm ,a7a,(int)count);
-                        }
-                        else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
+                        } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
                                 a7a = orderData;
                                 indexmm = i;
                                 orderAdapter.addItem(indexmm ,a7a,(int)count);
@@ -236,10 +234,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 for(int i = 0;i<mm.size();i++){
                     if(mm.get(i).getId().equals(orderData.getId())){
                         indexs = i;
+                        orderData.setRemoved("true");
+                        orderAdapter.removeItem(indexs, mm.size(), orderData);
                     }
                 }
-                orderAdapter.removeItem(indexs, mm.size());
-                mm.remove(indexs);
             }
 
             @Override
