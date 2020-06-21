@@ -36,6 +36,15 @@ public class Data {
 
     private String srated;
     private String srateid;
+    private String removed = "false";
+
+    public String getRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(String removed) {
+        this.removed = removed;
+    }
 
     private String drated;
     private String drateid;
@@ -56,7 +65,6 @@ public class Data {
         this.mPAddress = mPAddress;
         this.mPShop = mPShop;
         this.notes = notes;
-
         this.acceptedTime = acceptedTime;
         this.dilverTime = dilverTime;
 

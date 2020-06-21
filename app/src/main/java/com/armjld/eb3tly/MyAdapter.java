@@ -77,9 +77,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     public void removeItem(int position, int size){
-        filtersData.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, size);
+      filtersData.get(position).setRemoved("true");
     }
 
     public void update(ArrayList<Data> data){
@@ -145,11 +143,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         if(!filtersData.get(position).getStatue().equals("placed")) {
             holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setText("الاوردر تم قبولة بالفعل من مندوب اخر");
             holder.txtWarning.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else {
             holder.lin1.setVisibility(View.VISIBLE);
             holder.txtWarning.setVisibility(View.GONE);
         }
+        if(filtersData.get(position).getRemoved().equals("true")){
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
+            holder.txtWarning.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.lin1.setVisibility(View.VISIBLE);
+            holder.txtWarning.setVisibility(View.GONE);
+        }
+
+
 
         //Hide this order Button
         holder.btnHide.setOnClickListener(new View.OnClickListener() {
@@ -338,6 +349,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                                                     Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
                                                     context.startActivity(new Intent(context, profile.class));
+
                                                     break;
                                                 case DialogInterface.BUTTON_NEGATIVE:
                                                     break;

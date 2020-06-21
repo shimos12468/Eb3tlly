@@ -196,18 +196,19 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 final Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
                 if (orderData.getStatue().equals("placed") || orderData.getStatue().equals("accepted")) {
-                    for(int i = 0;i<count;i++){
-                        if(i != 0) {
-                            if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
+                    for(int i = 0;i<mm.size();i++){
+
+                        if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
                                 a7a = orderData;
                                 indexmm = i;
                                 orderAdapter.addItem(indexmm ,a7a,(int)count);
-                            } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
-                                a7a = orderData;
-                                indexmm = i;
-                                orderAdapter.addItem(indexmm ,a7a,(int)count);
-                            }
                         }
+                        else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
+                                a7a = orderData;
+                                indexmm = i;
+                                orderAdapter.addItem(indexmm ,a7a,(int)count);
+                        }
+
                     }
                 }
 
@@ -233,7 +234,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 assert orderData != null;
                 int indexs = 0;
                 for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")){
+                    if(mm.get(i).getId().equals(orderData.getId())){
                         indexs = i;
                     }
                 }
