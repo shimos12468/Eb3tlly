@@ -1056,6 +1056,7 @@ public class profile extends AppCompatActivity {
 
                         @Override
                         protected void populateViewHolder(final myviewholder myviewholder, final Data data, int i) {
+
                             // Get Post Date
                             String startDate = data.getDate();
                             String stopDate = datee;
@@ -1301,18 +1302,18 @@ public class profile extends AppCompatActivity {
                                                             String acceptedDate = data.getAcceptedTime();
                                                             String owner = data.getuId();
 
-                                                            String now = datee;
                                                             int cancelledCount =  Integer.parseInt(dataSnapshot.child("canceled").getValue().toString());
                                                             int finalCount = (cancelledCount + 1);
                                                             int reminCount = 3 - cancelledCount - 1;
 
-                                                            if(acceptedDate.compareTo(lastedit) == -1) { // if the worker accepted the order after editing it
+                                                            if(acceptedDate.compareTo(lastedit) < 0) { // if the worker accepted the order after editing it
                                                                 uDatabase.child(uID).child("canceled").setValue(String.valueOf(finalCount));
                                                                 Log.i(TAG, "Remining tries : " + reminCount);
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
                                                             } else {
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             }
+
                                                             mDatabase.child(DorderID).child("uAccepted").setValue("");
                                                             mDatabase.child(DorderID).child("acceptTime").setValue("");
                                                             mDatabase.child(DorderID).child("statue").setValue("placed");
