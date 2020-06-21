@@ -28,9 +28,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtStatue"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="0dp"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -38,10 +38,13 @@
                     android:layout_width="0dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_bad"
                     android:text="الغاء الاوردر"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textSize="20sp"
                     android:visibility="visible" />
 
@@ -50,6 +53,9 @@
                     android:layout_width="0dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
                     android:text="بيانات الاوردر"
@@ -61,10 +67,13 @@
                     android:layout_width="0dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_bad"
                     android:text="تعديل الاوردر"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -73,9 +82,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lin1"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="0dp"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -83,6 +92,9 @@
                     android:layout_width="0dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
                     android:text="تم تسليم الاوردر للمندوب"
@@ -94,6 +106,9 @@
                     android:layout_width="0dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
                     android:text="تم توصيل الاوردر"
@@ -106,9 +121,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lin2"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="0dp"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -116,6 +131,9 @@
                     android:layout_width="0dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
                     android:text="تقييم الاوردر"
@@ -306,6 +324,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
+                android:gravity="center"
                 android:text="TextView"
                 android:textAlignment="center"
                 android:textColor="#FFFCFC"

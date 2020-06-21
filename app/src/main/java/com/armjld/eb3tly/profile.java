@@ -55,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,6 +97,8 @@ public class profile extends AppCompatActivity {
     FirebaseRecyclerAdapter<Data, myviewholder> adapter;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
+
+    String notiDate = DateFormat.getDateInstance().format(new Date());
 
     // Disable the Back Button
     @Override
@@ -479,7 +482,7 @@ public class profile extends AppCompatActivity {
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             setOrderCount("Supplier", mUser.getUid());
                                                             // --------------------------- Send Notifications ---------------------//
-                                                            notiData Noti = new notiData(mUser.getUid().toString(), idAccepted,orderID,"deleted",datee,"false");
+                                                            notiData Noti = new notiData(mUser.getUid().toString(), idAccepted,orderID,"deleted",notiDate,"false");
                                                             nDatabase.child(idAccepted).push().setValue(Noti);
                                                         }
 
@@ -874,7 +877,7 @@ public class profile extends AppCompatActivity {
                                             mDatabase.child(id).child("lastedit").setValue(datee);
 
                                             // --------------------------- Send Notifications ---------------------//
-                                            notiData Noti = new notiData(mUser.getUid().toString(), uAccepted,orderID,"edited",datee,"false");
+                                            notiData Noti = new notiData(mUser.getUid().toString(), uAccepted,orderID,"edited",notiDate,"false");
                                             nDatabase.child(uAccepted).push().setValue(Noti);
 
                                             Toast.makeText(profile.this, "تم تعديل بيانات الاوردر بنجاح", Toast.LENGTH_SHORT).show();
@@ -992,9 +995,14 @@ public class profile extends AppCompatActivity {
                                     final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<String>(profile.this, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
                                     listComment.setAdapter(arrayAdapterLessons);
                                     mArraylistSectionLessons.clear(); // To not dublicate comments
-                                    rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addValueEventListener(new ValueEventListener() {
+                                    rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if(snapshot.exists()) {
+                                                txtNodsComments.setVisibility(View.GONE);
+                                            } else {
+                                                txtNodsComments.setVisibility(View.VISIBLE);
+                                            }
                                             for (DataSnapshot data : dataSnapshot.getChildren()) {
                                                 int count = (int) dataSnapshot.getChildrenCount();
                                                 String tempComment = data.child("comment").getValue().toString();
@@ -1009,12 +1017,6 @@ public class profile extends AppCompatActivity {
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
                                         }
                                     });
-
-                                    if(mArraylistSectionLessons.isEmpty()) {
-                                        txtNodsComments.setVisibility(View.VISIBLE);
-                                    } else {
-                                        txtNodsComments.setVisibility(View.GONE);
-                                    }
                                 }
                             });
                             datalist.add(data);
@@ -1187,7 +1189,7 @@ public class profile extends AppCompatActivity {
                                     });
 
                                     // --------------------------- Send Notifications ---------------------//
-                                    notiData Noti = new notiData(mUser.getUid().toString(), SID,orderID,"delivered",datee,"false");
+                                    notiData Noti = new notiData(mUser.getUid().toString(), SID,orderID,"delivered",notiDate,"false");
                                     nDatabase.child(SID).push().setValue(Noti);
 
                                     Toast.makeText(getApplicationContext(), "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
@@ -1295,7 +1297,7 @@ public class profile extends AppCompatActivity {
                                                             mDatabase.child(DorderID).child("statue").setValue("placed");
 
                                                             // --------------------------- Send Notifications ---------------------//
-                                                            notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",datee,"false");
+                                                            notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",notiDate,"false");
                                                             nDatabase.child(owner).push().setValue(Noti);
 
                                                             adapter.notifyDataSetChanged();

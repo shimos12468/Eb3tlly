@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,9 +61,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
      SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
      String datee = sdf.format(new Date());
+    String notiDate = DateFormat.getDateInstance().format(new Date());
 
-    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-    String datee2 = sdf.format(new Date());
+
 
     public MyAdapter(SwipeRefreshLayout mSwipeRefreshLayout) {
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
@@ -280,6 +281,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            txtNoddComments.setVisibility(View.GONE);
+                        } else {
+                            txtNoddComments.setVisibility(View.VISIBLE);
+                        }
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             String tempComment = data.child("comment").getValue().toString();
                             if(!tempComment.equals("")) { // make sure that there is a comment
@@ -293,11 +299,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     }
                 });
 
-                if(mArraylistSectionLessons.isEmpty()) {
-                    txtNoddComments.setVisibility(View.VISIBLE);
-                } else {
-                    txtNoddComments.setVisibility(View.GONE);
-                }
 
             }
         });
@@ -332,7 +333,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                     mDatabase.child(orderID).child("acceptedTime").setValue(datee);
 
                                                     // --------------------------- Send Notifications ---------------------//
-                                                    notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
+                                                    notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",notiDate,"false");
                                                     nDatabase.child(owner).push().setValue(Noti);
 
                                                     Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();

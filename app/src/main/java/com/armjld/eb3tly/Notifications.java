@@ -79,8 +79,8 @@ public class Notifications extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager= new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(false);
-        layoutManager.setStackFromEnd(false);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
         // NAV BAR
@@ -145,6 +145,33 @@ public class Notifications extends AppCompatActivity {
             }
         });
 
+        // ---------------------- GET ALL THE Notifications -------------------//
+        nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    txtNoOrders.setVisibility(View.GONE);
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if(ds.exists()) {
+                            int noticount = (int) ds.getChildrenCount();
+                            notiData notiDB = ds.getValue(notiData.class);
+                            mm[(int) count] = notiDB;
+                            count++;
+                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count);
+                            nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
+                            recyclerView.setAdapter(orderAdapter);
+                        }
+                    }
+                } else {
+                    txtNoOrders.setVisibility(View.VISIBLE);
+                    Log.i(TAG, "No Notifications for this user");
+                }
+                count = 0;
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
         // ------------------ Show or Hide Buttons depending on the User Type
         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -159,47 +186,5 @@ public class Notifications extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) { }
         });
 
-    }
-
-    @Override
-    protected void onStart () {
-        super.onStart();
-        nDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    txtNoOrders.setVisibility(View.GONE);
-                } else {
-                    txtNoOrders.setVisibility(View.VISIBLE);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
-
-        // ---------------------- GET ALL THE Notifications -------------------//
-        nDatabase.child(mAuth.getCurrentUser().getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        if(ds.exists()) {
-                            int noticount = (int) ds.getChildrenCount();
-                            notiData notiDB = ds.getValue(notiData.class);
-                            mm[(int) count] = notiDB;
-                            count++;
-                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count);
-                            nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
-                            recyclerView.setAdapter(orderAdapter);
-                        }
-                    }
-                } else {
-                    Log.i(TAG, "No Notifications for this user");
-                }
-                count = 0;
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
     }
 }

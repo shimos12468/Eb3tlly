@@ -45,6 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_gravity="left"
+        android:background="@color/colorBack"
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,83 +60,113 @@
             android:orientation="vertical"
             tools:context="com.armjld.eb3tly.profile">
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constProfInfo"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:text="مجموع عدد الاوردرات :"
-                android:textColor="#000000"
+                android:background="@color/ic_profile_background"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="50dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtUserDate">
+                <TextView
+                    android:id="@+id/txtUserType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="مندوب شحن"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
 
-                <ImageView
-                    android:id="@+id/imgPPP"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@color/colorWhite"
-                    tools:srcCompat="@color/colorWhite" />
-            </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/txtUsername"
+                    android:layout_width="250dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="5dp"
+                    android:text="User Name"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBack"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-            <TextView
-                android:id="@+id/txtUsername"
-                android:layout_width="250dp"
-                android:layout_height="35dp"
-                android:text="User Name"
-                android:textAlignment="center"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView" />
+                <TextView
+                    android:id="@+id/txtTotalOrders"
+                    android:layout_width="229dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Orders Count"
+                    android:textAlignment="viewEnd"
+                    android:textColor="@color/colorBack"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/textView8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <RatingBar
+                    android:id="@+id/rbProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:focusableInTouchMode="false"
+                    android:isIndicator="true"
+                    android:scaleX="0.5"
+                    android:scaleY="0.5"
+                    android:theme="@style/RatingBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtUserType" />
 
-            <TextView
-                android:id="@+id/txtUserType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="مندوب شحن"
-                android:textAlignment="center"
-                android:textColor="#9C27B0"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.496"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+                <TextView
+                    android:id="@+id/txtUserDate"
+                    android:layout_width="200dp"
+                    android:layout_height="23dp"
+                    android:layout_marginTop="5dp"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtTotalOrders" />
 
-            <TextView
-                android:id="@+id/txtTotalOrders"
-                android:layout_width="229dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="5dp"
-                android:text="Orders Count"
-                android:textAlignment="viewEnd"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/textView8"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="مجموع عدد الاوردرات :"
+                    android:textColor="@color/colorBack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
+                    app:cardCornerRadius="50dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtUserDate">
+
+                    <ImageView
+                        android:id="@+id/imgPPP"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@color/colorWhite"
+                        tools:srcCompat="@color/colorWhite" />
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnAdd"
@@ -174,42 +205,13 @@
                 android:layout_height="0dp"
                 android:layout_below="@+id/cardView"
                 android:layout_gravity="left"
-                android:layout_marginTop="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rbProfile"
+                app:layout_constraintTop_toBottomOf="@+id/constProfInfo"
                 app:layout_constraintVertical_bias="1.0" />
 
-            <RatingBar
-                android:id="@+id/rbProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusableInTouchMode="false"
-                android:isIndicator="true"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
-                android:theme="@style/RatingBar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtUserType" />
-
-            <TextView
-                android:id="@+id/txtUserDate"
-                android:layout_width="200dp"
-                android:layout_height="23dp"
-                android:layout_marginTop="10dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtTotalOrders" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView
