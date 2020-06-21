@@ -45,6 +45,7 @@ public class AddOrders extends AppCompatActivity {
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
     private ImageView btnClose;
+    DatePickerDialog dpd;
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
@@ -201,7 +202,6 @@ public class AddOrders extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
                 updateLabel();
             }
 
@@ -215,7 +215,7 @@ public class AddOrders extends AppCompatActivity {
         DDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog dpd = new DatePickerDialog(AddOrders.this, pdate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                dpd = new DatePickerDialog(AddOrders.this, pdate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH));
                 DatePicker dp = dpd.getDatePicker();
                 dp.setMinDate(myCalendar.getTimeInMillis() - 100); // disable all the previos dates
@@ -227,8 +227,6 @@ public class AddOrders extends AppCompatActivity {
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mdialog.setMessage("جاري اضافة الاوردر");
-                mdialog.show();
                 // Txt Fields Strings
                 final String mPAddress = PAddress.getText().toString();
                 final String mNote = txtNotes.getText().toString();
@@ -263,7 +261,7 @@ public class AddOrders extends AppCompatActivity {
                     DDate.setError("الرجاء ادخال البيانات");
                     return;
                 }
-                if (TextUtils.isEmpty(mDPhone)) {
+                if(mDPhone.length() != 11) {
                     DPhone.setError("الرجاء ادخال البيانات");
                     return;
                 }
@@ -301,6 +299,9 @@ public class AddOrders extends AppCompatActivity {
                 } else {
                     isMotor = "";
                 }
+
+                mdialog.setMessage("جاري اضافة الاوردر");
+                mdialog.show();
 
                 final String finalIsMetro = isMetro;
                 final String finalIsTrans = isTrans;
@@ -326,7 +327,7 @@ public class AddOrders extends AppCompatActivity {
                                 startActivity(new Intent(AddOrders.this, profile.class));
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
+                                mdialog.dismiss();
                                 break;
                         }
                     }
@@ -340,8 +341,6 @@ public class AddOrders extends AppCompatActivity {
          btnSaveAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mdialog.setMessage("جاري اضافة الاوردر");
-                mdialog.show();
                 // Txt Fields Strings
                 final String mPAddress = PAddress.getText().toString();
                 final String mNote = txtNotes.getText().toString();
@@ -376,10 +375,12 @@ public class AddOrders extends AppCompatActivity {
                     DDate.setError("الرجاء ادخال البيانات");
                     return;
                 }
-                if (TextUtils.isEmpty(mDPhone)) {
+
+                if(mDPhone.length() != 11) {
                     DPhone.setError("الرجاء ادخال البيانات");
                     return;
                 }
+
                 if (TextUtils.isEmpty(mDName)) {
                     DName.setError("الرجاء ادخال البيانات");
                     return;
@@ -415,6 +416,9 @@ public class AddOrders extends AppCompatActivity {
                     isMotor = "";
                 }
 
+                mdialog.setMessage("جاري اضافة الاوردر");
+                mdialog.show();
+
                 final String finalIsMetro = isMetro;
                 final String finalIsTrans = isTrans;
                 final String finalIsMotor = isMotor;
@@ -439,7 +443,7 @@ public class AddOrders extends AppCompatActivity {
                                 Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن يمكنك الان اضافه اوردر اخر", Toast.LENGTH_SHORT).show();
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
+                                mdialog.dismiss();
                                 break;
                         }
                     }
@@ -449,9 +453,9 @@ public class AddOrders extends AppCompatActivity {
             }
 
             private void clearText() {
+                dpd = null;
                 txtNotes.setText("");
                 DAddress.setText("");
-                DDate.setText("");
                 DPhone.setText("");
                 DName.setText("");
                 GMoney.setText("");
@@ -461,7 +465,7 @@ public class AddOrders extends AppCompatActivity {
                 chkMotor.setChecked(false);
                 chkTrans.setChecked(false);
                 spDState.setSelection(0);
-                spPRegion.setSelection(0);
+                spDRegion.setSelection(0);
             }
         });
     }

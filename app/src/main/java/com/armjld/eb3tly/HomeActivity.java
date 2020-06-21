@@ -186,6 +186,13 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             }
         });
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
+
         mDatabase.orderByChild("ddate").startAt(datee).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

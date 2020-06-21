@@ -36,7 +36,7 @@ public class Data {
 
     private String srated;
     private String srateid;
-    private String removed = "false";
+    public static String removed = "false";
 
     public String getRemoved() {
         return removed;
@@ -103,27 +103,21 @@ public class Data {
     public String getTxtPState() {
         return txtPState;
     }
-
     public void setTxtPState(String txtPState) {
         this.txtPState = txtPState;
     }
-
     public String getmPAddress() {
         return mPAddress;
     }
-
     public void setmPAddress(String mPAddress) {
         this.mPAddress = mPAddress;
     }
-
     public String getmPShop() {
         return mPShop;
     }
-
     public void setmPShop(String mPShop) {
         this.mPShop = mPShop;
     }
-
     public String getDate() {
         return date;
     }

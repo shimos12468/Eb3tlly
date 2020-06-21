@@ -478,13 +478,34 @@ public class profile extends AppCompatActivity {
                                                     mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            // ------------ Delete the Orders Notfications ------------------- //
+                                                            nDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                    if(dataSnapshot.exists()) {
+                                                                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                                                            if(ds.exists()) {
+                                                                                for(DataSnapshot sn : ds.getChildren()) {
+                                                                                    if(sn.exists()) {
+                                                                                        String orderI = sn.child("orderid").getValue().toString();
+                                                                                        if(orderID.equals(orderI)) {
+                                                                                            sn.getRef().removeValue();
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) { }
+                                                            });
+
                                                             snapshot.getRef().removeValue();
                                                             String idAccepted = snapshot.child("uAccepted").getValue().toString();
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             setOrderCount("Supplier", mUser.getUid());
-                                                            // --------------------------- Send Notifications ---------------------//
-                                                            notiData Noti = new notiData(mUser.getUid().toString(), idAccepted,orderID,"deleted",notiDate,"false");
-                                                            nDatabase.child(idAccepted).push().setValue(Noti);
                                                         }
 
                                                         @Override
@@ -1615,25 +1636,25 @@ public class profile extends AppCompatActivity {
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
             } else {
-                icnCar.setVisibility(View.INVISIBLE);
+                icnCar.setVisibility(View.GONE);
             }
 
             if(motor.equals("موتسكل")) {
                 icnMotor.setVisibility(View.VISIBLE);
             } else {
-                icnMotor.setVisibility(View.INVISIBLE);
+                icnMotor.setVisibility(View.GONE);
             }
 
             if(metro.equals("مترو")) {
                 icnMetro.setVisibility(View.VISIBLE);
             } else {
-                icnMetro.setVisibility(View.INVISIBLE);
+                icnMetro.setVisibility(View.GONE);
             }
 
             if (trans.equals("مواصلات")) {
                 icnTrans.setVisibility(View.VISIBLE);
             } else {
-                icnTrans.setVisibility(View.INVISIBLE);
+                icnTrans.setVisibility(View.GONE);
             }
         }
         public void setPostDate(int dS, int dM, int dH, int dD) {

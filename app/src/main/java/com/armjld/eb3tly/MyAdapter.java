@@ -72,7 +72,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void addItem(int position , Data data , int count){
         filtersData.set(position,data);
         notifyItemChanged(position);
-        //notifyAll();
     }
 
     public void removeItem(int position, int size, Data data){
@@ -154,12 +153,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
             holder.txtWarning.setVisibility(View.VISIBLE);
-        } else if (filtersData.get(position).getRemoved() == null){
+            Data.removed = "false";
+        } else {
             holder.lin1.setVisibility(View.VISIBLE);
             holder.txtWarning.setVisibility(View.GONE);
         }
-
-
 
         //Hide this order Button
         holder.btnHide.setOnClickListener(new View.OnClickListener() {
@@ -452,25 +450,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
             } else {
-                icnCar.setVisibility(View.INVISIBLE);
+                icnCar.setVisibility(View.GONE);
             }
 
             if(motor.equals("موتسكل")) {
                 icnMotor.setVisibility(View.VISIBLE);
             } else {
-                icnMotor.setVisibility(View.INVISIBLE);
+                icnMotor.setVisibility(View.GONE);
             }
-
             if(metro.equals("مترو")) {
                 icnMetro.setVisibility(View.VISIBLE);
             } else {
-                icnMetro.setVisibility(View.INVISIBLE);
+                icnMetro.setVisibility(View.GONE);
             }
-
             if (trans.equals("مواصلات")) {
                 icnTrans.setVisibility(View.VISIBLE);
             } else {
-                icnTrans.setVisibility(View.INVISIBLE);
+                icnTrans.setVisibility(View.GONE);
             }
         }
 

@@ -46,8 +46,10 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
+                android:gravity="right"
                 android:hint="اسم المحل (اذا وجد)"
                 android:inputType="textPersonName"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -127,8 +129,10 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
+                android:gravity="right"
                 android:hint="العنوان"
                 android:inputType="textPersonName"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light" />
 
@@ -155,8 +159,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
+                android:gravity="right"
                 android:hint="اسم العميل"
                 android:inputType="textPersonName"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light" />
 
@@ -171,6 +177,7 @@
                 android:gravity="right"
                 android:hint="رقم هاتف العميل"
                 android:inputType="number|phone"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light" />
 
@@ -184,8 +191,10 @@
                 android:clickable="true"
                 android:ems="10"
                 android:focusable="false"
+                android:gravity="right"
                 android:hint="تاريخ تسليم الاوردر"
                 android:inputType="none"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light" />
 
@@ -262,8 +271,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
+                android:gravity="right"
                 android:hint="العنوان بالتفصيل"
                 android:inputType="textPersonName"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light" />
 
@@ -277,8 +288,10 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
                 android:ems="10"
+                android:gravity="right"
                 android:hint="ملاحظات : محتوي الاوردر, وزنة,معاد تسليمه .."
                 android:inputType="textLongMessage"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="#9A9A9A" />
 
@@ -305,10 +318,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
+                android:gravity="right"
                 android:hint="مقدم الاوردر"
-                android:inputType="number"
 
-                android:textAlignment="viewEnd"
+                android:inputType="number"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light" />
 
@@ -320,8 +334,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
+                android:gravity="right"
                 android:hint="مصاريف الشحن"
                 android:inputType="number"
+                android:textAlignment="gravity"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/tertiary_text_light" />
 
