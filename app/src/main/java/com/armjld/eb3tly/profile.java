@@ -1326,8 +1326,7 @@ public class profile extends AppCompatActivity {
                                                             setOrderCount("Delivery Worker", mUser.getUid());
                                                         }
                                                         @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
-                                                        }
+                                                        public void onCancelled(DatabaseError databaseError) { }
                                                     });
                                                     break;
                                                 case DialogInterface.BUTTON_NEGATIVE:
