@@ -22,7 +22,7 @@
         android:id="@+id/txtEditPassword"
         android:layout_width="280dp"
         android:layout_height="47dp"
-
+        android:drawableRight="@drawable/ic_add_key"
         android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="كلمة السر الجديدة"
@@ -41,7 +41,7 @@
         android:id="@+id/txtOldPassword"
         android:layout_width="280dp"
         android:layout_height="47dp"
-
+        android:drawableRight="@drawable/ic_add_key"
         android:layout_marginTop="74dp"
         android:ems="10"
         android:hint="كلمه السر القديمة"
@@ -60,7 +60,7 @@
         android:id="@+id/txtEditPassword2"
         android:layout_width="280dp"
         android:layout_height="47dp"
-
+        android:drawableRight="@drawable/ic_add_key"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="اعادة كتابه كلمة السر الجديدة"
@@ -81,7 +81,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/btn_defult"
-        android:text="تغيير الرقم السري"
+        android:text="تغيير كلمه السر"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"

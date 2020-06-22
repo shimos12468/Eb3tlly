@@ -412,6 +412,9 @@ public class Signup extends AppCompatActivity {
             return;
         }
 
+        mdialog.setMessage("جاري التأكد من البيانات ..");
+        mdialog.show();
+
         impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
 
         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -419,9 +422,11 @@ public class Signup extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     if (snapshot.getValue() != null) {
+                        mdialog.dismiss();
                         Toast.makeText(Signup.this, "رقم الهاتف بالفعل مسجل", Toast.LENGTH_SHORT).show();
                     } else {
                         startTimer();
+                        mdialog.dismiss();
                         linersignUp.setVisibility(View.GONE);
                         linerVerf.setVisibility(View.VISIBLE);
                         txtViewPhone.setText("ضع الرمز المرسل اليك");
@@ -443,6 +448,7 @@ public class Signup extends AppCompatActivity {
                     }
                 } else {
                     startTimer();
+                    mdialog.dismiss();
                     linersignUp.setVisibility(View.GONE);
                     linerVerf.setVisibility(View.VISIBLE);
                     txtViewPhone.setText("ضع الرمز المرسل اليك");
@@ -477,6 +483,8 @@ public class Signup extends AppCompatActivity {
                     editTextCode.requestFocus();
                     return;
                 }
+                mdialog.setMessage("جاري التأكد من الكود ..");
+                mdialog.show();
                 verifyVerificationCode(code);
             }
         });
@@ -559,8 +567,6 @@ public class Signup extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    mdialog.setMessage("جاري انشاء حسابك..");
-                    mdialog.show();
                     final String id = mAuth.getCurrentUser().getUid().toString();
                     final  String memail = impdata.getMail();
                     final  String mpass  = impdata.getPassword();
@@ -610,6 +616,7 @@ public class Signup extends AppCompatActivity {
                     if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                         message = "Invalid code entered...";
                     }
+                    mdialog.dismiss();
                     Toast.makeText(Signup.this, message, Toast.LENGTH_LONG).show();
                 }
             }

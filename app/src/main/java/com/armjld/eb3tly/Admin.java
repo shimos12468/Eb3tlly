@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import Model.Data;
+
 public class Admin extends Activity {
 
     private FirebaseAuth mAuth;
@@ -493,9 +495,11 @@ public class Admin extends Activity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int allOrders = (int) dataSnapshot.getChildrenCount();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    ordersWorth = ordersWorth + Integer.parseInt(Objects.requireNonNull(ds.child("gmoney").getValue()).toString());
-                }
+                    if(dataSnapshot.exists()) {
+                        Data orderData = dataSnapshot.getValue(Data.class);
+                        assert orderData != null;
+                        ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
+                    }
                 txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP");
             }
 

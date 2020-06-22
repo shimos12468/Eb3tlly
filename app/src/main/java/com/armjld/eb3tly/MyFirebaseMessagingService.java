@@ -29,10 +29,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        sendNotification("تم توصيل الاوردر الخاص بك","تم توصيل الاوردر");
+
         if (remoteMessage.getData().size() > 0) {
             Map<String, String> data = remoteMessage.getData();
             String title = data.get("title").toString() ;
+            String body = data.get("body").toString() ;
+            sendNotification(body,title);
 
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             if (true) {

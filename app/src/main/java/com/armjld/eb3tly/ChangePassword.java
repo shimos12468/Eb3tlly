@@ -91,7 +91,7 @@ public class ChangePassword extends Activity {
                     old_pass.setText("");
                     return;
                 }
-                mdialog.setMessage("جاري تحديث الصور الشخصيةة ...");
+                mdialog.setMessage("جاري تغيير الرقم السري ...");
                 mdialog.show();
 
                 AuthCredential credential2 = EmailAuthProvider.getCredential(mAuth.getCurrentUser().getEmail(),oldPass); // Current Login Credentials \\
@@ -116,6 +116,7 @@ public class ChangePassword extends Activity {
                             }
                         });
                     } else{
+                            mdialog.dismiss();
                             Toast.makeText(ChangePassword.this, "a7oo ezay", Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -86,14 +86,14 @@ public class UserSetting extends AppCompatActivity {
             Uri uri = null;
             try {
                 uri = Uri.parse(getFilePath(UserSetting.this, photoUri));
-                Log.i(TAG,"uri : " + uri.toString());
             }
             catch (URISyntaxException e) {
                 e.printStackTrace();
             }
             if(uri != null) {
-                bitmap = rotateImage(bitmap , uri ,photoUri);
+                bitmap = rotateImage(bitmap , uri , photoUri);
             }
+            Log.i(TAG,"uri : " + uri.toString());
             UserImage.setImageBitmap(bitmap);
         }
     }
@@ -162,7 +162,7 @@ public class UserSetting extends AppCompatActivity {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    private Bitmap rotateImage(Bitmap bitmap , Uri uri , Uri photouri){
+    private Bitmap rotateImage(Bitmap bitmap , Uri uri , Uri photoUri){
         ExifInterface exifInterface =null;
         try {
             if(uri==null){
@@ -173,16 +173,19 @@ public class UserSetting extends AppCompatActivity {
         catch (IOException e){
             e.printStackTrace();
         }
+
         assert exifInterface != null;
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
-
+        Log.i(TAG, "Orign: " + String.valueOf(orintation));
         if(orintation == 6 || orintation == 3 || orintation == 8) {
             Matrix matrix = new Matrix();
             if (orintation == 6) {
                 matrix.postRotate(90);
-            } else if (orintation == 3) {
+            }
+            else if (orintation == 3) {
                 matrix.postRotate(180);
-            } else if (orintation == 8) {
+            }
+            else if (orintation == 8) {
                 matrix.postRotate(270);
             }
             Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
@@ -293,7 +296,6 @@ public class UserSetting extends AppCompatActivity {
                     Email.setError("يجب ادخال البريد ألالكتروني");
                     return;
                 }
-
 
                 final String id = mAuth.getCurrentUser().getUid();
                 FirebaseUser user = mAuth.getCurrentUser();

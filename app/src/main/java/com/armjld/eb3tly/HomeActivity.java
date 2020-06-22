@@ -468,11 +468,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     @Override
     protected void onStart() {
         super.onStart();
-
-        mDatabase.orderByChild("statue").equalTo("placed").addValueEventListener(new ValueEventListener() {
+        mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
+                if(snapshot.exists() && snapshot.child("statue").getValue().toString().equals("placed")) {
                     txtNoOrders.setVisibility(View.GONE);
                 } else {
                     txtNoOrders.setVisibility(View.VISIBLE);

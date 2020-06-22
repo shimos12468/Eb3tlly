@@ -7,38 +7,6 @@
     android:background="@color/colorBack"
     tools:context="com.armjld.eb3tly.profile">
 
-    <include
-        android:id="@+id/toolbar_home"
-        layout="@layout/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/drawer_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageView
-        android:id="@+id/btnNavbarProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_home"
-        app:srcCompat="@drawable/ic_menu" />
-
-    <ImageView
-        android:id="@+id/btnOpenNoti"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_home"
-        app:srcCompat="@drawable/ic_notifications" />
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -51,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
+        app:layout_constraintTop_toTopOf="parent"
         tools:openDrawer="start">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,6 +28,35 @@
             android:orientation="vertical"
             tools:context="com.armjld.eb3tly.profile">
 
+            <include
+                android:id="@+id/toolbar_home"
+                layout="@layout/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/btnNavbarProfile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_menu" />
+
+            <ImageView
+                android:id="@+id/btnOpenNoti"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar_home"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_notifications" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constProfInfo"
                 android:layout_width="0dp"
@@ -67,7 +64,7 @@
                 android:background="@color/ic_profile_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
                 <TextView
                     android:id="@+id/txtUserType"

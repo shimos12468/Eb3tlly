@@ -30,7 +30,6 @@
         android:layout_width="280dp"
         android:layout_height="46dp"
         android:layout_marginStart="20dp"
-
         android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
@@ -38,6 +37,7 @@
         android:hint="البريد الالكتروني"
         android:inputType="textEmailAddress"
         android:textAlignment="textStart"
+        android:drawableRight="@drawable/ic_add_email"
         android:textColor="#000000"
         android:textColorHint="@android:color/tertiary_text_light"
         android:textSize="24sp"
@@ -54,11 +54,12 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
+        android:drawableRight="@drawable/ic_add_key"
         android:ems="10"
         android:gravity="left"
-        android:hint="    كلمه المرور"
+        android:hint="كلمة السر"
         android:inputType="textPassword"
-        android:textAlignment="textEnd"
+        android:textAlignment="textStart"
         android:textColor="#000000"
         android:textColorHint="@android:color/tertiary_text_light"
         android:textSize="24sp"
@@ -79,8 +80,6 @@
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtEditPassword"
         tools:ignore="MissingConstraints" />
