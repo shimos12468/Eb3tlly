@@ -335,8 +335,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case DialogInterface.BUTTON_POSITIVE:
-                                                    mDatabase.child(orderID).child("statue").setValue("accepted");
                                                     mDatabase.child(orderID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
+                                                    mDatabase.child(orderID).child("statue").setValue("accepted");
                                                     mDatabase.child(orderID).child("acceptedTime").setValue(datee);
 
                                                     // --------------------------- Send Notifications ---------------------//

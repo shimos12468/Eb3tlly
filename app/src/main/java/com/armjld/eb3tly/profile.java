@@ -1017,7 +1017,7 @@ public class profile extends AppCompatActivity {
                                     final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<String>(profile.this, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
                                     listComment.setAdapter(arrayAdapterLessons);
                                     mArraylistSectionLessons.clear(); // To not dublicate comments
-                                    rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             if(snapshot.exists()) {
@@ -1467,21 +1467,21 @@ public class profile extends AppCompatActivity {
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setEnabled(true);
                     DatabaseReference mRef;
-                    mRef = getInstance().getReference("Pickly").child("users").child(uAccepted);
-                    mRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String mName = snapshot.child("name").getValue().toString();
-                            if(getStatue.equals("recived")) {
-                                txtGetStat.setText("تم استلام اوردرك من : " + mName);
-                            } else {
-                                txtGetStat.setText("تم قبول اوردرك من : " + mName);
+                    mRef = getInstance().getReference("Pickly").child("users").child(uAccepted.toString());
+                        mRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String mName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                                if(getStatue.equals("recived")) {
+                                    txtGetStat.setText("تم استلام اوردرك من : " + mName);
+                                } else {
+                                    txtGetStat.setText("تم قبول اوردرك من : " + mName);
+                                }
+                                txtGetStat.setTextColor(Color.parseColor("#ffc922"));
                             }
-                            txtGetStat.setTextColor(Color.parseColor("#ffc922"));
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) { }
-                    });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) { }
+                        });
                     break;
                 }
                 case "delivered": {
