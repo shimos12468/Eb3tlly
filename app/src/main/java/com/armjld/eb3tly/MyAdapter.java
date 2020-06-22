@@ -161,6 +161,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
 
+        holder.linerDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.txtgGet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "مصاريف شحن الاوردر : "+ holder.txtgGet.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.txtgMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "مقدم الاوردر : "+ holder.txtgMoney.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //More Info Button
         holder.btnMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -397,8 +418,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         View myview;
         Button btnAccept, btnHide, btnMore;
-        TextView txtWarning;
-        LinearLayout lin1;
+        TextView txtWarning,txtgGet, txtgMoney,txtDate;
+        LinearLayout lin1,linerDate;
         ImageView icnCar,icnMotor,icnMetro,icnTrans;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -409,6 +430,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             btnMore = myview.findViewById(R.id.btnMore);
             lin1 = myview.findViewById(R.id.lin1);
             txtWarning = myview.findViewById(R.id.txtWarning);
+            linerDate = myview.findViewById(R.id.linerDate);
+            txtgGet = myview.findViewById(R.id.fees);
+            txtgMoney = myview.findViewById(R.id.ordercash);
+            txtDate = myview.findViewById(R.id.date);
         }
 
         void setUsername(String userID){

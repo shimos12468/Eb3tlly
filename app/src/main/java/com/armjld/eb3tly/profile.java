@@ -35,6 +35,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -1179,6 +1180,27 @@ public class profile extends AppCompatActivity {
                                 }
                             });
 
+                            myviewholder.linerDate.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(profile.this,"معاد تسليم الاوردر يوم : " + myviewholder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            myviewholder.txtgGet.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(profile.this, "مصاريف شحن الاوردر : "+ myviewholder.txtgGet.getText().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            myviewholder.txtgMoney.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(profile.this, "مقدم الاوردر : "+ myviewholder.txtgMoney.getText().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
 
                             // -----------------------   Set ORDER as Delivered
                             final String orderID = data.getId();
@@ -1424,7 +1446,8 @@ public class profile extends AppCompatActivity {
     public static class myviewholder extends RecyclerView.ViewHolder {
         View myview;
         Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
-        TextView txtRate,txtGetStat;
+        TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate;
+        LinearLayout linerDate;
         RatingBar drStar;
         ImageView icnCar,icnMotor,icnMetro,icnTrans;
 
@@ -1440,6 +1463,11 @@ public class profile extends AppCompatActivity {
             txtRate = myview.findViewById(R.id.drComment);
             drStar = myview.findViewById(R.id.drStar);
             txtGetStat = myview.findViewById(R.id.txtStatue);
+
+            linerDate = myview.findViewById(R.id.linerDate);
+            txtgGet = myview.findViewById(R.id.fees);
+            txtgMoney = myview.findViewById(R.id.ordercash);
+            txtDate = myview.findViewById(R.id.date);
         }
 
         void setUsername(String currentUser, final String orderOwner, final String DName, String uType){
