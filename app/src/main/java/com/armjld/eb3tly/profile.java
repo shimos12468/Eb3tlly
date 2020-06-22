@@ -1279,10 +1279,33 @@ public class profile extends AppCompatActivity {
                                     });
                                 }
                             });
-
+                            // ----------------------- Transportations Toasts ------------------- //
+                            myviewholder.icnCar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(profile.this, "يمكن توصيل الاوردر بالسيارة", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            myviewholder.icnMetro.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(profile.this, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            myviewholder.icnMotor.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(profile.this, "يمكن توصيل الاوردر بالموتسكل", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            myviewholder.icnTrans.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(profile.this, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             // -----------------------  Delete order for Delivery
                             final String DorderID = data.getId();
-
                             myviewholder.btnDelete.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1403,6 +1426,7 @@ public class profile extends AppCompatActivity {
         Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
         TextView txtRate,txtGetStat;
         RatingBar drStar;
+        ImageView icnCar,icnMotor,icnMetro,icnTrans;
 
         public myviewholder(@NonNull View itemView) {
             super(itemView);
@@ -1626,10 +1650,10 @@ public class profile extends AppCompatActivity {
             });
         }
         public void setType(String car, String motor, String metro, String trans) {
-            ImageView icnCar = myview.findViewById(R.id.icnCar);
-            ImageView icnMotor = myview.findViewById(R.id.icnMotor);
-            ImageView icnMetro = myview.findViewById(R.id.icnMetro);
-            ImageView icnTrans = myview.findViewById(R.id.icnTrans);
+             icnCar = myview.findViewById(R.id.icnCar);
+             icnMotor = myview.findViewById(R.id.icnMotor);
+             icnMetro = myview.findViewById(R.id.icnMetro);
+             icnTrans = myview.findViewById(R.id.icnTrans);
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
             } else {

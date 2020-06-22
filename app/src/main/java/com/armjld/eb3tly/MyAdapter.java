@@ -269,8 +269,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     }
                 });
 
-
-
                 // Get that user Comments
                 ListView listComment = dialogMore.findViewById(R.id.dsComment);
                 final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<String>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
@@ -301,6 +299,30 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+        holder.icnCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "يمكن توصيل الاوردر بالسيارة", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.icnMetro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.icnMotor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "يمكن توصيل الاوردر بالموتسكل", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.icnTrans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show();
+            }
+        });
         //Accept Order Button
         final String orderID = filtersData.get(position).getId();
         final String owner = filtersData.get(position).getuId();
@@ -377,6 +399,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Button btnAccept, btnHide, btnMore;
         TextView txtWarning;
         LinearLayout lin1;
+        ImageView icnCar,icnMotor,icnMetro,icnTrans;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -425,10 +448,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
         public void setType(String car, String motor, String metro, String trans) {
-            ImageView icnCar = myview.findViewById(R.id.icnCar);
-            ImageView icnMotor = myview.findViewById(R.id.icnMotor);
-            ImageView icnMetro = myview.findViewById(R.id.icnMetro);
-            ImageView icnTrans = myview.findViewById(R.id.icnTrans);
+             icnCar = myview.findViewById(R.id.icnCar);
+             icnMotor = myview.findViewById(R.id.icnMotor);
+             icnMetro = myview.findViewById(R.id.icnMetro);
+             icnTrans = myview.findViewById(R.id.icnTrans);
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
             } else {

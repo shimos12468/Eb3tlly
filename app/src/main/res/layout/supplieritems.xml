@@ -225,7 +225,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="0dp"
             android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRecived"
@@ -263,7 +264,8 @@
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDelete"
@@ -314,7 +316,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRate"
@@ -339,7 +342,8 @@
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="TextView" />
+            android:text="TextView"
+            android:visibility="gone" />
 
 
     </LinearLayout>
