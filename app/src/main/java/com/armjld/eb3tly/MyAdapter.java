@@ -68,6 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         notifyItemChanged(position);
     }
 
+
     public void removeItem(int position, int size, Data data){
         filtersData.set(position,data);
         notifyItemChanged(position);

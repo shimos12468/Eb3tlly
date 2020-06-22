@@ -48,22 +48,22 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private Toolbar toolbar;
     private ImageView filtrs_btn,btnNavBar;
     private static ArrayList<Data> mm;
-    private long count;
+    private static ArrayList<Data> ff;
+    private long count,countFilter;
     private String FTAG = "Filters ";
     Data a7a = new Data();
-    int index = 0;
     // import firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase,rDatabase,uDatabase;
     int indexmm = -1;
-    int indexs = 0;
+    int indexff = -1;
     private Spinner spPState,spPRegion,spDState,spDRegion;
     private Button btnApplyFilters;
     private EditText txtFilterMoney;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView txtNoOrders;
     private String TAG = "Home Activity";
-    private MyAdapter orderAdapter;
+    private MyAdapter orderAdapter,filterAdapter;
 
     //Recycler view
     private RecyclerView recyclerView;
@@ -91,7 +91,9 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
         //Find View
         count =0;
+        countFilter = 0;
         mm = new ArrayList<Data>();
+        ff = new ArrayList<Data>();
         toolbar = findViewById(R.id.toolbar_home);
         filtrs_btn = findViewById(R.id.filters_btn);
         btnNavBar = findViewById(R.id.btnNavBar);
@@ -188,8 +190,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                tsferAdapter();
+                mm.clear();
+                mm.trimToSize();
                 count = 0;
+                orderAdapter = null;
                 recyclerView.setAdapter(null);
                 mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -215,6 +219,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+                updateNone();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -225,18 +230,30 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                final Data orderData = dataSnapshot.getValue(Data.class);
+                Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
                 if (orderData.getStatue().equals("placed") || orderData.getStatue().equals("accepted")) {
                     for(int i = 0;i<mm.size();i++){
                         if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
-                                a7a = orderData;
-                                indexmm = i;
-                                orderAdapter.addItem(indexmm ,a7a,(int)count);
+                            a7a = orderData;
+                            indexmm = i;
+                            orderAdapter.addItem(indexmm ,a7a,(int)count);
                         } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
-                                a7a = orderData;
-                                indexmm = i;
-                                orderAdapter.addItem(indexmm ,a7a,(int)count);
+                            a7a = orderData;
+                            indexmm = i;
+                            orderAdapter.addItem(indexmm ,a7a,(int)count);
+                        }
+                    }
+
+                    for(int i = 0;i<ff.size();i++) {
+                        if (ff.get(i).getId().equals(orderData.getId()) && ff.get(i).getStatue().equals("placed")) {
+                            a7a = orderData;
+                            indexff = i;
+                            filterAdapter.addItem(indexff, a7a, (int) countFilter);
+                        } else if (ff.get(i).getId().equals(orderData.getId()) && ff.get(i).getStatue().equals("accepted")) {
+                            a7a = orderData;
+                            indexff = i;
+                            filterAdapter.addItem(indexff-1, a7a, (int) countFilter);
                         }
                     }
                 }
@@ -244,7 +261,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                final Data orderData = dataSnapshot.getValue(Data.class);
+                Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
                 int indexs = 0;
                 for(int i = 0;i<mm.size();i++){
@@ -252,6 +269,14 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         indexs = i;
                         orderData.setRemoved("true");
                         orderAdapter.removeItem(indexs, mm.size(), orderData);
+                    }
+                }
+
+                for(int i = 0;i<ff.size();i++){
+                    if(ff.get(i).getId().equals(orderData.getId())){
+                        indexs = i;
+                        orderData.setRemoved("true");
+                        filterAdapter.removeItem(indexs-1, ff.size(), orderData);
                     }
                 }
             }
@@ -267,7 +292,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                orderAdapter = null;
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Data orderData = ds.getValue(Data.class);
@@ -278,6 +302,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         }
                         orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                         recyclerView.setAdapter(orderAdapter);
+                        updateNone();
                     }
                 }
             }
@@ -401,9 +426,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     @Override
                     public void onClick(View v) {
                         tsferAdapter();
-                        count = 0;
-                        recyclerView.setAdapter(null);
-                        mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
+                        filterAdapter = null;
+                        mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.exists()) {
@@ -422,40 +446,41 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                         if(spPState.getSelectedItem().toString().equals("كل المناطق")) {
                                             if(spDState.getSelectedItem().toString().equals("كل المناطق")) {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue ) {
-                                                    mm.add((int) count, filterData);
-                                                    count++;
+                                                    ff.add((int) countFilter, filterData);
+                                                    countFilter++;
                                                 }
                                             } else {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtDState().equals(spDState.getSelectedItem().toString()) ) {
-                                                    mm.add((int) count, filterData);
-                                                    count++;
+                                                    ff.add((int) countFilter, filterData);
+                                                    countFilter++;
                                                 }
                                             }
                                         } else {
                                             if(spDState.getSelectedItem().toString().equals("كل المناطق")) {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtPState().equals(spPState.getSelectedItem().toString())) {
-                                                    mm.add((int) count, filterData);
-                                                    count++;
+                                                    ff.add((int) countFilter, filterData);
+                                                    countFilter++;
                                                 }
                                             } else {
                                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue &&
                                                         filterData.getTxtPState().equals(spPState.getSelectedItem().toString()) &&
                                                         filterData.getTxtDState().equals(spDState.getSelectedItem().toString()) ) {
-                                                    mm.add((int) count, filterData);
-                                                    count++;
+                                                    ff.add((int) countFilter, filterData);
+                                                    countFilter++;
                                                 }
                                             }
                                         }
                                     }
-                                    orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
-                                    recyclerView.setAdapter(orderAdapter);
+                                    updateNone();
+                                    filterAdapter = new MyAdapter(HomeActivity.this, ff, getApplicationContext(), countFilter);
+                                    recyclerView.setAdapter(filterAdapter);
                                 }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) { }
                         });
                         filterDialog.dismiss();
-                        updateNone();
+
                     }
                 });
 
@@ -472,8 +497,13 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     }
 
     private void tsferAdapter() {
-        mm = new ArrayList<Data>();
-        orderAdapter = null;
+        mm.clear();
+        ff.clear();
+        mm.trimToSize();
+        ff.trimToSize();
+        count = 0;
+        countFilter = 0;
+        recyclerView.setAdapter(null);
     }
 
     private void updateNone() {
@@ -495,19 +525,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     @Override
     protected void onStart() {
         super.onStart();
-        mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists() && snapshot.child("statue").getValue().toString().equals("placed")) {
-                    txtNoOrders.setVisibility(View.GONE);
-                } else {
-                    txtNoOrders.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
     }
 
     @Override
