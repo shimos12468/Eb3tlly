@@ -455,6 +455,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             public void onCancelled(@NonNull DatabaseError databaseError) { }
                         });
                         filterDialog.dismiss();
+                        updateNone();
                     }
                 });
 
@@ -473,6 +474,22 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private void tsferAdapter() {
         mm = new ArrayList<Data>();
         orderAdapter = null;
+    }
+
+    private void updateNone() {
+        mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.child("statue").getValue().toString().equals("placed")) {
+                    txtNoOrders.setVisibility(View.GONE);
+                } else {
+                    txtNoOrders.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 
     @Override

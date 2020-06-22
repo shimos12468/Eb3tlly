@@ -188,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:text="لم تقبل اي اوردر حتي الان"
                 android:textColor="@android:color/tertiary_text_light"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
