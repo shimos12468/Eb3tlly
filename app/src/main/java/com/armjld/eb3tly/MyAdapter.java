@@ -127,15 +127,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
 
-        if(filtersData.get(position).getStatue().equals("accepted")) {
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setText("الاوردر تم قبولة بالفعل من مندوب اخر");
-            holder.txtWarning.setVisibility(View.VISIBLE);
-        } else {
-            holder.lin1.setVisibility(View.VISIBLE);
-            holder.txtWarning.setVisibility(View.GONE);
-        }
-
         if(filtersData.get(position).getRemoved().equals("true")){
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
@@ -158,6 +149,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         final String DAddress = filtersData.get(position).getDAddress();
         final String rateUID = filtersData.get(position).getuId();
         final String notes = filtersData.get(position).getNotes();
+        final String statues = filtersData.get(position).getStatue();
+
+        if(!statues.equals("placed")) {
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setText("الاوردر تم قبولة بالفعل من مندوب اخر");
+            holder.txtWarning.setVisibility(View.VISIBLE);
+        } else {
+            holder.lin1.setVisibility(View.VISIBLE);
+            holder.txtWarning.setVisibility(View.GONE);
+        }
 
 
         //More Info Button
@@ -267,6 +268,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                     }
                 });
+
+
 
                 // Get that user Comments
                 ListView listComment = dialogMore.findViewById(R.id.dsComment);
