@@ -1,9 +1,13 @@
 package com.armjld.eb3tly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,9 +22,11 @@ import java.util.TimerTask;
 
 public class StartUp extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences = null;
     private FirebaseAuth mAuth;
     public void onBackPressed() { }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
@@ -61,12 +67,18 @@ public class StartUp extends AppCompatActivity {
                 }
             });
         } else {
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(StartUp.this, MainActivity.class));
-                }
-            }, 2500);
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
+                        if(sharedPreferences.getBoolean("firstrun", true)) {
+                            startActivity(new Intent(StartUp.this, IntroFirstRun.class));
+                            sharedPreferences.edit().putBoolean("firstrun", false).commit();
+                        } else {
+                            startActivity(new Intent(StartUp.this, MainActivity.class));
+                        }
+                    }
+                    }, 2500);
         }
     }
 }

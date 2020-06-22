@@ -20,10 +20,10 @@ public class intro2 extends AppIntro {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addSlide(AppIntroFragment.newInstance( "سهولة اختيار الاوردرات", " سيظهر لك جميع الاوردرات المتاحة و مواعيد التسليم الخاصة بها ومقدم الشحن واجر التوصيل حيث يتاح لك قبول اي اوردر مناسبا لك",R.drawable.ic_intro1 ));
-        addSlide(AppIntroFragment.newInstance( "نظام التقييم", "حيث يمكنك ان تري تقييم التاجر قبل قبول الاوردر ومصدقيتة في العمل وتذكر دائما يمكنك الابلاغ اذا واجهت اي مشكله مع التاجر ",R.drawable.ic_intro2));
+        addSlide(AppIntroFragment.newInstance( "سهولة اختيار الاوردرات", " نساعدك علي ان تختار الاوردرات ذات المقدم الذي تحددة, و يمكنك بسهولة اختيار الاوردرات التي تناسب وجهتك",R.drawable.ic_intro1));
+        addSlide(AppIntroFragment.newInstance( "الشفافية", "يتميز برنامج ابعتلي بامكانيه تقييمك لمعاملتك مع التاجر, و التعليق علي المشاكل التي واجهتها في المعاملة ",R.drawable.ic_intro2));
         addSlide(AppIntroFragment.newInstance( "تصفية الاوردرات", "بدلاً من ظهور جميع الاوردرات يمكنك انا تحدد الاوردرات القرييبة منك فقط ",R.drawable.ic_intro3));
-        addSlide(AppIntroFragment.newInstance( "الامان", "لامان قم بأستلام الاوردر من محل العمل او بيت العميل وليس من الطريق للتجنب اي احتيال او مشاكل ",R.drawable.ic_alert));
+        addSlide(AppIntroFragment.newInstance( "الامان", "لامان قم بأستلام الاوردر من مكان او بيت التاجر لضمان عدم حدوث اي مشاكل ",R.drawable.ic_alert));
     }
 
     @Override

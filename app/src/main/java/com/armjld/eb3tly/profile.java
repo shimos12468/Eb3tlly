@@ -1314,13 +1314,13 @@ public class profile extends AppCompatActivity {
                                 btnDelete.setVisibility(View.VISIBLE);
                                 btnDelivered.setVisibility(View.GONE);
                                 btnInfo.setVisibility(View.VISIBLE);
-                                txtGetStat.setVisibility(View.GONE);
+                                txtGetStat.setVisibility(View.VISIBLE);
                                 txtGetStat.setText("تواصل مع التاجر لاستلام الاوردر");
                                 txtGetStat.setTextColor(Color.RED);
                                 break;
                             }
                             case "recived" : {
-                                txtGetStat.setVisibility(View.GONE);
+                                txtGetStat.setVisibility(View.VISIBLE);
                                 btnDelete.setVisibility(View.GONE);
                                 btnDelivered.setVisibility(View.VISIBLE);
                                 btnInfo.setVisibility(View.VISIBLE);
@@ -1329,7 +1329,7 @@ public class profile extends AppCompatActivity {
                                 break;
                             }
                             case "delivered" : {
-                                btnDelivered.setVisibility(View.GONE);
+                                btnDelivered.setVisibility(View.VISIBLE);
                                 btnDelete.setVisibility(View.GONE);
                                 btnInfo.setVisibility(View.GONE);
                                 txtGetStat.setText("تم توصيل الاوردر بنجاح");

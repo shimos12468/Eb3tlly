@@ -22,12 +22,10 @@ public class introSup extends AppIntro {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // sup
         addSlide(AppIntroFragment.newInstance( "أضافة الاوردرات بسهولة", "اذا كان لديك اوردر تريد ارسالة فقط قم باضافتة وسوف يظهر لمندوبين الشحن القريبين منك وسيتواصلون معك في اقرب وقت  ",R.drawable.ic_intro4));
-        addSlide(AppIntroFragment.newInstance( "نظام التقييم", "حيث يمكنك ان تري تقييم المندوب الذي سيقوم باستلام اوردرك وتذكر دائما يمكنك الابلاغ اذا واجهت اي مشكلة مع المندوب",R.drawable.ic_intro2));
-        addSlide(AppIntroFragment.newInstance( "المتابعة", "يمكنك متابعة الاوردر الخاص بك الي ان يصل الي العميل  ",R.drawable.ic_intro5));
-        addSlide(AppIntroFragment.newInstance( "الامان", "عند وصول المندوب اليك تذكر ان تراجع الرقم القومي وتطابقة مع الرقم القومي الموجود في حسابة للتجنب اي احتيال او مشاكل ",R.drawable.ic_alert));
-
+        addSlide(AppIntroFragment.newInstance( "الشفافية", "حيث يمكنك ان تري تقييم المندوب الذي سيقوم باستلام اوردرك, و تجارب التجار الاخرين معه.",R.drawable.ic_intro2));
+        addSlide(AppIntroFragment.newInstance( "المتابعة", "يمكنك متابعة الاوردر الخاص بك الي ان يصل الي العميل",R.drawable.ic_intro5));
+        addSlide(AppIntroFragment.newInstance( "الامان", "يجب استلام مقدم الشحن بالكامل من المندوب و تسليمة من محل السكن او العمل ضمانا لحق كلا الطرفين",R.drawable.ic_alert));
     }
 
     @Override

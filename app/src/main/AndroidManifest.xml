@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".EditOrders"></activity>
+        <activity android:name=".IntroFirstRun"></activity>
+        <activity android:name=".EditOrders" />
 
         <service
             android:name=".MyFirebaseMessagingService"
