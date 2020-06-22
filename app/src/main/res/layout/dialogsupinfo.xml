@@ -83,8 +83,9 @@
             android:isIndicator="true"
             android:stepSize="0.5"
             android:theme="@style/RatingBar"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            tools:layout_editor_absoluteX="166dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
@@ -104,6 +105,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
+        android:drawableRight="@drawable/ic_add_address"
         android:text="عنوان استلام الاوردر بالتفصيل"
         android:textAlignment="viewEnd"
         android:textColor="#000000"
@@ -120,6 +122,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
+        android:drawableRight="@drawable/ic_add_address"
         android:text="عنوان تسليم الاوردر بالتفصيل"
         android:textAlignment="viewEnd"
         android:textColor="#000000"
@@ -131,18 +134,19 @@
 
     <TextView
         android:id="@+id/dsOrderNotes"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:drawableEnd="@drawable/ic_add_notes"
         android:text="الملاحظات"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textColorHint="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dsDAddress" />
 
