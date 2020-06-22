@@ -127,7 +127,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
 
-        if(!filtersData.get(position).getStatue().equals("placed")) {
+        if(filtersData.get(position).getStatue().equals("accepted")) {
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setText("الاوردر تم قبولة بالفعل من مندوب اخر");
             holder.txtWarning.setVisibility(View.VISIBLE);

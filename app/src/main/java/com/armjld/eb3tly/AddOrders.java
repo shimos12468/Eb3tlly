@@ -300,9 +300,6 @@ public class AddOrders extends AppCompatActivity {
                     isMotor = "";
                 }
 
-                mdialog.setMessage("جاري اضافة الاوردر");
-                mdialog.show();
-
                 final String finalIsMetro = isMetro;
                 final String finalIsTrans = isTrans;
                 final String finalIsMotor = isMotor;
@@ -312,6 +309,8 @@ public class AddOrders extends AppCompatActivity {
                     public void onClick(DialogInterface confirmDailog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
+                                mdialog.setMessage("جاري اضافة الاوردر");
+                                mdialog.show();
                                 String id = mDatabase.push().getKey().toString(); // create Order ID
                                 String srate = "false";
                                 String srateid = "";
@@ -416,9 +415,6 @@ public class AddOrders extends AppCompatActivity {
                     isMotor = "";
                 }
 
-                mdialog.setMessage("جاري اضافة الاوردر");
-                mdialog.show();
-
                 final String finalIsMetro = isMetro;
                 final String finalIsTrans = isTrans;
                 final String finalIsMotor = isMotor;
@@ -428,6 +424,8 @@ public class AddOrders extends AppCompatActivity {
                     public void onClick(DialogInterface confirmDailog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
+                                mdialog.setMessage("جاري اضافة الاوردر");
+                                mdialog.show();
                                 String id = mDatabase.push().getKey().toString(); // create Order ID
                                 String srate = "false";
                                 String srateid = "";

@@ -486,9 +486,9 @@ public class profile extends AppCompatActivity {
                                                                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                                                             if(ds.exists()) {
                                                                                 for(DataSnapshot sn : ds.getChildren()) {
-                                                                                    if(sn.exists()) {
-                                                                                        String orderI = sn.child("orderid").getValue().toString();
-                                                                                        if(orderID.equals(orderI)) {
+                                                                                    if(sn.child("orderid").exists()) {
+                                                                                        String orderI = Objects.requireNonNull(sn.child("orderid").getValue().toString());
+                                                                                        if(orderI.equals(orderID)) {
                                                                                             sn.getRef().removeValue();
                                                                                         }
                                                                                     }
