@@ -203,8 +203,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                     Data orderData = ds.getValue(Data.class);
                                     assert orderData != null;
                                     if (orderData.getStatue().equals("placed")) {
-                                        Log.i(TAG, "orderData Data : " + orderData.getId().toString());
-                                        Log.i(TAG, "orderData Count : " + count);
                                         mm.add((int) count, orderData);
                                         count++;
                                     }
@@ -218,7 +216,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-                updateNone(mm.size());
+                updateNone(mm.size() + 1);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -510,7 +508,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     }
 
     private void updateNone(int listSize) {
-        if(listSize >= 0) {
+        Log.i(TAG, "List size is now : " + listSize);
+        if(listSize > 0) {
             txtNoOrders.setVisibility(View.GONE);
         } else {
             txtNoOrders.setVisibility(View.VISIBLE);
