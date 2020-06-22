@@ -508,7 +508,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     }
 
     private void updateNone(int listSize) {
-        if(listSize > 0) {
+        if(listSize >= 0) {
             txtNoOrders.setVisibility(View.GONE);
         } else {
             txtNoOrders.setVisibility(View.VISIBLE);
