@@ -141,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
                                                     Toast.makeText(MainActivity.this, "Please clear the app data and signon again", Toast.LENGTH_SHORT).show();
                                                 }
                                             } else{
-                                                    //u do not have account please sign up.
-                                                    //go to signup.
+                                                    Toast.makeText(getApplicationContext(), "تأكد من بيانات الحساب", Toast.LENGTH_LONG).show();
+                                                    mdialog.dismiss();
                                                 }
                                             }
                                             @Override

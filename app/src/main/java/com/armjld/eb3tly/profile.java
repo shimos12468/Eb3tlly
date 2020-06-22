@@ -1324,14 +1324,16 @@ public class profile extends AppCompatActivity {
                                 btnDelete.setVisibility(View.GONE);
                                 btnDelivered.setVisibility(View.VISIBLE);
                                 btnInfo.setVisibility(View.VISIBLE);
+                                txtGetStat.setVisibility(View.VISIBLE);
                                 txtGetStat.setText("تم استلام الاوردر من التاجر");
                                 txtGetStat.setTextColor(Color.parseColor("#ffc922"));
                                 break;
                             }
                             case "delivered" : {
-                                btnDelivered.setVisibility(View.VISIBLE);
+                                btnDelivered.setVisibility(View.GONE);
                                 btnDelete.setVisibility(View.GONE);
                                 btnInfo.setVisibility(View.GONE);
+                                txtGetStat.setVisibility(View.VISIBLE);
                                 txtGetStat.setText("تم توصيل الاوردر بنجاح");
                                 txtGetStat.setTextColor(Color.parseColor("#4CAF50"));
                                 break;

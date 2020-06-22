@@ -311,7 +311,7 @@ public class EditOrders extends AppCompatActivity {
 
                 //DEFULT ORDER States ON ADD
                 final String states = statee;
-                final String uAccepted = "";
+                final String uAccepted = acceptedID;
 
                 // Check if Empty
                 if (TextUtils.isEmpty(mPAddress) && !spPState.getSelectedItem().toString().equals("مترو")) {
