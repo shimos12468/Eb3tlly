@@ -602,7 +602,7 @@ public class Signup extends AppCompatActivity {
                                 // ------------- Welcome message in Notfications----------------------//
 
                                 if(first==true) {
-                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-M9z6ArQZAr9snFyM_mR", "welcome", datee, "false");
+                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
                                     nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
                                 }
                                 first = false;

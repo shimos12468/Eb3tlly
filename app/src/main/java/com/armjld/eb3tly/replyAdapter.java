@@ -77,7 +77,7 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
             @Override
             public void onClick(View v) {
                 String myReply = holder.txtReply.getText().toString().trim();
-                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",uID, "-M9z6ArQZAr9snFyM_mR", myReply, datee, "false");
+                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",uID, "-MAPQWoKEfmHIQG9xv-v", myReply, datee, "false");
                 nDatabase.child(uID).push().setValue(Noti);
                 cDatabase.child(uID).child(mID).child("statue").setValue("closed");
                 Toast.makeText(context, "Replied Success", Toast.LENGTH_SHORT).show();
