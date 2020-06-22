@@ -8,117 +8,149 @@
     tools:context="com.armjld.eb3tly.MainActivity">
 
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="150dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="تسجيل الدخول"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/black"
-        android:textSize="32sp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/ic_profile_background"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/txtEditName"
-        android:layout_width="280dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="20dp"
-        android:ems="10"
-        android:gravity="left"
-        android:hint="البريد الالكتروني"
-        android:inputType="textEmailAddress"
-        android:textAlignment="textStart"
-        android:drawableRight="@drawable/ic_add_email"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/app_icon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <EditText
-        android:id="@+id/txtEditPassword"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:drawableRight="@drawable/ic_add_key"
-        android:ems="10"
-        android:gravity="left"
-        android:hint="كلمة السر"
-        android:inputType="textPassword"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditName"
-        tools:ignore="MissingConstraints" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEditInfo"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/btn_defult"
-        android:text="تسجيل الدخول"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditPassword"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@id/signup_text"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:padding="7dp"
-        android:text="لا تمتلك حساب ؟ قم بالتسجيل من هنا"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:layout_marginBottom="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnEditInfo"
-        tools:ignore="MissingConstraints,RtlCompat" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/txtForgetPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:padding="7dp"
-        android:text="نسيت كلمه المرور ؟"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_text"
-        tools:ignore="MissingConstraints,RtlCompat" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="تسجيل الدخول"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/black"
+            android:textSize="32sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/txtEditName"
+            android:layout_width="280dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="20dp"
+            android:drawableRight="@drawable/ic_add_email"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="البريد الالكتروني"
+            android:inputType="textEmailAddress"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/txtEditPassword"
+            android:layout_width="280dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:drawableRight="@drawable/ic_add_key"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="كلمة السر"
+            android:inputType="textPassword"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditName"
+            tools:ignore="HardcodedText,MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnEditInfo"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_defult"
+            android:text="تسجيل الدخول"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditPassword"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@id/signup_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:padding="7dp"
+            android:text="لا تمتلك حساب ؟ قم بالتسجيل من هنا"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnEditInfo"
+            tools:ignore="MissingConstraints,RtlCompat" />
+
+        <TextView
+            android:id="@+id/txtForgetPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:padding="7dp"
+            android:text="نسيت كلمه المرور ؟"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signup_text"
+            tools:ignore="MissingConstraints,RtlCompat" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
