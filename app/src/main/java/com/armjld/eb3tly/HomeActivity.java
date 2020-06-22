@@ -48,11 +48,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private Toolbar toolbar;
     private ImageView filtrs_btn,btnNavBar;
     private static ArrayList<Data> mm;
-    private long count,count2;
+    private long count;
     private String FTAG = "Filters ";
     Data a7a = new Data();
     int index = 0;
-    boolean flag = false;
     // import firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase,rDatabase,uDatabase;
@@ -63,6 +62,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     private EditText txtFilterMoney;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView txtNoOrders;
+    private String TAG = "Home Activity";
     private MyAdapter orderAdapter;
 
     //Recycler view
@@ -91,7 +91,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
         //Find View
         count =0;
-        count2 = 0;
         mm = new ArrayList<Data>();
         toolbar = findViewById(R.id.toolbar_home);
         filtrs_btn = findViewById(R.id.filters_btn);
@@ -190,19 +189,25 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             @Override
             public void onRefresh() {
                 tsferAdapter();
+                count = 0;
+                recyclerView.setAdapter(null);
                 mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
                             for (DataSnapshot ds : snapshot.getChildren()) {
-                                Data orderData = ds.getValue(Data.class);
-                                assert orderData != null;
-                                if (orderData.getStatue().equals("placed")) {
-                                    mm.add((int) count, orderData);
-                                    count++;
+                                if(ds.exists()) {
+                                    Data orderData = ds.getValue(Data.class);
+                                    assert orderData != null;
+                                    if (orderData.getStatue().equals("placed")) {
+                                        Log.i(TAG, "orderData Data : " + orderData.getId().toString());
+                                        Log.i(TAG, "orderData Count : " + count);
+                                        mm.add((int) count, orderData);
+                                        count++;
+                                    }
+                                    orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+                                    recyclerView.setAdapter(orderAdapter);
                                 }
-                                orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
-                                recyclerView.setAdapter(orderAdapter);
                             }
                         }
                     }
@@ -216,8 +221,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
         mDatabase.orderByChild("ddate").startAt(datee).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -234,23 +238,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                 indexmm = i;
                                 orderAdapter.addItem(indexmm ,a7a,(int)count);
                         }
-
                     }
-                }
-
-                    /*for(int i = 0;i<count;i++){
-                        if(mm.get(i).getId().equals(dataSnapshot.getKey()) && mm.get(i).getStatue().equals("placed")){
-                            indexs = i;
-                            mm.remove(indexs);
-                            mm.trimToSize();
-                            break;
-                        }
-                    }
-                    orderAdapter.notifyItemRemoved(indexs);
-                    orderAdapter.notifyItemRangeChanged(indexs, mm.size());
-                    orderAdapter.update(mm);*/
-                else {
-                    // ------------ Do Nothing
                 }
             }
 
@@ -269,14 +257,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
         // ---------------------- GET ALL THE ORDERS -------------------//
@@ -417,6 +401,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     @Override
                     public void onClick(View v) {
                         tsferAdapter();
+                        count = 0;
                         recyclerView.setAdapter(null);
                         mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -486,8 +471,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
     }
 
     private void tsferAdapter() {
-        mm = null;
-        count = 0;
+        mm = new ArrayList<Data>();
         orderAdapter = null;
     }
 
