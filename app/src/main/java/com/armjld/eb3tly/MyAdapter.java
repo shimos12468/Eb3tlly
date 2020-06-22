@@ -361,8 +361,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 int cancelledCount =  Integer.parseInt(dataSnapshot.child("canceled").getValue().toString());
-                                if(cancelledCount >= 3) { // Number of allowed canceled orders
-                                    Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الشهر, لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
+                                if(cancelledCount >= 3) {
+                                    // Number of allowed canceled orders
+                                    Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الاسبوع , لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
                                 } else {
                                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                         @Override

@@ -1336,19 +1336,28 @@ public class profile extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case DialogInterface.BUTTON_POSITIVE:
-                                                    // Add the Profit of the Dilvery Worker
+                                                    // --------------- Add the cencelled order to the counter ----------------------- //
                                                     uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            String lastedit = data.getLastedit().toString();
-                                                            String acceptedDate = data.getAcceptedTime();
-                                                            String owner = data.getuId();
+                                                            Date lastedit = null;
+                                                            Date acceptedDate = null;
+                                                            try {
+                                                                lastedit = format.parse(data.getLastedit().toString());
+                                                                acceptedDate = format.parse(data.getAcceptedTime());
+                                                            } catch (ParseException e) {
+                                                                e.printStackTrace();
+                                                            }
 
+                                                            // ------------------------------- Adding the order to the worker cancelled orders counter --------------- //
                                                             int cancelledCount =  Integer.parseInt(dataSnapshot.child("canceled").getValue().toString());
+                                                            Log.i(TAG, "You Already Canceled : " + cancelledCount);
                                                             int finalCount = (cancelledCount + 1);
                                                             int reminCount = 3 - cancelledCount - 1;
 
-                                                            if(acceptedDate.compareTo(lastedit) < 0) { // if the worker accepted the order after editing it
+                                                            assert acceptedDate != null;
+                                                            Log.i(TAG, "acc date : " + acceptedDate + " last edited" + lastedit);
+                                                            if(acceptedDate.compareTo(lastedit) > 0) { // if the worker accepted the order before it has been edited
                                                                 uDatabase.child(uID).child("canceled").setValue(String.valueOf(finalCount));
                                                                 Log.i(TAG, "Remining tries : " + reminCount);
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
@@ -1356,11 +1365,13 @@ public class profile extends AppCompatActivity {
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             }
 
+                                                            // --------------- Setting the order as placed again ---------------- //
                                                             mDatabase.child(DorderID).child("statue").setValue("placed");
                                                             mDatabase.child(DorderID).child("uAccepted").setValue("");
                                                             mDatabase.child(DorderID).child("acceptTime").setValue("");
 
                                                             // --------------------------- Send Notifications ---------------------//
+                                                            String owner = data.getuId();
                                                             notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",notiDate,"false");
                                                             nDatabase.child(owner).push().setValue(Noti);
 
