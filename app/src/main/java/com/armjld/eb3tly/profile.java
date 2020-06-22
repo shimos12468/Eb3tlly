@@ -133,6 +133,7 @@ public class profile extends AppCompatActivity {
 
         // -------------------- intalize
         btnAdd = findViewById(R.id.btnAdd);
+        btnAdd.setVisibility(View.GONE);
 
         //btnSettings = findViewById(R.id.btnSettings);
         btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
@@ -1209,12 +1210,12 @@ public class profile extends AppCompatActivity {
                         txtGetStat.setEnabled(false);
                         txtGetStat.setVisibility(View.VISIBLE);
                         txtGetStat.setText("فات معاد تسلم اوردرك و لم يستمله اي مندوب, الرجاء تعديل معاد تسليم الاوردر او الغاءة");
-                        txtGetStat.setTextColor(Color.RED);
+                        txtGetStat.setBackgroundColor(Color.RED);
                     } else {
                         txtGetStat.setEnabled(false);
                         txtGetStat.setVisibility(View.VISIBLE);
                         txtGetStat.setText("لم يتم استلام اوردرك");
-                        txtGetStat.setTextColor(Color.RED);
+                        txtGetStat.setBackgroundColor(Color.RED);
                     }
                     break;
                 }
@@ -1233,7 +1234,7 @@ public class profile extends AppCompatActivity {
                                 } else {
                                     txtGetStat.setText("تم قبول اوردرك من : " + mName);
                                 }
-                                txtGetStat.setTextColor(Color.parseColor("#ffc922"));
+                                txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                             }
                             @Override
                             public void onCancelled(DatabaseError databaseError) { }
@@ -1244,7 +1245,7 @@ public class profile extends AppCompatActivity {
                     txtGetStat.setEnabled(false);
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setText("تم توصيل اوردرك");
-                    txtGetStat.setTextColor(Color.parseColor("#4CAF50"));
+                    txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
                     break;
                 }
             }
@@ -1316,7 +1317,7 @@ public class profile extends AppCompatActivity {
                                 btnInfo.setVisibility(View.VISIBLE);
                                 txtGetStat.setVisibility(View.VISIBLE);
                                 txtGetStat.setText("تواصل مع التاجر لاستلام الاوردر");
-                                txtGetStat.setTextColor(Color.RED);
+                                txtGetStat.setBackgroundColor(Color.RED);
                                 break;
                             }
                             case "recived" : {
@@ -1326,7 +1327,7 @@ public class profile extends AppCompatActivity {
                                 btnInfo.setVisibility(View.VISIBLE);
                                 txtGetStat.setVisibility(View.VISIBLE);
                                 txtGetStat.setText("تم استلام الاوردر من التاجر");
-                                txtGetStat.setTextColor(Color.parseColor("#ffc922"));
+                                txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                                 break;
                             }
                             case "delivered" : {
@@ -1335,7 +1336,7 @@ public class profile extends AppCompatActivity {
                                 btnInfo.setVisibility(View.GONE);
                                 txtGetStat.setVisibility(View.VISIBLE);
                                 txtGetStat.setText("تم توصيل الاوردر بنجاح");
-                                txtGetStat.setTextColor(Color.parseColor("#4CAF50"));
+                                txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
                                 break;
                             }
                         }
