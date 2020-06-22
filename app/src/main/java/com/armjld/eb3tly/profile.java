@@ -227,7 +227,7 @@ public class profile extends AppCompatActivity {
         });
 
         // -------------------------- Get user info for profile
-        uDatabase.child(uID).addValueEventListener(new ValueEventListener() {
+        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String ppURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
@@ -244,7 +244,7 @@ public class profile extends AppCompatActivity {
         });
 
         //Get this user account type
-        uDatabase.child(uID).addValueEventListener(new ValueEventListener() {
+        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 uType = snapshot.child("accountType").getValue().toString();
@@ -254,7 +254,7 @@ public class profile extends AppCompatActivity {
                     txtNoOrders.setText("لم تقم باضافه اي اوردرات حتي الان");
                     user_type = "sId";
                     final RatingBar rbProfile = findViewById(R.id.rbProfile);
-                    rDatabase.child(uID).orderByChild(user_type).equalTo(uID).addValueEventListener(new ValueEventListener() {
+                    rDatabase.child(uID).orderByChild(user_type).equalTo(uID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             long total = 0;
@@ -281,7 +281,7 @@ public class profile extends AppCompatActivity {
                     txtNoOrders.setText("لم تقم بقبول اي اوردرات حتي الان");
                     user_type = "dId";
                     final RatingBar rbProfile = findViewById(R.id.rbProfile);
-                    rDatabase.child(uID).orderByChild(user_type).equalTo(uID).addValueEventListener(new ValueEventListener() {
+                    rDatabase.child(uID).orderByChild(user_type).equalTo(uID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             long total = 0;
@@ -312,7 +312,7 @@ public class profile extends AppCompatActivity {
         });
 
         // ------------------ Show or Hide Buttons depending on the User Type
-        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uID).addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
@@ -372,7 +372,7 @@ public class profile extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);
         userRecycler.setLayoutManager(layoutManager);
 
-        uDatabase.child(uID).addValueEventListener(new ValueEventListener() {
+        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final String uType = snapshot.child("accountType").getValue().toString();
@@ -411,7 +411,7 @@ public class profile extends AppCompatActivity {
             }
         });
 
-        uDatabase.child(uID).addValueEventListener(new ValueEventListener() {
+        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final String uType = snapshot.child("accountType").getValue().toString();
@@ -954,7 +954,7 @@ public class profile extends AppCompatActivity {
                                     });
 
                                     // --------------------- Get the user name && Phone Number -------------------//
-                                    uDatabase.child(dilvID).addValueEventListener(new ValueEventListener() {
+                                    uDatabase.child(dilvID).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot snapshot) {
                                             String dUser = snapshot.child("name").getValue().toString();
@@ -974,7 +974,7 @@ public class profile extends AppCompatActivity {
                                     });
 
                                     // -------------------- Get the Rate Stars ------------------//
-                                    rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addValueEventListener(new ValueEventListener() {
+                                    rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             long total = 0;
@@ -1468,7 +1468,7 @@ public class profile extends AppCompatActivity {
                     txtGetStat.setEnabled(true);
                     DatabaseReference mRef;
                     mRef = getInstance().getReference("Pickly").child("users").child(uAccepted);
-                    mRef.addValueEventListener(new ValueEventListener() {
+                    mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String mName = snapshot.child("name").getValue().toString();
@@ -1519,7 +1519,7 @@ public class profile extends AppCompatActivity {
         }
 
         public void setDilveredButton(final String state) {
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("ResourceAsColor")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1610,7 +1610,7 @@ public class profile extends AppCompatActivity {
             final Button btnEdit = myview.findViewById(R.id.btnEdit);
             final Button btnDilvered = myview.findViewById(R.id.btnDelivered);
             final Button btnInfo = myview.findViewById(R.id.btnInfo);
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String uType = snapshot.child("accountType").getValue().toString();
