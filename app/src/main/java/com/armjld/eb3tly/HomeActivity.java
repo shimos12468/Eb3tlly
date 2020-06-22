@@ -417,7 +417,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 btnApplyFilters.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        count = 0; //Reset the adapter everytime the user filters
+                        tsferAdapter();
                         recyclerView.setAdapter(null);
                         mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
                             @Override
