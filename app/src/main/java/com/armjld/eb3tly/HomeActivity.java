@@ -187,6 +187,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             }
         });
 
+        // ------------------------ Refresh the recycler view ------------------------------- //
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -216,11 +217,12 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-                updateNone(mm.size() + 1);
+                updateNone(mm.size());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
+        // ------------------------ CHECK FOR REALTIME CHANGES IN ORDERS --------------------------- //
         mDatabase.orderByChild("ddate").startAt(datee).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }

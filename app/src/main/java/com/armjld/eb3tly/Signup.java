@@ -81,7 +81,6 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class Signup extends AppCompatActivity {
 
-    boolean first = true;
     private SOMEUSERDATAPROVIDER impdata;
     private EditText user,email,pass,con_password , phoneNum,editTextCode;
     private Button btnreg;
@@ -560,7 +559,6 @@ public class Signup extends AppCompatActivity {
     };
 
         private void verifyVerificationCode(String code) {
-            Log.i(TAG, "Verfied");
             Log.i(TAG, "verf : " + mVerificationId + " code : " + code);
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
             signInWithPhoneAuthCredential(credential);
@@ -601,11 +599,9 @@ public class Signup extends AppCompatActivity {
 
                                 // ------------- Welcome message in Notfications----------------------//
 
-                                if(first==true) {
-                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
-                                    nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-                                }
-                                first = false;
+                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
+                                nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
                                 if (accountType.equals("Supplier")) {
                                     startActivity(new Intent(getApplicationContext(), introSup.class));
                                 } else if (accountType.equals("Delivery Worker")) {
