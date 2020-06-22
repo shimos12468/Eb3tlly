@@ -496,9 +496,11 @@ public class Admin extends Activity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int allOrders = (int) dataSnapshot.getChildrenCount();
                     if(dataSnapshot.exists()) {
-                        Data orderData = dataSnapshot.getValue(Data.class);
-                        assert orderData != null;
-                        ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
+                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                            Data orderData = ds.getValue(Data.class);
+                            assert orderData != null;
+                            ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
+                        }
                     }
                 txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP");
             }

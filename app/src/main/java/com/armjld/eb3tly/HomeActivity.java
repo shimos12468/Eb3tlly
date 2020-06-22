@@ -410,8 +410,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     }
 
                     @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
+                    public void onNothingSelected(AdapterView<?> parent) { }
                 });
 
                 btnApplyFilters.setOnClickListener(new View.OnClickListener() {
