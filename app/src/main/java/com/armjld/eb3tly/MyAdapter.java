@@ -53,7 +53,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      //Data [] filtersData;
      ArrayList<Data>filtersData;
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-     SwipeRefreshLayout mSwipeRefreshLayout;
      private ArrayList datalist,filterList;
      private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase,nDatabase;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
@@ -63,11 +62,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      String datee = sdf.format(new Date());
     String notiDate = DateFormat.getDateInstance().format(new Date());
 
-
-
-    public MyAdapter(SwipeRefreshLayout mSwipeRefreshLayout) {
-        this.mSwipeRefreshLayout = mSwipeRefreshLayout;
-    }
 
     public void addItem(int position , Data data , int count){
         filtersData.set(position,data);
@@ -84,12 +78,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         notifyDataSetChanged();
     }
 
-    public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count, SwipeRefreshLayout mSwipeRefreshLayout ) {
+    public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count) {
         this.count = count;
         this.context = context;
         this.filtersData = filtersData;
         this.context1 = context1;
-        this.mSwipeRefreshLayout = mSwipeRefreshLayout;
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -372,14 +365,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
-
-
     }
 
     @Override
@@ -486,36 +471,4 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    private void refresh() {
-        new Handler() {
-            public void postDelayed(Runnable runnable, int i) {
-            }
-
-            @Override
-            public void publish(LogRecord record) {
-
-            }
-
-            @Override
-            public void flush() {
-
-            }
-
-            @Override
-            public void close() throws SecurityException {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        }.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                MyAdapter.this.notifyDataSetChanged();
-                Log.i(TAG, "Data Refreshed");
-
-            }
-        },3000);
-        MyAdapter.this.notifyDataSetChanged();
-        Log.i(TAG, "Data Refreshed");
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
 }

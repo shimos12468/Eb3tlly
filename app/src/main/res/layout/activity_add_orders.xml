@@ -32,7 +32,7 @@
                 android:background="@color/colorAccent"
                 android:backgroundTint="@color/colorAccent"
                 android:gravity="center"
-                android:text="بيانات استلام الاوردر"
+                android:text="بياناتك"
                 android:textColor="#FDFAFA"
                 android:textColorHint="@android:color/tertiary_text_light"
                 android:textSize="24sp" />
@@ -148,7 +148,7 @@
                 android:background="@color/colorAccent"
                 android:backgroundTint="@color/colorAccent"
                 android:gravity="center"
-                android:text="بيانات تسليم الاوردر"
+                android:text="بيانات العميل"
                 android:textColor="#FDFAFA"
                 android:textColorHint="@android:color/tertiary_text_light"
                 android:textSize="24sp" />

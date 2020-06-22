@@ -21,12 +21,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:text="اكتب الشكوي او الاقتراح الذي تريد عرضه علي مطورين البرنامج و سيتم الرد عليك في الاشعارات الخاصة بك في اقرب وقت"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addToolbar" />
+
     <EditText
         android:id="@+id/txtContact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:gravity="top|right"
         android:hint="اكتب الشكوي او الاقتراح هنا ..."
@@ -39,7 +53,7 @@
         android:textColorHint="#323232"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/textView25"
         tools:ignore="RtlCompat,RtlHardcoded" />
 
     <androidx.appcompat.widget.AppCompatButton

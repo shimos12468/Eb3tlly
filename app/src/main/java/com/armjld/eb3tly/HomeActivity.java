@@ -189,7 +189,28 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                tsferAdapter();
+                mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            for (DataSnapshot ds : snapshot.getChildren()) {
+                                Data orderData = ds.getValue(Data.class);
+                                assert orderData != null;
+                                if (orderData.getStatue().equals("placed")) {
+                                    mm.add((int) count, orderData);
+                                    count++;
+                                }
+                                orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+                                recyclerView.setAdapter(orderAdapter);
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -271,7 +292,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             mm.add((int) count, orderData);
                             count++;
                         }
-                        orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                        orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                         recyclerView.setAdapter(orderAdapter);
                     }
                 }
@@ -442,7 +463,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                             }
                                         }
                                     }
-                                    orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count, mSwipeRefreshLayout);
+                                    orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                                     recyclerView.setAdapter(orderAdapter);
                                 }
                             }
@@ -463,6 +484,12 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             }
         });
 
+    }
+
+    private void tsferAdapter() {
+        mm = null;
+        count = 0;
+        orderAdapter = null;
     }
 
     @Override
