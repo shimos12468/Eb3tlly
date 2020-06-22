@@ -113,6 +113,12 @@ public class Signup extends AppCompatActivity {
     private Boolean timerRunning = false;
 
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, Terms.class));
+    }
+
     public void UpdateTimer(){
         int minutes = (int)timeleft/60000;
         int seconds = (int)timeleft%60000/1000;

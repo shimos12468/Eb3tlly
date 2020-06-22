@@ -68,6 +68,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         notifyItemChanged(position);
     }
 
+    public void addItem2(int position , Data data){
+        filtersData.add(position,data);
+        notifyItemInserted(position);
+    }
+
 
     public void removeItem(int position, int size, Data data){
         filtersData.set(position,data);
