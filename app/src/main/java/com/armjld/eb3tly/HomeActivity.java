@@ -193,7 +193,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 mm.clear();
                 mm.trimToSize();
                 count = 0;
-                orderAdapter = null;
                 recyclerView.setAdapter(null);
                 mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -253,7 +252,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         } else if (ff.get(i).getId().equals(orderData.getId()) && ff.get(i).getStatue().equals("accepted")) {
                             a7a = orderData;
                             indexff = i;
-                            filterAdapter.addItem(indexff-1, a7a, (int) countFilter);
+                            filterAdapter.addItem(indexff, a7a, (int) countFilter);
                         }
                     }
                 }

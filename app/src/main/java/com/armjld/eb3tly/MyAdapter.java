@@ -60,29 +60,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
      SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
      String datee = sdf.format(new Date());
-    String notiDate = DateFormat.getDateInstance().format(new Date());
-
+     String notiDate = DateFormat.getDateInstance().format(new Date());
 
     public void addItem(int position , Data data , int count){
         filtersData.set(position,data);
         notifyItemChanged(position);
     }
 
-    public void addItem2(int position , Data data){
-        filtersData.add(position,data);
-        notifyItemInserted(position);
-    }
-
-
     public void removeItem(int position, int size, Data data){
         filtersData.set(position,data);
         notifyItemChanged(position);
     }
 
-    public void update(ArrayList<Data> data){
-        this.filtersData = data;
-        notifyDataSetChanged();
-    }
 
     public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count) {
         this.count = count;
@@ -95,7 +84,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
         vDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-
     }
 
     @NonNull

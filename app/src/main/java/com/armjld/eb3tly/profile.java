@@ -1016,21 +1016,18 @@ public class profile extends AppCompatActivity {
                                     ListView listComment = (ListView) dialogMore.findViewById(R.id.dsComment);
                                     final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<String>(profile.this, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
                                     listComment.setAdapter(arrayAdapterLessons);
-                                    mArraylistSectionLessons.clear(); // To not dublicate comments
+                                    mArraylistSectionLessons.clear();
+                                    txtNodsComments.setVisibility(View.VISIBLE);// To not dublicate comments
                                     rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if(snapshot.exists()) {
-                                                txtNodsComments.setVisibility(View.GONE);
-                                            } else {
-                                                txtNodsComments.setVisibility(View.VISIBLE);
-                                            }
                                             for (DataSnapshot data : dataSnapshot.getChildren()) {
                                                 int count = (int) dataSnapshot.getChildrenCount();
                                                 String tempComment = data.child("comment").getValue().toString();
                                                 Log.i(TAG, tempComment);
                                                 if(!tempComment.equals("")) {
                                                     mArraylistSectionLessons.add(tempComment);
+                                                    txtNodsComments.setVisibility(View.GONE);
                                                 }
                                                 arrayAdapterLessons.notifyDataSetChanged();
                                             }
