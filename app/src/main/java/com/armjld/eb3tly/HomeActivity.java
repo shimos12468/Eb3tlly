@@ -219,7 +219,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-                updateNone();
+                updateNone(mm.size());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -272,11 +272,12 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     }
                 }
 
+                int indexf = 0;
                 for(int i = 0;i<ff.size();i++){
                     if(ff.get(i).getId().equals(orderData.getId())){
-                        indexs = i;
+                        indexf = i;
                         orderData.setRemoved("true");
-                        filterAdapter.removeItem(indexs-1, ff.size(), orderData);
+                        filterAdapter.removeItem(indexf, ff.size(), orderData);
                     }
                 }
             }
@@ -302,7 +303,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         }
                         orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                         recyclerView.setAdapter(orderAdapter);
-                        updateNone();
+                        updateNone(mm.size());
                     }
                 }
             }
@@ -471,7 +472,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                             }
                                         }
                                     }
-                                    updateNone();
+                                    updateNone(ff.size());
                                     filterAdapter = new MyAdapter(HomeActivity.this, ff, getApplicationContext(), countFilter);
                                     recyclerView.setAdapter(filterAdapter);
                                 }
@@ -506,20 +507,12 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         recyclerView.setAdapter(null);
     }
 
-    private void updateNone() {
-        mDatabase.orderByChild("ddate").startAt(datee).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists() && snapshot.child("statue").getValue().toString().equals("placed")) {
-                    txtNoOrders.setVisibility(View.GONE);
-                } else {
-                    txtNoOrders.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
+    private void updateNone(int listSize) {
+        if(listSize > 0) {
+            txtNoOrders.setVisibility(View.GONE);
+        } else {
+            txtNoOrders.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
