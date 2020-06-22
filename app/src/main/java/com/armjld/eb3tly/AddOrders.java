@@ -323,7 +323,7 @@ public class AddOrders extends AppCompatActivity {
                                 mDatabase.child(id).setValue(data);
                                 mDatabase.child(id).child("lastedit").setValue(datee);
                                 mdialog.dismiss();
-                                Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(AddOrders.this, profile.class));
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -440,7 +440,7 @@ public class AddOrders extends AppCompatActivity {
                                 mDatabase.child(id).child("lastedit").setValue(datee);
                                 clearText();
                                 mdialog.dismiss();
-                                Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن يمكنك الان اضافه اوردر اخر", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن يمكنك الان اضافه اوردر اخر", Toast.LENGTH_LONG).show();
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
                                 mdialog.dismiss();

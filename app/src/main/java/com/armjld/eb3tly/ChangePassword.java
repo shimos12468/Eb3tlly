@@ -87,7 +87,7 @@ public class ChangePassword extends Activity {
                     return;
                 }
                 if (!oldd.equals(oldPass)) {
-                    Toast.makeText(ChangePassword.this, "ادخلت كلمه مرور خاطئة", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChangePassword.this, "ادخلت كلمه مرور خاطئة", Toast.LENGTH_LONG).show();
                     old_pass.setText("");
                     return;
                 }
@@ -117,7 +117,7 @@ public class ChangePassword extends Activity {
                         });
                     } else{
                             mdialog.dismiss();
-                            Toast.makeText(ChangePassword.this, "a7oo ezay", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

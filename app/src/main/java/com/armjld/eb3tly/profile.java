@@ -250,7 +250,7 @@ public class profile extends AppCompatActivity {
                 uType = snapshot.child("accountType").getValue().toString();
                 TextView usType = findViewById(R.id.txtUserType);
                 if (uType.equals("Supplier")) {
-                    usType.setText("تاجر / موزع");
+                    usType.setText("تاجر");
                     txtNoOrders.setText("لم تقم باضافه اي اوردرات حتي الان");
                     user_type = "sId";
                     final RatingBar rbProfile = findViewById(R.id.rbProfile);
@@ -1314,9 +1314,9 @@ public class profile extends AppCompatActivity {
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             }
 
+                                                            mDatabase.child(DorderID).child("statue").setValue("placed");
                                                             mDatabase.child(DorderID).child("uAccepted").setValue("");
                                                             mDatabase.child(DorderID).child("acceptTime").setValue("");
-                                                            mDatabase.child(DorderID).child("statue").setValue("placed");
 
                                                             // --------------------------- Send Notifications ---------------------//
                                                             notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",notiDate,"false");

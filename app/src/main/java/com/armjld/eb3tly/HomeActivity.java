@@ -237,7 +237,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
                             a7a = orderData;
                             indexmm = i;
-                            orderAdapter.addItem2(indexmm ,a7a);
+                            orderAdapter.addItem(indexmm ,a7a,(int)count);
                         } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
                             a7a = orderData;
                             indexmm = i;

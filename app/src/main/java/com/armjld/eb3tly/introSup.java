@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import com.github.appintro.AppIntro;
 import com.github.appintro.AppIntroFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,24 +34,10 @@ public class introSup extends AppIntro {
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String uType = snapshot.child("accountType").getValue().toString();
-                if (uType.equals("Supplier")) {
-                    startActivity(new Intent(getApplicationContext(), HowTo.class));
-                } else if (uType.equals("Delivery Worker")) {
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    } else {
-            // will say that there is no user please register or sign in again
-            // intent to registration page
+            startActivity(new Intent(getApplicationContext(), HowTo.class));
+        } else {
+            Toast.makeText(this, "االرجاء تسجيل الدخول مجددا ..", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
     }
@@ -57,18 +45,11 @@ public class introSup extends AppIntro {
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
-        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String uType = snapshot.child("accountType").getValue().toString();
-                if (uType.equals("Supplier")) {
-                    startActivity(new Intent(getApplicationContext(), HowTo.class));
-                } else if (uType.equals("Delivery Worker")) {
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(), HowTo.class));
+        } else {
+            Toast.makeText(this, "االرجاء تسجيل الدخول مجددا ..", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
     }
 }
