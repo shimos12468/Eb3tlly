@@ -234,12 +234,26 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 assert orderData != null;
                     for(int i = 0;i<mm.size();i++){
                         if(mm.get(i).getId().equals(orderData.getId())) {
-                            orderAdapter.addItem(i, orderData);
+                            if(orderAdapter!=null)
+                                orderAdapter.addItem(i, orderData);
+                            else{
+                                Log.i(TAG,"adapter is null here");
+                                orderAdapter  = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+                                orderAdapter.addItem(i, orderData);
+                                //recyclerView.setAdapter(orderAdapter);
+                            }
                         }
                     }
                     for(int i = 0;i<ff.size();i++) {
                         if(ff.get(i).getId().equals(orderData.getId())) {
-                            filterAdapter.addItem(i, orderData);
+                            if(filterAdapter!=null)
+                                filterAdapter.addItem(i, orderData);
+                            else{
+                                Log.i(TAG,"adapter is null here");
+                                filterAdapter = new MyAdapter(HomeActivity.this, ff, getApplicationContext(), countFilter);
+                                filterAdapter.addItem(i, orderData);
+                                //recyclerView.setAdapter(orderAdapter);
+                            }
                         }
                     }
             }
@@ -251,7 +265,14 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 for(int i = 0;i<mm.size();i++){
                     if(mm.get(i).getId().equals(orderData.getId())) {
                         orderData.setRemoved("true");
-                        orderAdapter.addItem(i, orderData);
+                        if(orderAdapter!=null)
+                            orderAdapter.addItem(i, orderData);
+                        else{
+                            Log.i(TAG,"adapter is null here");
+                            orderAdapter  = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+                            orderAdapter.addItem(i, orderData);
+                            //recyclerView.setAdapter(orderAdapter);
+                        }
                     }
                 }
 
@@ -261,8 +282,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                         if(filterAdapter!=null)
                         filterAdapter.addItem(i, orderData);
                         else{
+                            Log.i(TAG,"adapter is null here");
                             filterAdapter = new MyAdapter(HomeActivity.this, ff, getApplicationContext(), countFilter);
                             filterAdapter.addItem(i, orderData);
+                            //recyclerView.setAdapter(orderAdapter);
                         }
                     }
                 }
