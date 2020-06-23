@@ -64,7 +64,7 @@ public class Notifications extends AppCompatActivity {
             Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         mAuth = FirebaseAuth.getInstance();
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         btnNavBar = findViewById(R.id.btnNavBar);
@@ -185,6 +185,9 @@ public class Notifications extends AppCompatActivity {
                 if (uType.equals("Supplier")) {
                     Menu nav_menu = navigationView.getMenu();
                     nav_menu.findItem(R.id.nav_timeline).setVisible(false);
+                } else {
+                    Menu nav_menu = navigationView.getMenu();
+                    nav_menu.findItem(R.id.nav_how).setVisible(false);
                 }
             }
             @Override

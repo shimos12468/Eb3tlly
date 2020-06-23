@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -186,6 +187,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 return true;
             }
         });
+
+        // ----------------- Hide the How to For Delivery
+        Menu nav_menu = navigationView.getMenu();
+        nav_menu.findItem(R.id.nav_how).setVisible(false);
 
         // ------------------------ Refresh the recycler view ------------------------------- //
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

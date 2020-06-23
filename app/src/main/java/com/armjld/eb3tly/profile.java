@@ -349,6 +349,8 @@ public class profile extends AppCompatActivity {
                     nav_menu.findItem(R.id.nav_timeline).setVisible(false);
                     btnNavbarProfile.setVisibility(View.VISIBLE);
                 } else {
+                    Menu nav_menu = navigationView.getMenu();
+                    nav_menu.findItem(R.id.nav_how).setVisible(false);
                     btnAdd.setVisibility(View.GONE);
                 }
             }
@@ -1468,9 +1470,9 @@ public class profile extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PHONE_CALL_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(profile.this, "Camera Permission Granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(profile.this, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(profile.this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(profile.this, "Phone Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
