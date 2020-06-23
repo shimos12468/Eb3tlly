@@ -150,6 +150,15 @@ public class profile extends AppCompatActivity {
         constNoti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+                startActivity(new Intent(profile.this, Notifications.class));
+            }
+        });
+
+        btnNavbarProfile.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RtlHardcoded")
+            @Override
+            public void onClick(View v) {
                 if (drawer.isDrawerOpen(Gravity.LEFT)) {
                     drawer.closeDrawer(Gravity.LEFT);
                 } else {

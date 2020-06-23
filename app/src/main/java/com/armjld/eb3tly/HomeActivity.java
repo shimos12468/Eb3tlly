@@ -210,6 +210,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                     }
                                     orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                                     recyclerView.setAdapter(orderAdapter);
+                                    Log.i(TAG, "Filter Size : " + count + " - " + mm.size());
+                                    updateNone((int) count);
                                 }
                             }
                         }
@@ -219,7 +221,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     }
                 });
                 mSwipeRefreshLayout.setRefreshing(false);
-                updateNone((int) count);
+
+
             }
         });
 
@@ -240,10 +243,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                 Log.i(TAG,"adapter is null here");
                                 orderAdapter  = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                                 orderAdapter.addItem(i, orderData);
-                                //recyclerView.setAdapter(orderAdapter);
                             }
                         }
                     }
+
                     for(int i = 0;i<ff.size();i++) {
                         if(ff.get(i).getId().equals(orderData.getId())) {
                             if(filterAdapter!=null)
@@ -252,7 +255,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                 Log.i(TAG,"adapter is null here");
                                 filterAdapter = new MyAdapter(HomeActivity.this, ff, getApplicationContext(), countFilter);
                                 filterAdapter.addItem(i, orderData);
-                                //recyclerView.setAdapter(orderAdapter);
                             }
                         }
                     }
@@ -271,7 +273,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             Log.i(TAG,"adapter is null here");
                             orderAdapter  = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                             orderAdapter.addItem(i, orderData);
-                            //recyclerView.setAdapter(orderAdapter);
                         }
                     }
                 }
@@ -285,7 +286,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             Log.i(TAG,"adapter is null here");
                             filterAdapter = new MyAdapter(HomeActivity.this, ff, getApplicationContext(), countFilter);
                             filterAdapter.addItem(i, orderData);
-                            //recyclerView.setAdapter(orderAdapter);
                         }
                     }
                 }
