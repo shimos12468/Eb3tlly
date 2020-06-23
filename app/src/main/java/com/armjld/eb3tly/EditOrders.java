@@ -389,10 +389,11 @@ public class EditOrders extends AppCompatActivity {
                                 mDatabase.child(orderID).setValue(data);
                                 mDatabase.child(orderID).child("lastedit").setValue(datee);
 
-                                // --------------------------- Send Notifications ---------------------//
-                                notiData Noti = new notiData(mAuth.getCurrentUser().getUid().toString(), uAccepted,orderID,"edited",notiDate,"false");
-                                nDatabase.child(uAccepted).push().setValue(Noti);
-
+                                if(!uAccepted.equals("")) {
+                                    // --------------------------- Send Notifications ---------------------//
+                                    notiData Noti = new notiData(mAuth.getCurrentUser().getUid().toString(), uAccepted,orderID,"edited",notiDate,"false");
+                                    nDatabase.child(uAccepted).push().setValue(Noti);
+                                }
                                 mdialog.dismiss();
                                 Toast.makeText(EditOrders.this, "تم تعديل الاوردر الخاص بك", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(EditOrders.this, profile.class));

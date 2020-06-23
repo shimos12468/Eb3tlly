@@ -224,13 +224,14 @@ public class profile extends AppCompatActivity {
                     int notiCount = 0;
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                         if(ds.exists()) {
-                            if(ds.child("isRead").getValue().equals("true")) {
-                                notiCount ++;
+                            if(ds.child("isRead").getValue().equals("false")) {
+                                notiCount++;
                             }
                         }
                     }
-                    if (notiCount > 0) {
-                        txtNotiCount.setText(notiCount);
+                    if(notiCount > 0) {
+                        txtNotiCount.setVisibility(View.VISIBLE);
+                        txtNotiCount.setText(""+notiCount);
                     } else {
                         txtNotiCount.setVisibility(View.GONE);
                     }
@@ -492,35 +493,34 @@ public class profile extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case DialogInterface.BUTTON_POSITIVE:
-                                                    mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    // ------------ Delete the Orders Notfications ------------------- //
+                                                    nDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            // ------------ Delete the Orders Notfications ------------------- //
-                                                            nDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                    if(dataSnapshot.exists()) {
-                                                                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                                                            if(ds.exists()) {
-                                                                                for(DataSnapshot sn : ds.getChildren()) {
-                                                                                    if(sn.child("orderid").exists()) {
-                                                                                        String orderI = Objects.requireNonNull(sn.child("orderid").getValue().toString());
-                                                                                        if(orderI.equals(orderID)) {
-                                                                                            sn.getRef().removeValue();
-                                                                                        }
-                                                                                    }
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            if(dataSnapshot.exists()) {
+                                                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                                                    if(ds.exists()) {
+                                                                        for(DataSnapshot sn : ds.getChildren()) {
+                                                                            if(sn.child("orderid").exists()) {
+                                                                                String orderI = Objects.requireNonNull(sn.child("orderid").getValue().toString());
+                                                                                if(orderI.equals(orderID)) {
+                                                                                    sn.getRef().removeValue();
                                                                                 }
                                                                             }
                                                                         }
                                                                     }
                                                                 }
+                                                            }
+                                                        }
 
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError databaseError) { }
-                                                            });
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                                                    });
 
+                                                    mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                             snapshot.getRef().removeValue();
-                                                            String idAccepted = snapshot.child("uAccepted").getValue().toString();
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                                                             setOrderCount("Supplier", mUser.getUid());
                                                         }

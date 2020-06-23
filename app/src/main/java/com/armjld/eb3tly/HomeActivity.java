@@ -191,6 +191,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                tbTitle.setText("جميع الاوردرات المتاحة");
                 mm.clear();
                 mm.trimToSize();
                 count = 0;
@@ -338,9 +339,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 final AlertDialog filterDialog = myfilterDialog.create();
                 filterDialog.show();
 
-                // INITALIZE
-                TextView toolbar_title = textEntryView.findViewById(R.id.toolbar_title);
-                toolbar_title.setText("تصفية الاوردرات");
+                TextView fitlerTitle = textEntryView.findViewById(R.id.toolbar_title);
+                fitlerTitle.setText("تصفية الاوردرات");
 
                 //-------------------SPINNERS -------------------------//
                 ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(HomeActivity.this, R.array.txtStates, R.layout.color_spinner_layout);
@@ -431,6 +431,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 btnApplyFilters.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        tbTitle.setText("تصفية الاوردرات");
                         tsferAdapter();
                         filterAdapter = null;
                         mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
