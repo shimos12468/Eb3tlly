@@ -47,7 +47,6 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-     private int Sposition;
      Context context , context1;
      long count;
      //Data [] filtersData;
@@ -62,16 +61,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      String datee = sdf.format(new Date());
      String notiDate = DateFormat.getDateInstance().format(new Date());
 
-    public void addItem(int position , Data data , int count){
-        filtersData.set(position,data);
-        notifyItemChanged(position);
+    public void addItem(int position , Data data){
+        int size = filtersData.size() - 1;
+        if(size >= position && size != -1) {
+            filtersData.set(position,data);
+            notifyItemChanged(position);
+            Log.i(TAG, "Filter Data Statue : " + data.getStatue());
+        }
     }
-
-    public void removeItem(int position, int size, Data data){
-        filtersData.set(position,data);
-        notifyItemChanged(position);
-    }
-
 
     public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count) {
         this.count = count;
@@ -139,29 +136,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         final String DAddress = filtersData.get(position).getDAddress();
         final String rateUID = filtersData.get(position).getuId();
         final String notes = filtersData.get(position).getNotes();
-        final String statues = filtersData.get(position).getStatue();
-        final String removed = filtersData.get(position).getRemoved();
-        final String orderID = filtersData.get(position).getId();
-        final String owner = filtersData.get(position).getuId();
-
-        if(!statues.equals("placed")) {
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setText("الاوردر تم قبولة بالفعل من مندوب اخر");
-            holder.txtWarning.setVisibility(View.VISIBLE);
-        } else {
-            holder.lin1.setVisibility(View.VISIBLE);
-            holder.txtWarning.setVisibility(View.GONE);
-        }
-
-        if(removed.equals("true")){
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
-            holder.txtWarning.setVisibility(View.VISIBLE);
-        } else {
-            holder.lin1.setVisibility(View.VISIBLE);
-            holder.txtWarning.setVisibility(View.GONE);
-        }
-
+        String statues = filtersData.get(position).getStatue();
+        String removed = filtersData.get(position).getRemoved();
+        String orderID = filtersData.get(position).getId();
+        String owner = filtersData.get(position).getuId();
 
         holder.linerDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,8 +295,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 });
-
-
             }
         });
 
@@ -346,6 +322,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 Toast.makeText(context, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show();
             }
         });
+
+        if(removed.equals("true") || !statues.equals("placed")){
+            Log.i(TAG, "You're inside the if of GGMONEY" + filtersData.get(position).getGMoney());
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setVisibility(View.VISIBLE);
+        } else {
+            holder.lin1.setVisibility(View.VISIBLE);
+            holder.txtWarning.setVisibility(View.GONE);
+        }
+
         //Accept Order Button
         holder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -380,8 +366,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                     nDatabase.child(owner).push().setValue(Noti);
 
                                                     Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
+                                                    ((HomeActivity)context).finish();
                                                     context.startActivity(new Intent(context, profile.class));
-
                                                     break;
                                                 case DialogInterface.BUTTON_NEGATIVE:
                                                     break;

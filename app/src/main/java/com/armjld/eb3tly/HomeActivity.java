@@ -219,7 +219,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     }
                 });
                 mSwipeRefreshLayout.setRefreshing(false);
-                updateNone(mm.size());
+                updateNone((int) count);
             }
         });
 
@@ -232,66 +232,33 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
-                if (orderData.getStatue().equals("placed") || orderData.getStatue().equals("accepted")) {
                     for(int i = 0;i<mm.size();i++){
-                        if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("placed")) {
-                            if(mm.get(i).getStatue().equals("placed") && orderData.getStatue().equals("accepted")) {
-                                orderData.setStatue("accepted");
-                            }
-                            if(mm.size() != 0) {
-                                a7a = orderData;
-                                indexmm = i;
-                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
-                            }
-                        } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
-                            if(mm.size() != 0) {
-                                a7a = orderData;
-                                indexmm = i;
-                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
-                            }
+                        if(mm.get(i).getId().equals(orderData.getId())) {
+                            orderAdapter.addItem(i, orderData);
                         }
                     }
-
                     for(int i = 0;i<ff.size();i++) {
-                        if (ff.get(i).getId().equals(orderData.getId()) && ff.get(i).getStatue().equals("placed")) {
-                            if(ff.get(i).getStatue().equals("placed") && orderData.getStatue().equals("accepted")) {
-                                orderData.setStatue("accepted");
-                            }
-                            if(ff.size() != 0) {
-                                a7a = orderData;
-                                indexff = i;
-                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
-                            }
-                        } else if (ff.get(i).getId().equals(orderData.getId()) && ff.get(i).getStatue().equals("accepted")) {
-                            if(ff.size() != 0) {
-                                a7a = orderData;
-                                indexff = i;
-                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
-                            }
+                        if(ff.get(i).getId().equals(orderData.getId())) {
+                            filterAdapter.addItem(i, orderData);
                         }
                     }
-                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 Data orderData = dataSnapshot.getValue(Data.class);
                 assert orderData != null;
-                int indexs = 0;
                 for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId()) && mm.size() != 0){
-                        indexs = i;
+                    if(mm.get(i).getId().equals(orderData.getId())) {
                         orderData.setRemoved("true");
-                        orderAdapter.removeItem(indexs, mm.size(), orderData);
+                        orderAdapter.addItem(i, orderData);
                     }
                 }
 
-                int indexf = 0;
                 for(int i = 0;i<ff.size();i++){
-                    if(ff.get(i).getId().equals(orderData.getId()) && ff.size() != 0){
-                        indexf = i;
+                    if(ff.get(i).getId().equals(orderData.getId())) {
                         orderData.setRemoved("true");
-                        filterAdapter.removeItem(indexf, ff.size(), orderData);
+                        filterAdapter.addItem(i, orderData);
                     }
                 }
             }
