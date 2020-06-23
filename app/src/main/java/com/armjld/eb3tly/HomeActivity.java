@@ -258,7 +258,12 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 for(int i = 0;i<ff.size();i++){
                     if(ff.get(i).getId().equals(orderData.getId())) {
                         orderData.setRemoved("true");
+                        if(filterAdapter!=null)
                         filterAdapter.addItem(i, orderData);
+                        else{
+                            filterAdapter = new MyAdapter(HomeActivity.this, ff, getApplicationContext(), countFilter);
+                            filterAdapter.addItem(i, orderData);
+                        }
                     }
                 }
             }
@@ -408,7 +413,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     public void onClick(View v) {
                         tbTitle.setText("تصفية الاوردرات");
                         tsferAdapter();
-                        filterAdapter = null;
                         mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

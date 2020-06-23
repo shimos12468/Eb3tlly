@@ -7,12 +7,9 @@ public class Data {
     private String mPShop;
     private String txtPState;
     private String mPRegion;
-
-    // Main
     private String date;
     private String id;
     private String uId;
-
     // Drop Data
     private String txtDState;
     private String DAddress;
@@ -20,20 +17,16 @@ public class Data {
     private String DPhone;
     private String DName;
     private String mDRegion;
-
     // Money Data
     private String GMoney;
     private String GGet;
-
     // Transportation
     private String isTrans;
     private String isMetro;
     private String isMotor;
     private String isCar;
-
     private String statue;
     private String uAccepted;
-
     private String srated;
     private String srateid;
     public static String removed = "false";
