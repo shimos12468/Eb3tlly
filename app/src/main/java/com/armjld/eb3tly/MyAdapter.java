@@ -62,8 +62,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      String notiDate = DateFormat.getDateInstance().format(new Date());
 
     public void addItem(int position , Data data){
-        int size = filtersData.size() - 1;
-        if(size >= position && size != -1) {
+        int size = filtersData.size();
+        if(size > position && size != 0) {
             filtersData.set(position,data);
             notifyItemChanged(position);
             Log.i(TAG, "Filter Data Statue : " + data.getStatue());

@@ -3,12 +3,16 @@ package com.armjld.eb3tly;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -66,6 +70,7 @@ public class UserSetting extends AppCompatActivity {
     private String ppURL = "";
     String oldPass = "";
     String TAG = "User Settings";
+    private static final int READ_EXTERNAL_STORAGE_CODE = 101;
 
     public void onBackPressed () {
         Intent newIntentNB = new Intent(this, profile.class);
@@ -232,6 +237,25 @@ public class UserSetting extends AppCompatActivity {
         });
     }
 
+    // ------------------- CHEECK FOR PERMISSIONS -------------------------------//
+    public void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(UserSetting.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(UserSetting.this, new String[] { permission }, requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == READ_EXTERNAL_STORAGE_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(UserSetting.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(UserSetting.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,10 +300,12 @@ public class UserSetting extends AppCompatActivity {
         UserImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if(intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, TAKE_IMAGE_CODE);
+                checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
+                if (ContextCompat.checkSelfPermission(UserSetting.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    if(intent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(intent, TAKE_IMAGE_CODE);
+                    }
                 }
             }
         });
