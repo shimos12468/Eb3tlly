@@ -238,13 +238,17 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             if(mm.get(i).getStatue().equals("placed") && orderData.getStatue().equals("accepted")) {
                                 orderData.setStatue("accepted");
                             }
-                            a7a = orderData;
-                            indexmm = i;
-                            orderAdapter.addItem(indexmm ,a7a,(int)count);
+                            if(mm.size() != 0) {
+                                a7a = orderData;
+                                indexmm = i;
+                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
+                            }
                         } else if(mm.get(i).getId().equals(orderData.getId()) && mm.get(i).getStatue().equals("accepted")) {
-                            a7a = orderData;
-                            indexmm = i;
-                            orderAdapter.addItem(indexmm ,a7a,(int)count);
+                            if(mm.size() != 0) {
+                                a7a = orderData;
+                                indexmm = i;
+                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
+                            }
                         }
                     }
 
@@ -253,13 +257,17 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                             if(ff.get(i).getStatue().equals("placed") && orderData.getStatue().equals("accepted")) {
                                 orderData.setStatue("accepted");
                             }
-                            a7a = orderData;
-                            indexff = i;
-                            filterAdapter.addItem(indexff, a7a, (int) countFilter);
+                            if(ff.size() != 0) {
+                                a7a = orderData;
+                                indexff = i;
+                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
+                            }
                         } else if (ff.get(i).getId().equals(orderData.getId()) && ff.get(i).getStatue().equals("accepted")) {
-                            a7a = orderData;
-                            indexff = i;
-                            filterAdapter.addItem(indexff, a7a, (int) countFilter);
+                            if(ff.size() != 0) {
+                                a7a = orderData;
+                                indexff = i;
+                                filterAdapter.addItem(indexff, a7a, (int) countFilter);
+                            }
                         }
                     }
                 }
@@ -271,7 +279,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 assert orderData != null;
                 int indexs = 0;
                 for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())){
+                    if(mm.get(i).getId().equals(orderData.getId()) && mm.size() != 0){
                         indexs = i;
                         orderData.setRemoved("true");
                         orderAdapter.removeItem(indexs, mm.size(), orderData);
@@ -280,7 +288,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
                 int indexf = 0;
                 for(int i = 0;i<ff.size();i++){
-                    if(ff.get(i).getId().equals(orderData.getId())){
+                    if(ff.get(i).getId().equals(orderData.getId()) && ff.size() != 0){
                         indexf = i;
                         orderData.setRemoved("true");
                         filterAdapter.removeItem(indexf, ff.size(), orderData);

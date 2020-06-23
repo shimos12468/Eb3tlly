@@ -176,7 +176,6 @@ public class UserSetting extends AppCompatActivity {
 
         assert exifInterface != null;
         int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
-        Log.i(TAG, "Orign: " + String.valueOf(orintation));
         if(orintation == 6 || orintation == 3 || orintation == 8) {
             Matrix matrix = new Matrix();
             if (orintation == 6) {

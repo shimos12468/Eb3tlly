@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                             if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
                                 final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
                                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
-
                                     @Override
                                     public void onSuccess(InstanceIdResult instanceIdResult) {
                                         String deviceToken = instanceIdResult.getToken();
@@ -124,12 +123,15 @@ public class MainActivity extends AppCompatActivity {
                                                         // --------------------- check account types and send each type to it's activity --------------//
                                                         switch (uType) {
                                                             case "Supplier":
+                                                                mdialog.dismiss();
                                                                 startActivity(new Intent(getApplicationContext(), profile.class));
                                                                 break;
                                                             case "Delivery Worker":
+                                                                mdialog.dismiss();
                                                                 startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                                                                 break;
                                                             case "Admin":
+                                                                mdialog.dismiss();
                                                                 startActivity(new Intent(getApplicationContext(), Admin.class));
                                                                 break;
                                                         }
@@ -149,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                                             public void onCancelled(DatabaseError databaseError) {
                                             }
                                         });
-                                        mdialog.dismiss();
                                     }
                                 });
                             } else {

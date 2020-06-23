@@ -63,17 +63,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      String notiDate = DateFormat.getDateInstance().format(new Date());
 
     public void addItem(int position , Data data , int count){
-        if(filtersData.size() != 0) {
-            filtersData.set(position,data);
-            notifyItemChanged(position);
-        }
+        filtersData.set(position,data);
+        notifyItemChanged(position);
     }
 
     public void removeItem(int position, int size, Data data){
-        if(filtersData.size() != 0) {
-            filtersData.set(position,data);
-            notifyItemChanged(position);
-        }
+        filtersData.set(position,data);
+        notifyItemChanged(position);
     }
 
 
