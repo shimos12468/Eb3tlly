@@ -84,7 +84,7 @@ public class Signup extends AppCompatActivity {
     private SOMEUSERDATAPROVIDER impdata;
     private EditText user,email,pass,con_password , phoneNum,editTextCode;
     private Button btnreg;
-    private TextView logintxt ,timer,txtViewPhone ,txtretype;
+    private TextView logintxt ,timer,txtViewPhone ,txtretype,txtSended;
     private ImageView imgSetPP;
     private String mVerificationId;
     private FirebaseAuth mAuth;
@@ -125,7 +125,7 @@ public class Signup extends AppCompatActivity {
         time = " "+minutes+":";
         if(seconds<10)time+="0";
         time+=seconds;
-        timer.setText("يمكنك الضغط هنا لاعادة ارسال الرمز ؟ بعد " + time);
+        timer.setText("يمكنك الضغط هنا لاعادة ارسال الرمز بعد " + time);
     }
 
     public void startTimer(){
@@ -322,6 +322,7 @@ public class Signup extends AppCompatActivity {
         linerVerf = findViewById(R.id.linerVerf);
         logintxt = findViewById(R.id.signup_text);
         linerVerf.setVisibility(View.GONE);
+        linersignUp.setVisibility(View.VISIBLE);
         tbTitle.setText("تسجيل حساب جديد");
 
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -340,6 +341,7 @@ public class Signup extends AppCompatActivity {
         txtViewPhone = findViewById(R.id.txtViewPhone);
         editTextCode = findViewById(R.id.txtVerfCode);
         btnConfirmCode = findViewById(R.id.btnConfirmCode);
+        txtSended = findViewById(R.id.txtSended);
         Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
 
         /*uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -433,9 +435,9 @@ public class Signup extends AppCompatActivity {
                         startTimer();
                         mdialog.dismiss();
                         linersignUp.setVisibility(View.GONE);
+                        txtSended.setText("تم ارسال الكود الي رقم : " + phone);
                         linerVerf.setVisibility(View.VISIBLE);
                         txtViewPhone.setText("ضع الرمز المرسل اليك");
-                        Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
                         sendVerificationCode(phone);
 
                         timer.setOnClickListener(new View.OnClickListener() {
@@ -454,10 +456,10 @@ public class Signup extends AppCompatActivity {
                 } else {
                     startTimer();
                     mdialog.dismiss();
+                    txtSended.setText("تم ارسال الكود الي رقم : " + phone);
                     linersignUp.setVisibility(View.GONE);
                     linerVerf.setVisibility(View.VISIBLE);
                     txtViewPhone.setText("ضع الرمز المرسل اليك");
-                    Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
                     sendVerificationCode(phone);
                     timer.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -517,9 +519,9 @@ public class Signup extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == READ_EXTERNAL_STORAGE_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(Signup.this, "Camera Permission Granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Signup.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(Signup.this, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Signup.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -551,8 +553,9 @@ public class Signup extends AppCompatActivity {
         }
 
         @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+        public void onCodeSent(String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+            Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onCodeSent : " + s);
             mVerificationId = s;
         }

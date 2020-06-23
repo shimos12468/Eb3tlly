@@ -20,17 +20,30 @@
         android:id="@+id/linerVerf"
         android:layout_width="223dp"
         android:layout_height="392dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addToolbar">
+        app:layout_constraintTop_toBottomOf="@+id/addToolbar"
+        app:layout_constraintVertical_bias="0.296">
+
+        <TextView
+            android:id="@+id/txtSended"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="TextView"
+            android:textAlignment="viewEnd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtViewPhone" />
 
         <EditText
             android:id="@+id/txtVerfCode"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:drawableRight="@drawable/ic_add_key"
             android:ems="10"
             android:gravity="center"
@@ -43,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewPhone" />
+            app:layout_constraintTop_toBottomOf="@+id/txtSended" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnConfirmCode"
@@ -67,7 +80,7 @@
             android:text="اعادة ارسال الرمز ؟ بعد"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="18sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.506"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,6 +118,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="40dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

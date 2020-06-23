@@ -217,8 +217,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-                updateNone(mm.size());
                 mSwipeRefreshLayout.setRefreshing(false);
+                updateNone((int) count);
             }
         });
 
@@ -249,6 +249,9 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
                     for(int i = 0;i<ff.size();i++) {
                         if (ff.get(i).getId().equals(orderData.getId()) && ff.get(i).getStatue().equals("placed")) {
+                            if(ff.get(i).getStatue().equals("placed") && orderData.getStatue().equals("accepted")) {
+                                orderData.setStatue("accepted");
+                            }
                             a7a = orderData;
                             indexff = i;
                             filterAdapter.addItem(indexff, a7a, (int) countFilter);
@@ -268,6 +271,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 int indexs = 0;
                 for(int i = 0;i<mm.size();i++){
                     if(mm.get(i).getId().equals(orderData.getId())){
+                        //--- error
                         indexs = i;
                         orderData.setRemoved("true");
                         orderAdapter.removeItem(indexs, mm.size(), orderData);

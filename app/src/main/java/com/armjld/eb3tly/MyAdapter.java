@@ -127,16 +127,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
 
-        if(filtersData.get(position).getRemoved().equals("true")){
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
-            holder.txtWarning.setVisibility(View.VISIBLE);
-            Data.removed = "false";
-        } else {
-            holder.lin1.setVisibility(View.VISIBLE);
-            holder.txtWarning.setVisibility(View.GONE);
-        }
-
         //Hide this order Button
         holder.btnHide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,10 +140,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         final String rateUID = filtersData.get(position).getuId();
         final String notes = filtersData.get(position).getNotes();
         final String statues = filtersData.get(position).getStatue();
+        final String removed = filtersData.get(position).getRemoved();
+        final String orderID = filtersData.get(position).getId();
+        final String owner = filtersData.get(position).getuId();
 
         if(!statues.equals("placed")) {
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setText("الاوردر تم قبولة بالفعل من مندوب اخر");
+            holder.txtWarning.setVisibility(View.VISIBLE);
+        } else {
+            holder.lin1.setVisibility(View.VISIBLE);
+            holder.txtWarning.setVisibility(View.GONE);
+        }
+
+        if(removed.equals("true")){
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setText("لقد تم الغاء هذا الاوردر بالفعل");
             holder.txtWarning.setVisibility(View.VISIBLE);
         } else {
             holder.lin1.setVisibility(View.VISIBLE);
@@ -345,11 +347,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
         //Accept Order Button
-        final String orderID = filtersData.get(position).getId();
-        final String owner = filtersData.get(position).getuId();
         holder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String gettingID = filtersData.get(position).getId();
                 vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -370,9 +371,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case DialogInterface.BUTTON_POSITIVE:
-                                                    mDatabase.child(orderID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
-                                                    mDatabase.child(orderID).child("statue").setValue("accepted");
-                                                    mDatabase.child(orderID).child("acceptedTime").setValue(datee);
+                                                    mDatabase.child(gettingID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
+                                                    mDatabase.child(gettingID).child("statue").setValue("accepted");
+                                                    mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
 
                                                     // --------------------------- Send Notifications ---------------------//
                                                     notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",notiDate,"false");

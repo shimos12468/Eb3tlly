@@ -1230,9 +1230,9 @@ public class profile extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String mName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                                 if(getStatue.equals("recived")) {
-                                    txtGetStat.setText("تم استلام اوردرك من : " + mName);
+                                    txtGetStat.setText("تم استلام اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل");
                                 } else {
-                                    txtGetStat.setText("تم قبول اوردرك من : " + mName);
+                                    txtGetStat.setText("تم قبول اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل");
                                 }
                                 txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                             }
