@@ -62,6 +62,13 @@ public class AddOrders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_orders);
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Toolbar
         TextView toolbar_title = findViewById(R.id.toolbar_title);
         toolbar_title.setText("اضافة اوردر جديد");

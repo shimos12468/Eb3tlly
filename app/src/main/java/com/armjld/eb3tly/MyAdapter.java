@@ -63,6 +63,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      String notiDate = DateFormat.getDateInstance().format(new Date());
 
     public void addItem(int position , Data data , int count){
+        // ---- if there is one order it crashes
         filtersData.set(position,data);
         notifyItemChanged(position);
     }

@@ -45,8 +45,8 @@ public class Conatact extends AppCompatActivity {
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            Toast.makeText(this, "الرجاء تسجيل الدخزل", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
             return;
         }
 

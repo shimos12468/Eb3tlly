@@ -242,6 +242,13 @@ public class UserSetting extends AppCompatActivity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تغيير بيانات الحساب");
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         UserImage = findViewById(R.id.imgEditPhoto);

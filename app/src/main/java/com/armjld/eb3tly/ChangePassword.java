@@ -48,6 +48,13 @@ public class ChangePassword extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_pass);
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         password = findViewById(R.id.txtEditPassword);

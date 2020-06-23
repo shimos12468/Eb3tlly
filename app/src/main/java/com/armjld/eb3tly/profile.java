@@ -3,17 +3,15 @@ package com.armjld.eb3tly;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,18 +19,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,30 +48,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import android.widget.Toast;
 import android.widget.Toolbar;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.Objects;
 import Model.rateData;
 import Model.Data;
 import Model.notiData;
-import Model.userData;
 
 import static com.google.firebase.database.FirebaseDatabase.*;
 
 public class profile extends AppCompatActivity {
 
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
+    private ConstraintLayout constNoti;
     private RecyclerView userRecycler;
     private FirebaseAuth mAuth;
     private NavigationMenuItemView item;
@@ -86,12 +75,8 @@ public class profile extends AppCompatActivity {
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     private String user_type = "";
     private ImageView btnNavbarProfile, imgSetPP, btnOpenNoti;
-    private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
-    private CheckBox chkMetro, chkTrans, chkCar, chkMotor;
-    private Spinner spPState, spPRegion, spDState, spDRegion;
-    private TextView txtUserDate, tbTitle, uName, txtNoOrders;
+    private TextView txtUserDate, tbTitle, uName, txtNoOrders,txtNotiCount;
     private String TAG = "Profile";
-    Toolbar toolbar_home = null;
 
     private static final int PHONE_CALL_CODE = 100;
 
@@ -114,8 +99,8 @@ public class profile extends AppCompatActivity {
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            Toast.makeText(this, "الرجاء تسجيل الدخزل", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -137,12 +122,14 @@ public class profile extends AppCompatActivity {
 
         //btnSettings = findViewById(R.id.btnSettings);
         btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
+        constNoti = findViewById(R.id.constNoti);
         btnOpenNoti = findViewById(R.id.btnOpenNoti);
         datalist = new ArrayList<Data>();
         uName = findViewById(R.id.txtUsername);
         txtUserDate = findViewById(R.id.txtUserDate);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         imgSetPP = findViewById(R.id.imgPPP);
+        txtNotiCount = findViewById(R.id.txtNotiCount);
 
 
         //Title Bar
@@ -150,6 +137,7 @@ public class profile extends AppCompatActivity {
         tbTitle.setText("اوردراتي");
 
         txtNoOrders.setVisibility(View.GONE);
+        txtNotiCount.setVisibility(View.GONE);
 
         // NAV BAR
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -159,7 +147,7 @@ public class profile extends AppCompatActivity {
                 .setDrawerLayout(drawer)
                 .build();
 
-        btnNavbarProfile.setOnClickListener(new View.OnClickListener() {
+        constNoti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (drawer.isDrawerOpen(Gravity.LEFT)) {
@@ -226,6 +214,33 @@ public class profile extends AppCompatActivity {
                 drawer.closeDrawer(Gravity.LEFT);
                 return true;
             }
+        });
+
+        // -------------------------- Get users Notifications Count -------------------//
+        nDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    int notiCount = 0;
+                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if(ds.exists()) {
+                            if(ds.child("isRead").getValue().equals("true")) {
+                                notiCount ++;
+                            }
+                        }
+                    }
+                    if (notiCount > 0) {
+                        txtNotiCount.setText(notiCount);
+                    } else {
+                        txtNotiCount.setVisibility(View.GONE);
+                    }
+                } else {
+                    txtNotiCount.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
         // -------------------------- Get user info for profile
@@ -1209,12 +1224,12 @@ public class profile extends AppCompatActivity {
                     if (yesterday.compareTo(strDate) > 0) {
                         txtGetStat.setEnabled(false);
                         txtGetStat.setVisibility(View.VISIBLE);
-                        txtGetStat.setText("فات معاد تسلم اوردرك و لم يستمله اي مندوب, الرجاء تعديل معاد تسليم الاوردر او الغاءة");
+                        txtGetStat.setText("فات معاد تسلم اوردرك و لم يقبله اي مندوب, الرجاء تعديل معاد تسليم الاوردر او الغاءة");
                         txtGetStat.setBackgroundColor(Color.RED);
                     } else {
                         txtGetStat.setEnabled(false);
                         txtGetStat.setVisibility(View.VISIBLE);
-                        txtGetStat.setText("لم يتم استلام اوردرك");
+                        txtGetStat.setText("لم يتم قبول اوردرك بعد");
                         txtGetStat.setBackgroundColor(Color.RED);
                     }
                     break;
@@ -1230,9 +1245,9 @@ public class profile extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String mName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                                 if(getStatue.equals("recived")) {
-                                    txtGetStat.setText("تم استلام اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل");
+                                    txtGetStat.setText("تم استلام اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
                                 } else {
-                                    txtGetStat.setText("تم قبول اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل");
+                                    txtGetStat.setText("تم قبول اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
                                 }
                                 txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                             }

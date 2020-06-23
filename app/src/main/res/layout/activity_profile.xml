@@ -47,15 +47,39 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_menu" />
 
-            <ImageView
-                android:id="@+id/btnOpenNoti"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constNoti"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar_home"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_notifications" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/btnOpenNoti"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_notifications" />
+
+                <TextView
+                    android:id="@+id/txtNotiCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="left"
+                    android:text="5"
+                    android:textColor="@color/ic_profile_background"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnOpenNoti"
+                    app:layout_constraintEnd_toEndOf="@+id/btnOpenNoti"
+                    app:layout_constraintStart_toStartOf="@+id/btnOpenNoti"
+                    app:layout_constraintTop_toTopOf="@+id/btnOpenNoti" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constProfInfo"

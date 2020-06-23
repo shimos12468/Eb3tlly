@@ -81,8 +81,8 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            Toast.makeText(this, "الرجاء تسجيل الدخزل", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -218,7 +218,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     }
                 });
                 mSwipeRefreshLayout.setRefreshing(false);
-                updateNone((int) count);
+                updateNone(mm.size());
             }
         });
 
@@ -271,7 +271,6 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 int indexs = 0;
                 for(int i = 0;i<mm.size();i++){
                     if(mm.get(i).getId().equals(orderData.getId())){
-                        //--- error
                         indexs = i;
                         orderData.setRemoved("true");
                         orderAdapter.removeItem(indexs, mm.size(), orderData);
