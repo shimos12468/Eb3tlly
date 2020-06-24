@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -283,7 +284,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         if(dataSnapshot.exists()) {
                             for (DataSnapshot cData : dataSnapshot.getChildren()) {
                                 if(cData.exists()) {
-                                    String tempComment = cData.child("comment").getValue().toString();
+                                    String tempComment = Objects.requireNonNull(cData.child("comment").getValue()).toString();
                                     if(!tempComment.equals("")) {
                                         mArraylistSectionLessons.add(tempComment);
                                         comments++;

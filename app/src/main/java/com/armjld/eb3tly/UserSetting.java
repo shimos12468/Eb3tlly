@@ -180,24 +180,28 @@ public class UserSetting extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        assert exifInterface != null;
-        int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
-        if(orintation == 6 || orintation == 3 || orintation == 8) {
-            Matrix matrix = new Matrix();
-            if (orintation == 6) {
-                matrix.postRotate(90);
+        if(exifInterface != null) {
+            int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
+            if(orintation == 6 || orintation == 3 || orintation == 8) {
+                Matrix matrix = new Matrix();
+                if (orintation == 6) {
+                    matrix.postRotate(90);
+                }
+                else if (orintation == 3) {
+                    matrix.postRotate(180);
+                }
+                else if (orintation == 8) {
+                    matrix.postRotate(270);
+                }
+                Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+                return rotatedmap;
+            } else {
+                return bitmap;
             }
-            else if (orintation == 3) {
-                matrix.postRotate(180);
-            }
-            else if (orintation == 8) {
-                matrix.postRotate(270);
-            }
-            Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-            return rotatedmap;
         } else {
             return bitmap;
         }
+
     }
 
     private void handleUpload (Bitmap bitmap) {

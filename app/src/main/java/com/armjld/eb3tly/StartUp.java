@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,26 +61,34 @@ public class StartUp extends AppCompatActivity {
         uDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String isComplete = snapshot.child("completed").getValue().toString();
-                if(isComplete.equals("true")) {
-                    String isActive = snapshot.child("active").getValue().toString();
-                    if(isActive.equals("true")) {
-                        String uType = snapshot.child("accountType").getValue().toString();
-                        switch (uType) {
-                            case "Supplier":
-                                startActivity(new Intent(StartUp.this, profile.class));
-                                break;
-                            case "Delivery Worker":
-                                startActivity(new Intent(StartUp.this, HomeActivity.class));
-                                break;
-                            case "Admin":
-                                startActivity(new Intent(StartUp.this, Admin.class));
-                                break;
+                if(snapshot.exists()) {
+                    String isComplete = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
+                    if(isComplete.equals("true")) {
+                        String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
+                        if(isActive.equals("true")) {
+                            String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
+                            switch (uType) {
+                                case "Supplier":
+                                    finish();
+                                    startActivity(new Intent(StartUp.this, profile.class));
+                                    break;
+                                case "Delivery Worker":
+                                    finish();
+                                    startActivity(new Intent(StartUp.this, HomeActivity.class));
+                                    break;
+                                case "Admin":
+                                    finish();
+                                    startActivity(new Intent(StartUp.this, Admin.class));
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
+                            mAuth.signOut();
                         }
-                    } else {
-                        Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
-                        mAuth.signOut();
                     }
+                } else {
+                    finish();
+                    startActivity(new Intent(StartUp.this, MainActivity.class));
                 }
             }
 
