@@ -40,8 +40,8 @@ public class Admin extends Activity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,vDatabase;
     private EditText txtChild,txtValue;
     private TextView txtAllOrdersCount,txtAllUsersCount,txtAllDevCount,txtAllSupCount,txtAllProfit;
-    private Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments,btnDeleteUser;
-    private Button btnMessages;
+    Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments,btnDeleteUser;
+    Button btnMessages;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     int supCount = 0;
     int devCount = 0;
@@ -177,9 +177,9 @@ public class Admin extends Activity {
                     public void onClick(DialogInterface confirmDailog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
+                                mAuth.signOut();
                                 finish();
                                 startActivity(new Intent(Admin.this, MainActivity.class));
-                                mAuth.signOut();
                                 Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:

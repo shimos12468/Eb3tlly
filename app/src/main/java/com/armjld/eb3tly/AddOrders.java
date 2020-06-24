@@ -47,7 +47,7 @@ public class AddOrders extends AppCompatActivity {
     private ImageView btnClose;
     DatePickerDialog dpd;
     @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
     // Disable the Back Button
@@ -214,7 +214,7 @@ public class AddOrders extends AppCompatActivity {
 
             private void updateLabel() {
                 String dFormat = "yyyy-MM-dd";
-                SimpleDateFormat sDF = new SimpleDateFormat(dFormat, Locale.US);
+                SimpleDateFormat sDF = new SimpleDateFormat(dFormat, Locale.ENGLISH);
                 DDate.setText(sDF.format(myCalendar.getTime()));
             }
         };

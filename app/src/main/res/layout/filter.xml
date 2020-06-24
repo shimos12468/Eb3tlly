@@ -86,11 +86,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constPick"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,46 +100,46 @@
             android:id="@+id/txtDescP1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="المحافظة :"
             android:textColor="#000000"
             android:textColorHint="@android:color/tertiary_text_light"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.792"
-            app:layout_constraintStart_toStartOf="@+id/spFilterPState"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtDescP2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="المنطقة :"
             android:textColor="#000000"
             android:textColorHint="@android:color/tertiary_text_light"
-            app:layout_constraintEnd_toEndOf="@+id/spFilterPRegion"
-            app:layout_constraintHorizontal_bias="0.802"
-            app:layout_constraintStart_toStartOf="@+id/spFilterPRegion"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Spinner
-            android:id="@+id/spFilterPRegion"
-            android:layout_width="130dp"
-            android:layout_height="38dp"
-            android:layout_marginEnd="10dp"
-            android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/spFilterPState"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtDescP2" />
-
-        <Spinner
-            android:id="@+id/spFilterPState"
-            android:layout_width="130dp"
-            android:layout_height="38dp"
-            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtDescP1" />
+
+        <Spinner
+            android:id="@+id/spFilterPRegion"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txtDescP2"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spFilterPState" />
+
+        <Spinner
+            android:id="@+id/spFilterPState"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toStartOf="@+id/txtDescP1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
@@ -156,11 +156,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constDrop"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -170,45 +170,45 @@
             android:id="@+id/txtDescD1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="المحافظة :"
             android:textColor="#000000"
             android:textColorHint="@android:color/tertiary_text_light"
-            app:layout_constraintEnd_toEndOf="@+id/spFilterDState"
-            app:layout_constraintHorizontal_bias="0.792"
-            app:layout_constraintStart_toStartOf="@+id/spFilterDState"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtDescD2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="المنطقة :"
             android:textColor="#000000"
             android:textColorHint="@android:color/tertiary_text_light"
-            app:layout_constraintEnd_toEndOf="@+id/spFilterDRegion"
-            app:layout_constraintHorizontal_bias="0.767"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Spinner
-            android:id="@+id/spFilterDState"
-            android:layout_width="130dp"
-            android:layout_height="38dp"
-            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtDescD1" />
 
         <Spinner
-            android:id="@+id/spFilterDRegion"
-            android:layout_width="130dp"
+            android:id="@+id/spFilterDState"
+            android:layout_width="0dp"
             android:layout_height="38dp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toStartOf="@+id/txtDescD1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/spFilterDRegion"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/spFilterDState"
+            app:layout_constraintEnd_toStartOf="@+id/txtDescD2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtDescD2" />
+            app:layout_constraintTop_toBottomOf="@+id/spFilterDState" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -259,13 +259,15 @@
 
     <EditText
         android:id="@+id/txtFilterMoney"
-        android:layout_width="60dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
+        android:drawableEnd="@drawable/ic_add_money"
         android:hint="0"
-        android:inputType="textPersonName"
+        android:inputType="none|number"
         android:textAlignment="viewEnd"
         android:textColor="#000000"
         android:textColorHint="@android:color/tertiary_text_light"
@@ -291,7 +293,7 @@
         android:layout_width="84dp"
         android:layout_height="27dp"
         android:layout_marginTop="44dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginEnd="10dp"
         android:text="اعلى مقدم :"
         android:textColor="#000000"
         android:textColorHint="@android:color/tertiary_text_light"

@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -58,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
      private String TAG = "My Adapter";
 
-     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
      String datee = sdf.format(new Date());
      String notiDate = DateFormat.getDateInstance().format(new Date());
 
@@ -97,7 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // Get Post Date
         String startDate = filtersData.get(position).getDate();
         String stopDate = datee;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
         Date d1 = null;
         Date d2 = null;
         try {

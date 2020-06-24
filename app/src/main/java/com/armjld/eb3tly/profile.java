@@ -58,6 +58,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import Model.rateData;
 import Model.Data;
@@ -85,7 +86,7 @@ public class profile extends AppCompatActivity {
 
     String uType = "";
     FirebaseRecyclerAdapter<Data, myviewholder> adapter;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
     String notiDate = DateFormat.getDateInstance().format(new Date());
@@ -460,7 +461,7 @@ public class profile extends AppCompatActivity {
                             // Get Post Date
                             String startDate = data.getDate();
                             String stopDate = datee;
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
                             Date d1 = null;
                             Date d2 = null;
                             try {
@@ -798,7 +799,7 @@ public class profile extends AppCompatActivity {
                             // Get Post Date
                             String startDate = data.getDate();
                             String stopDate = datee;
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
                             Date d1 = null;
                             Date d2 = null;
                             try {
@@ -1243,7 +1244,7 @@ public class profile extends AppCompatActivity {
         @SuppressLint("ResourceAsColor")
         public void setStatue(final String getStatue, final String uAccepted, String ddate){
             String valid_until = ddate;
-            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date yesterday = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24));
             Date strDate = null;
             try { strDate = sdf2.parse(valid_until); } catch (ParseException e) { e.printStackTrace(); }

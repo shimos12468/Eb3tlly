@@ -175,9 +175,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:drawableRight="@drawable/ic_add_phone"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
+                android:drawableRight="@drawable/ic_add_phone"
                 android:ems="10"
                 android:gravity="right"
                 android:hint="رقم هاتف العميل"
@@ -192,6 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:clickable="true"
                 android:drawableRight="@drawable/ic_add_date"
@@ -208,6 +210,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp">
 
                 <Spinner
@@ -242,6 +245,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp">
 
                 <Spinner
@@ -275,9 +279,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
-                android:ems="10"
                 android:drawableRight="@drawable/ic_add_address"
+                android:ems="10"
                 android:gravity="right"
                 android:hint="العنوان بالتفصيل"
                 android:inputType="textPersonName"

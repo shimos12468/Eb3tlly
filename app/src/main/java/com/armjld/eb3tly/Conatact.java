@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import Model.notiData;
 import Model.replyAdmin;
@@ -35,7 +36,7 @@ public class Conatact extends AppCompatActivity {
     String strName, strPhone, strEmail = "";
     String userID;
     DatabaseReference uDatabase, cDatabase;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
     @Override

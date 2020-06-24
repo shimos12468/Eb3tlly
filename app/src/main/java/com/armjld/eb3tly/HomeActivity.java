@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import Model.Data;
 
@@ -73,7 +74,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView txtNoOrders;
     private String TAG = "Home Activity";
     private MyAdapter orderAdapter, filterAdapter;
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     //Recycler view
     private RecyclerView recyclerView;
@@ -486,7 +487,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                                         assert filterData != null;
                                         int dbMoney = Integer.parseInt(filterData.getGMoney());
                                         String moneyValue = txtFilterMoney.getText().toString();
-                                        if (TextUtils.isEmpty(moneyValue)) {
+                                        if (TextUtils.isEmpty(moneyValue) || moneyValue.equals("0")) {
                                             filterValue = 5000000;
                                         } else {
                                             filterValue = Integer.parseInt(moneyValue);
