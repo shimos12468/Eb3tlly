@@ -1,7 +1,11 @@
 package com.armjld.eb3tly;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,59 +41,63 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import Model.Data;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class HomeActivity extends AppCompatActivity  implements AdapterView.OnItemSelectedListener{
+public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
-    private ImageView filtrs_btn,btnNavBar;
+    private ImageView filtrs_btn, btnNavBar;
     private static ArrayList<Data> mm;
     private static ArrayList<Data> ff;
-    private long count,countFilter;
+    private long count, countFilter;
     private String FTAG = "Filters ";
     Data a7a = new Data();
     // import firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase,rDatabase,uDatabase;
+    private DatabaseReference mDatabase, rDatabase, uDatabase;
     int indexmm = -1;
     int indexff = -1;
-    private Spinner spPState,spPRegion,spDState,spDRegion;
+    private Spinner spPState, spPRegion, spDState, spDRegion;
     private Button btnApplyFilters;
     private EditText txtFilterMoney;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView txtNoOrders;
     private String TAG = "Home Activity";
-    private MyAdapter orderAdapter,filterAdapter;
+    private MyAdapter orderAdapter, filterAdapter;
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     //Recycler view
     private RecyclerView recyclerView;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-    String datee = sdf.format(new Date());
 
     // Disable the Back Button
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+    }
 
     // On Create Fun
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
             startActivity(new Intent(this, MainActivity.class));
             Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        final String datee = sdf.format(new Date());
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String datee = sdf.format(Calendar.getInstance().getTime());
+        String filterDate = format.format(Calendar.getInstance().getTime());
 
         //Find View
         count =0;
@@ -102,7 +111,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("جميع الاوردرات المتاحة");
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout = findViewById(R.id.swipeToRefresh);
 
         // ToolBar
         setSupportActionBar(toolbar);
@@ -143,6 +152,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         final Intent newIntentNB = new Intent(this, HomeActivity.class);
         // Navigation Bar Buttons Function
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("RtlHardcoded")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
@@ -201,7 +211,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 mm.trimToSize();
                 count = 0;
                 recyclerView.setAdapter(null);
-                mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
@@ -209,20 +219,31 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                                 if(ds.exists()) {
                                     Data orderData = ds.getValue(Data.class);
                                     assert orderData != null;
-                                    if (orderData.getStatue().equals("placed")) {
+                                    Date orderDate = null;
+                                    Date myDate = null;
+                                    try {
+                                        orderDate= format.parse(ds.child("ddate").getValue().toString());
+                                        myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    assert orderDate != null;
+                                    assert myDate != null;
+                                    Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
+                                    if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
                                         mm.add((int) count, orderData);
                                         count++;
                                     }
+
                                     orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                                     recyclerView.setAdapter(orderAdapter);
-                                    Log.i(TAG, "Filter Size : " + count + " - " + mm.size());
-                                    updateNone((int) count);
+                                    updateNone(mm.size());
                                 }
                             }
                         }
                     }
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 });
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -232,7 +253,7 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         });
 
         // ------------------------ CHECK FOR REALTIME CHANGES IN ORDERS --------------------------- //
-        mDatabase.orderByChild("ddate").startAt(datee).addChildEventListener(new ChildEventListener() {
+        mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
@@ -304,25 +325,39 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
         });
 
         // ---------------------- GET ALL THE ORDERS -------------------//
-        mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        Data orderData = ds.getValue(Data.class);
-                        assert orderData != null;
-                        if (orderData.getStatue().equals("placed")) {
-                            mm.add((int) count, orderData);
-                            count++;
+                        if(ds.exists()) {
+                            Data orderData = ds.getValue(Data.class);
+                            assert orderData != null;
+                            Date orderDate = null;
+                            Date myDate = null;
+                            try {
+                                orderDate= format.parse(ds.child("ddate").getValue().toString());
+                                myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            assert orderDate != null;
+                            assert myDate != null;
+                            Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
+                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
+                                mm.add((int) count, orderData);
+                                count++;
+                            }
+
+                            orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+                            recyclerView.setAdapter(orderAdapter);
+                            updateNone(mm.size());
                         }
-                        orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
-                        recyclerView.setAdapter(orderAdapter);
-                        updateNone(mm.size());
                     }
                 }
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 
@@ -335,10 +370,10 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                 View textEntryView = filter.inflate(R.layout.filter, null);
 
                 ImageView btnFClose = textEntryView.findViewById(R.id.btnClose);
-                spPState = (Spinner) textEntryView.findViewById(R.id.spFilterPState);
-                spPRegion = (Spinner) textEntryView.findViewById(R.id.spFilterPRegion);
-                spDState = (Spinner) textEntryView.findViewById(R.id.spFilterDState);
-                spDRegion = (Spinner) textEntryView.findViewById(R.id.spFilterDRegion);
+                spPState = textEntryView.findViewById(R.id.spFilterPState);
+                spPRegion = textEntryView.findViewById(R.id.spFilterPRegion);
+                spDState = textEntryView.findViewById(R.id.spFilterDState);
+                spDRegion = textEntryView.findViewById(R.id.spFilterDRegion);
                 btnApplyFilters = textEntryView.findViewById(R.id.btnApplyFilters);
                 txtFilterMoney = textEntryView.findViewById(R.id.txtFilterMoney);
 
@@ -441,13 +476,14 @@ public class HomeActivity extends AppCompatActivity  implements AdapterView.OnIt
                     public void onClick(View v) {
                         tbTitle.setText("تصفية الاوردرات");
                         tsferAdapter();
-                        mDatabase.orderByChild("ddate").startAt(datee).addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.exists()) {
                                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                                         final Data filterData = ds.getValue(Data.class);
                                         int filterValue;
+                                        assert filterData != null;
                                         int dbMoney = Integer.parseInt(filterData.getGMoney());
                                         String moneyValue = txtFilterMoney.getText().toString();
                                         if (TextUtils.isEmpty(moneyValue)) {

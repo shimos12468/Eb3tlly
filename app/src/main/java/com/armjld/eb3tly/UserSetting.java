@@ -69,7 +69,7 @@ public class UserSetting extends AppCompatActivity {
     private ProgressDialog mdialog;
     private String ppURL = "";
     String oldPass = "";
-    String TAG = "User Settings";
+    private static String TAG = "User Settings";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
 
     public void onBackPressed () {
@@ -84,7 +84,8 @@ public class UserSetting extends AppCompatActivity {
         if (data != null) {
             Uri photoUri = data.getData();
             try {
-                bitmap = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                Bitmap source = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                bitmap = resizeBitmap(source, 150);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -256,7 +257,6 @@ public class UserSetting extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -372,5 +372,40 @@ public class UserSetting extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static Bitmap resizeBitmap(Bitmap source, int maxLength) {
+        try {
+            if (source.getHeight() >= source.getWidth()) {
+                int targetHeight = maxLength;
+                if (source.getHeight() <= targetHeight) { // if image already smaller than the required height
+                    return source;
+                }
+
+                double aspectRatio = (double) source.getWidth() / (double) source.getHeight();
+                int targetWidth = (int) (targetHeight * aspectRatio);
+
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                Log.i(TAG, "Returned a Resized Photo");
+                return result;
+            } else {
+                int targetWidth = maxLength;
+                if (source.getWidth() <= targetWidth) { // if image already smaller than the required height
+                    return source;
+                }
+
+                double aspectRatio = ((double) source.getHeight()) / ((double) source.getWidth());
+                int targetHeight = (int) (targetWidth * aspectRatio);
+
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                Log.i(TAG, "Returned a Resized Photo");
+                return result;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.i("SignUp", "Returned the source Photo");
+            return source;
+        }
     }
 }

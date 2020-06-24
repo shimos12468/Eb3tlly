@@ -161,7 +161,8 @@ public class Signup extends AppCompatActivity {
         if (data != null) {
             Uri photoUri = data.getData();
             try {
-                    bitmap = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                Bitmap source = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                bitmap = resizeBitmap (source, 150);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -343,18 +344,6 @@ public class Signup extends AppCompatActivity {
         btnConfirmCode = findViewById(R.id.btnConfirmCode);
         txtSended = findViewById(R.id.txtSended);
         Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
-
-        /*uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String getURL = dataSnapshot.child("ppURL").getValue().toString();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
 
 
         //Check For Account Type
@@ -628,6 +617,41 @@ public class Signup extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static Bitmap resizeBitmap(Bitmap source, int maxLength) {
+        try {
+            if (source.getHeight() >= source.getWidth()) {
+                int targetHeight = maxLength;
+                if (source.getHeight() <= targetHeight) { // if image already smaller than the required height
+                    return source;
+                }
+
+                double aspectRatio = (double) source.getWidth() / (double) source.getHeight();
+                int targetWidth = (int) (targetHeight * aspectRatio);
+
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                Log.i("SignUp", "Returned a Resized Photo");
+                return result;
+            } else {
+                int targetWidth = maxLength;
+                if (source.getWidth() <= targetWidth) { // if image already smaller than the required height
+                    return source;
+                }
+
+                double aspectRatio = ((double) source.getHeight()) / ((double) source.getWidth());
+                int targetHeight = (int) (targetWidth * aspectRatio);
+
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                Log.i("SignUp", "Returned a Resized Photo");
+                return result;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.i("SignUp", "Returned the source Photo");
+            return source;
+        }
     }
 }
 

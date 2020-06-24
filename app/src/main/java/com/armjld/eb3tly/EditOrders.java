@@ -323,30 +323,37 @@ public class EditOrders extends AppCompatActivity {
                 // Check if Empty
                 if (TextUtils.isEmpty(mPAddress) && !spPState.getSelectedItem().toString().equals("مترو")) {
                     PAddress.setError("الرجاء ادخال البيانات");
+                    PAddress.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(mDAddress) && !spDState.getSelectedItem().toString().equals("مترو")) {
                     DAddress.setError("الرجاء ادخال البيانات");
+                    DAddress.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(mDDate)) {
                     DDate.setError("الرجاء ادخال البيانات");
+                    Toast.makeText(EditOrders.this, "ادخل تاريخ تسليم الاوردر", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(mDPhone.length() != 11) {
                     DPhone.setError("الرجاء ادخال البيانات");
+                    DPhone.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(mDName)) {
                     DName.setError("الرجاء ادخال البيانات");
+                    DName.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(mGMoney)) {
                     GMoney.setError("الرجاء ادخال البيانات");
+                    GMoney.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(mGGet)) {
                     GGet.setError("الرجاء ادخال البيانات");
+                    GGet.requestFocus();
                     return;
                 }
 

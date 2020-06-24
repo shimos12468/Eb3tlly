@@ -24,6 +24,7 @@ public class StartUp extends AppCompatActivity {
 
     SharedPreferences sharedPreferences = null;
     private FirebaseAuth mAuth;
+    DatabaseReference uDatabase;
     public void onBackPressed() { }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -31,54 +32,59 @@ public class StartUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_startup);
+        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mAuth=FirebaseAuth.getInstance();
-            FirebaseUser user = mAuth.getCurrentUser();
-            DatabaseReference uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-            uDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String isComplete = snapshot.child("completed").getValue().toString();
-                    if(isComplete.equals("true")) {
-                        String isActive = snapshot.child("active").getValue().toString();
-                        if(isActive.equals("true")) {
-                            String uType = snapshot.child("accountType").getValue().toString();
-                            switch (uType) {
-                                case "Supplier":
-                                    startActivity(new Intent(StartUp.this, profile.class));
-                                    break;
-                                case "Delivery Worker":
-                                    startActivity(new Intent(StartUp.this, MainActivity.class));
-                                    break;
-                                case "Admin":
-                                    startActivity(new Intent(StartUp.this, Admin.class));
-                                    break;
-                            }
-                        } else {
-                            Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
-                            mAuth.signOut();
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+            reRoute();
         } else {
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
-                        if(sharedPreferences.getBoolean("firstrun", true)) {
-                            startActivity(new Intent(StartUp.this, IntroFirstRun.class));
-                            sharedPreferences.edit().putBoolean("firstrun", false).commit();
-                        } else {
-                            startActivity(new Intent(StartUp.this, MainActivity.class));
-                        }
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
+                    if(sharedPreferences.getBoolean("firstrun", true)) {
+                        startActivity(new Intent(StartUp.this, IntroFirstRun.class));
+                        sharedPreferences.edit().putBoolean("firstrun", false).apply();
+                    } else {
+                        startActivity(new Intent(StartUp.this, MainActivity.class));
                     }
-                    }, 2500);
+                }
+                }, 2500);
         }
+    }
+
+    public void reRoute () {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        uDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String isComplete = snapshot.child("completed").getValue().toString();
+                if(isComplete.equals("true")) {
+                    String isActive = snapshot.child("active").getValue().toString();
+                    if(isActive.equals("true")) {
+                        String uType = snapshot.child("accountType").getValue().toString();
+                        switch (uType) {
+                            case "Supplier":
+                                startActivity(new Intent(StartUp.this, profile.class));
+                                break;
+                            case "Delivery Worker":
+                                startActivity(new Intent(StartUp.this, HomeActivity.class));
+                                break;
+                            case "Admin":
+                                startActivity(new Intent(StartUp.this, Admin.class));
+                                break;
+                        }
+                    } else {
+                        Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

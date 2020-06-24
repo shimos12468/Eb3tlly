@@ -50,6 +50,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import android.widget.Toast;
 import android.widget.Toolbar;
+
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -648,6 +651,7 @@ public class profile extends AppCompatActivity {
                                     tbTitle.setText("بيانات المندوب");
 
                                     ImageView btnClose = dialogMore.findViewById(R.id.btnClose);
+                                    TextView txtTitle = dialogMore.findViewById(R.id.txtTitle);
 
                                     btnClose.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -745,15 +749,28 @@ public class profile extends AppCompatActivity {
                                     rDatabase.child(dilvID).orderByChild("dId").equalTo(dilvID).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                                int count = (int) dataSnapshot.getChildrenCount();
-                                                String tempComment = data.child("comment").getValue().toString();
-                                                Log.i(TAG, tempComment);
-                                                if(!tempComment.equals("")) {
-                                                    mArraylistSectionLessons.add(tempComment);
-                                                    txtNodsComments.setVisibility(View.GONE);
+                                            int comments = 0;
+                                            if(dataSnapshot.exists()) {
+                                                for (DataSnapshot cData : dataSnapshot.getChildren()) {
+                                                    if(cData.exists()) {
+                                                        String tempComment = cData.child("comment").getValue().toString();
+                                                        Log.i(TAG, tempComment);
+                                                        if(!tempComment.equals("")) {
+                                                            mArraylistSectionLessons.add(tempComment);
+                                                            comments ++;
+                                                        }
+                                                        arrayAdapterLessons.notifyDataSetChanged();
+                                                    }
                                                 }
-                                                arrayAdapterLessons.notifyDataSetChanged();
+                                            }
+                                            if(comments > 0) {
+                                                txtNodsComments.setVisibility(View.GONE);
+                                                listComment.setVisibility(View.VISIBLE);
+                                                txtTitle.setVisibility(View.VISIBLE);
+                                            } else {
+                                                txtNodsComments.setVisibility(View.VISIBLE);
+                                                listComment.setVisibility(View.GONE);
+                                                txtTitle.setVisibility(View.GONE);
                                             }
                                         }
                                         @Override

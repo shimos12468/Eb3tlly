@@ -189,6 +189,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 TextView dsPAddress = dialogMore.findViewById(R.id.ddPhone);
                 TextView dsDAddress = dialogMore.findViewById(R.id.dsDAddress);
                 TextView dsOrderNotes = dialogMore.findViewById(R.id.dsOrderNotes);
+                TextView txtTitle = dialogMore.findViewById(R.id.txtTitle);
                 final ImageView supPP = dialogMore.findViewById(R.id.supPP);
                 final RatingBar rbUser = dialogMore.findViewById(R.id.ddRate);
                 final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
@@ -278,17 +279,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int comments = 0;
                         if(dataSnapshot.exists()) {
+                            for (DataSnapshot cData : dataSnapshot.getChildren()) {
+                                if(cData.exists()) {
+                                    String tempComment = cData.child("comment").getValue().toString();
+                                    if(!tempComment.equals("")) {
+                                        mArraylistSectionLessons.add(tempComment);
+                                        comments++;
+                                    }
+                                    arrayAdapterLessons.notifyDataSetChanged();
+                                }
+                            }
+                        }
+
+                        if(comments > 0) {
                             txtNoddComments.setVisibility(View.GONE);
+                            listComment.setVisibility(View.VISIBLE);
+                            txtTitle.setVisibility(View.VISIBLE);
                         } else {
                             txtNoddComments.setVisibility(View.VISIBLE);
-                        }
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            String tempComment = data.child("comment").getValue().toString();
-                            if(!tempComment.equals("")) { // make sure that there is a comment
-                                mArraylistSectionLessons.add(tempComment);
-                            }
-                            arrayAdapterLessons.notifyDataSetChanged();
+                            listComment.setVisibility(View.GONE);
+                            txtTitle.setVisibility(View.GONE);
                         }
                     }
                     @Override
