@@ -211,7 +211,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 mm.trimToSize();
                 count = 0;
                 recyclerView.setAdapter(null);
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
@@ -253,7 +253,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // ------------------------ CHECK FOR REALTIME CHANGES IN ORDERS --------------------------- //
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        mDatabase.orderByChild("ddate").startAt(filterDate).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
@@ -325,7 +325,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // ---------------------- GET ALL THE ORDERS -------------------//
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {

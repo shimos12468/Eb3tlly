@@ -2,8 +2,11 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/ic_profile_background"
+    android:drawableEnd="@drawable/ic_add_location"
+    android:layout_marginEnd="5dp"
     android:padding="10dp"
     android:text="اختار"
+    android:textAlignment="viewEnd"
     android:textColor="#000000"
-    android:textSize="14sp">
-</TextView>
+    android:textSize="18sp" />

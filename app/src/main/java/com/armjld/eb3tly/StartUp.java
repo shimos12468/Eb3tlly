@@ -63,8 +63,8 @@ public class StartUp extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     String isComplete = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
+                    String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
                     if(isComplete.equals("true")) {
-                        String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
                         if(isActive.equals("true")) {
                             String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                             switch (uType) {
@@ -84,7 +84,14 @@ public class StartUp extends AppCompatActivity {
                         } else {
                             Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
+                            finish();
+                            startActivity(new Intent(StartUp.this, MainActivity.class));
                         }
+                    } else {
+                        Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                        finish();
+                        startActivity(new Intent(StartUp.this, MainActivity.class));
                     }
                 } else {
                     finish();
