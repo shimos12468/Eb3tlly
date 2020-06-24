@@ -103,7 +103,8 @@
             android:textColor="@color/colorBack"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="91dp" />
+            tools:layout_editor_absoluteX="91dp"
+            tools:ignore="MissingConstraints" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:elevation="0dp"
+    android:layoutDirection="ltr"
     android:background="@color/ic_profile_background"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark">

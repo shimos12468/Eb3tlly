@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+    android:layoutDirection="ltr"
     android:visibility="visible"
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark">
 
