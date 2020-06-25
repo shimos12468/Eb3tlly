@@ -33,6 +33,7 @@
         <item>"الوادي الجديد"</item>
     </string-array>
     <string-array name="txtCairoRegion">
+        <item>15 مايو</item>
         <item>الازبكية</item>
         <item>الزمالك</item>
         <item>الزيتون</item>
@@ -49,6 +50,7 @@
         <item>المعادي</item>
         <item>المنيل</item>
         <item>باب اللوق</item>
+        <item>حلوان</item>
         <item>جاردن سيتي</item>
         <item>جسر السويس</item>
         <item>شبرا الخيمة</item>
@@ -61,10 +63,12 @@
         <item>مدينة نصر</item>
         <item>وسط البلد</item>
         <item>مدينتي</item>
+        <item>مدينة السلام</item>
         <item>مصر القديمة</item>
     </string-array>
     <string-array name="filterCairo">
         <item>كل المناطق</item>
+        <item>15 مايو</item>
         <item>الازبكية</item>
         <item>الزمالك</item>
         <item>الزيتون</item>
@@ -81,6 +85,7 @@
         <item>المعادي</item>
         <item>المنيل</item>
         <item>باب اللوق</item>
+        <item>حلوان</item>
         <item>جاردن سيتي</item>
         <item>جسر السويس</item>
         <item>شبرا الخيمة</item>
@@ -93,6 +98,7 @@
         <item>مدينة نصر</item>
         <item>وسط البلد</item>
         <item>مدينتي</item>
+        <item>مدينة السلام</item>
         <item>مصر القديمة</item>
     </string-array>
     <string-array name="txtGizaRegion">

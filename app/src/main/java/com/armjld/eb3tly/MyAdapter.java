@@ -60,8 +60,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private String TAG = "My Adapter";
 
      SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+    SimpleDateFormat notiSDF = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
      String datee = sdf.format(new Date());
-     String notiDate = DateFormat.getDateInstance().format(new Date());
+     String notiDate = notiSDF.format(new Date());
 
     public void addItem(int position , Data data){
         int size = filtersData.size();

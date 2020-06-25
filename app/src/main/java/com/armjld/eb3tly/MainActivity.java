@@ -104,19 +104,15 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
-                                final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
                                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
                                     @Override
                                     public void onSuccess(InstanceIdResult instanceIdResult) {
-                                        String deviceToken = instanceIdResult.getToken();
-                                        Log.i("Token : ", deviceToken);
-                                        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("device_token").setValue(deviceToken);
-                                        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("mpass").setValue(mpass);
-                                        FirebaseDatabase.getInstance().getReference("Pickly").child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+                                        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists() && mAuth.getCurrentUser() != null){
-                                                    String isCompleted = snapshot.child("completed").getValue().toString();
+                                                if (snapshot.exists() && mAuth.getCurrentUser() != null && snapshot.child("id").exists()){
+                                                    String isCompleted = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
                                                 if (isCompleted.equals("true")) {
                                                     String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                                                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
@@ -141,8 +137,12 @@ public class MainActivity extends AppCompatActivity {
                                                         mAuth.signOut();
                                                     }
                                                 } else {
-                                                    Toast.makeText(MainActivity.this, "Please clear the app data and signon again", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainActivity.this, "Please clear the app data and signIn again", Toast.LENGTH_SHORT).show();
                                                 }
+                                                    String deviceToken = instanceIdResult.getToken();
+                                                    Log.i("Token : ", deviceToken);
+                                                    FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("device_token").setValue(deviceToken);
+                                                    FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("mpass").setValue(mpass);
                                             } else{
                                                     Toast.makeText(getApplicationContext(), "تأكد من بيانات الحساب", Toast.LENGTH_LONG).show();
                                                     mdialog.dismiss();

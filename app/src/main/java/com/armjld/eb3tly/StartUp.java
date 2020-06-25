@@ -61,7 +61,7 @@ public class StartUp extends AppCompatActivity {
         uDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
+                if(snapshot.exists() && snapshot.child("id").exists()) {
                     String isComplete = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
                     if(isComplete.equals("true")) {
@@ -94,6 +94,7 @@ public class StartUp extends AppCompatActivity {
                         startActivity(new Intent(StartUp.this, MainActivity.class));
                     }
                 } else {
+                    mAuth.signOut();
                     finish();
                     startActivity(new Intent(StartUp.this, MainActivity.class));
                 }

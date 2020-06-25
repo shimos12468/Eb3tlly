@@ -573,10 +573,10 @@ public class Signup extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
                     final String id = mAuth.getCurrentUser().getUid().toString();
-                    final  String memail = impdata.getMail();
-                    final  String mpass  = impdata.getPassword();
+                    final String memail = impdata.getMail();
+                    final String mpass  = impdata.getPassword();
                     final String muser = impdata.getUser();
-                    final  String phone = impdata.getPhone();
+                    final String phone = impdata.getPhone();
                     AuthCredential credential = EmailAuthProvider.getCredential(memail, mpass);
                     mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
                         @Override

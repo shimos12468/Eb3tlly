@@ -2,6 +2,7 @@ package com.armjld.eb3tly;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,28 +31,40 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import Model.Data;
+import Model.notiData;
+import Model.userData;
+
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class Admin extends Activity {
 
     private FirebaseAuth mAuth;
-    private DatabaseReference uDatabase,mDatabase,rDatabase,vDatabase;
-    private EditText txtChild,txtValue;
+    private DatabaseReference uDatabase,mDatabase,rDatabase,vDatabase,nDatabase;
+    private EditText txtChild,txtValue,txtBody;
     private TextView txtAllOrdersCount,txtAllUsersCount,txtAllDevCount,txtAllSupCount,txtAllProfit;
     Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments,btnDeleteUser;
-    Button btnMessages;
+    Button btnMessages,btnSendNotficationDel, btnSendNotficationSup;
+    ImageView btnRefresh,imgLogo;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     int supCount = 0;
     int devCount = 0;
     int profitCount = 0;
     int usedUsers = 0;
+    private ProgressDialog mdialog;
 
     int notCompleted = 0;
     String TAG = "Admin";
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
+    String datee = sdf.format(new Date());
 
     public void onBackPressed() { }
 
@@ -89,9 +104,124 @@ public class Admin extends Activity {
         btnAddToComments = findViewById(R.id.btnAddToComments);
         btnDeleteUser = findViewById(R.id.btnDeleteUser);
         btnMessages = findViewById(R.id.btnMessages);
+        btnRefresh = findViewById(R.id.btnRefresh);
+        imgLogo = findViewById(R.id.imgLogo);
+        txtBody = findViewById(R.id.txtBody);
+        btnSendNotficationDel = findViewById(R.id.btnSendNotficationDel);
+        btnSendNotficationSup = findViewById(R.id.btnSendNotficationSup);
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+
+
+        mdialog = new ProgressDialog(Admin.this);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("Admin Panel");
+
+        getStatics();
+
+        // ------------------------ Send notfication to all Delivery Workers ----------------------------//
+        btnSendNotficationDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface confirmDailog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()) {
+                                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                                if(ds.exists() && ds.child("id").exists()) {
+                                                    userData uData = ds.getValue(userData.class);
+                                                    assert uData != null;
+                                                    String userID = uData.getId();
+                                                    if(uData.getAccountType().equals("Delivery Worker")) {
+                                                        String theMsg = txtBody.getText().toString().trim();
+                                                        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee, "false");
+                                                        nDatabase.child(userID).push().setValue(Noti);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(Admin.this);
+                builder.setMessage("Are you sure you want to send the notification to all Delivery Workers ?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        // ------------------------ Send notfication to all Suppliers ----------------------------//
+        btnSendNotficationSup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface confirmDailog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()) {
+                                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                                if(ds.exists() && ds.child("id").exists()) {
+                                                    userData uData = ds.getValue(userData.class);
+                                                    assert uData != null;
+                                                    String userID = uData.getId();
+                                                    if(uData.getAccountType().equals("Supplier")) {
+                                                        String theMsg = txtBody.getText().toString().trim();
+                                                        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee, "false");
+                                                        nDatabase.child(userID).push().setValue(Noti);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(Admin.this);
+                builder.setMessage("Are you sure you want to send the notification to all Suppliers ?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+            }
+        });
+
+        imgLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Admin.this, "I AM CEO, BITCH", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mdialog.setMessage("Refreshing");
+                mdialog.show();
+                getStatics();
+            }
+        });
 
         // -------------------------- Check the Reports ------------------------------------//
         btnReports.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +247,7 @@ public class Admin extends Activity {
                     }
                 });
 
-                rDatabase.addValueEventListener(new ValueEventListener() {
+                rDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -149,14 +279,17 @@ public class Admin extends Activity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String isCompleted = ds.child("completed").getValue().toString();
-                            int deletedCount = 0;
-                            if(isCompleted.equals("false")) {
-                                ++deletedCount;
-                                Log.i(TAG, " Users to Remove : " + ds.getValue());
-                                ds.getRef().removeValue();
+                            if(ds.exists() && ds.child("id").exists()) {
+                                String isCompleted = ds.child("completed").getValue().toString();
+                                int deletedCount = 0;
+                                if(isCompleted.equals("false")) {
+                                    ++deletedCount;
+                                    Log.i(TAG, " Users to Remove : " + ds.getValue());
+                                    ds.getRef().removeValue();
+                                }
+                                Toast.makeText(Admin.this, "Deleted Non Completed : " + deletedCount + " Users", Toast.LENGTH_SHORT).show();
+
                             }
-                            Toast.makeText(Admin.this, "Deleted Non Completed : " + deletedCount + " Users", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -214,11 +347,13 @@ public class Admin extends Activity {
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         int userCount = (int) dataSnapshot.getChildrenCount();
                                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                                            String isCompleted = ds.child("completed").getValue().toString();
-                                            if(isCompleted.equals("true")) {
-                                                String userID = ds.child("id").getValue().toString();
-                                                uDatabase.child(userID).child("canceled").setValue("0");
-                                                Toast.makeText(Admin.this, "Counter Reseted for : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+                                            if(ds.exists() && ds.child("id").exists()) {
+                                                String isCompleted = ds.child("completed").getValue().toString();
+                                                if(isCompleted.equals("true")) {
+                                                    String userID = ds.child("id").getValue().toString();
+                                                    uDatabase.child(userID).child("canceled").setValue("0");
+                                                    Toast.makeText(Admin.this, "Counter Reseted for : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
                                         }
                                     }
@@ -258,10 +393,12 @@ public class Admin extends Activity {
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         int userCount = (int) dataSnapshot.getChildrenCount();
                                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                                            if(ds.child("completed").getValue().equals("true")) {
-                                                String userID = ds.child("id").getValue().toString();
-                                                uDatabase.child(userID).child(txtChild.getText().toString()).setValue(txtValue.getText().toString());
-                                                Toast.makeText(Admin.this, "Add Childs to : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+                                            if(ds.exists() && ds.child("id").exists()) {
+                                                if(ds.child("completed").getValue().equals("true")) {
+                                                    String userID = ds.child("id").getValue().toString();
+                                                    uDatabase.child(userID).child(txtChild.getText().toString()).setValue(txtValue.getText().toString());
+                                                    Toast.makeText(Admin.this, "Add Childs to : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
                                         }
                                     }
@@ -441,96 +578,6 @@ public class Admin extends Activity {
     @Override
     protected void onStart () {
         super.onStart();
-
-        // -------------------------------------- Get users Counts --------------------------//
-        uDatabase.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int allUsers = (int) dataSnapshot.getChildrenCount();
-                usedUsers = 0;
-                supCount = 0;
-                devCount = 0;
-                notCompleted = 0;
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String strCompleted = ds.child("completed").getValue().toString();
-                    if(strCompleted.equals("true")) {
-                        String userType = ds.child("accountType").getValue().toString();
-                        int intProfit = (int) Integer.parseInt(Objects.requireNonNull(ds.child("profit").getValue()).toString());
-                        profitCount = profitCount + Integer.parseInt(Objects.requireNonNull(ds.child("profit").getValue()).toString());
-                        if(intProfit > 0) {
-                            ++usedUsers;
-                        }
-                        switch (userType) {
-                            case "Supplier" : {
-                                ++supCount;
-                                break;
-                            }
-                            case "Delivery Worker" : {
-                                ++devCount;
-                                break;
-                            }
-                        }
-                    } else {
-                        ++notCompleted;
-                    }
-                }
-                int forEach = 0;
-                if(usedUsers != 0) {
-                    forEach = profitCount / usedUsers;
-                }
-                txtAllUsersCount.setText("Users Count : " + allUsers + " | Completed " + (allUsers - notCompleted) + " | Not Completed : " + notCompleted);
-                txtAllProfit.setText("Total Profit = " + profitCount + " EGP | " + forEach + " EGP For Each Active Delivery User");
-                txtAllSupCount.setText("Suppliers Count : " + supCount);
-                txtAllDevCount.setText("Delivery Workers Count : " + devCount + " | Active Count : " + usedUsers);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-        // ----------------------------------------- Get orders Counts --------------------------------//
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int allOrders = 0;
-                int ordersWorth = 0;
-                int acOrders = 0;
-                int plOrders = 0;
-                int deOrders = 0;
-                int reOrders = 0;
-                    if(dataSnapshot.exists()) {
-                        allOrders = (int) dataSnapshot.getChildrenCount();
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            if(ds.exists()) {
-                                Data orderData = ds.getValue(Data.class);
-                                assert orderData != null;
-                                ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
-                                switch (orderData.getStatue()) {
-                                    case "placed":
-                                        plOrders++;
-                                        break;
-                                    case "accepted":
-                                        acOrders++;
-                                        break;
-                                    case "recived":
-                                        reOrders++;
-                                        break;
-                                    case "delivered":
-                                        deOrders++;
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP | " + plOrders + " Placed | " + acOrders + " Accepted | " + reOrders + " Recived | " + deOrders + " Delivered." );
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
         // --------------------------------------- Changing Button name Depending on Values ---------------------------//
         vDatabase.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -556,6 +603,102 @@ public class Admin extends Activity {
         });
 
         //-----------------------------
+    }
 
+    public void getStatics() {
+        // -------------------------------------- Get users Counts --------------------------//
+        uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    int allUsers = (int) dataSnapshot.getChildrenCount();
+                    usedUsers = 0;
+                    supCount = 0;
+                    devCount = 0;
+                    notCompleted = 0;
+                    profitCount = 0;
+
+                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if(ds.exists() && ds.child("id").exists()) {
+                            userData uData = ds.getValue(userData.class);
+                            assert uData != null;
+                            String userType = uData.getAccountType();
+                            int intProfit = (int) Integer.parseInt(Objects.requireNonNull(ds.child("profit").getValue()).toString());
+                            profitCount = profitCount + intProfit;
+                            if(intProfit > 0) {
+                                ++usedUsers;
+                            }
+                            switch (userType) {
+                                case "Supplier" : {
+                                    ++supCount;
+                                    break;
+                                }
+                                case "Delivery Worker" : {
+                                    ++devCount;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    int forEach = 0;
+                    if(usedUsers != 0) {
+                        forEach = profitCount / usedUsers;
+                    }
+                    txtAllUsersCount.setText("Users Count : " + allUsers);
+                    txtAllProfit.setText("Total Profit = " + profitCount + " EGP | " + forEach + " EGP For Each Active Delivery User");
+                    txtAllSupCount.setText("Suppliers Count : " + supCount);
+                    txtAllDevCount.setText("Delivery Workers Count : " + devCount + " | Active Count : " + usedUsers);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+        // ----------------------------------------- Get orders Counts --------------------------------//
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int allOrders = 0;
+                int ordersWorth = 0;
+                int acOrders = 0;
+                int plOrders = 0;
+                int deOrders = 0;
+                int reOrders = 0;
+                if(dataSnapshot.exists()) {
+                    allOrders = (int) dataSnapshot.getChildrenCount();
+                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if(ds.exists()) {
+                            Data orderData = ds.getValue(Data.class);
+                            assert orderData != null;
+                            ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
+                            switch (orderData.getStatue()) {
+                                case "placed":
+                                    plOrders++;
+                                    break;
+                                case "accepted":
+                                    acOrders++;
+                                    break;
+                                case "recived":
+                                    reOrders++;
+                                    break;
+                                case "delivered":
+                                    deOrders++;
+                                    break;
+                            }
+                        }
+                    }
+                }
+                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP | " + plOrders + " Placed | " + acOrders + " Accepted | " + reOrders + " Recived | " + deOrders + " Delivered." );
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+        Toast.makeText(Admin.this, "Refreshed", Toast.LENGTH_SHORT).show();
+        mdialog.dismiss();
     }
 }
