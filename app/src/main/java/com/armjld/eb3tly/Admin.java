@@ -47,7 +47,7 @@ public class Admin extends Activity {
     int devCount = 0;
     int profitCount = 0;
     int usedUsers = 0;
-    int ordersWorth = 0;
+
     int notCompleted = 0;
     String TAG = "Admin";
 
@@ -494,15 +494,37 @@ public class Admin extends Activity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int allOrders = (int) dataSnapshot.getChildrenCount();
+                int allOrders = 0;
+                int ordersWorth = 0;
+                int acOrders = 0;
+                int plOrders = 0;
+                int deOrders = 0;
+                int reOrders = 0;
                     if(dataSnapshot.exists()) {
+                        allOrders = (int) dataSnapshot.getChildrenCount();
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            Data orderData = ds.getValue(Data.class);
-                            assert orderData != null;
-                            ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
+                            if(ds.exists()) {
+                                Data orderData = ds.getValue(Data.class);
+                                assert orderData != null;
+                                ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
+                                switch (orderData.getStatue()) {
+                                    case "placed":
+                                        plOrders++;
+                                        break;
+                                    case "accepted":
+                                        acOrders++;
+                                        break;
+                                    case "recived":
+                                        reOrders++;
+                                        break;
+                                    case "delivered":
+                                        deOrders++;
+                                        break;
+                                }
+                            }
                         }
                     }
-                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP");
+                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP | " + plOrders + " Placed | " + acOrders + " Accepted | " + reOrders + " Recived | " + deOrders + " Delivered." );
             }
 
             @Override

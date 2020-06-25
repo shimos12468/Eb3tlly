@@ -147,7 +147,7 @@ public class AddOrders extends AppCompatActivity {
                 } else {
                     ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.justAll, R.layout.color_spinner_layout);
                     adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spPRegion.setPrompt("لم يتم تسجيل اي مناطق لتلك المحافظة");
+                    spPRegion.setPrompt("سيتم اضافه مناطق المحافظة في اصدارات جديدة");
                     spPRegion.setAdapter(adapter4);
                 }
             }

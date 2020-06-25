@@ -147,7 +147,7 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="10dp"
         android:background="#00000000"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -168,6 +168,7 @@
                 android:soundEffectsEnabled="false"
                 android:textAlignment="viewEnd"
                 android:verticalScrollbarPosition="left"
+                android:visibility="gone"
                 tools:listitem="t">
 
             </ListView>

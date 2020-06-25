@@ -13,6 +13,24 @@
         <item>اسيوط</item>
         <item>اسوان</item>
         <item>المنوفية</item>
+        <item>"الاسماعلية"</item>
+        <item>"الاقصر "</item>
+        <item>"البحيرة"</item>
+        <item>" بني سويف"</item>
+        <item>"بور سعيد"</item>
+        <item>"البحر الاحمر "</item>
+        <item>"جنوب سيناء"</item>
+        <item>" دمياط"</item>
+        <item>"سوهاج "</item>
+        <item>" السويس"</item>
+        <item>"الغربية "</item>
+        <item>" الفيوم "</item>
+        <item>" قنا "</item>
+        <item>" كفر الشيخ"</item>
+        <item>" شمال سيناء "</item>
+        <item>" مطروح"</item>
+        <item>"المنيا"</item>
+        <item>"الوادي الجديد"</item>
     </string-array>
     <string-array name="txtCairoRegion">
         <item>الازبكية</item>
@@ -32,6 +50,7 @@
         <item>المنيل</item>
         <item>باب اللوق</item>
         <item>جاردن سيتي</item>
+        <item>جسر السويس</item>
         <item>شبرا الخيمة</item>
         <item>شبرا مصر</item>
         <item>عباسيه</item>
@@ -63,6 +82,7 @@
         <item>المنيل</item>
         <item>باب اللوق</item>
         <item>جاردن سيتي</item>
+        <item>جسر السويس</item>
         <item>شبرا الخيمة</item>
         <item>شبرا مصر</item>
         <item>عباسيه</item>
@@ -353,7 +373,6 @@
     <string-array name="justAll">
         <item>كل المناطق</item>
     </string-array>
-
 
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>

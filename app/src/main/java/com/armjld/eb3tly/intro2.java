@@ -29,12 +29,12 @@ public class intro2 extends AppIntro {
     @Override
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
-        startActivity(new Intent(getApplicationContext(), profile.class));
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
     }
 
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
-        startActivity(new Intent(getApplicationContext(), profile.class));
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
     }
 }

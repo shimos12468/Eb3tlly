@@ -520,21 +520,13 @@ public class Signup extends AppCompatActivity {
         }
     }
 
-    private void sendVerificationCode(String mobile) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+2" + mobile,
-                60,
-                TimeUnit.SECONDS,
-                TaskExecutors.MAIN_THREAD,
-                mCallbacks);
-        Log.i(TAG, "Send Verfication Code fun to : +2" + mobile);
-    }
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             String code = phoneAuthCredential.getSmsCode();
             Log.i(TAG, "Message Detected " + code);
-            if (code != null) {
+            assert code != null;
+            if (code.length() == 6) {
                 editTextCode.setText(code);
                 verifyVerificationCode(code);
             }
@@ -555,10 +547,22 @@ public class Signup extends AppCompatActivity {
         }
     };
 
+    private void sendVerificationCode(String mobile) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                "+2" + mobile,
+                60,
+                TimeUnit.SECONDS,
+                this,
+                mCallbacks);
+        Log.i(TAG, "Send Verfication Code fun to : +2" + mobile);
+    }
+
         private void verifyVerificationCode(String code) {
             Log.i(TAG, "verf : " + mVerificationId + " code : " + code);
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-            signInWithPhoneAuthCredential(credential);
+            if(code.length() == 6) {
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+                signInWithPhoneAuthCredential(credential);
+            }
         }
 
 
