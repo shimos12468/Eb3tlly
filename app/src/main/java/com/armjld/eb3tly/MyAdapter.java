@@ -382,6 +382,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                                                     Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
                                                     ((HomeActivity)context).finish();
+
                                                     context.startActivity(new Intent(context, profile.class));
                                                     break;
                                                 case DialogInterface.BUTTON_NEGATIVE:

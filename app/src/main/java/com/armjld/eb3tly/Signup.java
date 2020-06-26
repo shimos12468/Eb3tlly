@@ -72,6 +72,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import Model.notiData;
@@ -87,7 +88,7 @@ public class Signup extends AppCompatActivity {
     private Button btnreg;
     private TextView logintxt ,timer,txtViewPhone ,txtretype,txtSended;
     private ImageView imgSetPP;
-    private String mVerificationId;
+    private String mVerificationId = "";
     private FirebaseAuth mAuth;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase,nDatabase;
@@ -484,6 +485,12 @@ public class Signup extends AppCompatActivity {
                     editTextCode.requestFocus();
                     return;
                 }
+
+                if (mVerificationId.equals("")) {
+                    Toast.makeText(Signup.this, "can't find verfication id", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 mdialog.setMessage("جاري التأكد من الكود ..");
                 mdialog.show();
                 verifyVerificationCode(code);
@@ -532,7 +539,7 @@ public class Signup extends AppCompatActivity {
         }
 
         @Override
-        public void onCodeSent(String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+        public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onCodeSent : " + s);
@@ -545,18 +552,18 @@ public class Signup extends AppCompatActivity {
                 "+2" + mobile,
                 60,
                 TimeUnit.SECONDS,
-                this,
+                Signup.this,
                 mCallbacks);
         Log.i(TAG, "Send Verfication Code fun to : +2" + mobile);
     }
 
-        private void verifyVerificationCode(String code) {
-            Log.i(TAG, "verf : " + mVerificationId + " code : " + code);
-            if(code.length() == 6) {
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-                signInWithPhoneAuthCredential(credential);
-            }
+    private void verifyVerificationCode(String code) {
+        Log.i(TAG, "Verf : " + mVerificationId + " code : " + code);
+        if(code.length() == 6) {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+            signInWithPhoneAuthCredential(credential);
         }
+    }
 
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -575,7 +582,6 @@ public class Signup extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
-                                FirebaseUser user = task.getResult().getUser();
                                 datee = DateFormat.getDateInstance().format(new Date());
                                 userData data= new userData(muser, phone, memail, datee, id, accountType, defultPP, mpass, "0");
                                 uDatabase.child(id).setValue(data);
@@ -602,8 +608,8 @@ public class Signup extends AppCompatActivity {
                                     startActivity(new Intent(getApplicationContext(), intro2.class));
                                 }
                             } else {
-                                String ERROR = task.getException().getMessage();
-                                Toast.makeText(getApplicationContext(), "فشل في تسجيل البيانات حاول مجددا", Toast.LENGTH_SHORT).show();
+                                String ERROR = Objects.requireNonNull(task.getException()).getMessage();
+                                Toast.makeText(getApplicationContext(), ERROR, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

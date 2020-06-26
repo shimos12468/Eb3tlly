@@ -373,7 +373,6 @@ public class profile extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.child("adding").getValue().toString().equals("false")) {
                             Toast.makeText(profile.this, "عذرا لا يمكنك اضافه اوردرات في الوقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
-                            return;
                         } else {
                             finish();
                             startActivity(new Intent(profile.this, AddOrders.class));

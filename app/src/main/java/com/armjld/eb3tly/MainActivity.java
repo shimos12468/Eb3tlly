@@ -31,6 +31,8 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.Objects;
 
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView signup,txtForgetPass;
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         //Connect to Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
-        uDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        uDatabase = getInstance().getReference().child("Pickly").child("users");
 
 
         mdialog = new ProgressDialog(this);
