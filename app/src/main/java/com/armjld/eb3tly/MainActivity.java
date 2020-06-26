@@ -84,35 +84,39 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnlogin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String memail = email.getText().toString().trim();
-                    String mpass = pass.getText().toString().trim();
+            @Override
+            public void onClick(View v) {
+                String memail = email.getText().toString().trim();
+                String mpass = pass.getText().toString().trim();
 
-                    if (TextUtils.isEmpty(memail)) {
-                        email.setError("يجب ادخال اسم المستخدم");
-                        return;
-                    }
-                    if (TextUtils.isEmpty(mpass)) {
-                        pass.setError("يجب ادخال كلمه المرور");
-                        return;
-                    }
-                    mdialog.setMessage("جاري تسجيل الدخول..");
-                    mdialog.show();
+                if (TextUtils.isEmpty(memail)) {
+                    email.setError("يجب ادخال اسم المستخدم");
+                    return;
+                }
+                if (TextUtils.isEmpty(mpass)) {
+                    pass.setError("يجب ادخال كلمه المرور");
+                    return;
+                }
+                mdialog.setMessage("جاري تسجيل الدخول..");
+                mdialog.show();
 
-                    mAuth.signInWithEmailAndPassword(memail, mpass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
-                                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
-                                    @Override
-                                    public void onSuccess(InstanceIdResult instanceIdResult) {
-                                        final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-                                        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists() && mAuth.getCurrentUser() != null && snapshot.child("id").exists()){
-                                                    String isCompleted = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
+                mAuth.signInWithEmailAndPassword(memail, mpass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
+                            final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    String deviceToken = instanceIdResult.getToken();
+                                    Log.i("Token : ", deviceToken);
+                                    FirebaseDatabase.getInstance().getReference("Pickly").child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists() && mAuth.getCurrentUser() != null){
+                                                uDatabase.child(userID).child("device_token").setValue(deviceToken);
+                                                uDatabase.child(userID).child("mpass").setValue(mpass);
+                                                String isCompleted = snapshot.child("completed").getValue().toString();
                                                 if (isCompleted.equals("true")) {
                                                     String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                                                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
@@ -133,34 +137,34 @@ public class MainActivity extends AppCompatActivity {
                                                                 break;
                                                         }
                                                     } else {
+                                                        mdialog.dismiss();
                                                         Toast.makeText(MainActivity.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
                                                         mAuth.signOut();
                                                     }
                                                 } else {
-                                                    Toast.makeText(MainActivity.this, "Please clear the app data and signIn again", Toast.LENGTH_SHORT).show();
-                                                }
-                                                    String deviceToken = instanceIdResult.getToken();
-                                                    Log.i("Token : ", deviceToken);
-                                                    FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("device_token").setValue(deviceToken);
-                                                    FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(userID).child("mpass").setValue(mpass);
-                                            } else{
-                                                    Toast.makeText(getApplicationContext(), "تأكد من بيانات الحساب", Toast.LENGTH_LONG).show();
                                                     mdialog.dismiss();
+                                                    Toast.makeText(MainActivity.this, "Please clear the app data and signon again", Toast.LENGTH_SHORT).show();
                                                 }
+                                            } else{
+                                                Toast.makeText(getApplicationContext(), "سجل حسابك مرة اخري", Toast.LENGTH_LONG).show();
+                                                mdialog.dismiss();
+                                                finish();
+                                                startActivity(new Intent(MainActivity.this, Signup.class));
                                             }
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(getApplicationContext(), "تأكد من بيانات الحساب", Toast.LENGTH_LONG).show();
-                                mdialog.dismiss();
-                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getApplicationContext(), "تأكد من بيانات الحساب", Toast.LENGTH_LONG).show();
+                            mdialog.dismiss();
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
+        });
     }
 }

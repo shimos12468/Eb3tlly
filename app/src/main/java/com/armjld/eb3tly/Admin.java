@@ -117,7 +117,6 @@ public class Admin extends Activity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("Admin Panel");
 
-        getStatics();
 
         // ------------------------ Send notfication to all Delivery Workers ----------------------------//
         btnSendNotficationDel.setOnClickListener(new View.OnClickListener() {
@@ -295,6 +294,27 @@ public class Admin extends Activity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int fuckedUp = 0;
+                        if(snapshot.exists()) {
+                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                if(!ds.child("id").exists()) {
+                                    fuckedUp ++;
+                                    ds.getRef().removeValue();
+                                }
+                            }
+                        }
+                        Toast.makeText(Admin.this, "Just deleted " + fuckedUp + " Gletches", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
@@ -618,9 +638,8 @@ public class Admin extends Activity {
                     devCount = 0;
                     notCompleted = 0;
                     profitCount = 0;
-
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if(ds.exists() && ds.child("id").exists()) {
+                        if(ds.exists() && ds.child("id").exists() ) {
                             userData uData = ds.getValue(userData.class);
                             assert uData != null;
                             String userType = uData.getAccountType();
@@ -697,7 +716,6 @@ public class Admin extends Activity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
         Toast.makeText(Admin.this, "Refreshed", Toast.LENGTH_SHORT).show();
         mdialog.dismiss();
     }

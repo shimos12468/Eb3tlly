@@ -522,14 +522,7 @@ public class Signup extends AppCompatActivity {
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            String code = phoneAuthCredential.getSmsCode();
-            Log.i(TAG, "Message Detected " + code);
-            assert code != null;
-            if (code.length() == 6) {
-                editTextCode.setText(code);
-                verifyVerificationCode(code);
-            }
+        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
         }
 
         @Override

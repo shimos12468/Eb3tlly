@@ -48,6 +48,9 @@
         <item>المرج</item>
         <item>المطرية</item>
         <item>المعادي</item>
+        <item>المقطم</item>
+        <item>القطامية</item>
+        <item>الازهر</item>
         <item>المنيل</item>
         <item>باب اللوق</item>
         <item>حلوان</item>
@@ -83,6 +86,9 @@
         <item>المرج</item>
         <item>المطرية</item>
         <item>المعادي</item>
+        <item>المقطم</item>
+        <item>القطامية</item>
+        <item>الازهر</item>
         <item>المنيل</item>
         <item>باب اللوق</item>
         <item>حلوان</item>
@@ -121,6 +127,7 @@
         <item>بولاق الدكرور</item>
         <item>فيصل</item>
         <item>كرداسه</item>
+        <item>نيو جيزة</item>
     </string-array>
     <string-array name="filterGize">
         <item>كل المناطق</item>
@@ -143,6 +150,7 @@
         <item>بولاق الدكرور</item>
         <item>فيصل</item>
         <item>كرداسه</item>
+        <item>نيو جيزة</item>
     </string-array>
     <string-array name="txtAlexRegion">
         <item>ابيس</item>

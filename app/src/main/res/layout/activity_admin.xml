@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorWhite"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     android:visibility="visible"
     android:layoutDirection="ltr"
@@ -174,7 +174,8 @@
                         android:ems="10"
                         android:hint="Value"
                         android:inputType="text"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#000000"
+                        android:textColorHint="@android:color/tertiary_text_light" />
 
                     <EditText
                         android:id="@+id/txtChild"
@@ -183,35 +184,42 @@
                         android:ems="10"
                         android:hint="Child"
                         android:inputType="text"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#000000"
+                        android:textColorHint="@android:color/tertiary_text_light" />
                 </LinearLayout>
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAddToOrders"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="5dp"
-                    android:background="#FF0000"
-                    android:text="Add New Child to All Orders" />
+                    android:background="@drawable/btn_bad"
 
-                <Button
+                    android:text="Add New Child to All Orders"
+                    android:textColor="#000000" />
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAddToComments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="5dp"
-                    android:background="#FF0000"
-                    android:text="Add New Child to All Comments" />
+                    android:background="@drawable/btn_bad"
 
-                <Button
+                    android:text="Add New Child to All Comments"
+                    android:textColor="#000000" />
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAddToUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="5dp"
-                    android:background="#FF0000"
-                    android:text="Add New Child to All Users" />
+                    android:background="@drawable/btn_bad"
+
+                    android:text="Add New Child to All Users"
+                    android:textColor="#000000" />
             </LinearLayout>
 
             <LinearLayout
@@ -220,7 +228,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:background="@drawable/btn_defult"
                     android:id="@+id/btnMessages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -228,7 +237,8 @@
                     android:layout_marginBottom="5dp"
                     android:text="Check Messages" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:background="@drawable/btn_defult"
                     android:id="@+id/btnReports"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -236,7 +246,8 @@
                     android:layout_marginBottom="5dp"
                     android:text="Check Reports" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:background="@drawable/btn_defult"
                     android:id="@+id/btnResetCounter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -244,7 +255,8 @@
                     android:layout_marginBottom="5dp"
                     android:text="Reset Declined Order Counter " />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:background="@drawable/btn_defult"
                     android:id="@+id/btnAccepting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -252,7 +264,8 @@
                     android:layout_marginBottom="5dp"
                     android:text="Button" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:background="@drawable/btn_defult"
                     android:id="@+id/btnAdding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -260,14 +273,15 @@
                     android:layout_marginBottom="5dp"
                     android:text="Button" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnDeleteUser"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Delete Non Completed"
-                    android:visibility="gone" />
+                    android:background="@drawable/btn_defult"
+                    android:text="Delete Glithces"
+                    android:visibility="visible" />
 
                 <EditText
                     android:id="@+id/txtBody"
@@ -276,7 +290,8 @@
                     android:ems="10"
                     android:hint="Type the Notfication Here"
                     android:inputType="textLongMessage|none"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="#000000"
+                    android:textColorHint="@android:color/tertiary_text_light" />
 
 
                 <LinearLayout
@@ -286,27 +301,38 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnSendNotficationDel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Send to Delv" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/btn_defult"
+                        android:text="Send Notfication to Del" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnSendNotficationSup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Send to Sup" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/btn_defult"
+                        android:text="Send Notfication to Sup" />
                 </LinearLayout>
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAdminSignOut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="0dp"
-                    android:background="#FD0000"
-                    android:text="SignOut" />
+                    android:background="@drawable/btn_bad"
+                    android:text="SignOut"
+                    android:textColor="#000000" />
             </LinearLayout>
 
         </LinearLayout>

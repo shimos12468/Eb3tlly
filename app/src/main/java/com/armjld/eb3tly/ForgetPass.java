@@ -91,8 +91,7 @@ public class ForgetPass extends Activity {
                 else return;
 
                 final String getMobile = mobile;
-                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users")
-                        .orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
+                uDatabase.orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
@@ -101,7 +100,6 @@ public class ForgetPass extends Activity {
                                 linerPhone.setVisibility(View.GONE);
                                 linerPass.setVisibility(View.GONE);
                                 linerVerf.setVisibility(View.VISIBLE);
-                                Toast.makeText(ForgetPass.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
                                 sendVerificationCode(getMobile);
                             } else {
                                 Toast.makeText(ForgetPass.this, "رقم الهاتف غير مسجل", Toast.LENGTH_SHORT).show();
@@ -157,13 +155,7 @@ public class ForgetPass extends Activity {
     //the callback to detect the verification status
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            String code = phoneAuthCredential.getSmsCode();
-            Log.i(TAG, "Message Detected " + code);
-            if (code != null) {
-                editTextCode.setText(code);
-                verifyVerificationCode(code);
-            }
+        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
         }
 
         @Override
@@ -173,8 +165,9 @@ public class ForgetPass extends Activity {
         }
 
         @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+        public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
+            Toast.makeText(ForgetPass.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onCodeSent : " + s);
             mVerificationId = s;
         }
@@ -182,10 +175,10 @@ public class ForgetPass extends Activity {
 
 
     private void verifyVerificationCode(String code) {
-        //-----------------------------------------------
-        Log.i(TAG, "Verfied");
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-        signInWithPhoneAuthCredential(credential);
+        if(code.length() == 6) {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+            signInWithPhoneAuthCredential(credential);
+        }
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
