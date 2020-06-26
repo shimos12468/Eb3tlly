@@ -10,9 +10,16 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -20,23 +27,83 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import java.util.Map;
+import java.util.Objects;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
+    private DatabaseReference uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
+    private DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
+    String body = "";
+    String nameFrom = "";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-
         if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "From: " + remoteMessage.getFrom());
             Map<String, String> data = remoteMessage.getData();
-            String title = data.get("title").toString() ;
-            String body = data.get("body").toString() ;
-            sendNotification(body,title);
+            String title = data.get("title");
+            String statue = data.get("statue");
+            String OrderID = data.get("orderid");
+            String sendby = data.get("sendby");
+            String To = data.get("sendto");
+            uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    nameFrom = Objects.requireNonNull(snapshot.child(sendby).child("name").getValue()).toString();
+                    String ToType = Objects.requireNonNull(snapshot.child(To).child("accountType").getValue()).toString();
+                    mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String orderTo = Objects.requireNonNull(snapshot.child("dname").getValue()).toString();
+                            assert statue != null;
+                            switch (statue) {
+                                case "edited": {
+                                    body = " قام " + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته ";
+                                    break;
+                                }
+                                case "deleted": {
+                                    if (ToType.equals("Supplier")) {
+                                        body = " قام " + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة ";
+                                    } else {
+                                        body = " قام " + nameFrom + " بالغاء الاوردر ";
+                                    }
+                                    break;
+                                }
+                                case "delivered": {
+                                    body = " قام " + nameFrom + " بتوصيل اوردر " + orderTo;
+                                    break;
+                                }
+                                case "accepted": {
+                                    body = " قام " + nameFrom + " بقبول اوردر " + orderTo;
+                                    break;
+                                }
+                                case "recived": {
+                                    body = "قام" + nameFrom + " بتسليمك الاوردر";
+                                    break;
+                                }
+                                case "welcome": {
+                                    body = "اهلا بيك في برنامج ابعتلي, اول منصة مهمتها توصيل التاجر بمندوب الشحن";
+                                    break;
+                                }
+                                default: {
+                                    body = statue;
+                                    break;
+                                }
+                            }
+                        }
 
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) { }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+
+            sendNotification(body,nameFrom);
             if (true) {
                 scheduleJob();
             } else {
@@ -50,7 +117,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(@NonNull String token) {
         Log.d(TAG, "Refreshed token: " + token);
         sendRegistrationToServer(token);
     }
@@ -94,9 +161,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_DEFAULT);
+            assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
 
+        assert notificationManager != null;
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }

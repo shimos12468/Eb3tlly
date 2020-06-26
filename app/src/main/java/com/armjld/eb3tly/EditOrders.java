@@ -137,14 +137,14 @@ public class EditOrders extends AppCompatActivity {
                 acceptedTime = orderData.getAcceptedTime();
                 acceptedID = orderData.getuAccepted();
                 statee = orderData.getStatue();
-                PAddress.setText(orderData.getmPAddress().toString());
-                PShop.setText(orderData.getmPShop().toString());
-                DAddress.setText(orderData.getDAddress().toString());
-                DDate.setText(orderData.getDDate().toString());
-                DPhone.setText(orderData.getDPhone().toString());
-                DName.setText(orderData.getDName().toString());
-                GMoney.setText(orderData.getGMoney().toString());
-                GGet.setText(orderData.getGGet().toString());
+                PAddress.setText(orderData.getmPAddress().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                PShop.setText(orderData.getmPShop().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DAddress.setText(orderData.getDAddress().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DDate.setText(orderData.getDDate().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DPhone.setText(orderData.getDPhone().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DName.setText(orderData.getDName().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                GMoney.setText(orderData.getGMoney().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                GGet.setText(orderData.getGGet().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                 txtNotes.setText(orderData.getNotes());
 
                 if(!orderData.getIsMetro().equals("")) {
@@ -300,15 +300,15 @@ public class EditOrders extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Txt Fields Strings
-                final String mPAddress = PAddress.getText().toString();
-                final String mNote = txtNotes.getText().toString();
-                final String mPShop = PShop.getText().toString();
-                final String mDAddress = DAddress.getText().toString();
-                final String mDDate = DDate.getText().toString();
-                final String mDPhone = DPhone.getText().toString();
-                final String mDName = DName.getText().toString();
-                final String mGMoney = GMoney.getText().toString();
-                final String mGGet = GGet.getText().toString();
+                final String mPAddress = PAddress.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mNote = txtNotes.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mPShop = PShop.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mDAddress = DAddress.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mDDate = DDate.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mDPhone = DPhone.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mDName = DName.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mGMoney = GMoney.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mGGet = GGet.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
 
                 // Checkboxes Strings
                 String isTrans = "";

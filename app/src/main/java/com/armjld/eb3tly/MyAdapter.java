@@ -118,12 +118,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffMinutes = (int) diffMinutes;
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
-        holder.setDate(filtersData.get(position).getDDate());
+        holder.setDate(filtersData.get(position).getDDate().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setUsername(filtersData.get(position).getuId());
-        holder.setOrdercash(filtersData.get(position).getGMoney());
-        holder.setOrderFrom(filtersData.get(position).reStateP());
-        holder.setOrderto(filtersData.get(position).reStateD());
-        holder.setFee(filtersData.get(position).getGGet().toString());
+        holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setFee(filtersData.get(position).getGGet().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
 
@@ -135,14 +135,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-        final String PAddress = filtersData.get(position).getmPAddress();
-        final String DAddress = filtersData.get(position).getDAddress();
-        final String rateUID = filtersData.get(position).getuId();
-        final String notes = filtersData.get(position).getNotes();
-        String statues = filtersData.get(position).getStatue();
-        String removed = filtersData.get(position).getRemoved();
-        String orderID = filtersData.get(position).getId();
-        String owner = filtersData.get(position).getuId();
+        final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        final String rateUID = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        final String notes = filtersData.get(position).getNotes().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        String statues = filtersData.get(position).getStatue().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        String removed = filtersData.get(position).getRemoved().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
 
         holder.linerDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -339,7 +339,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
         if(removed.equals("true") || !statues.equals("placed")){
-            Log.i(TAG, "You're inside the if of GGMONEY" + filtersData.get(position).getGMoney());
+            Log.i(TAG, "You're inside the if of GGMONEY" + filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setVisibility(View.VISIBLE);
         } else {

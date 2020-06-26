@@ -204,11 +204,11 @@ public class ForgetPass extends Activity {
                                 return;
                             }
 
-                            mAuth.getCurrentUser().updatePassword(newPass1.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            mAuth.getCurrentUser().updatePassword(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(newPass1.getText().toString().trim());
+                                        uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                                         Log.i(TAG, "Pass Updated : " + newPass1.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
                                         mAuth.signOut();
                                         Toast.makeText(ForgetPass.this, "تم تغيير الرقم السري بنجاح", Toast.LENGTH_SHORT).show();

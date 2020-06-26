@@ -387,9 +387,9 @@ public class Signup extends AppCompatActivity {
     public void onClick(View view) {
         final String muser = user.getText().toString().trim();
         final String memail = email.getText().toString().trim();
-        final String mpass = pass.getText().toString().trim();
-        final String con_pass = con_password.getText().toString().trim();
-        final String phone = phoneNum.getText().toString().trim();
+        final String mpass = pass.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        final String con_pass = con_password.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        final String phone = phoneNum.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
         // Check For empty fields
         if(TextUtils.isEmpty(muser)){
        user.setError("يجب ادخال اسم المستخدم");
@@ -471,7 +471,8 @@ public class Signup extends AppCompatActivity {
                 }
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                mdialog.dismiss();
             }});
 
     }});

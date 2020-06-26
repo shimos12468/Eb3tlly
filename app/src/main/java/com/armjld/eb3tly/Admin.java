@@ -286,8 +286,7 @@ public class Admin extends Activity {
                                     Log.i(TAG, " Users to Remove : " + ds.getValue());
                                     ds.getRef().removeValue();
                                 }
-                                Toast.makeText(Admin.this, "Deleted Non Completed : " + deletedCount + " Users", Toast.LENGTH_SHORT).show();
-
+                                //Toast.makeText(Admin.this, "Deleted Non Completed : " + deletedCount + " Users", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -305,6 +304,27 @@ public class Admin extends Activity {
                         if(snapshot.exists()) {
                             for(DataSnapshot ds : snapshot.getChildren()) {
                                 if(!ds.child("id").exists()) {
+                                    fuckedUp ++;
+                                    ds.getRef().removeValue();
+                                }
+                            }
+                        }
+                        //Toast.makeText(Admin.this, "Just deleted " + fuckedUp + " Gletches", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int fuckedUp = 0;
+                        if(snapshot.exists()) {
+                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                if(Objects.requireNonNull(ds.child("ddate").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("gmoney").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("gget").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("dphone").getValue()).toString().contains("(^\\h*)|(\\h*$)")) {
                                     fuckedUp ++;
                                     ds.getRef().removeValue();
                                 }

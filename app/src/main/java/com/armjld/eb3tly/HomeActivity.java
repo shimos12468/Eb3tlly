@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import Model.Data;
 
@@ -337,7 +338,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             Date orderDate = null;
                             Date myDate = null;
                             try {
-                                orderDate= format.parse(ds.child("ddate").getValue().toString());
+                                orderDate = format.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString().replaceAll("(^\\h*)|(\\h*$)",""));
                                 myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -345,11 +346,12 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             assert orderDate != null;
                             assert myDate != null;
                             Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
-                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
-                                mm.add((int) count, orderData);
-                                count++;
+                            if(myDate != null && orderData != null) {
+                                if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
+                                    mm.add((int) count, orderData);
+                                    count++;
+                                }
                             }
-
                             orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(orderAdapter);
                             updateNone(mm.size());

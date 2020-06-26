@@ -235,15 +235,16 @@ public class AddOrders extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Txt Fields Strings
-                final String mPAddress = PAddress.getText().toString();
-                final String mNote = txtNotes.getText().toString();
-                final String mPShop = PShop.getText().toString();
-                final String mDAddress = DAddress.getText().toString();
-                final String mDDate = DDate.getText().toString();
-                final String mDPhone = DPhone.getText().toString();
-                final String mDName = DName.getText().toString();
-                final String mGMoney = GMoney.getText().toString();
-                final String mGGet = GGet.getText().toString();
+                final String mPAddress = PAddress.getText().toString().trim();
+                final String mNote = txtNotes.getText().toString().trim();
+                final String mPShop = PShop.getText().toString().trim();
+                final String mDAddress = DAddress.getText().toString().trim();
+                final String mDDate = DDate.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mDPhone = DPhone.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mDName = DName.getText().toString().trim();
+                final String mGMoney = GMoney.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                final String mGGet = GGet.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                int intget = Integer.parseInt(mGGet);
 
                 // Checkboxes Strings
                 String isTrans = "";
@@ -291,7 +292,11 @@ public class AddOrders extends AppCompatActivity {
                     GGet.requestFocus();
                     return;
                 }
-
+                if(intget == 0) {
+                    GGet.setError("الرجاء وضع سعر للشحن");
+                    GGet.requestFocus();
+                    return;
+                }
                 // Check the way of transportation
                 if (chkTrans.isChecked()) {
                     isTrans = "مواصلات";
