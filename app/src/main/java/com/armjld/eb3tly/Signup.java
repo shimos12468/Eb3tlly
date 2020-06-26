@@ -433,6 +433,7 @@ public class Signup extends AppCompatActivity {
                         txtSended.setText("تم ارسال الكود الي رقم : " + phone);
                         linerVerf.setVisibility(View.VISIBLE);
                         txtViewPhone.setText("ضع الرمز المرسل اليك");
+                        checkState();
                         sendVerificationCode(phone);
 
                         timer.setOnClickListener(new View.OnClickListener() {
@@ -455,6 +456,7 @@ public class Signup extends AppCompatActivity {
                     linersignUp.setVisibility(View.GONE);
                     linerVerf.setVisibility(View.VISIBLE);
                     txtViewPhone.setText("ضع الرمز المرسل اليك");
+                    checkState();
                     sendVerificationCode(phone);
                     timer.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -658,6 +660,12 @@ public class Signup extends AppCompatActivity {
         {
             Log.i("SignUp", "Returned the source Photo");
             return source;
+        }
+    }
+
+    private void checkState() {
+        if(mAuth.getCurrentUser() != null) {
+            mAuth.signOut();
         }
     }
 }

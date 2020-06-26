@@ -48,6 +48,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String OrderID = data.get("orderid");
             String sendby = data.get("sendby");
             String To = data.get("sendto");
+            Log.i(TAG, "Check This : " + statue + OrderID + sendby + To);
             uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -92,6 +93,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                     break;
                                 }
                             }
+                            sendNotification(body,nameFrom);
                         }
 
                         @Override
@@ -103,7 +105,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 public void onCancelled(@NonNull DatabaseError error) { }
             });
 
-            sendNotification(body,nameFrom);
             if (true) {
                 scheduleJob();
             } else {
@@ -137,7 +138,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String messageBody, String title) {
 
-        Intent intent = new Intent(this, StartUp.class);
+        Intent intent = new Intent(this, Notifications.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

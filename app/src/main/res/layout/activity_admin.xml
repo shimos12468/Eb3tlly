@@ -11,331 +11,358 @@
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark"
     tools:context=".Admin">
 
-    <include
-        android:id="@+id/toolbar_home"
-        layout="@layout/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageView
-        android:id="@+id/btnRefresh"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/ic_baseline_refresh_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_home" />
-
-    <ImageView
-        android:id="@+id/imgLogo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/app_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_home" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constStatics"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/ic_profile_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif-black"
-            android:gravity="center"
-            android:shadowColor="#FFFFFF"
-            android:text="Statics"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7">
-
-            <TextView
-                android:id="@+id/txtAllOrdersCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtAllUsersCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtAllDevCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtAllSupCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtAllProfit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ScrollView
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_gravity="left"
+        android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constStatics">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:openDrawer="start">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/linDatabase"
-                android:layout_width="match_parent"
+            <include
+                android:id="@+id/toolbar_home"
+                layout="@layout/toolbar"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/app_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbar_home" />
 
-                    <EditText
-                        android:id="@+id/txtValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="Value"
-                        android:inputType="text"
-                        android:textColor="#000000"
-                        android:textColorHint="@android:color/tertiary_text_light" />
+            <ImageView
+                android:id="@+id/btnRefresh"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_baseline_refresh_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbar_home" />
 
-                    <EditText
-                        android:id="@+id/txtChild"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="Child"
-                        android:inputType="text"
-                        android:textColor="#000000"
-                        android:textColorHint="@android:color/tertiary_text_light" />
-                </LinearLayout>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnAddToOrders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/btn_bad"
-
-                    android:text="Add New Child to All Orders"
-                    android:textColor="#000000" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnAddToComments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/btn_bad"
-
-                    android:text="Add New Child to All Comments"
-                    android:textColor="#000000" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnAddToUsers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/btn_bad"
-
-                    android:text="Add New Child to All Users"
-                    android:textColor="#000000" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linCare"
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constStatics"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@color/ic_profile_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:background="@drawable/btn_defult"
-                    android:id="@+id/btnMessages"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Check Messages" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:background="@drawable/btn_defult"
-                    android:id="@+id/btnReports"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Check Reports" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:background="@drawable/btn_defult"
-                    android:id="@+id/btnResetCounter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Reset Declined Order Counter " />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:background="@drawable/btn_defult"
-                    android:id="@+id/btnAccepting"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Button" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:background="@drawable/btn_defult"
-                    android:id="@+id/btnAdding"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Button" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnDeleteUser"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/btn_defult"
-                    android:text="Delete Glithces"
-                    android:visibility="visible" />
-
-                <EditText
-                    android:id="@+id/txtBody"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Type the Notfication Here"
-                    android:inputType="textLongMessage|none"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/tertiary_text_light" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:shadowColor="#FFFFFF"
+                    android:text="Statics"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btnSendNotficationDel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@drawable/btn_defult"
-                        android:text="Send Notfication to Del" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btnSendNotficationSup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@drawable/btn_defult"
-                        android:text="Send Notfication to Sup" />
-                </LinearLayout>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnAdminSignOut"
+                <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@drawable/btn_bad"
-                    android:text="SignOut"
-                    android:textColor="#000000" />
-            </LinearLayout>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7">
 
-        </LinearLayout>
-    </ScrollView>
+                    <TextView
+                        android:id="@+id/txtAllOrdersCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/txtAllUsersCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/txtAllDevCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/txtAllSupCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/txtAllProfit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="TextView"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ScrollView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constStatics">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/linDatabase"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/txtValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="Value"
+                                android:inputType="text"
+                                android:textColor="#000000"
+                                android:textColorHint="@android:color/tertiary_text_light" />
+
+                            <EditText
+                                android:id="@+id/txtChild"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="Child"
+                                android:inputType="text"
+                                android:textColor="#000000"
+                                android:textColorHint="@android:color/tertiary_text_light" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnAddToOrders"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_bad"
+
+                            android:text="Add New Child to All Orders"
+                            android:textColor="#000000" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnAddToComments"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_bad"
+
+                            android:text="Add New Child to All Comments"
+                            android:textColor="#000000" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnAddToUsers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_bad"
+
+                            android:text="Add New Child to All Users"
+                            android:textColor="#000000" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linCare"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnMessages"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Check Messages" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnReports"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Check Reports" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnResetCounter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Reset Declined Order Counter " />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnAccepting"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Button" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnAdding"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Button" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnDeleteUser"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Delete Glithces"
+                            android:visibility="visible" />
+
+                        <EditText
+                            android:id="@+id/txtBody"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="Type the Notfication Here"
+                            android:inputType="textLongMessage|none"
+                            android:textColor="#000000"
+                            android:textColorHint="@android:color/tertiary_text_light" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btnSendNotficationDel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/btn_defult"
+                                android:text="Send Notfication to Del" />
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btnSendNotficationSup"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/btn_defult"
+                                android:text="Send Notfication to Sup" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnAdminSignOut"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:background="@drawable/btn_bad"
+                            android:text="SignOut"
+                            android:textColor="#000000" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/nav_header_main"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
+            app:menu="@menu/activity_main_drawer" />
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +25,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.ui.AppBarConfiguration;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -117,6 +122,58 @@ public class Admin extends Activity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("Admin Panel");
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_profile, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
+
+        final Intent newIntentNB = new Intent(this, HomeActivity.class);
+        // Navigation Bar Buttons Function
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("RtlHardcoded")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                if (id == R.id.nav_timeline) {
+                    newIntentNB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    finish();
+                    startActivity(newIntentNB);
+                }
+                if (id == R.id.nav_changepass) {
+                    startActivity(new Intent(getApplicationContext(), ChangePassword.class));
+                }
+                if (id==R.id.nav_profile){
+                    startActivity(new Intent(getApplicationContext(), profile.class));
+                }
+                if(id == R.id.nav_info) {
+                    startActivity(new Intent(getApplicationContext(), UserSetting.class));
+
+                }
+                if (id == R.id.nav_how) {
+                    startActivity(new Intent(getApplicationContext(), HowTo.class));
+                }
+                if (id==R.id.nav_signout){
+                    finish();
+                    startActivity(new Intent(Admin.this, MainActivity.class));
+                    mAuth.signOut();
+                }
+                if (id==R.id.nav_about){
+                    startActivity(new Intent(Admin.this, About.class));
+                }
+                if(id==R.id.nav_share){
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    String shareBody = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Play Store Link");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                    startActivity(Intent.createChooser(sharingIntent, "شارك البرنامج مع اخرون"));
+                }
+                if (id == R.id.nav_contact) {
+                    startActivity(new Intent(getApplicationContext(), Conatact.class));
+                }
+                drawer.closeDrawer(Gravity.LEFT);
+                return true;
+            }
+        });
 
         // ------------------------ Send notfication to all Delivery Workers ----------------------------//
         btnSendNotficationDel.setOnClickListener(new View.OnClickListener() {
