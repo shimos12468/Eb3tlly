@@ -196,7 +196,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     startActivity(new Intent(getApplicationContext(), Conatact.class));
                 }
                 if (id==R.id.nav_exit){
-                    HomeActivity.this.finish();
+                    finish();
                     System.exit(0);
                 }
                 drawer.closeDrawer(Gravity.LEFT);

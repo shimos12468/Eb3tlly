@@ -146,7 +146,7 @@ public class Notifications extends AppCompatActivity {
                     mAuth.signOut();
                 }
                 if (id==R.id.nav_exit){
-                    Notifications.this.finish();
+                    finish();
                     System.exit(0);
                 }
                 drawer.closeDrawer(Gravity.LEFT);
