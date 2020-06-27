@@ -613,7 +613,7 @@ public class Signup extends AppCompatActivity {
                 } else {
                     String message = "Somthing is wrong, we will fix it soon...";
                     if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        message = "Invalid code entered...";
+                        message = "لقد طلبت الكود مرات كثيره يرجي الانتظار و اعادة المحاولة";
                     }
                     mdialog.dismiss();
                     Toast.makeText(Signup.this, message, Toast.LENGTH_LONG).show();
@@ -663,8 +663,3 @@ public class Signup extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-

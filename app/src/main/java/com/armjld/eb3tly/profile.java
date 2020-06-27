@@ -13,14 +13,17 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,12 +62,13 @@ import java.util.Objects;
 import Model.Data;
 import Model.notiData;
 import Model.rateData;
+import Model.reportData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class profile extends AppCompatActivity {
 
-    private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
+    private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase, reportDatabase;
     private ConstraintLayout constNoti;
     private RecyclerView userRecycler;
     private FirebaseAuth mAuth;
@@ -110,6 +114,7 @@ public class profile extends AppCompatActivity {
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        reportDatabase = getInstance().getReference().child("Pickly").child("reports");
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
@@ -496,10 +501,42 @@ public class profile extends AppCompatActivity {
 
                             final String dilvID = data.getuAccepted();
                             final String sID = data.getuId();
+                            final String orderID = data.getId();
                             //final String rateUID = data.getuId();
 
+                            if(data.getStatue().equals("placed")) {
+                                myviewholder.mImageButton.setVisibility(View.GONE);
+                            }
+                            // Report for Supplier
+                            myviewholder.mImageButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    PopupMenu popup = new PopupMenu(profile.this,v );
+                                    MenuInflater inflater = popup.getMenuInflater();
+                                    inflater.inflate(R.menu.popup_menu, popup.getMenu());
+                                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem item) {
+                                            switch (item.getItemId()) {
+                                                case R.id.didnt_reciv:
+                                                    reportData repo = new reportData(uID, dilvID,orderID,datee,"المندوب لم يستلم الاوردر");
+                                                    reportDatabase.child(dilvID).push().setValue(repo);
+                                                    Toast.makeText(profile.this, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                                case R.id.didnt_deliv:
+                                                    reportData repo2 = new reportData(uID, dilvID,orderID,datee,"المندوب لم يسلم الاوردر");
+                                                    reportDatabase.child(dilvID).push().setValue(repo2);
+                                                    Toast.makeText(profile.this, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                            }
+                                            return false;
+                                        }
+                                    });
+                                    popup.show();
+                                }
+                            });
+
                             // Delete Order for Supplier
-                            final String orderID = data.getId();
                                 myviewholder.btnDelete.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -840,6 +877,10 @@ public class profile extends AppCompatActivity {
                             final String iDName = data.getDName();
                             final String iUID = data.getuId();
 
+                            if(data.getStatue().equals("placed")) {
+                                myviewholder.mImageButton.setVisibility(View.GONE);
+                            }
+
                             //Order info
                             myviewholder.btnInfo.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -1067,6 +1108,36 @@ public class profile extends AppCompatActivity {
                                     Toast.makeText(profile.this, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show();
                                 }
                             });
+
+                            // --------- Report for Delvery
+                            myviewholder.mImageButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    PopupMenu popup = new PopupMenu(profile.this,v );
+                                    MenuInflater inflater = popup.getMenuInflater();
+                                    inflater.inflate(R.menu.popup_menu_delv, popup.getMenu());
+                                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem item) {
+                                            switch (item.getItemId()) {
+                                                case R.id.deleted:
+                                                    reportData repo3 = new reportData(uID, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله");
+                                                    reportDatabase.child(data.getuId()).push().setValue(repo3);
+                                                    Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                                case R.id.falsemoney:
+                                                    reportData repo4 = new reportData(uID, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق");
+                                                    reportDatabase.child(data.getuId()).push().setValue(repo4);
+                                                    Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                            }
+                                            return false;
+                                        }
+                                    });
+                                    popup.show();
+                                }
+                            });
+
                             // -----------------------  Delete order for Delivery
                             final String DorderID = data.getId();
                             myviewholder.btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -1202,6 +1273,7 @@ public class profile extends AppCompatActivity {
         LinearLayout linerDate;
         RatingBar drStar;
         ImageView icnCar,icnMotor,icnMetro,icnTrans;
+        ImageButton mImageButton;
 
         public myviewholder(@NonNull View itemView) {
             super(itemView);
@@ -1220,6 +1292,7 @@ public class profile extends AppCompatActivity {
             txtgGet = myview.findViewById(R.id.fees);
             txtgMoney = myview.findViewById(R.id.ordercash);
             txtDate = myview.findViewById(R.id.date);
+            mImageButton = (ImageButton) myview.findViewById(R.id.imageButton);
         }
 
         void setUsername(String currentUser, final String orderOwner, final String DName, String uType){

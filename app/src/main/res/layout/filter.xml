@@ -121,25 +121,29 @@
 
         <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterPRegion"
+            style="@style/AppTheme.SpinnerDialog"
             android:layout_width="0dp"
             android:layout_height="38dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/txtDescP2"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spFilterPState" />
+            app:layout_constraintTop_toBottomOf="@+id/spFilterPState"
+            tools:ignore="HardcodedText,MissingClass" />
 
         <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterPState"
+            style="@style/AppTheme.SpinnerDialog"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             app:layout_constraintEnd_toStartOf="@+id/txtDescP1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingClass" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
@@ -191,24 +195,28 @@
 
         <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterDState"
+            style="@style/AppTheme.SpinnerDialog"
             android:layout_width="0dp"
             android:layout_height="38dp"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             app:layout_constraintEnd_toStartOf="@+id/txtDescD1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText,MissingClass" />
 
         <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterDRegion"
+            style="@style/AppTheme.SpinnerDialog"
             android:layout_width="0dp"
             android:layout_height="38dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/txtDescD2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spFilterDState" />
+            app:layout_constraintTop_toBottomOf="@+id/spFilterDState"
+            tools:ignore="HardcodedText,MissingClass" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
