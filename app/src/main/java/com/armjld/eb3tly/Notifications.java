@@ -113,26 +113,21 @@ public class Notifications extends AppCompatActivity {
                     finish();
                     startActivity(newIntentNB);
                 }
-                if (id == R.id.nav_changepass) {
-                    startActivity(new Intent(getApplicationContext(), ChangePassword.class));
-                }
                 if (id==R.id.nav_profile){
                     startActivity(new Intent(getApplicationContext(), profile.class));
-                }
-                if (id == R.id.nav_how) {
-                    startActivity(new Intent(getApplicationContext(), HowTo.class));
                 }
                 if(id == R.id.nav_info) {
                     startActivity(new Intent(getApplicationContext(), UserSetting.class));
 
                 }
-                if (id==R.id.nav_signout){
-                    finish();
-                    startActivity(new Intent(Notifications.this, MainActivity.class));
-                    mAuth.signOut();
+                if (id == R.id.nav_changepass) {
+                    startActivity(new Intent(getApplicationContext(), ChangePassword.class));
                 }
-                if (id==R.id.nav_about){
-                    startActivity(new Intent(Notifications.this, About.class));
+                if (id == R.id.nav_how) {
+                    startActivity(new Intent(getApplicationContext(), HowTo.class));
+                }
+                if (id == R.id.nav_contact) {
+                    startActivity(new Intent(getApplicationContext(), Conatact.class));
                 }
                 if(id==R.id.nav_share){
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -142,8 +137,17 @@ public class Notifications extends AppCompatActivity {
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "شارك البرنامج مع اخرون"));
                 }
-                if (id == R.id.nav_contact) {
-                    startActivity(new Intent(getApplicationContext(), Conatact.class));
+                if (id==R.id.nav_about){
+                    startActivity(new Intent(Notifications.this, About.class));
+                }
+                if (id==R.id.nav_signout){
+                    finish();
+                    startActivity(new Intent(Notifications.this, MainActivity.class));
+                    mAuth.signOut();
+                }
+                if (id==R.id.nav_exit){
+                    Notifications.this.finish();
+                    System.exit(0);
                 }
                 drawer.closeDrawer(Gravity.LEFT);
                 return true;

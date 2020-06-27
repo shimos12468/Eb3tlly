@@ -57,6 +57,7 @@
         <item>حلوان</item>
         <item>جاردن سيتي</item>
         <item>جسر السويس</item>
+        <item>حلوان</item>
         <item>شبرا الخيمة</item>
         <item>شبرا مصر</item>
         <item>عباسيه</item>
@@ -97,6 +98,7 @@
         <item>حلوان</item>
         <item>جاردن سيتي</item>
         <item>جسر السويس</item>
+        <item>حلوان</item>
         <item>شبرا الخيمة</item>
         <item>شبرا مصر</item>
         <item>عباسيه</item>
@@ -390,7 +392,6 @@
     <string-array name="justAll">
         <item>كل المناطق</item>
     </string-array>
-
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>

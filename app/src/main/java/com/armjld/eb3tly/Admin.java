@@ -36,8 +36,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -64,11 +66,12 @@ public class Admin extends Activity {
     int profitCount = 0;
     int usedUsers = 0;
     private ProgressDialog mdialog;
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     int notCompleted = 0;
     String TAG = "Admin";
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
+    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String datee = sdf.format(new Date());
 
     public void onBackPressed() { }
@@ -138,9 +141,6 @@ public class Admin extends Activity {
                     finish();
                     startActivity(newIntentNB);
                 }
-                if (id == R.id.nav_changepass) {
-                    startActivity(new Intent(getApplicationContext(), ChangePassword.class));
-                }
                 if (id==R.id.nav_profile){
                     startActivity(new Intent(getApplicationContext(), profile.class));
                 }
@@ -148,16 +148,14 @@ public class Admin extends Activity {
                     startActivity(new Intent(getApplicationContext(), UserSetting.class));
 
                 }
+                if (id == R.id.nav_changepass) {
+                    startActivity(new Intent(getApplicationContext(), ChangePassword.class));
+                }
                 if (id == R.id.nav_how) {
                     startActivity(new Intent(getApplicationContext(), HowTo.class));
                 }
-                if (id==R.id.nav_signout){
-                    finish();
-                    startActivity(new Intent(Admin.this, MainActivity.class));
-                    mAuth.signOut();
-                }
-                if (id==R.id.nav_about){
-                    startActivity(new Intent(Admin.this, About.class));
+                if (id == R.id.nav_contact) {
+                    startActivity(new Intent(getApplicationContext(), Conatact.class));
                 }
                 if(id==R.id.nav_share){
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -167,8 +165,17 @@ public class Admin extends Activity {
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "شارك البرنامج مع اخرون"));
                 }
-                if (id == R.id.nav_contact) {
-                    startActivity(new Intent(getApplicationContext(), Conatact.class));
+                if (id==R.id.nav_about){
+                    startActivity(new Intent(Admin.this, About.class));
+                }
+                if (id==R.id.nav_signout){
+                    finish();
+                    startActivity(new Intent(Admin.this, MainActivity.class));
+                    mAuth.signOut();
+                }
+                if (id==R.id.nav_exit){
+                    Admin.this.finish();
+                    System.exit(0);
                 }
                 drawer.closeDrawer(Gravity.LEFT);
                 return true;
@@ -387,7 +394,41 @@ public class Admin extends Activity {
                                 }
                             }
                         }
-                        Toast.makeText(Admin.this, "Just deleted " + fuckedUp + " Gletches", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(Admin.this, "Just deleted " + fuckedUp + " Gletches", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int ToBeDelv = 0;
+                        if(snapshot.exists()) {
+                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                if(ds.exists() && ds.child("statue").exists()) {
+                                    String deliverDate = ds.child("ddate").getValue().toString();
+                                    Date orderDate = null;
+                                    Date myDate = null;
+                                    try {
+                                        orderDate= format.parse(deliverDate);
+                                        myDate =  format.parse(getYesterdayDate());
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    assert orderDate != null;
+                                    if(orderDate.compareTo(myDate) < 0 && Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("accepted")) {
+                                        String orderI = ds.child("id").getValue().toString();
+                                        mDatabase.child(orderI).child("statue").setValue("delivered");
+                                        ToBeDelv++;
+                                    }
+                                }
+                            }
+                        }
+                        Toast.makeText(Admin.this, "Accepted But not Delv " + ToBeDelv, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -717,9 +758,7 @@ public class Admin extends Activity {
                     profitCount = 0;
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                         if(ds.exists() && ds.child("id").exists() ) {
-                            userData uData = ds.getValue(userData.class);
-                            assert uData != null;
-                            String userType = uData.getAccountType();
+                            String userType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
                             int intProfit = (int) Integer.parseInt(Objects.requireNonNull(ds.child("profit").getValue()).toString());
                             profitCount = profitCount + intProfit;
                             if(intProfit > 0) {
@@ -763,13 +802,15 @@ public class Admin extends Activity {
                 int plOrders = 0;
                 int deOrders = 0;
                 int reOrders = 0;
+                int DelWorth = 0;
                 if(dataSnapshot.exists()) {
                     allOrders = (int) dataSnapshot.getChildrenCount();
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                         if(ds.exists()) {
                             Data orderData = ds.getValue(Data.class);
                             assert orderData != null;
-                            ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString());
+                            ordersWorth = ordersWorth + Integer.parseInt(orderData.getGMoney().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                            DelWorth = DelWorth + Integer.parseInt(orderData.getGGet().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                             switch (orderData.getStatue()) {
                                 case "placed":
                                     plOrders++;
@@ -787,7 +828,7 @@ public class Admin extends Activity {
                         }
                     }
                 }
-                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP | " + plOrders + " Placed | " + acOrders + " Accepted | " + reOrders + " Recived | " + deOrders + " Delivered." );
+                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP | Delv Fees " + DelWorth + " EGP | " + plOrders + " Placed | " + acOrders + " Accepted | " + reOrders + " Recived | " + deOrders + " Delivered." );
             }
 
             @Override
@@ -795,5 +836,12 @@ public class Admin extends Activity {
         });
         Toast.makeText(Admin.this, "Refreshed", Toast.LENGTH_SHORT).show();
         mdialog.dismiss();
+    }
+
+    public static String getYesterdayDate() {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return dateFormat.format(cal.getTime());
     }
 }

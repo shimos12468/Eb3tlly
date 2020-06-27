@@ -496,7 +496,9 @@ public class Signup extends AppCompatActivity {
 
                 mdialog.setMessage("جاري التأكد من الكود ..");
                 mdialog.show();
-                verifyVerificationCode(code);
+
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+                signInWithPhoneAuthCredential(credential);
             }
         });
 
@@ -558,14 +560,6 @@ public class Signup extends AppCompatActivity {
                 Signup.this,
                 mCallbacks);
         Log.i(TAG, "Send Verfication Code fun to : +2" + mobile);
-    }
-
-    private void verifyVerificationCode(String code) {
-        Log.i(TAG, "Verf : " + mVerificationId + " code : " + code);
-        if(code.length() == 6) {
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-            signInWithPhoneAuthCredential(credential);
-        }
     }
 
 
