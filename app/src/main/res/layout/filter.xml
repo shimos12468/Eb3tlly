@@ -119,7 +119,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtDescP1" />
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterPRegion"
             android:layout_width="0dp"
             android:layout_height="38dp"
@@ -132,7 +132,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spFilterPState" />
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterPState"
             android:layout_width="0dp"
             android:layout_height="45dp"
@@ -189,7 +189,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtDescD1" />
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterDState"
             android:layout_width="0dp"
             android:layout_height="38dp"
@@ -198,7 +198,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spFilterDRegion"
             android:layout_width="0dp"
             android:layout_height="38dp"
