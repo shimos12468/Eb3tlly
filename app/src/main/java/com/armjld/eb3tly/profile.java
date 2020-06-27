@@ -222,7 +222,7 @@ public class profile extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
                 }
                 if (id==R.id.nav_exit){
-                    finish();
+                    finishAffinity();
                     System.exit(0);
                 }
                 drawer.closeDrawer(Gravity.LEFT);

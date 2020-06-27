@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 mAuth.signInWithEmailAndPassword(memail, mpass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
+                        if (task.isSuccessful()) {
                             final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
                             FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
                                 @Override
