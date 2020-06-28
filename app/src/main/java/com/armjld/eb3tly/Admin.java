@@ -65,6 +65,7 @@ public class Admin extends Activity {
     int devCount = 0;
     int profitCount = 0;
     int usedUsers = 0;
+    int isAcitve = 0;
     private ProgressDialog mdialog;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
@@ -191,22 +192,22 @@ public class Admin extends Activity {
                     public void onClick(DialogInterface confirmDailog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
+                                String theMsg = txtBody.getText().toString().trim();
                                 uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(snapshot.exists()) {
                                             for(DataSnapshot ds : snapshot.getChildren()) {
                                                 if(ds.exists() && ds.child("id").exists()) {
-                                                    userData uData = ds.getValue(userData.class);
-                                                    assert uData != null;
-                                                    String userID = uData.getId();
-                                                    if(uData.getAccountType().equals("Delivery Worker")) {
-                                                        String theMsg = txtBody.getText().toString().trim();
+                                                        String userID = ds.child("id").getValue().toString();
+                                                        if(ds.child("accountType").getValue().toString().equals("Delivery Worker")) {
                                                         notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee, "false");
                                                         nDatabase.child(userID).push().setValue(Noti);
                                                     }
                                                 }
                                             }
+                                            txtBody.setText("");
+                                            Toast.makeText(Admin.this, "تم ارسال الاشعار", Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
@@ -235,29 +236,27 @@ public class Admin extends Activity {
                     public void onClick(DialogInterface confirmDailog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
+                                String theMsg = txtBody.getText().toString().trim();
                                 uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(snapshot.exists()) {
                                             for(DataSnapshot ds : snapshot.getChildren()) {
                                                 if(ds.exists() && ds.child("id").exists()) {
-                                                    userData uData = ds.getValue(userData.class);
-                                                    assert uData != null;
-                                                    String userID = uData.getId();
-                                                    if(uData.getAccountType().equals("Supplier")) {
-                                                        String theMsg = txtBody.getText().toString().trim();
+                                                    String userID = ds.child("id").getValue().toString();
+                                                    if(ds.child("accountType").getValue().toString().equals("Supplier")) {
                                                         notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee, "false");
                                                         nDatabase.child(userID).push().setValue(Noti);
                                                     }
                                                 }
                                             }
+                                            txtBody.setText("");
+                                            Toast.makeText(Admin.this, "تم ارسال الاشعار", Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
                                     @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
+                                    public void onCancelled(@NonNull DatabaseError error) { }
                                 });
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -756,6 +755,7 @@ public class Admin extends Activity {
                     devCount = 0;
                     notCompleted = 0;
                     profitCount = 0;
+                    isAcitve = 0;
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                         if(ds.exists() && ds.child("id").exists() ) {
                             String userType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
@@ -767,6 +767,18 @@ public class Admin extends Activity {
                             switch (userType) {
                                 case "Supplier" : {
                                     ++supCount;
+                                    mDatabase.orderByChild("uId").equalTo(Objects.requireNonNull(ds.child("id").getValue()).toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(snapshot.exists()) {
+                                                ++isAcitve;
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) { }
+
+                                    });
                                     break;
                                 }
                                 case "Delivery Worker" : {
@@ -782,7 +794,7 @@ public class Admin extends Activity {
                     }
                     txtAllUsersCount.setText("Users Count : " + allUsers);
                     txtAllProfit.setText("Total Profit = " + profitCount + " EGP | " + forEach + " EGP For Each Active Delivery User");
-                    txtAllSupCount.setText("Suppliers Count : " + supCount);
+                    txtAllSupCount.setText("Suppliers Count : " + supCount + " | Active Users : " + isAcitve);
                     txtAllDevCount.setText("Delivery Workers Count : " + devCount + " | Active Count : " + usedUsers);
                 }
             }

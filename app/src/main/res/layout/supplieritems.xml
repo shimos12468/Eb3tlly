@@ -69,6 +69,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -141,6 +142,20 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="22dp"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/item_detail"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@null"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:src="@drawable/ic_baseline_outlined_flag_24" />
 
                 <ImageView
                     android:id="@+id/icnTrans"
@@ -224,9 +239,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:layout_marginRight="0dp"
-            android:layout_marginBottom="5dp"
             android:orientation="horizontal"
             android:visibility="visible">
 
@@ -321,7 +335,6 @@
             android:id="@+id/lin3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:orientation="horizontal"
             android:visibility="visible">
 
@@ -346,6 +359,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="0dp"
             android:background="#00000000"
             android:gravity="center"
