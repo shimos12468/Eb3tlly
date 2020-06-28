@@ -144,6 +144,126 @@ public class AddOrders extends AppCompatActivity {
                     adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spPRegion.setPrompt("اختار محطة المترو");
                     spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 4) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtQalyobiaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة القليوبية");
+                    spPRegion.setAdapter(adapter4);
+                }else if (itemSelected == 5) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSharqyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة الشرقية");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 6) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtDqhlyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة الدقهليه");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 7) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtAsyutRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة اسيوط");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 8) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtAswanRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة اسوان");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 9) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtMenofyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة المنوفية");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 10) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtIsmaliaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة الاسماعيليه");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 11) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtAqsorRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة الاقصر");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 12) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtBeheraRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة البحيرة");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 13) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtBaniSwefRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة بين سويف");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 14) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtPortSaidRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة بور سعيد");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 15) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtRedSeaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة البحر الاحمر");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 16) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSouthSeniaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة جنوب سيناء");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 17) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtDomyatRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة دمياط");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 18) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSohagRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة سوهاج");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 19) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSuezRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة السويس");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 20) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtGarbyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة الغربية");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 21) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtFayoumRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة الفييوم");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 22) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtQenaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة قنا");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 23) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtKafrRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة كفر الشيخ");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 24) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtNorthSenia, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة شمال سيناْء");
+                    spPRegion.setAdapter(adapter4);
+                }  else if (itemSelected == 25) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtMatrohRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة مطروح");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 26) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtMeiaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة المنيا");
+                    spPRegion.setAdapter(adapter4);
+                } else if (itemSelected == 27) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtNewWadiRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spPRegion.setPrompt("اختار منطقة محافظة الوادي الجديد");
+                    spPRegion.setAdapter(adapter4);
                 } else {
                     ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(AddOrders.this, R.array.justAll, R.layout.color_spinner_layout);
                     adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -151,6 +271,7 @@ public class AddOrders extends AppCompatActivity {
                     spPRegion.setAdapter(adapter4);
                 }
             }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -188,10 +309,130 @@ public class AddOrders extends AppCompatActivity {
                     adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spDRegion.setPrompt("اختار محطة المترو");
                     spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 4) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtQalyobiaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة القليوبية");
+                    spDRegion.setAdapter(adapter5);
+                }else if (itemSelected == 5) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSharqyaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة الشرقية");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 6) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtDqhlyaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة الدقهليه");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 7) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtAsyutRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة اسيوط");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 8) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtAswanRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة اسوان");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 9) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtMenofyaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة المنوفية");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 10) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtIsmaliaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة الاسماعيليه");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 11) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtAqsorRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة الاقصر");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 12) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtBeheraRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة البحيرة");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 13) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtBaniSwefRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة بين سويف");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 14) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtPortSaidRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة بور سعيد");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 15) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtRedSeaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة البحر الاحمر");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 16) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSouthSeniaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة جنوب سيناء");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 17) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtDomyatRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة دمياط");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 18) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSohagRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة سوهاج");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 19) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtSuezRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة السويس");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 20) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtGarbyaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة الغربية");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 21) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtFayoumRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة الفييوم");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 22) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtQenaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة قنا");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 23) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtKafrRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة كفر الشيخ");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 24) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtNorthSenia, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة شمال سيناْء");
+                    spDRegion.setAdapter(adapter5);
+                }  else if (itemSelected == 25) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtMatrohRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة مطروح");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 26) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtMeiaRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة المنيا");
+                    spDRegion.setAdapter(adapter5);
+                } else if (itemSelected == 27) {
+                    ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtNewWadiRegion, R.layout.color_spinner_layout);
+                    adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("اختار منطقة محافظة الوادي الجديد");
+                    spDRegion.setAdapter(adapter5);
                 } else {
-                    spDRegion.setPrompt("لم يتم تسجيل اي مناطق لتلك المحافظة");
                     ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(AddOrders.this, R.array.justAll, R.layout.color_spinner_layout);
                     adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spDRegion.setPrompt("سيتم اضافه مناطق المحافظة في اصدارات جديدة");
                     spDRegion.setAdapter(adapter5);
                 }
             }

@@ -126,15 +126,21 @@ public class MainActivity extends AppCompatActivity {
                                                         // --------------------- check account types and send each type to it's activity --------------//
                                                         switch (uType) {
                                                             case "Supplier":
+                                                                StartUp.userType = uType;
                                                                 mdialog.dismiss();
+                                                                finish();
                                                                 startActivity(new Intent(getApplicationContext(), profile.class));
                                                                 break;
                                                             case "Delivery Worker":
+                                                                StartUp.userType = uType;
                                                                 mdialog.dismiss();
+                                                                finish();
                                                                 startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                                                                 break;
                                                             case "Admin":
+                                                                StartUp.userType = uType;
                                                                 mdialog.dismiss();
+                                                                finish();
                                                                 startActivity(new Intent(getApplicationContext(), Admin.class));
                                                                 break;
                                                         }

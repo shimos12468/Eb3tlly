@@ -45,7 +45,8 @@
             android:text="مترو"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
 
         <CheckBox
             android:id="@+id/chkFilterMotor"

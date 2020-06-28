@@ -57,7 +57,6 @@
         <item>حلوان</item>
         <item>جاردن سيتي</item>
         <item>جسر السويس</item>
-        <item>حلوان</item>
         <item>شبرا الخيمة</item>
         <item>شبرا مصر</item>
         <item>عباسيه</item>
@@ -98,7 +97,6 @@
         <item>حلوان</item>
         <item>جاردن سيتي</item>
         <item>جسر السويس</item>
-        <item>حلوان</item>
         <item>شبرا الخيمة</item>
         <item>شبرا مصر</item>
         <item>عباسيه</item>
@@ -389,6 +387,541 @@
         <item>الجيش</item>
         <item>باب الشعرية</item>
     </string-array>
+    <string-array name="txtDqhlyaRegion">
+        <item>حي شرق</item>
+        <item>حي غرب</item>
+        <item>المنصورة</item>
+        <item>طلخا</item>
+        <item>ميت غمرة</item>
+        <item>دكرنس</item>
+        <item>اجا</item>
+        <item>منية النصر</item>
+        <item>السنبلاوين</item>
+        <item>بني عبيد</item>
+        <item>المنزلة</item>
+        <item>تمي الامديد</item>
+        <item>الجمالية</item>
+        <item>شربين</item>
+        <item>المطرية</item>
+        <item>بلقاس</item>
+        <item>ميت سلسيل</item>
+        <item>جمصة</item>
+        <item>محلة الدمنة</item>
+        <item>نبروة</item>
+        <item>الكردي</item>
+    </string-array>
+    <string-array name="filterDqhlya">
+        <item>كل المناطق</item>
+        <item>حي شرق</item>
+        <item>حي غرب</item>
+        <item>المنصورة</item>
+        <item>طلخا</item>
+        <item>ميت غمرة</item>
+        <item>دكرنس</item>
+        <item>اجا</item>
+        <item>منية النصر</item>
+        <item>السنبلاوين</item>
+        <item>بني عبيد</item>
+        <item>المنزلة</item>
+        <item>تمي الامديد</item>
+        <item>الجمالية</item>
+        <item>شربين</item>
+        <item>المطرية</item>
+        <item>بلقاس</item>
+        <item>ميت سلسيل</item>
+        <item>جمصة</item>
+        <item>محلة الدمنة</item>
+        <item>نبروة</item>
+        <item>الكردي</item>
+    </string-array>
+    <string-array name="txtQalyobiaRegion">
+        <item>بنها</item>
+        <item>الخانكة</item>
+        <item>شبين القناطر</item>
+        <item>طوخ</item>
+        <item>قليوب</item>
+        <item>القناطر الخيرية</item>
+        <item>كفر شكر</item>
+    </string-array>
+    <string-array name="filterQalyobia">
+        <item>كل المناطق</item>
+        <item>بنها</item>
+        <item>الخانكة</item>
+        <item>شبين القناطر</item>
+        <item>طوخ</item>
+        <item>قليوب</item>
+        <item>القناطر الخيرية</item>
+        <item>كفر شكر</item>
+    </string-array>
+    <string-array name="txtSharqyaRegion">
+        <item>الابراهيمية</item>
+        <item>ابو حماد</item>
+        <item>ابو كبير</item>
+        <item>اولاد صقر</item>
+        <item>بلبيس</item>
+        <item>الحسينية</item>
+        <item>ديرب نجم</item>
+        <item>الزقازيق</item>
+        <item>فاقوس</item>
+        <item>كفر صقر</item>
+        <item>مشتول السوق</item>
+        <item>منيا القمح</item>
+        <item>ههيا</item>
+    </string-array>
+    <string-array name="filterSharqya">
+        <item>كل المناطق</item>
+        <item>الابراهيمية</item>
+        <item>ابو حماد</item>
+        <item>ابو كبير</item>
+        <item>اولاد صقر</item>
+        <item>بلبيس</item>
+        <item>الحسينية</item>
+        <item>ديرب نجم</item>
+        <item>الزقازيق</item>
+        <item>فاقوس</item>
+        <item>كفر صقر</item>
+        <item>مشتول السوق</item>
+        <item>منيا القمح</item>
+        <item>ههيا</item>
+    </string-array>
+    <string-array name="txtAsyutRegion">
+        <item>ديروط</item>
+        <item>القوصيه</item>
+        <item>أبنوب</item>
+        <item>منفلوط</item>
+        <item>أبو تيج</item>
+        <item>الغنايم</item>
+        <item>ساحل سليم</item>
+        <item>البداري</item>
+        <item>صدفا</item>
+        <item>الفتح</item>
+    </string-array>
+    <string-array name="filterAsyut">
+        <item>كل المناطق</item>
+        <item>ديروط</item>
+        <item>القوصيه</item>
+        <item>أبنوب</item>
+        <item>منفلوط</item>
+        <item>أبو تيج</item>
+        <item>الغنايم</item>
+        <item>ساحل سليم</item>
+        <item>البداري</item>
+        <item>صدفا</item>
+        <item>الفتح</item>
+    </string-array>
+    <string-array name="txtAswanRegion">
+    <item>أدفو</item>
+    <item>دراو</item>
+    <item>كوم أمبو</item>
+    <item>نصر النوبة</item>
+    </string-array>
+    <string-array name="filterAswan">
+        <item>كل المناطق</item>
+        <item>أدفو</item>
+        <item>دراو</item>
+        <item>كوم أمبو</item>
+        <item>نصر النوبة</item>
+    </string-array>
+    <string-array name="txtMenofyaRegion">
+        <item>أشمون</item>
+        <item>الباجور</item>
+        <item>بركة السبع</item>
+        <item>تلا</item>
+        <item>السادات</item>
+        <item>شبين الكوم</item>
+        <item>الشهداء</item>
+        <item>قويسنا</item>
+        <item>منوف</item>
+    </string-array>
+    <string-array name="filterMenofya">
+        <item>كل المناطق</item>
+        <item>أشمون</item>
+        <item>الباجور</item>
+        <item>بركة السبع</item>
+        <item>تلا</item>
+        <item>السادات</item>
+        <item>شبين الكوم</item>
+        <item>الشهداء</item>
+        <item>قويسنا</item>
+        <item>منوف</item>
+    </string-array>
+    <string-array name="txtIsmaliaRegion">
+        <item>أبو صوير</item>
+        <item>التل الكبير</item>
+        <item>فايد</item>
+        <item>القصاصين</item>
+        <item>القنطره شرق</item>
+        <item>القنطرة غرب</item>
+    </string-array>
+    <string-array name="filterIsmalia">
+        <item>كل المناطق</item>
+        <item>أبو صوير</item>
+        <item>التل الكبير</item>
+        <item>فايد</item>
+        <item>القصاصين</item>
+        <item>القنطره شرق</item>
+        <item>القنطرة غرب</item>
+    </string-array>
+    <string-array name="txtAqsorRegion">
+        <item>أرمنت</item>
+        <item>أسنا</item>
+        <item>الباضية</item>
+        <item>الزينية</item>
+        <item>الطود</item>
+        <item>القرنة</item>
+    </string-array>
+    <string-array name="filterAqsor">
+        <item>كل المناطق</item>
+        <item>أرمنت</item>
+        <item>أسنا</item>
+        <item>الباضية</item>
+        <item>الزينية</item>
+        <item>الطود</item>
+        <item>القرنة</item>
+    </string-array>
+    <string-array name="txtBeheraRegion">
+        <item>ابو المطامير</item>
+        <item>أبو حمص</item>
+        <item>أدكو</item>
+        <item>أيتاي البارود</item>
+        <item>بدر</item>
+        <item>حوش عيسي</item>
+        <item>الدلنجات</item>
+        <item>دمنهور</item>
+        <item>الرحمانية</item>
+        <item>رشيد</item>
+        <item>شبراخيت</item>
+        <item>كفر الدوار</item>
+        <item>كوم حمادة</item>
+        <item>المحمودية</item>
+        <item>وادي النطرون</item>
+    </string-array>
+    <string-array name="filterBehera">
+        <item>ابو المطامير</item>
+        <item>أبو حمص</item>
+        <item>أدكو</item>
+        <item>أيتاي البارود</item>
+        <item>بدر</item>
+        <item>حوش عيسي</item>
+        <item>الدلنجات</item>
+        <item>دمنهور</item>
+        <item>الرحمانية</item>
+        <item>رشيد</item>
+        <item>شبراخيت</item>
+        <item>كفر الدوار</item>
+        <item>كوم حمادة</item>
+        <item>المحمودية</item>
+        <item>وادي النطرون</item>
+    </string-array>
+    <string-array name="txtBaniSwefRegion">
+        <item>أهناسيا</item>
+        <item>ببا</item>
+        <item>سمسطا</item>
+        <item>الفشن</item>
+        <item>ناصر</item>
+        <item>الواسطي</item>
+    </string-array>
+    <string-array name="filterBeniSwef">
+        <item>كل المناطق</item>
+        <item>أهناسيا</item>
+        <item>ببا</item>
+        <item>سمسطا</item>
+        <item>الفشن</item>
+        <item>ناصر</item>
+        <item>الواسطي</item>
+    </string-array>
+    <string-array name="txtPortSaidRegion">
+        <item>حي الشرق</item>
+        <item>حي الجنوب</item>
+        <item>بورفوائد</item>
+        <item>الضواحي</item>
+        <item>المناخ</item>
+        <item>الزهور</item>
+        <item>حي العرب</item>
+    </string-array>
+    <string-array name="filterPortSaid">
+        <item>كل المناطق</item>
+        <item>حي الشرق</item>
+        <item>حي الجنوب</item>
+        <item>بورفوائد</item>
+        <item>الضواحي</item>
+        <item>المناخ</item>
+        <item>الزهور</item>
+        <item>حي العرب</item>
+    </string-array>
+    <string-array name="txtRedSeaRegion">
+        <item>الشلاتين</item>
+        <item>حلايب</item>
+        <item>رأس شقير</item>
+        <item>رأس غارب</item>
+        <item>سفاجا</item>
+        <item>الغردقة</item>
+        <item>القصير</item>
+        <item>مرسي علم</item>
+    </string-array>
+    <string-array name="filterRedSea">
+        <item>كل المناطق</item>
+        <item>الشلاتين</item>
+        <item>حلايب</item>
+        <item>رأس شقير</item>
+        <item>رأس غارب</item>
+        <item>سفاجا</item>
+        <item>الغردقة</item>
+        <item>القصير</item>
+        <item>مرسي علم</item>
+    </string-array>
+    <string-array name="txtSouthSeniaRegion">
+        <item>أبو رديس</item>
+        <item>ابو زنيمة</item>
+        <item>دهب</item>
+        <item>رأس سدر</item>
+        <item>سانت كاترين</item>
+        <item>شرم الشيخ</item>
+        <item>طور سيناء</item>
+        <item>نوبيع</item>
+    </string-array>
+    <string-array name="filterSouthSenia">
+        <item>كل المناطق</item>
+        <item>أبو رديس</item>
+        <item>ابو زنيمة</item>
+        <item>دهب</item>
+        <item>رأس سدر</item>
+        <item>سانت كاترين</item>
+        <item>شرم الشيخ</item>
+        <item>طور سيناء</item>
+        <item>نوبيع</item>
+    </string-array>
+    <string-array name="txtDomyatRegion">
+        <item>الزرقا</item>
+        <item>فارسكور</item>
+        <item>دمياط</item>
+        <item>كفر سعد</item>
+        <item>كفر البطيخ</item>
+    </string-array>
+    <string-array name="filterDomyat">
+        <item>كل المناطق</item>
+        <item>الزرقا</item>
+        <item>فارسكور</item>
+        <item>دمياط</item>
+        <item>كفر سعد</item>
+        <item>كفر البطيخ</item>
+    </string-array>
+    <string-array name="txtSohagRegion">
+        <item>اخميم</item>
+        <item>البلينا</item>
+        <item>جرجا</item>
+        <item>جهينة</item>
+        <item>دار السلام</item>
+        <item>ساقلتة</item>
+        <item>سوهاج</item>
+        <item>طما</item>
+        <item>طهطا</item>
+        <item>العسيرات</item>
+        <item>المراغة</item>
+        <item>المنشأة</item>
+    </string-array>
+    <string-array name="filterSohag">
+        <item>كل المناطق</item>
+        <item>اخميم</item>
+        <item>البلينا</item>
+        <item>جرجا</item>
+        <item>جهينة</item>
+        <item>دار السلام</item>
+        <item>ساقلتة</item>
+        <item>سوهاج</item>
+        <item>طما</item>
+        <item>طهطا</item>
+        <item>العسيرات</item>
+        <item>المراغة</item>
+        <item>المنشأة</item>
+    </string-array>
+    <string-array name="txtSuezRegion">
+        <item>العين السخنة</item>
+        <item>جامعة السويس</item>
+        <item>السويس</item>
+        <item>جبل الجلالة</item>
+        <item>حي الاربعين</item>
+        <item>حي الجناين</item>
+        <item>خليج السويس</item>
+        <item>كفر النجار</item>
+        <item>نفق الشهيد احمد حمدي</item>
+    </string-array>
+    <string-array name="filterSuez">
+        <item>كل المناطق</item>
+        <item>العين السخنة</item>
+        <item>جامعة السويس</item>
+        <item>السويس</item>
+        <item>جبل الجلالة</item>
+        <item>حي الاربعين</item>
+        <item>حي الجناين</item>
+        <item>خليج السويس</item>
+        <item>كفر النجار</item>
+        <item>نفق الشهيد احمد حمدي</item>
+</string-array>
+    <string-array name="txtGarbyaRegion">
+        <item>بسيون</item>
+        <item>زفتى</item>
+        <item>سمنود</item>
+        <item>السنطة</item>
+        <item>طنطا</item>
+        <item>قطور</item>
+        <item>كفر الزيات</item>
+        <item>المحلة الكبري</item>
+    </string-array>
+    <string-array name="filterGarbya">
+        <item>كل المناطق</item>
+        <item>بسيون</item>
+        <item>زفتى</item>
+        <item>سمنود</item>
+        <item>السنطة</item>
+        <item>طنطا</item>
+        <item>قطور</item>
+        <item>كفر الزيات</item>
+        <item>المحلة الكبري</item>
+    </string-array>
+    <string-array name="txtFayoumRegion">
+        <item>أبشواي</item>
+        <item>أطسا</item>
+        <item>سنورس</item>
+        <item>طامية</item>
+        <item>الفيوم</item>
+        <item>يوسف الصديق</item>
+    </string-array>
+    <string-array name="filterFayoum">
+        <item>كل المناطق</item>
+        <item>أبشواي</item>
+        <item>أطسا</item>
+        <item>سنورس</item>
+        <item>طامية</item>
+        <item>الفيوم</item>
+        <item>يوسف الصديق</item>
+    </string-array>
+    <string-array name="txtQenaRegion">
+        <item>ابو تشت</item>
+        <item>دشنا</item>
+        <item>فرشوط</item>
+        <item>قفط</item>
+        <item>قنا</item>
+        <item>قوص</item>
+        <item>نجع حمادي</item>
+        <item>نقادة</item>
+        <item>الوقف</item>
+    </string-array>
+    <string-array name="filterQena">
+        <item>كل المناطق</item>
+        <item>ابو تشت</item>
+        <item>دشنا</item>
+        <item>فرشوط</item>
+        <item>قفط</item>
+        <item>قنا</item>
+        <item>قوص</item>
+        <item>نجع حمادي</item>
+        <item>نقادة</item>
+        <item>الوقف</item>
+    </string-array>
+    <string-array name="txtKafrRegion">
+        <item>البرلس</item>
+        <item>بيلا</item>
+        <item>الحامول</item>
+        <item>دسوق</item>
+        <item>الرياض</item>
+        <item>سيدي سالم</item>
+        <item>فوه</item>
+        <item>قلين</item>
+        <item>كفر اشليخ</item>
+        <item>مطوبس</item>
+    </string-array>
+    <string-array name="filterKafr">
+        <item>كل المناطق</item>
+        <item>البرلس</item>
+        <item>بيلا</item>
+        <item>الحامول</item>
+        <item>دسوق</item>
+        <item>الرياض</item>
+        <item>سيدي سالم</item>
+        <item>فوه</item>
+        <item>قلين</item>
+        <item>كفر اشليخ</item>
+        <item>مطوبس</item>
+    </string-array>
+    <string-array name="txtNorthSenia">
+        <item>بئر العبد</item>
+        <item>نخل</item>
+        <item>الحسنة</item>
+        <item>العريش</item>
+        <item>الشيخ زويد</item>
+        <item>رفح</item>
+    </string-array>
+    <string-array name="filterNorthSenia">
+        <item>كل المناطق</item>
+        <item>بئر العبد</item>
+        <item>نخل</item>
+        <item>الحسنة</item>
+        <item>العريش</item>
+        <item>الشيخ زويد</item>
+        <item>رفح</item>
+    </string-array>
+    <string-array name="txtMatrohRegion">
+        <item>الحمام</item>
+        <item>السلوم</item>
+        <item>سيدي براني</item>
+        <item>سيوة</item>
+        <item>الضبعة</item>
+        <item>العلمين</item>
+        <item>مرسي مروح</item>
+        <item>النجيلة</item>
+    </string-array>
+    <string-array name="filterMatroh">
+        <item>كل المناطق</item>
+        <item>الحمام</item>
+        <item>السلوم</item>
+        <item>سيدي براني</item>
+        <item>سيوة</item>
+        <item>الضبعة</item>
+        <item>العلمين</item>
+        <item>مرسي مروح</item>
+        <item>النجيلة</item>
+    </string-array>
+    <string-array name="txtMeiaRegion">
+        <item>ابو قرقاص</item>
+        <item>بني مزار</item>
+        <item>دير مواس</item>
+        <item>سمالوط</item>
+        <item>العدوة</item>
+        <item>مطاي</item>
+        <item>مغاغة</item>
+        <item>ملوي</item>
+        <item>المنيا</item>
+    </string-array>
+    <string-array name="filterMeia">
+        <item>كل المناطق</item>
+        <item>ابو قرقاص</item>
+        <item>بني مزار</item>
+        <item>دير مواس</item>
+        <item>سمالوط</item>
+        <item>العدوة</item>
+        <item>مطاي</item>
+        <item>مغاغة</item>
+        <item>ملوي</item>
+        <item>المنيا</item>
+    </string-array>
+    <string-array name="txtNewWadiRegion">
+        <item>باريس</item>
+        <item>بلاط</item>
+        <item>الخارجة</item>
+        <item>الداخلة</item>
+        <item>الفرافرة</item>
+    </string-array>
+    <string-array name="filterNewWadi">
+        <item>كل المناطق</item>
+        <item>باريس</item>
+        <item>بلاط</item>
+        <item>الخارجة</item>
+        <item>الداخلة</item>
+        <item>الفرافرة</item>
+    </string-array>
+
+
     <string-array name="justAll">
         <item>كل المناطق</item>
     </string-array>

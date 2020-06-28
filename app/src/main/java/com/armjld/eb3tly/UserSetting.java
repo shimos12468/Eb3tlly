@@ -72,12 +72,6 @@ public class UserSetting extends AppCompatActivity {
     private static String TAG = "User Settings";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
 
-    public void onBackPressed () {
-        Intent newIntentNB = new Intent(this, profile.class);
-        newIntentNB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(newIntentNB);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -74,9 +74,10 @@
                     android:textAlignment="viewEnd"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtPState"
                     android:layout_width="0dp"
                     android:layout_height="47dp"
@@ -107,9 +108,10 @@
                     android:textAlignment="viewEnd"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtPRegion"
                     android:layout_width="0dp"
                     android:layout_height="47dp"
@@ -210,7 +212,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp">
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtDState"
                     android:layout_width="0dp"
                     android:layout_height="47dp"
@@ -222,7 +224,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textView15"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
 
                 <TextView
                     android:id="@+id/textView15"
@@ -235,7 +238,8 @@
                     android:textAlignment="viewEnd"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -244,7 +248,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp">
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtDRegion"
                     android:layout_width="0dp"
                     android:layout_height="47dp"
@@ -267,7 +271,8 @@
                     android:textAlignment="viewEnd"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <EditText

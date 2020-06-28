@@ -89,7 +89,6 @@ public class Signup extends AppCompatActivity {
     private TextView logintxt ,timer,txtViewPhone ,txtretype,txtSended;
     private ImageView imgSetPP;
     private String phone;
-    private String mVerificationId = "";
     private FirebaseAuth mAuth;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase,nDatabase;
@@ -99,67 +98,20 @@ public class Signup extends AppCompatActivity {
     private String accountType;
     private Bitmap bitmap, ssnBitmap;
     private String ssnURL = "none";
-    private Boolean f = true;
     Button btnConfirmCode;
     private String defultPP = "https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f";
     private String TAG = "Sign Up Activity";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
     int TAKE_IMAGE_CODE = 10001;
-    int SSN_IMAGE = 10002;
 
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
-    private CountDownTimer Timer;
-    private long timeleft = 60000;
-    private Boolean timerRunning = false;
-
-    public Signup() {
-    }
-
-
     @Override
     public void onBackPressed() {
         finish();
         startActivity(new Intent(this, Terms.class));
-    }
-
-    public void UpdateTimer(){
-        int minutes = (int)timeleft/60000;
-        int seconds = (int)timeleft%60000/1000;
-        String time;
-        time = " "+minutes+":";
-        if(seconds<10)time+="0";
-        time+=seconds;
-        timer.setText("يمكنك الضغط هنا لاعادة ارسال الرمز بعد " + time);
-    }
-
-    public void startTimer(){
-        Timer = new CountDownTimer(timeleft , 1000) {
-            @Override
-            public void onTick(long l) {
-                timeleft = l;
-                timerRunning = true;
-                UpdateTimer();
-                if(timeleft<1000){
-                    stopTimer();
-                }
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }.start();
-
-    }
-
-    public void stopTimer(){
-        Timer.cancel();
-        timerRunning = false;
-        timeleft = 60000;
     }
 
     @Override
@@ -170,21 +122,21 @@ public class Signup extends AppCompatActivity {
             try {
                 Bitmap source = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 bitmap = resizeBitmap (source, 150);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Uri uri = null;
-                try {
-                    uri = Uri.parse(getFilePath(Signup.this, photoUri));
-                }
-                catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                if(uri != null) {
-                    bitmap = rotateImage(bitmap , uri , photoUri);
-                }
-                Log.i(TAG,"uri : " + uri.toString());
-                imgSetPP.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Uri uri = null;
+            try {
+                uri = Uri.parse(getFilePath(Signup.this, photoUri));
+            }
+            catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            if(uri != null) {
+                bitmap = rotateImage(bitmap , uri , photoUri);
+            }
+            Log.i(TAG,"uri : " + uri.toString());
+            imgSetPP.setImageBitmap(bitmap);
         }
     }
 
@@ -261,9 +213,9 @@ public class Signup extends AppCompatActivity {
             }
             exifInterface = new ExifInterface(String.valueOf(uri));
         }
-       catch (IOException e){
+        catch (IOException e){
             e.printStackTrace();
-       }
+        }
         if(exifInterface != null) {
             int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
             Log.i(TAG, "Orign: " + String.valueOf(orintation));
@@ -318,7 +270,7 @@ public class Signup extends AppCompatActivity {
             }
         });
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -386,140 +338,68 @@ public class Signup extends AppCompatActivity {
                 }
             }
         });
+
         // Register Fun
         btnreg.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        final String muser = user.getText().toString().trim();
-        final String memail = email.getText().toString().trim();
-        final String mpass = pass.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        final String con_pass = con_password.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-         phone = phoneNum.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        // Check For empty fields
-        if(TextUtils.isEmpty(muser)){
-       user.setError("يجب ادخال اسم المستخدم");
-       return;
-        }
-        if(TextUtils.isEmpty(memail)){
-            email.setError("يجب ادخال البريد ألالكتروني");
-            return;
-        }
-        if(TextUtils.isEmpty(mpass)){
-            pass.setError("يجب ادخال كلمه المرور");
-            return;
-        }
-        //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
-        if(!mpass.equals(con_pass)){
-            con_password.setError("تاكد ان كلمه المرور نفسها");
-            return;
-        }
-        if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
-            phoneNum.setError("ادخل رقم هاتف صحيح");
-            phoneNum.requestFocus();
-            return;
-        }
-
-        mdialog.setMessage("جاري التأكد من البيانات ..");
-        mdialog.show();
-
-        impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
-
-        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    if (snapshot.getValue() != null) {
-                        mdialog.dismiss();
-                        Toast.makeText(Signup.this, "رقم الهاتف بالفعل مسجل", Toast.LENGTH_SHORT).show();
-                    } else {
-                        startTimer();
-                        mdialog.dismiss();
-                        linersignUp.setVisibility(View.GONE);
-                        txtSended.setText("تم ارسال الكود الي رقم : " + phone);
-                        linerVerf.setVisibility(View.VISIBLE);
-                        txtViewPhone.setText("ضع الرمز المرسل اليك");
-                        checkState();
-                        sendVerificationCode(phone);
+            public void onClick(View view) {
+                String muser = user.getText().toString().trim();
+                String memail = email.getText().toString().trim();
+                String mpass = pass.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                String con_pass = con_password.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                phone = phoneNum.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                // Check For empty fields
+                if(TextUtils.isEmpty(muser)){
+                    user.setError("يجب ادخال اسم المستخدم");
+                    return;
+                }
+                if(TextUtils.isEmpty(memail)){
+                    email.setError("يجب ادخال البريد ألالكتروني");
+                    return;
+                }
+                if(TextUtils.isEmpty(mpass)){
+                    pass.setError("يجب ادخال كلمه المرور");
+                    return;
+                }
+                //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
+                if(!mpass.equals(con_pass)){
+                    con_password.setError("تاكد ان كلمه المرور نفسها");
+                    return;
+                }
+                if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
+                    phoneNum.setError("ادخل رقم هاتف صحيح");
+                    phoneNum.requestFocus();
+                    return;
+                }
 
-                        timer.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if(!timerRunning){
-                                    sendVerificationCode(phone);
-                                    startTimer();
-                                    Toast.makeText(Signup.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
-                                } else{
-                                    Toast.makeText(Signup.this, "ارجاء الانتظار قليلا", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    startTimer();
-                    mdialog.dismiss();
-                    txtSended.setText("تم ارسال الكود الي رقم : " + phone);
-                    linersignUp.setVisibility(View.GONE);
-                    linerVerf.setVisibility(View.VISIBLE);
-                    txtViewPhone.setText("ضع الرمز المرسل اليك");
-                    checkState();
-
-                    sendVerificationCode(phone);
-                    f = false;
-                    timer.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if(!timerRunning){
-                                sendVerificationCode(phone);
-                                startTimer();
-                                Toast.makeText(Signup.this, "تم ارسال الرمز مجددا", Toast.LENGTH_SHORT).show();
+                mdialog.setMessage("جاري التاكد من رقم الهاتف");
+                mdialog.show();
+                impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
+                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            if (snapshot.getValue() != null) {
+                                mdialog.dismiss();
+                                Toast.makeText(Signup.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(Signup.this,"ارجاء الانتظار قليلا  ", Toast.LENGTH_SHORT).show();
+                                mdialog.dismiss();
+                                checkState();
+                                signUp(memail, mpass);
                             }
+                        } else {
+                            mdialog.dismiss();
+                            checkState();
+                            signUp(memail, mpass);
                         }
-                    });
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                mdialog.dismiss();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(Signup.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
+                        mdialog.dismiss();
+                    }});
+
             }});
-
-    }});
-
-        btnConfirmCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String code = editTextCode.getText().toString().trim();
-                if (code.length() != 6) {
-                    editTextCode.setError("ادخل كود صحيح");
-                    editTextCode.requestFocus();
-                    return;
-                }
-
-
-                if (mVerificationId==null||mVerificationId.equals("")) {
-                    sendVerificationCode(phone);
-                    Toast.makeText(Signup.this, "can't find verfication id", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else {
-                    mdialog.setMessage("جاري التأكد من الكود ..");
-                    mdialog.show();
-
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-                    signInWithPhoneAuthCredential(credential);
-                }
-            }
-        });
-
-        txtretype.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                linersignUp.setVisibility(View.VISIBLE);
-                linerVerf.setVisibility(View.GONE);
-                stopTimer();
-            }
-        });
 
     }
 
@@ -542,101 +422,53 @@ public class Signup extends AppCompatActivity {
         }
     }
 
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
 
-            Toast.makeText(Signup.this, "completed", Toast.LENGTH_SHORT).show();
-        }
-
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(Signup.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.i(TAG, "Failed to verfiy");
-        }
-
-        @Override
-        public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "onCodeSent : " + s);
-            mVerificationId = s;
-
-        }
-    };
-
-    private boolean retry(String mVerificationId){
-
-        return true;
-    }
-
-    private void sendVerificationCode(String mobile) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+2" + mobile,
-                60,
-                TimeUnit.SECONDS,
-                Signup.this,
-                mCallbacks);
-
-        Log.i(TAG, "Send Verfication Code fun to : +2" + mobile);
-    }
-
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        Log.i(TAG, "Signed Up via phone");
-        mAuth.signInWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
+    private void signUp(String memail, String mpass) {
+        mdialog.setMessage("جاري تسجيل الحساب ..");
+        mdialog.show();
+        mAuth.createUserWithEmailAndPassword(memail, mpass).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
-                    final String id = mAuth.getCurrentUser().getUid().toString();
-                    final String memail = impdata.getMail();
-                    final String mpass  = impdata.getPassword();
-                    final String muser = impdata.getUser();
-                    final String phone = impdata.getPhone();
-                    AuthCredential credential = EmailAuthProvider.getCredential(memail, mpass);
-                    mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful() && mAuth.getCurrentUser() != null) {
-                                datee = DateFormat.getDateInstance().format(new Date());
-                                userData data= new userData(muser, phone, memail, datee, id, accountType, defultPP, mpass, "0");
-                                uDatabase.child(id).setValue(data);
-                                uDatabase.child(id).child("completed").setValue("true");
-                                uDatabase.child(id).child("profit").setValue("0");
-                                uDatabase.child(id).child("active").setValue("true");
-                                Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
+                if (task.isSuccessful()) {
+                    String id = mAuth.getCurrentUser().getUid().toString();
+                    String memail = impdata.getMail();
+                    String mpass  = impdata.getPassword();
+                    String muser = impdata.getUser();
+                    String phone = impdata.getPhone();
 
-                                if(bitmap != null) {
-                                    handleUpload(bitmap);
-                                } else {
-                                    uDatabase.child(id).child("ppURL").setValue(defultPP);
-                                    mdialog.dismiss();
-                                }
+                    datee = DateFormat.getDateInstance().format(new Date());
+                    userData data= new userData(muser, phone, memail, datee, id, accountType, defultPP, mpass, "0");
+                    uDatabase.child(id).setValue(data);
+                    uDatabase.child(id).child("completed").setValue("true");
+                    uDatabase.child(id).child("profit").setValue("0");
+                    uDatabase.child(id).child("active").setValue("true");
 
-                                // ------------- Welcome message in Notfications----------------------//
-
-                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
-                                nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-
-                                if (accountType.equals("Supplier")) {
-                                    startActivity(new Intent(getApplicationContext(), introSup.class));
-                                } else if (accountType.equals("Delivery Worker")) {
-                                    startActivity(new Intent(getApplicationContext(), intro2.class));
-                                }
-                            } else {
-                                String ERROR = Objects.requireNonNull(task.getException()).getMessage();
-                                Toast.makeText(getApplicationContext(), ERROR, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } else {
-                    String message = "Somthing is wrong, we will fix it soon...";
-                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        message = "لقد طلبت الكود مرات كثيره يرجي الانتظار و اعادة المحاولة";
+                    if(bitmap != null) {
+                        handleUpload(bitmap);
+                    } else {
+                        uDatabase.child(id).child("ppURL").setValue(defultPP);
+                        mdialog.dismiss();
                     }
+
+                    // ------------- Welcome message in Notfications----------------------//
+
+                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
+                    nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
+                    if (accountType.equals("Supplier")) {
+                        StartUp.userType = "Supplier";
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), introSup.class));
+                    } else if (accountType.equals("Delivery Worker")) {
+                        StartUp.userType = "Delivery Worker";
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), intro2.class));
+                    }
+                    Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
                     mdialog.dismiss();
-                    Toast.makeText(Signup.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(Signup.this, "حدث خطأ في تسجيل الحساب ..", Toast.LENGTH_LONG).show();
+                    mdialog.dismiss();
                 }
             }
         });

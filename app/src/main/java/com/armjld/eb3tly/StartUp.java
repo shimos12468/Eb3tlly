@@ -26,6 +26,7 @@ public class StartUp extends AppCompatActivity {
 
     SharedPreferences sharedPreferences = null;
     private FirebaseAuth mAuth;
+    public static String userType;
     DatabaseReference uDatabase;
     public void onBackPressed() { }
 
@@ -69,14 +70,17 @@ public class StartUp extends AppCompatActivity {
                             String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                             switch (uType) {
                                 case "Supplier":
+                                    userType = uType;
                                     finish();
                                     startActivity(new Intent(StartUp.this, profile.class));
                                     break;
                                 case "Delivery Worker":
+                                    userType = uType;
                                     finish();
                                     startActivity(new Intent(StartUp.this, HomeActivity.class));
                                     break;
                                 case "Admin":
+                                    userType = uType;
                                     finish();
                                     startActivity(new Intent(StartUp.this, Admin.class));
                                     break;

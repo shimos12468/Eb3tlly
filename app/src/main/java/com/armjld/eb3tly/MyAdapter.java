@@ -59,8 +59,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
      private String TAG = "My Adapter";
 
+     private static String uType = "Supplier";
+
      SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-    SimpleDateFormat notiSDF = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
+     SimpleDateFormat notiSDF = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
      String datee = sdf.format(new Date());
      String notiDate = notiSDF.format(new Date());
 
@@ -97,6 +99,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         // Get Post Date
+        holder.lin1.setVisibility(View.GONE);
+        holder.txtWarning.setVisibility(View.GONE);
         String startDate = filtersData.get(position).getDate();
         String stopDate = datee;
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -118,6 +122,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffMinutes = (int) diffMinutes;
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
+
+        uType = StartUp.userType.toString();
+
         holder.setDate(filtersData.get(position).getDDate().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setUsername(filtersData.get(position).getuId());
         holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
@@ -143,6 +150,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String removed = filtersData.get(position).getRemoved().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
+
 
         holder.linerDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,13 +346,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-        if(removed.equals("true") || !statues.equals("placed")){
-            Log.i(TAG, "You're inside the if of GGMONEY" + filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        if(!uType.equals("Delivery Worker")) {
             holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setVisibility(View.VISIBLE);
-        } else {
-            holder.lin1.setVisibility(View.VISIBLE);
             holder.txtWarning.setVisibility(View.GONE);
+        }
+
+        if(uType.equals("Delivery Worker")) {
+            if(removed.equals("true") || !statues.equals("placed")){
+                Log.i(TAG, "You're inside the if of GGMONEY" + filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                holder.lin1.setVisibility(View.GONE);
+                holder.txtWarning.setVisibility(View.VISIBLE);
+            } else {
+                holder.lin1.setVisibility(View.VISIBLE);
+                holder.txtWarning.setVisibility(View.GONE);
+            }
         }
 
         //Accept Order Button

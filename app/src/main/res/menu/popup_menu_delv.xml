@@ -9,4 +9,16 @@
         android:id="@+id/falsemoney"
         android:orderInCategory="100"
         android:title="التاجر اخلف بالاتفاق" />
+    <item
+        android:id="@+id/doesntanswer"
+        android:orderInCategory="100"
+        android:title="التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر" />
+    <item
+        android:id="@+id/idelv"
+        android:orderInCategory="100"
+        android:title="وصلت الاوردر و زر تم التوصيل غير موجود" />
+    <item
+        android:id="@+id/didnt_reciv"
+        android:orderInCategory="100"
+        android:title="لم استلم الاوردر بعد" />
 </menu>

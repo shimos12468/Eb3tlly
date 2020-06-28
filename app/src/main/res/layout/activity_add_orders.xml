@@ -76,7 +76,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtPState"
                     android:layout_width="0dp"
                     android:layout_height="47dp"
@@ -109,7 +109,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtPRegion"
                     android:layout_width="0dp"
                     android:layout_height="47dp"
@@ -213,7 +213,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp">
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtDState"
                     android:layout_width="0dp"
                     android:layout_height="47dp"
@@ -248,7 +248,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp">
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/txtDRegion"
                     android:layout_width="0dp"
                     android:layout_height="47dp"

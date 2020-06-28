@@ -37,7 +37,7 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,13 +51,16 @@
             android:layout_marginRight="5dp"
             android:ems="10"
             android:hint="Phone Number"
-            android:inputType="none|number" />
+            android:inputType="none|number"
+            android:textColor="#FFFFFF"
+            android:textColorHint="@android:color/tertiary_text_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -95,6 +98,19 @@
                 android:text="Reset Counter"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDeactive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_defult"
+            android:gravity="center"
+            android:text="Deactive Account"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
