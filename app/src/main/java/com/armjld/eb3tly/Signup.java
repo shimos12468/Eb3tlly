@@ -88,6 +88,7 @@ public class Signup extends AppCompatActivity {
     private Button btnreg;
     private TextView logintxt ,timer,txtViewPhone ,txtretype,txtSended;
     private ImageView imgSetPP;
+    private String phone;
     private String mVerificationId = "";
     private FirebaseAuth mAuth;
     private ProgressDialog mdialog;
@@ -98,6 +99,7 @@ public class Signup extends AppCompatActivity {
     private String accountType;
     private Bitmap bitmap, ssnBitmap;
     private String ssnURL = "none";
+    private Boolean f = true;
     Button btnConfirmCode;
     private String defultPP = "https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f";
     private String TAG = "Sign Up Activity";
@@ -112,6 +114,9 @@ public class Signup extends AppCompatActivity {
     private CountDownTimer Timer;
     private long timeleft = 60000;
     private Boolean timerRunning = false;
+
+    public Signup() {
+    }
 
 
     @Override
@@ -389,7 +394,7 @@ public class Signup extends AppCompatActivity {
         final String memail = email.getText().toString().trim();
         final String mpass = pass.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String con_pass = con_password.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        final String phone = phoneNum.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+         phone = phoneNum.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
         // Check For empty fields
         if(TextUtils.isEmpty(muser)){
        user.setError("يجب ادخال اسم المستخدم");
@@ -457,7 +462,9 @@ public class Signup extends AppCompatActivity {
                     linerVerf.setVisibility(View.VISIBLE);
                     txtViewPhone.setText("ضع الرمز المرسل اليك");
                     checkState();
+
                     sendVerificationCode(phone);
+                    f = false;
                     timer.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -489,16 +496,19 @@ public class Signup extends AppCompatActivity {
                     return;
                 }
 
-                if (mVerificationId.equals("")) {
+
+                if (mVerificationId==null||mVerificationId.equals("")) {
+                    sendVerificationCode(phone);
                     Toast.makeText(Signup.this, "can't find verfication id", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                else {
+                    mdialog.setMessage("جاري التأكد من الكود ..");
+                    mdialog.show();
 
-                mdialog.setMessage("جاري التأكد من الكود ..");
-                mdialog.show();
-
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-                signInWithPhoneAuthCredential(credential);
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
+                    signInWithPhoneAuthCredential(credential);
+                }
             }
         });
 
@@ -535,7 +545,10 @@ public class Signup extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+
+            Toast.makeText(Signup.this, "completed", Toast.LENGTH_SHORT).show();
         }
+
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
@@ -549,8 +562,14 @@ public class Signup extends AppCompatActivity {
             Toast.makeText(Signup.this, "تم ارسال الكود", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "onCodeSent : " + s);
             mVerificationId = s;
+
         }
     };
+
+    private boolean retry(String mVerificationId){
+
+        return true;
+    }
 
     private void sendVerificationCode(String mobile) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -559,6 +578,7 @@ public class Signup extends AppCompatActivity {
                 TimeUnit.SECONDS,
                 Signup.this,
                 mCallbacks);
+
         Log.i(TAG, "Send Verfication Code fun to : +2" + mobile);
     }
 
