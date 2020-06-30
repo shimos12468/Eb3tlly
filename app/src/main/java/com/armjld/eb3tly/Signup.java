@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -19,9 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -33,21 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,26 +38,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
-
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
 import Model.notiData;
 import Model.userData;
 
@@ -135,17 +109,18 @@ public class Signup extends AppCompatActivity {
             if(uri != null) {
                 bitmap = rotateImage(bitmap , uri , photoUri);
             }
+            assert uri != null;
             Log.i(TAG,"uri : " + uri.toString());
             imgSetPP.setImageBitmap(bitmap);
         }
     }
 
-    @SuppressLint("NewApi")
+    @SuppressLint({"NewApi", "Recycle"})
     public static String getFilePath(Context context, Uri uri) throws URISyntaxException {
         String selection = null;
         String[] selectionArgs = null;
         // Uri is different in versions after KITKAT (Android 4.4), we need to
-        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+        if (DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -153,7 +128,7 @@ public class Signup extends AppCompatActivity {
             } else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
                 uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                        Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
             } else if (isMediaDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -175,15 +150,15 @@ public class Signup extends AppCompatActivity {
             String[] projection = {
                     MediaStore.Images.Media.DATA
             };
-            Cursor cursor = null;
+            Cursor cursor;
             try {
-                cursor = context.getContentResolver()
-                        .query(uri, projection, selection, selectionArgs, null);
+                cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+                assert cursor != null;
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 if (cursor.moveToFirst()) {
                     return cursor.getString(column_index);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
@@ -218,16 +193,13 @@ public class Signup extends AppCompatActivity {
         }
         if(exifInterface != null) {
             int orintation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION ,ExifInterface.ORIENTATION_UNDEFINED);
-            Log.i(TAG, "Orign: " + String.valueOf(orintation));
             if(orintation == 6 || orintation == 3 || orintation == 8) {
                 Matrix matrix = new Matrix();
                 if (orintation == 6) {
                     matrix.postRotate(90);
-                }
-                else if (orintation == 3) {
+                } else if (orintation == 3) {
                     matrix.postRotate(180);
-                }
-                else if (orintation == 8) {
+                } else if (orintation == 8) {
                     matrix.postRotate(270);
                 }
                 Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
@@ -245,29 +217,18 @@ public class Signup extends AppCompatActivity {
         String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("ppUsers").child(uID + ".jpeg");
         final String did = uID;
-        reference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                getDownUrl(did, reference);
-                Log.i("Sign UP", " onSuccess");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("Upload Error: ", "Fail:", e.getCause());
-            }
-        });
+        reference.putBytes(baos.toByteArray()).addOnSuccessListener(taskSnapshot -> {
+            getDownUrl(did, reference);
+            Log.i("Sign UP", " onSuccess");
+        }).addOnFailureListener(e -> Log.e("Upload Error: ", "Fail:", e.getCause()));
         Log.i("Sign UP", " Handel Upload");
     }
 
     private void getDownUrl(final String uIDd, StorageReference reference) {
-        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Log.i("Sign UP", " add Profile URL");
-                uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
-                mdialog.dismiss();
-            }
+        reference.getDownloadUrl().addOnSuccessListener(uri -> {
+            Log.i("Sign UP", " add Profile URL");
+            uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
+            mdialog.dismiss();
         });
     }
 
@@ -312,15 +273,12 @@ public class Signup extends AppCompatActivity {
         rdDlivery = (RadioButton) findViewById(R.id.rdDlivery);
         rdSupplier = (RadioButton) findViewById(R.id.rdSupplier);
         accountType = "Delivery Worker";
-        rdAccountType.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // find which radio button is selected
-                if (checkedId == R.id.rdSupplier) {
-                    accountType = "Supplier";
-                } else {
-                    accountType = "Delivery Worker";
-                }
+        rdAccountType.setOnCheckedChangeListener((group, checkedId) -> {
+            // find which radio button is selected
+            if (checkedId == R.id.rdSupplier) {
+                accountType = "Supplier";
+            } else {
+                accountType = "Delivery Worker";
             }
         });
 
@@ -336,66 +294,64 @@ public class Signup extends AppCompatActivity {
         });
 
         // Register Fun
-        btnreg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String muser = user.getText().toString().trim();
-                String memail = email.getText().toString().trim();
-                String mpass = pass.getText().toString().trim();
-                String con_pass = con_password.getText().toString().trim();
-                phone = phoneNum.getText().toString().trim();
-                // Check For empty fields
-                if(TextUtils.isEmpty(muser)){
-                    user.setError("يجب ادخال اسم المستخدم");
-                    return;
-                }
-                if(TextUtils.isEmpty(memail)){
-                    email.setError("يجب ادخال البريد ألالكتروني");
-                    return;
-                }
-                if(TextUtils.isEmpty(mpass)){
-                    pass.setError("يجب ادخال كلمه المرور");
-                    return;
-                }
-                //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
-                if(!mpass.equals(con_pass)){
-                    con_password.setError("تاكد ان كلمه المرور نفسها");
-                    return;
-                }
-                if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
-                    phoneNum.setError("ادخل رقم هاتف صحيح");
-                    phoneNum.requestFocus();
-                    return;
-                }
+        btnreg.setOnClickListener(view -> {
+            String muser = user.getText().toString().trim();
+            String memail = email.getText().toString().trim();
+            String mpass = pass.getText().toString().trim();
+            String con_pass = con_password.getText().toString().trim();
+            phone = phoneNum.getText().toString().trim();
+            // Check For empty fields
+            if(TextUtils.isEmpty(muser)){
+                user.setError("يجب ادخال اسم المستخدم");
+                return;
+            }
+            if(TextUtils.isEmpty(memail)){
+                email.setError("يجب ادخال البريد ألالكتروني");
+                return;
+            }
+            if(TextUtils.isEmpty(mpass)){
+                pass.setError("يجب ادخال كلمه المرور");
+                return;
+            }
+            //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
+            if(!mpass.equals(con_pass)){
+                con_password.setError("تاكد ان كلمه المرور نفسها");
+                return;
+            }
+            if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
+                phoneNum.setError("ادخل رقم هاتف صحيح");
+                phoneNum.requestFocus();
+                return;
+            }
 
-                mdialog.setMessage("جاري التاكد من رقم الهاتف");
-                mdialog.show();
-                impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
-                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
-                            if (snapshot.getValue() != null) {
-                                mdialog.dismiss();
-                                Toast.makeText(Signup.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
-                            } else {
-                                mdialog.dismiss();
-                                checkState();
-                                signUp(memail, mpass);
-                            }
+            mdialog.setMessage("جاري التاكد من رقم الهاتف");
+            mdialog.show();
+            impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()) {
+                        if (snapshot.getValue() != null) {
+                            mdialog.dismiss();
+                            Toast.makeText(Signup.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
                         } else {
                             mdialog.dismiss();
                             checkState();
                             signUp(memail, mpass);
                         }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(Signup.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
+                    } else {
                         mdialog.dismiss();
-                    }});
+                        checkState();
+                        signUp(memail, mpass);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(Signup.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
+                    mdialog.dismiss();
+                }});
 
-            }});
+        });
 
     }
 
@@ -422,50 +378,47 @@ public class Signup extends AppCompatActivity {
     private void signUp(String memail, String mpass) {
         mdialog.setMessage("جاري تسجيل الحساب ..");
         mdialog.show();
-        mAuth.createUserWithEmailAndPassword(memail, mpass).addOnCompleteListener(Signup.this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    String id = mAuth.getCurrentUser().getUid().toString();
-                    String memail = impdata.getMail();
-                    String mpass  = impdata.getPassword();
-                    String muser = impdata.getUser();
-                    String phone = impdata.getPhone();
+        mAuth.createUserWithEmailAndPassword(memail, mpass).addOnCompleteListener(Signup.this, task -> {
+            if (task.isSuccessful()) {
+                String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+                String memail1 = impdata.getMail();
+                String mpass1 = impdata.getPassword();
+                String muser = impdata.getUser();
+                String phone = impdata.getPhone();
 
-                    datee = DateFormat.getDateInstance().format(new Date());
-                    userData data= new userData(muser, phone, memail, datee, id, accountType, defultPP, mpass, "0");
-                    uDatabase.child(id).setValue(data);
-                    uDatabase.child(id).child("completed").setValue("true");
-                    uDatabase.child(id).child("profit").setValue("0");
-                    uDatabase.child(id).child("active").setValue("true");
+                datee = DateFormat.getDateInstance().format(new Date());
+                userData data= new userData(muser, phone, memail1, datee, id, accountType, defultPP, mpass1, "0");
+                uDatabase.child(id).setValue(data);
+                uDatabase.child(id).child("completed").setValue("true");
+                uDatabase.child(id).child("profit").setValue("0");
+                uDatabase.child(id).child("active").setValue("true");
 
-                    if(bitmap != null) {
-                        handleUpload(bitmap);
-                    } else {
-                        uDatabase.child(id).child("ppURL").setValue(defultPP);
-                        mdialog.dismiss();
-                    }
-
-                    // ------------- Welcome message in Notfications----------------------//
-
-                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
-                    nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-
-                    if (accountType.equals("Supplier")) {
-                        StartUp.userType = "Supplier";
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), introSup.class));
-                    } else if (accountType.equals("Delivery Worker")) {
-                        StartUp.userType = "Delivery Worker";
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), intro2.class));
-                    }
-                    Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
-                    mdialog.dismiss();
+                if(bitmap != null) {
+                    handleUpload(bitmap);
                 } else {
-                    Toast.makeText(Signup.this, "حدث خطأ في تسجيل الحساب ..", Toast.LENGTH_LONG).show();
+                    uDatabase.child(id).child("ppURL").setValue(defultPP);
                     mdialog.dismiss();
                 }
+
+                // ------------- Welcome message in Notfications----------------------//
+
+                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
+                nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
+                if (accountType.equals("Supplier")) {
+                    StartUp.userType = "Supplier";
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), introSup.class));
+                } else if (accountType.equals("Delivery Worker")) {
+                    StartUp.userType = "Delivery Worker";
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), intro2.class));
+                }
+                Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
+                mdialog.dismiss();
+            } else {
+                Toast.makeText(Signup.this, "حدث خطأ في تسجيل الحساب ..", Toast.LENGTH_LONG).show();
+                mdialog.dismiss();
             }
         });
     }

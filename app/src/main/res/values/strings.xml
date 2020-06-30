@@ -202,6 +202,7 @@
         <item>محطه الرمل</item>
         <item>مساكن طوسون</item>
         <item>مينا البصل</item>
+        <item>ميامي</item>
     </string-array>
     <string-array name="filterAlex">
         <item>كل المناطق</item>
@@ -251,6 +252,7 @@
         <item>محطه الرمل</item>
         <item>مساكن طوسون</item>
         <item>مينا البصل</item>
+        <item>ميامي</item>
     </string-array>
     <string-array name="txtMetroRegion">
         <item>حلوان</item>
@@ -471,6 +473,7 @@
         <item>مشتول السوق</item>
         <item>منيا القمح</item>
         <item>ههيا</item>
+        <item>العاشر من رمضان</item>
     </string-array>
     <string-array name="filterSharqya">
         <item>كل المناطق</item>
@@ -487,6 +490,7 @@
         <item>مشتول السوق</item>
         <item>منيا القمح</item>
         <item>ههيا</item>
+        <item>العاشر من رمضان</item>
     </string-array>
     <string-array name="txtAsyutRegion">
         <item>ديروط</item>
@@ -840,7 +844,7 @@
         <item>سيدي سالم</item>
         <item>فوه</item>
         <item>قلين</item>
-        <item>كفر اشليخ</item>
+        <item>كفر الشيخ</item>
         <item>مطوبس</item>
     </string-array>
     <string-array name="filterKafr">
@@ -853,7 +857,7 @@
         <item>سيدي سالم</item>
         <item>فوه</item>
         <item>قلين</item>
-        <item>كفر اشليخ</item>
+        <item>كفر الشيخ</item>
         <item>مطوبس</item>
     </string-array>
     <string-array name="txtNorthSenia">

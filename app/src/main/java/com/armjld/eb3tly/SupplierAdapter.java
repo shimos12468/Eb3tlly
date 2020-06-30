@@ -47,6 +47,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import Model.Data;
+import Model.notiData;
 import Model.rateData;
 import Model.reportData;
 
@@ -169,18 +170,40 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.didnt_reciv:
-                        reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين");
-                        reportDatabase.child(dilvID).push().setValue(repo);
+                        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين");
+                                    reportDatabase.child(dilvID).push().setValue(repo);
 
-                        mDatabase.child(orderID).child("uAccepted").setValue("");
-                        mDatabase.child(orderID).child("statue").setValue("placed");
+                                    mDatabase.child(orderID).child("uAccepted").setValue("");
+                                    mDatabase.child(orderID).child("statue").setValue("placed");
 
-                        Toast.makeText(context, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
                         break;
                     case R.id.didnt_deliv:
-                        reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل");
-                        reportDatabase.child(dilvID).push().setValue(repo2);
-                        Toast.makeText(context, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
+                        DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل");
+                                    reportDatabase.child(dilvID).push().setValue(repo2);
+                                    Toast.makeText(context, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
+                        builder2.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
+
+
                         break;
                 }
                 return false;

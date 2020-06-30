@@ -349,35 +349,85 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.deleted:
-                        reportData repo3 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله");
+                        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    reportData repo3 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله");
 
-                        mDatabase.child(orderID).child("statue").setValue("placed");
-                        mDatabase.child(orderID).child("uAccepted").setValue("");
+                                    mDatabase.child(orderID).child("statue").setValue("placed");
+                                    mDatabase.child(orderID).child("uAccepted").setValue("");
 
-                        reportDatabase.child(data.getuId()).push().setValue(repo3);
-                        Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                    reportDatabase.child(data.getuId()).push().setValue(repo3);
+                                    Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
                         break;
                     case R.id.falsemoney:
-                        reportData repo4 = new reportData(uId, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق");
-                        reportDatabase.child(data.getuId()).push().setValue(repo4);
-                        Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                        DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    reportData repo4 = new reportData(uId, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق");
+                                    reportDatabase.child(data.getuId()).push().setValue(repo4);
+                                    Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
+                        builder2.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
                         break;
                     case R.id.doesntanswer:
-                        reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر");
-                        reportDatabase.child(data.getuId()).push().setValue(repo5);
+                        DialogInterface.OnClickListener dialogClickListener3 = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر");
+                                    reportDatabase.child(data.getuId()).push().setValue(repo5);
 
 
-                        Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
+                        builder3.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener3).setNegativeButton("لا", dialogClickListener3).show();
                         break;
                     case R.id.idelv:
-                        reportData repo6 = new reportData(uId, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود");
-                        reportDatabase.child(data.getuId()).push().setValue(repo6);
-                        Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                        DialogInterface.OnClickListener dialogClickListener4 = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    reportData repo6 = new reportData(uId, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود");
+                                    reportDatabase.child(data.getuId()).push().setValue(repo6);
+                                    Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder4 = new AlertDialog.Builder(context);
+                        builder4.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener4).setNegativeButton("لا", dialogClickListener4).show();
                         break;
                     case R.id.didnt_reciv:
-                        reportData repo7 = new reportData(uId, data.getuId(),orderID,datee,"لم استلم الاوردر بعد");
-                        reportDatabase.child(data.getuId()).push().setValue(repo7);
-                        Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                        DialogInterface.OnClickListener dialogClickListener5 = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    reportData repo7 = new reportData(uId, data.getuId(),orderID,datee,"لم استلم الاوردر بعد");
+                                    reportDatabase.child(data.getuId()).push().setValue(repo7);
+                                    Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder5 = new AlertDialog.Builder(context);
+                        builder5.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener5).setNegativeButton("لا", dialogClickListener5).show();
                         break;
                 }
                 return false;

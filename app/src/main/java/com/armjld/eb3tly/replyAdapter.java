@@ -11,18 +11,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import Model.notiData;
 import Model.replyAdmin;
 
@@ -33,10 +27,7 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
     Context context, context1;
     long count;
     ArrayList<replyAdmin>replyAdmin;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    private DatabaseReference uDatabase, nDatabase,cDatabase;
-    private String TAG = "Notification Adapter";
+    private DatabaseReference nDatabase,cDatabase;
     String datee = DateFormat.getDateInstance().format(new Date());
 
     public replyAdapter(Context context, ArrayList<Model.replyAdmin> replyAdmin, Context context1, long count) {
@@ -44,9 +35,9 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
         this.context = context;
         this.replyAdmin = replyAdmin;
         this.context1 = context1;
-        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         cDatabase = getInstance().getReference().child("Pickly").child("messages");
+        String TAG = "Notification Adapter";
         Log.i(TAG, " Reached Reply Adapter");
     }
 
@@ -64,7 +55,6 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
         String Message = replyAdmin.get(position).getMessage();
         String Name = replyAdmin.get(position).getName();
         String TimeStamp = replyAdmin.get(position).getTimestamp();
-        String Statue = replyAdmin.get(position).getStatue();
         String Phone = replyAdmin.get(position).getPhone();
         String mID = replyAdmin.get(position).getId();
         String uID = replyAdmin.get(position).getuID();
@@ -74,28 +64,22 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
 
         holder.setBody(Name, Phone, Email, Message,TimeStamp,version);
 
-        holder.btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cDatabase.child(uID).child(mID).child("statue").setValue("closed");
-                replyAdmin.remove(position);
-                notifyItemRemoved(position);
-            }
+        holder.btnClose.setOnClickListener(v -> {
+            cDatabase.child(uID).child(mID).child("statue").setValue("closed");
+            replyAdmin.remove(position);
+            notifyItemRemoved(position);
         });
 
-        holder.btnReply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String myReply = holder.txtReply.getText().toString().trim();
+        holder.btnReply.setOnClickListener(v -> {
+            String myReply = holder.txtReply.getText().toString().trim();
 
-                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",uID, "-MAPQWoKEfmHIQG9xv-v", myReply, datee, "false");
-                nDatabase.child(uID).push().setValue(Noti);
+            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",uID, "-MAPQWoKEfmHIQG9xv-v", myReply, datee, "false");
+            nDatabase.child(uID).push().setValue(Noti);
 
-                cDatabase.child(uID).child(mID).child("statue").setValue("closed");
-                Toast.makeText(context, "Replied Success", Toast.LENGTH_SHORT).show();
-                replyAdmin.remove(position);
-                notifyItemRemoved(position);
-            }
+            cDatabase.child(uID).child(mID).child("statue").setValue("closed");
+            Toast.makeText(context, "Replied Success", Toast.LENGTH_SHORT).show();
+            replyAdmin.remove(position);
+            notifyItemRemoved(position);
         });
     }
 
@@ -105,7 +89,7 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
     }
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         View myview;
         TextView txtName, txtPhone, txtEmail, txtDate, txtMessage;
         EditText txtReply;

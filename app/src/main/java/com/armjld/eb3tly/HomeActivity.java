@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
-    private ImageView filtrs_btn, btnNavBar;
+    private ImageView filtrs_btn, btnNavBar, btnSort;
     private static ArrayList<Data> mm;
     private long count;
     // import firebase
@@ -83,6 +83,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         mm = new ArrayList<>();
         toolbar = findViewById(R.id.toolbar_home);
         filtrs_btn = findViewById(R.id.filters_btn);
+        btnSort = findViewById(R.id.btnSort);
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         TextView tbTitle = findViewById(R.id.toolbar_title);

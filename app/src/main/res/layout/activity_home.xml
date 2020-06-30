@@ -71,9 +71,19 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/toolbar_home"
+                app:layout_constraintEnd_toStartOf="@+id/btnSort"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_filter_white" />
+
+            <ImageView
+                android:id="@+id/btnSort"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_sort" />
 
             <ImageView
                 android:id="@+id/btnNavBar"
