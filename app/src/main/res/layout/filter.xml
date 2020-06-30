@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBack"
     android:layoutDirection="ltr"
-    android:background="@color/colorBack">
+    tools:context="com.armjld.eb3tly.Filters">
 
     <include
         android:id="@+id/dsToolbar"
@@ -17,313 +18,168 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/btnClose"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/dsToolbar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constFilterCheck"
-        android:layout_width="wrap_content"
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:visibility="gone"
+        android:background="@color/ic_profile_background"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDesc3">
+        app:layout_constraintTop_toBottomOf="@+id/dsToolbar">
 
-        <CheckBox
-            android:id="@+id/chkFilterMetro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="مترو"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
+        <LinearLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
-        <CheckBox
-            android:id="@+id/chkFilterMotor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="موتوسكل"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chkFilterTrans"
-            app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/txtFilterMoney"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:drawableEnd="@drawable/ic_add_money"
+                android:ems="10"
+                android:hint="0"
+                android:inputType="none|number"
+                android:textAlignment="viewEnd"
+                android:textColor="#000000"
+                android:textColorHint="@android:color/tertiary_text_light" />
 
-        <CheckBox
-            android:id="@+id/chkFilterCar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="سيارة"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chkFilterMotor"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <CheckBox
-            android:id="@+id/chkFilterTrans"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="موصلات "
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chkFilterMetro"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constPick"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDesc1">
+            <TextView
+                android:id="@+id/txtDesc4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="center|right"
+                android:text="اعلى مقدم :"
+                android:textColor="#FFFFFF"
+                android:textColorHint="@android:color/tertiary_text_light"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/txtDescP1"
+            android:id="@+id/txtDesc2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:text="الي"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtDesc1" />
+
+        <TextView
+            android:id="@+id/txtDesc1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="المحافظة :"
-            android:textColor="#000000"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:text="من"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
             android:textColorHint="@android:color/tertiary_text_light"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/txtDescP2"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="المنطقة :"
-            android:textColor="#000000"
-            android:textColorHint="@android:color/tertiary_text_light"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtDescP1" />
-
-        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-            android:id="@+id/spFilterPRegion"
-            style="@style/AppTheme.SpinnerDialog"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:textColor="#000000"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/txtDescP2"
-            app:layout_constraintHorizontal_bias="1.0"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@+id/linearLayout7"
+            app:layout_constraintEnd_toStartOf="@+id/txtDesc1"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spFilterPState"
-            tools:ignore="HardcodedText,MissingClass" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-            android:id="@+id/spFilterPState"
-            style="@style/AppTheme.SpinnerDialog"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:textColor="#000000"
-            app:layout_constraintEnd_toStartOf="@+id/txtDescP1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingClass" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:id="@+id/spFilterPRegion"
+                style="@style/AppTheme.SpinnerDialog"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textColor="#000000"
+                tools:ignore="HardcodedText,MissingClass" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/txtDesc2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constPick" />
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:id="@+id/spFilterPState"
+                style="@style/AppTheme.SpinnerDialog"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textColor="#000000"
+                tools:ignore="MissingClass" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constDrop"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDesc2">
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtDescD1"
+        <LinearLayout
+            android:id="@+id/linearLayout4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="المحافظة :"
-            android:textColor="#000000"
-            android:textColorHint="@android:color/tertiary_text_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/txtDescD2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="المنطقة :"
-            android:textColor="#000000"
-            android:textColorHint="@android:color/tertiary_text_light"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtDescD1" />
-
-        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-            android:id="@+id/spFilterDState"
-            style="@style/AppTheme.SpinnerDialog"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:textColor="#000000"
-            app:layout_constraintEnd_toStartOf="@+id/txtDescD1"
+            android:layout_marginTop="-5dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/txtDesc2"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,MissingClass" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-            android:id="@+id/spFilterDRegion"
-            style="@style/AppTheme.SpinnerDialog"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:textColor="#000000"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/txtDescD2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spFilterDState"
-            tools:ignore="HardcodedText,MissingClass" />
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:id="@+id/spFilterDRegion"
+                style="@style/AppTheme.SpinnerDialog"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textColor="#000000"
+                tools:ignore="HardcodedText,MissingClass" />
+
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:id="@+id/spFilterDState"
+                style="@style/AppTheme.SpinnerDialog"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textColor="#000000"
+                tools:ignore="HardcodedText,MissingClass" />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/txtDesc3"
-        android:layout_width="118dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="16dp"
-        android:text="طريقة النقل"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="20dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtFilterMoney" />
-
-    <TextView
-        android:id="@+id/txtDesc2"
-        android:layout_width="118dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:text="التسليم "
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constPick" />
-
-    <TextView
-        android:id="@+id/txtDesc1"
-        android:layout_width="118dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:text="الاستلام"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dsToolbar" />
-
-    <EditText
-        android:id="@+id/txtFilterMoney"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:drawableEnd="@drawable/ic_add_money"
-        android:hint="0"
-        android:inputType="none|number"
-        android:textAlignment="viewEnd"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        app:layout_constraintEnd_toStartOf="@+id/txtDesc4"
-        app:layout_constraintHorizontal_bias="0.992"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constDrop" />
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/txtFilterMoney"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constDrop" />
-
-    <TextView
-        android:id="@+id/txtDesc4"
-        android:layout_width="84dp"
-        android:layout_height="27dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="10dp"
-        android:text="اعلى مقدم :"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/tertiary_text_light"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constDrop" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnApplyFilters"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_defult"
-        android:text="تصفية"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constFilterCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <TextView
+        android:id="@+id/txtNoOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="لا يوجد اوردرات بتلك المواصفات"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/recyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

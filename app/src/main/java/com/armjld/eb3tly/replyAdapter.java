@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,12 +74,23 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
 
         holder.setBody(Name, Phone, Email, Message,TimeStamp,version);
 
+        holder.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cDatabase.child(uID).child(mID).child("statue").setValue("closed");
+                replyAdmin.remove(position);
+                notifyItemRemoved(position);
+            }
+        });
+
         holder.btnReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String myReply = holder.txtReply.getText().toString().trim();
+
                 notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",uID, "-MAPQWoKEfmHIQG9xv-v", myReply, datee, "false");
                 nDatabase.child(uID).push().setValue(Noti);
+
                 cDatabase.child(uID).child(mID).child("statue").setValue("closed");
                 Toast.makeText(context, "Replied Success", Toast.LENGTH_SHORT).show();
                 replyAdmin.remove(position);
@@ -98,6 +110,7 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
         TextView txtName, txtPhone, txtEmail, txtDate, txtMessage;
         EditText txtReply;
         Button btnReply;
+        ImageButton btnClose;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,6 +126,7 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
             txtMessage = myview.findViewById(R.id.txtMessage);
             txtName = myview.findViewById(R.id.txtName);
             txtPhone = myview.findViewById(R.id.txtPhone);
+            btnClose = myview.findViewById(R.id.btnClose);
             txtPhone.setText(phone);
             txtName.setText(name);
             txtMessage.setText(message);

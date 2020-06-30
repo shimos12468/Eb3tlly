@@ -6,6 +6,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,14 +43,15 @@ public class ReplyByAdmin extends AppCompatActivity {
     private long count;
     private RecyclerView recyclerView;
     String TAG = "ReplyByAdmin";
-    Button btnToDel,btnToSupplier,btnResetUser;
+    Button btnToDel,btnToSupplier,btnResetUser,btnDeactive,btnInfo;
     EditText txtUserNumber;
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase,mDatabase,rDatabase,vDatabase,nDatabase;
 
     public void onBackPressed() {
-        finish();
-        startActivity(new Intent(this, Admin.class));
+        Intent i = new Intent(this, Admin.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(i);
     }
 
     @Override
@@ -69,6 +72,8 @@ public class ReplyByAdmin extends AppCompatActivity {
         btnToSupplier = findViewById(R.id.btnToSupplier);
         txtUserNumber = findViewById(R.id.txtUserNumber);
         btnResetUser = findViewById(R.id.btnResetUser);
+        btnDeactive = findViewById(R.id.btnDeactive);
+        btnInfo = findViewById(R.id.btnInfo);
 
         count =0;
         mm = new ArrayList<replyAdmin>();
@@ -83,6 +88,66 @@ public class ReplyByAdmin extends AppCompatActivity {
 
         cDatabase = getInstance().getReference().child("Pickly").child("messages");
 
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String num = txtUserNumber.getText().toString().trim();
+                uDatabase.orderByChild("phone").equalTo(num).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                if(ds.exists()) {
+                                    String mpass = Objects.requireNonNull(ds.child("mpass").getValue()).toString();
+                                    String memail = Objects.requireNonNull(ds.child("email").getValue()).toString();
+                                    String accountType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                                    Log.i(TAG, "Account Login Info : " + memail + " : " + mpass);
+                                    ClipboardManager clip = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                                    ClipData cl = ClipData.newPlainText("Info", memail + " : " + mpass);
+                                    clip.setPrimaryClip(cl);
+                                    Toast.makeText(ReplyByAdmin.this, memail + " : " + mpass + " Type : " + accountType, Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(ReplyByAdmin.this, "Wrong Number", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(ReplyByAdmin.this, "Wrong Number", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+            }
+        });
+
+        btnDeactive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String num = txtUserNumber.getText().toString().trim();
+                uDatabase.orderByChild("phone").equalTo(num).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                if(ds.exists()) {
+                                    String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                                    uDatabase.child(userID).child("active").setValue("false");
+                                    Toast.makeText(ReplyByAdmin.this, "Deactiveted Successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ReplyByAdmin.this, "Wrong Number", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(ReplyByAdmin.this, "Wrong Number", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+            }
+        });
         btnToDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

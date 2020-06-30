@@ -57,7 +57,7 @@ public class HowTo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(HowTo.this, profile.class));
+                startActivity(new Intent(HowTo.this, NewProfile.class));
             }
         });
     }

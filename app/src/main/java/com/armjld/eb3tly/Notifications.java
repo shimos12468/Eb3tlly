@@ -114,7 +114,7 @@ public class Notifications extends AppCompatActivity {
                     startActivity(newIntentNB);
                 }
                 if (id==R.id.nav_profile){
-                    startActivity(new Intent(getApplicationContext(), profile.class));
+                    startActivity(new Intent(getApplicationContext(), NewProfile.class));
                 }
                 if(id == R.id.nav_info) {
                     startActivity(new Intent(getApplicationContext(), UserSetting.class));

@@ -321,20 +321,16 @@ public class Signup extends AppCompatActivity {
                 } else {
                     accountType = "Delivery Worker";
                 }
-                return;
             }
         });
 
         //Set PP
-        imgSetPP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
-                if (ContextCompat.checkSelfPermission(Signup.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    if(intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, TAKE_IMAGE_CODE);
-                    }
+        imgSetPP.setOnClickListener(v -> {
+            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
+            if (ContextCompat.checkSelfPermission(Signup.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if(intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, TAKE_IMAGE_CODE);
                 }
             }
         });
@@ -345,9 +341,9 @@ public class Signup extends AppCompatActivity {
             public void onClick(View view) {
                 String muser = user.getText().toString().trim();
                 String memail = email.getText().toString().trim();
-                String mpass = pass.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                String con_pass = con_password.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                phone = phoneNum.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+                String mpass = pass.getText().toString().trim();
+                String con_pass = con_password.getText().toString().trim();
+                phone = phoneNum.getText().toString().trim();
                 // Check For empty fields
                 if(TextUtils.isEmpty(muser)){
                     user.setError("يجب ادخال اسم المستخدم");

@@ -59,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
      private String TAG = "My Adapter";
 
-     private static String uType = "Supplier";
+     String uType = StartUp.userType.toString();
 
      SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
      SimpleDateFormat notiSDF = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
@@ -122,8 +122,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffMinutes = (int) diffMinutes;
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
-
-        uType = StartUp.userType.toString();
 
         holder.setDate(filtersData.get(position).getDDate().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setUsername(filtersData.get(position).getuId());
@@ -382,31 +380,45 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                     // Number of allowed canceled orders
                                     Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الاسبوع , لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
                                 } else {
-                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    mDatabase.orderByChild("uAccepted").equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            switch (which){
-                                                case DialogInterface.BUTTON_POSITIVE:
-                                                    mDatabase.child(gettingID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
-                                                    mDatabase.child(gettingID).child("statue").setValue("accepted");
-                                                    mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            int acceptedCount = (int) snapshot.getChildrenCount();
+                                            if(acceptedCount <= 7) {
+                                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        switch (which){
+                                                            case DialogInterface.BUTTON_POSITIVE:
+                                                                mDatabase.child(gettingID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
+                                                                mDatabase.child(gettingID).child("statue").setValue("accepted");
+                                                                mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
 
-                                                    // --------------------------- Send Notifications ---------------------//
-                                                    notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",notiDate,"false");
-                                                    nDatabase.child(owner).push().setValue(Noti);
+                                                                // --------------------------- Send Notifications ---------------------//
+                                                                notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",notiDate,"false");
+                                                                nDatabase.child(owner).push().setValue(Noti);
 
-                                                    Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
-                                                    ((HomeActivity)context).finish();
+                                                                Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
+                                                                ((HomeActivity)context).finish();
 
-                                                    context.startActivity(new Intent(context, profile.class));
-                                                    break;
-                                                case DialogInterface.BUTTON_NEGATIVE:
-                                                    break;
+                                                                context.startActivity(new Intent(context, profile.class));
+                                                                break;
+                                                            case DialogInterface.BUTTON_NEGATIVE:
+                                                                break;
+                                                        }
+                                                    }
+                                                };
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                                builder.setMessage("هل انت متاكد من انك تريد استلام الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                                            } else {
+                                                Toast.makeText(context, "لا يمكنك قبول اكثر من سبع اوردرات في نفس الوقت", Toast.LENGTH_SHORT).show();
                                             }
                                         }
-                                    };
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setMessage("هل انت متاكد من انك تريد استلام الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) { }
+                                    });
+
                                 }
                             }
                             @Override

@@ -485,7 +485,6 @@ public class AddOrders extends AppCompatActivity {
                 final String mDName = DName.getText().toString().trim();
                 final String mGMoney = GMoney.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
                 final String mGGet = GGet.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                int intget = Integer.parseInt(mGGet);
 
                 // Checkboxes Strings
                 String isTrans = "";
@@ -533,6 +532,7 @@ public class AddOrders extends AppCompatActivity {
                     GGet.requestFocus();
                     return;
                 }
+                int intget = Integer.parseInt(mGGet);
                 if(intget == 0) {
                     GGet.setError("الرجاء وضع سعر للشحن");
                     GGet.requestFocus();

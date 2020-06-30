@@ -81,14 +81,16 @@ public class profile extends AppCompatActivity {
     private ImageView btnNavbarProfile, imgSetPP, btnOpenNoti;
     private TextView txtUserDate, tbTitle, uName, txtNoOrders,txtNotiCount;
     private String TAG = "Profile";
+    Data a7a = new Data();
+
+    static String uType = StartUp.userType;
+    String uId;
 
     private static final int PHONE_CALL_CODE = 100;
 
-    String uType = "";
     FirebaseRecyclerAdapter<Data, myviewholder> adapter;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
-
     String notiDate = DateFormat.getDateInstance().format(new Date());
 
     // Disable the Back Button
@@ -118,8 +120,7 @@ public class profile extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
-        String uId = mUser.getUid();
-        final String uID = uId;
+        uId = mUser.getUid();
 
         // -------------------- intalize
         btnAdd = findViewById(R.id.btnAdd);
@@ -242,7 +243,7 @@ public class profile extends AppCompatActivity {
                 if(dataSnapshot.exists()) {
                     int notiCount = 0;
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if(ds.exists()) {
+                        if(ds.exists() && ds.child("isRead").exists()) {
                             if(ds.child("isRead").getValue().equals("false")) {
                                 notiCount++;
                             }
@@ -264,7 +265,7 @@ public class profile extends AppCompatActivity {
         });
 
         // -------------------------- Get user info for profile
-        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String ppURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
@@ -281,46 +282,46 @@ public class profile extends AppCompatActivity {
         });
 
         //Get this user account type
-        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                uType = snapshot.child("accountType").getValue().toString();
-                TextView usType = findViewById(R.id.txtUserType);
-                if (uType.equals("Supplier")) {
-                    usType.setText("تاجر");
-                    txtNoOrders.setText("لم تقم باضافه اي اوردرات حتي الان");
-                    user_type = "sId";
-                    final RatingBar rbProfile = findViewById(R.id.rbProfile);
-                    rDatabase.child(uID).orderByChild(user_type).equalTo(uID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            long total = 0;
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                long rating = (long) Double.parseDouble(ds.child("rate").getValue().toString());
-                                total = total + rating;
-                            }
-                            double average = (double) total / dataSnapshot.getChildrenCount();
-                            Log.i(TAG, "Average Before : " + String.valueOf(average));
-                            if(String.valueOf(average).equals("NaN")) {
-                               average = 5;
-                               Log.i(TAG, "Average Midel : " + String.valueOf(average));
-                            }
-                            Log.i(TAG, "Average Final : " + String.valueOf(average));
-                            rbProfile.setRating((int) average);
-                        }
+        TextView usType = findViewById(R.id.txtUserType);
+        if (uType.equals("Supplier")) {
+            usType.setText("تاجر");
+            txtNoOrders.setText("لم تقم باضافه اي اوردرات حتي الان");
+            user_type = "sId";
+            btnAdd.setVisibility(View.VISIBLE);
+            btnNavbarProfile.setVisibility(View.VISIBLE);
+            final RatingBar rbProfile = findViewById(R.id.rbProfile);
+            rDatabase.child(uId).orderByChild(user_type).equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    long total = 0;
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        long rating = (long) Double.parseDouble(ds.child("rate").getValue().toString());
+                        total = total + rating;
+                    }
+                    double average = (double) total / dataSnapshot.getChildrenCount();
+                    Log.i(TAG, "Average Before : " + String.valueOf(average));
+                    if(String.valueOf(average).equals("NaN")) {
+                        average = 5;
+                        Log.i(TAG, "Average Midel : " + String.valueOf(average));
+                    }
+                    Log.i(TAG, "Average Final : " + String.valueOf(average));
+                    rbProfile.setRating((int) average);
+                }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
-                    Log.i(TAG, user_type);
-                } else if (uType.equals("Delivery Worker")) {
-                    usType.setText("مندوب شحن");
-                    txtNoOrders.setText("لم تقم بقبول اي اوردرات حتي الان");
-                    user_type = "dId";
-                    final RatingBar rbProfile = findViewById(R.id.rbProfile);
-                    rDatabase.child(uID).orderByChild(user_type).equalTo(uID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
+        } else if (uType.equals("Delivery Worker")) {
+            usType.setText("مندوب شحن");
+            txtNoOrders.setText("لم تقم بقبول اي اوردرات حتي الان");
+            user_type = "dId";
+            Menu nav_menu = navigationView.getMenu();
+            nav_menu.findItem(R.id.nav_how).setVisible(false);
+            btnAdd.setVisibility(View.GONE);
+            final RatingBar rbProfile = findViewById(R.id.rbProfile);
+            rDatabase.child(uId).orderByChild(user_type).equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             long total = 0;
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 long rating = (long) Double.parseDouble(ds.child("rate").getValue().toString());
@@ -334,39 +335,10 @@ public class profile extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
                     });
-                    Log.i(TAG, user_type);
                 }
-                setOrderCount(uType, uID);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-        // ------------------ Show or Hide Buttons depending on the User Type
-        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
-                if (uType.equals("Supplier")) {
-                    btnAdd.setVisibility(View.VISIBLE);
-                    btnNavbarProfile.setVisibility(View.VISIBLE);
-                } else {
-                    Menu nav_menu = navigationView.getMenu();
-                    nav_menu.findItem(R.id.nav_how).setVisible(false);
-                    btnAdd.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                setOrderCount(uType, uId);
 
         // ADD Order Button
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -378,7 +350,6 @@ public class profile extends AppCompatActivity {
                         if(dataSnapshot.child("adding").getValue().toString().equals("false")) {
                             Toast.makeText(profile.this, "عذرا لا يمكنك اضافه اوردرات في الوقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
                         } else {
-                            finish();
                             startActivity(new Intent(profile.this, AddOrders.class));
                         }
                     }
@@ -393,13 +364,6 @@ public class profile extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
-        mDatabase = getInstance().getReference("Pickly").child("orders");
-        uDatabase = getInstance().getReference("Pickly").child("users");
-        mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser mUser = mAuth.getCurrentUser();
-        final String uID = mUser.getUid();
-
         userRecycler = findViewById(R.id.userRecycler);
         userRecycler.setHasFixedSize(true);
 
@@ -408,56 +372,40 @@ public class profile extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);
         userRecycler.setLayoutManager(layoutManager);
 
-        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final String uType = snapshot.child("accountType").getValue().toString();
-                if (uType.equals("Supplier")) {
-                    mDatabase.orderByChild("uId").equalTo(uID).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()) {
-                                txtNoOrders.setVisibility(View.GONE);
-                            } else {
-                                txtNoOrders.setVisibility(View.VISIBLE);
-                            }
-                        }
+        if (uType.equals("Supplier")) {
+            mDatabase.orderByChild("uId").equalTo(uId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()) {
+                        txtNoOrders.setVisibility(View.GONE);
+                    } else {
+                        txtNoOrders.setVisibility(View.VISIBLE);
+                    }
+                }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }
                     });
                 } else {
-                    mDatabase.orderByChild("uAccepted").equalTo(uID).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()) {
-                                txtNoOrders.setVisibility(View.GONE);
-                            } else {
-                                txtNoOrders.setVisibility(View.VISIBLE);
-                            }
+                mDatabase.orderByChild("uAccepted").equalTo(uId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            txtNoOrders.setVisibility(View.GONE);
+                        } else {
+                            txtNoOrders.setVisibility(View.VISIBLE);
                         }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) { }
                     });
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final String uType = snapshot.child("accountType").getValue().toString();
-                // Get orders posted by the supplier
                 if (uType.equals("Supplier")) {
                     adapter = new FirebaseRecyclerAdapter<Data, myviewholder>(
                             Data.class,
                             R.layout.supplieritems,
                             myviewholder.class,
-                            mDatabase.orderByChild("uId").equalTo(uID)) {
+                            mDatabase.orderByChild("uId").equalTo(uId)) {
 
                         @Override
                         protected void populateViewHolder(myviewholder myviewholder, final Data data, int i) {
@@ -485,7 +433,7 @@ public class profile extends AppCompatActivity {
                             int idiffDays = (int) diffDays;
 
                             myviewholder.setDate(data.getDDate());
-                            myviewholder.setUsername(mUser.getUid(), data.getuId(), data.getDName(), uType);
+                            myviewholder.setUsername(uId, data.getuId(), data.getDName(), uType);
                             myviewholder.setOrdercash(data.getGMoney());
                             myviewholder.setOrderFrom(data.reStateP());
                             myviewholder.setOrderto(data.reStateD());
@@ -529,7 +477,7 @@ public class profile extends AppCompatActivity {
                                         public boolean onMenuItemClick(MenuItem item) {
                                             switch (item.getItemId()) {
                                                 case R.id.didnt_reciv:
-                                                    reportData repo = new reportData(uID, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين");
+                                                    reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين");
                                                     reportDatabase.child(dilvID).push().setValue(repo);
 
                                                     mDatabase.child(orderID).child("uAccepted").setValue("");
@@ -538,7 +486,7 @@ public class profile extends AppCompatActivity {
                                                     Toast.makeText(profile.this, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
                                                     break;
                                                 case R.id.didnt_deliv:
-                                                    reportData repo2 = new reportData(uID, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل");
+                                                    reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل");
                                                     reportDatabase.child(dilvID).push().setValue(repo2);
                                                     Toast.makeText(profile.this, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
                                                     break;
@@ -588,12 +536,11 @@ public class profile extends AppCompatActivity {
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                             snapshot.getRef().removeValue();
                                                             Toast.makeText(getApplicationContext(), "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
-                                                            setOrderCount("Supplier", mUser.getUid());
+                                                            setOrderCount(uType, uId);
                                                         }
 
                                                         @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
-                                                        }
+                                                        public void onCancelled(DatabaseError databaseError) { }
                                                     });
                                                     break;
                                                 case DialogInterface.BUTTON_NEGATIVE: break;
@@ -834,15 +781,12 @@ public class profile extends AppCompatActivity {
                             datalist.add(data);
                         }
                     };
-                    if (datalist.isEmpty()) {
-                        userRecycler.setAdapter(adapter);
-                    }
                 } else { // ------------------------------ Get orders accepted by the Dilvery worker
                     adapter = new FirebaseRecyclerAdapter<Data, myviewholder>(
                             Data.class,
                             R.layout.supplieritems,
                             myviewholder.class,
-                            mDatabase.orderByChild("uAccepted").equalTo(uID)) {
+                            mDatabase.orderByChild("uAccepted").equalTo(uId)) {
 
                         @Override
                         protected void populateViewHolder(final myviewholder myviewholder, final Data data, int i) {
@@ -871,7 +815,7 @@ public class profile extends AppCompatActivity {
                             int idiffDays = (int) diffDays;
 
                             myviewholder.setDate(data.getDDate());
-                            myviewholder.setUsername(mUser.getUid(), data.getuId(), data.getDName(), uType);
+                            myviewholder.setUsername(uId, data.getuId(), data.getDName(), uType);
                             myviewholder.setOrdercash(data.getGMoney());
                             myviewholder.setOrderFrom(data.reStateP());
                             myviewholder.setOrderto(data.reStateD());
@@ -1027,7 +971,7 @@ public class profile extends AppCompatActivity {
                                     });
 
                                     // --------------------------- Send Notifications ---------------------//
-                                    notiData Noti = new notiData(mUser.getUid().toString(), SID,orderID,"delivered",notiDate,"false");
+                                    notiData Noti = new notiData(uId.toString(), SID,orderID,"delivered",notiDate,"false");
                                     nDatabase.child(SID).push().setValue(Noti);
                                     Toast.makeText(getApplicationContext(), "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
                                 }
@@ -1082,7 +1026,7 @@ public class profile extends AppCompatActivity {
                                             final String rRate=txtRate.getText().toString().trim();
                                             final String rId=rDatabase.push().getKey().toString();
                                             final int intRating = (int) drStar.getRating();
-                                            rateData data=new rateData(rId, orderID, sId ,uID, intRating,rRate , datee);
+                                            rateData data=new rateData(rId, orderID, sId ,uId, intRating,rRate , datee);
                                             rDatabase.child(sId).child(rId).setValue(data);
                                             mDatabase.child(orderID).child("srated").setValue("true");
                                             mDatabase.child(orderID).child("srateid").setValue(rId);
@@ -1156,7 +1100,7 @@ public class profile extends AppCompatActivity {
                                         public boolean onMenuItemClick(MenuItem item) {
                                             switch (item.getItemId()) {
                                                 case R.id.deleted:
-                                                    reportData repo3 = new reportData(uID, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله");
+                                                    reportData repo3 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله");
 
                                                     mDatabase.child(orderID).child("statue").setValue("placed");
                                                     mDatabase.child(orderID).child("uAccepted").setValue("");
@@ -1165,24 +1109,24 @@ public class profile extends AppCompatActivity {
                                                     Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                                     break;
                                                 case R.id.falsemoney:
-                                                    reportData repo4 = new reportData(uID, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق");
+                                                    reportData repo4 = new reportData(uId, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق");
                                                     reportDatabase.child(data.getuId()).push().setValue(repo4);
                                                     Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                                     break;
                                                 case R.id.doesntanswer:
-                                                    reportData repo5 = new reportData(uID, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر");
+                                                    reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر");
                                                     reportDatabase.child(data.getuId()).push().setValue(repo5);
 
 
                                                     Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                                     break;
                                                 case R.id.idelv:
-                                                    reportData repo6 = new reportData(uID, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود");
+                                                    reportData repo6 = new reportData(uId, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود");
                                                     reportDatabase.child(data.getuId()).push().setValue(repo6);
                                                     Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                                     break;
                                                 case R.id.didnt_reciv:
-                                                    reportData repo7 = new reportData(uID, data.getuId(),orderID,datee,"لم استلم الاوردر بعد");
+                                                    reportData repo7 = new reportData(uId, data.getuId(),orderID,datee,"لم استلم الاوردر بعد");
                                                     reportDatabase.child(data.getuId()).push().setValue(repo7);
                                                     Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                                     break;
@@ -1206,7 +1150,7 @@ public class profile extends AppCompatActivity {
                                             switch (which){
                                                 case DialogInterface.BUTTON_POSITIVE:
                                                     // --------------- Add the cencelled order to the counter ----------------------- //
-                                                    uDatabase.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             Date lastedit = null;
@@ -1227,7 +1171,7 @@ public class profile extends AppCompatActivity {
                                                             assert acceptedDate != null;
                                                             Log.i(TAG, "acc date : " + acceptedDate + " last edited" + lastedit);
                                                             if(acceptedDate.compareTo(lastedit) > 0) { // if the worker accepted the order before it has been edited
-                                                                uDatabase.child(uID).child("canceled").setValue(String.valueOf(finalCount));
+                                                                uDatabase.child(uId).child("canceled").setValue(String.valueOf(finalCount));
                                                                 Log.i(TAG, "Remining tries : " + reminCount);
                                                                 Toast.makeText(profile.this, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
                                                             } else {
@@ -1241,11 +1185,11 @@ public class profile extends AppCompatActivity {
 
                                                             // --------------------------- Send Notifications ---------------------//
                                                             String owner = data.getuId();
-                                                            notiData Noti = new notiData(mUser.getUid().toString(), owner, orderID,"deleted",notiDate,"false");
+                                                            notiData Noti = new notiData(uId.toString(), owner, orderID,"deleted",notiDate,"false");
                                                             nDatabase.child(owner).push().setValue(Noti);
 
                                                             adapter.notifyDataSetChanged();
-                                                            setOrderCount("Delivery Worker", mUser.getUid());
+                                                            setOrderCount("Delivery Worker", uId);
                                                         }
                                                         @Override
                                                         public void onCancelled(DatabaseError databaseError) { }
@@ -1264,25 +1208,19 @@ public class profile extends AppCompatActivity {
                             datalist.add(data);
                         }
                     };
-                    if (datalist.isEmpty()) {
-                        userRecycler.setAdapter(adapter);
-                    }
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        if (datalist.isEmpty()) {
+            userRecycler.setAdapter(adapter);
+        }
         userRecycler.setAdapter(adapter);
     }
 
     // GET ORDERS COUNT FOR MY PROFILE
-    public void setOrderCount (String uType, String uID) {
+    public void setOrderCount (String uType, String uId) {
         if (uType.equals("Supplier")){
             // Get Orders Count for Supplier
             final TextView txtTotalOrders = findViewById(R.id.txtTotalOrders);
-            Query query = mDatabase.orderByChild("uId").equalTo(uID);
+            Query query = mDatabase.orderByChild("uId").equalTo(uId);
             ValueEventListener valueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1303,7 +1241,7 @@ public class profile extends AppCompatActivity {
         } else if (uType.equals("Delivery Worker")) {
             //GET order count for Delivery
             final TextView txtTotalOrders = findViewById(R.id.txtTotalOrders);
-            Query query = mDatabase.orderByChild("uAccepted").equalTo(uID);
+            Query query = mDatabase.orderByChild("uAccepted").equalTo(uId);
             ValueEventListener valueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1450,11 +1388,6 @@ public class profile extends AppCompatActivity {
         }
 
         public void setDilveredButton(final String state) {
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String uType = snapshot.child("accountType").getValue().toString();
                     if (uType.equals("Supplier")) {
                         btnDelivered.setVisibility(View.GONE);
                         btnInfo.setVisibility(View.GONE);
@@ -1515,11 +1448,6 @@ public class profile extends AppCompatActivity {
                             }
                         }
                     }
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
         }
 
         public void setOrderto(String orderto){
@@ -1543,24 +1471,16 @@ public class profile extends AppCompatActivity {
             final Button btnEdit = myview.findViewById(R.id.btnEdit);
             final Button btnDilvered = myview.findViewById(R.id.btnDelivered);
             final Button btnInfo = myview.findViewById(R.id.btnInfo);
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String uType = snapshot.child("accountType").getValue().toString();
-                    if (uType.equals("Supplier")) {
-                        //btnEdit.setVisibility(View.VISIBLE);
-                        btnDilvered.setVisibility(View.GONE);
-                        btnInfo.setVisibility(View.GONE);
-                    } else {
-                        //btnEdit.setVisibility(View.GONE);
-                        //btnDilvered.setVisibility(View.VISIBLE);
-                    }
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+            if (uType.equals("Supplier")) {
+                //btnEdit.setVisibility(View.VISIBLE);
+                btnDilvered.setVisibility(View.GONE);
+                btnInfo.setVisibility(View.GONE);
+            } else {
+                //btnEdit.setVisibility(View.GONE);
+                //btnDilvered.setVisibility(View.VISIBLE);
+            }
         }
+
         public void setType(String car, String motor, String metro, String trans) {
              icnCar = myview.findViewById(R.id.icnCar);
              icnMotor = myview.findViewById(R.id.icnMotor);

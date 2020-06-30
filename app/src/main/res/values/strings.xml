@@ -44,7 +44,6 @@
         <item>الرحاب</item>
         <item>الفجالة</item>
         <item>القبة</item>
-        <item>العبور</item>
         <item>الشروق</item>
         <item>المرج</item>
         <item>المطرية</item>
@@ -53,6 +52,7 @@
         <item>القطامية</item>
         <item>الازهر</item>
         <item>المنيل</item>
+        <item>الاميرية</item>
         <item>باب اللوق</item>
         <item>حلوان</item>
         <item>جاردن سيتي</item>
@@ -84,7 +84,6 @@
         <item>الفجالة</item>
         <item>القبة</item>
         <item>القبة</item>
-        <item>العبور</item>
         <item>الشروق</item>
         <item>المرج</item>
         <item>المطرية</item>
@@ -93,6 +92,7 @@
         <item>القطامية</item>
         <item>الازهر</item>
         <item>المنيل</item>
+        <item>الاميرية</item>
         <item>باب اللوق</item>
         <item>حلوان</item>
         <item>جاردن سيتي</item>
@@ -438,20 +438,24 @@
         <item>بنها</item>
         <item>الخانكة</item>
         <item>شبين القناطر</item>
+        <item>العبور</item>
         <item>طوخ</item>
         <item>قليوب</item>
         <item>القناطر الخيرية</item>
         <item>كفر شكر</item>
+        <item>ابو زعبل</item>
     </string-array>
     <string-array name="filterQalyobia">
         <item>كل المناطق</item>
         <item>بنها</item>
         <item>الخانكة</item>
+        <item>العبور</item>
         <item>شبين القناطر</item>
         <item>طوخ</item>
         <item>قليوب</item>
         <item>القناطر الخيرية</item>
         <item>كفر شكر</item>
+        <item>ابو زعبل</item>
     </string-array>
     <string-array name="txtSharqyaRegion">
         <item>الابراهيمية</item>
@@ -510,10 +514,10 @@
         <item>الفتح</item>
     </string-array>
     <string-array name="txtAswanRegion">
-    <item>أدفو</item>
-    <item>دراو</item>
-    <item>كوم أمبو</item>
-    <item>نصر النوبة</item>
+        <item>أدفو</item>
+        <item>دراو</item>
+        <item>كوم أمبو</item>
+        <item>نصر النوبة</item>
     </string-array>
     <string-array name="filterAswan">
         <item>كل المناطق</item>
@@ -546,20 +550,27 @@
         <item>منوف</item>
     </string-array>
     <string-array name="txtIsmaliaRegion">
+        <item>الاسماعيليه</item>
         <item>أبو صوير</item>
         <item>التل الكبير</item>
         <item>فايد</item>
         <item>القصاصين</item>
         <item>القنطره شرق</item>
         <item>القنطرة غرب</item>
+        <item>ابو عطوة</item>
+        <item>المنايف</item>
+        <item>القنطرة غرب</item>
     </string-array>
     <string-array name="filterIsmalia">
         <item>كل المناطق</item>
+        <item>الاسماعيليه</item>
         <item>أبو صوير</item>
         <item>التل الكبير</item>
         <item>فايد</item>
         <item>القصاصين</item>
         <item>القنطره شرق</item>
+        <item>ابو عطوة</item>
+        <item>المنايف</item>
         <item>القنطرة غرب</item>
     </string-array>
     <string-array name="txtAqsorRegion">
@@ -597,6 +608,7 @@
         <item>وادي النطرون</item>
     </string-array>
     <string-array name="filterBehera">
+        <item>كل المناطق</item>
         <item>ابو المطامير</item>
         <item>أبو حمص</item>
         <item>أدكو</item>
@@ -757,7 +769,7 @@
         <item>خليج السويس</item>
         <item>كفر النجار</item>
         <item>نفق الشهيد احمد حمدي</item>
-</string-array>
+    </string-array>
     <string-array name="txtGarbyaRegion">
         <item>بسيون</item>
         <item>زفتى</item>
@@ -928,4 +940,6 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

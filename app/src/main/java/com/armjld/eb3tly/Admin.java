@@ -143,7 +143,7 @@ public class Admin extends Activity {
                     startActivity(newIntentNB);
                 }
                 if (id==R.id.nav_profile){
-                    startActivity(new Intent(getApplicationContext(), profile.class));
+                    startActivity(new Intent(getApplicationContext(), NewProfile.class));
                 }
                 if(id == R.id.nav_info) {
                     startActivity(new Intent(getApplicationContext(), UserSetting.class));
@@ -465,7 +465,6 @@ public class Admin extends Activity {
         btnMessages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 startActivity(new Intent(Admin.this, ReplyByAdmin.class));
             }
         });

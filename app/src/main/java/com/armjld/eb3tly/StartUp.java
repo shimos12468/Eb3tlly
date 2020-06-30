@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -17,7 +16,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -65,6 +63,7 @@ public class StartUp extends AppCompatActivity {
                 if(snapshot.exists() && snapshot.child("id").exists()) {
                     String isComplete = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
+
                     if(isComplete.equals("true")) {
                         if(isActive.equals("true")) {
                             String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
@@ -72,7 +71,7 @@ public class StartUp extends AppCompatActivity {
                                 case "Supplier":
                                     userType = uType;
                                     finish();
-                                    startActivity(new Intent(StartUp.this, profile.class));
+                                    startActivity(new Intent(StartUp.this, NewProfile.class));
                                     break;
                                 case "Delivery Worker":
                                     userType = uType;
@@ -88,6 +87,7 @@ public class StartUp extends AppCompatActivity {
                         } else {
                             Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
+
                             finish();
                             startActivity(new Intent(StartUp.this, MainActivity.class));
                         }
