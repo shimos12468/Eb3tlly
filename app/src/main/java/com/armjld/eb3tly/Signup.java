@@ -204,10 +204,12 @@ public class Signup extends AppCompatActivity {
                 }
                 Bitmap rotatedmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
                 return rotatedmap;
-            } else {
+            }
+            else {
                 return bitmap;
             }
-        } else {
+        }
+        else {
             return bitmap;
         }
     }

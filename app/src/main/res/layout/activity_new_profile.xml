@@ -216,8 +216,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/userRecycler" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/userRecycler"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constProfInfo"
+                app:layout_constraintVertical_bias="1.0"
+                android:background="?attr/colorPrimary" />
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_gravity="left"
@@ -225,8 +235,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constProfInfo"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toBottomOf="@+id/tabs"
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -17,7 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".NewProfile"></activity>
+        <activity
+            android:name=".supplierProfile"
+            android:label="@string/title_activity_supplier_profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".NewProfile" />
 
         <service
             android:name=".MyFirebaseMessagingService"

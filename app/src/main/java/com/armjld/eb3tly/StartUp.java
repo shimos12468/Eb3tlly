@@ -71,7 +71,7 @@ public class StartUp extends AppCompatActivity {
                                 case "Supplier":
                                     userType = uType;
                                     finish();
-                                    startActivity(new Intent(StartUp.this, NewProfile.class));
+                                    startActivity(new Intent(StartUp.this, supplierProfile.class));
                                     break;
                                 case "Delivery Worker":
                                     userType = uType;

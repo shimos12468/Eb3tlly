@@ -135,7 +135,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             if (id==R.id.nav_profile){
                 finish();
-                startActivity(new Intent(getApplicationContext(), NewProfile.class));
+                startActivity(new Intent(getApplicationContext(), supplierProfile.class));
             }
             if(id == R.id.nav_info) {
                 startActivity(new Intent(getApplicationContext(), UserSetting.class));

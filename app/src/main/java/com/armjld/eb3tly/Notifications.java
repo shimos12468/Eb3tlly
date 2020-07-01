@@ -41,7 +41,7 @@ public class Notifications extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(Notifications.this, profile.class));
+        startActivity(new Intent(Notifications.this, NewProfile.class));
     }
     
     @SuppressLint("RtlHardcoded")
