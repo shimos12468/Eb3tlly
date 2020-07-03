@@ -30,6 +30,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -100,16 +102,18 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder,final int position) {
         Data data = filtersData.get(position);
         // Get Post Date
-        String startDate = data.getDate();
+        String startDate = Objects.requireNonNull(data.getDate().toString());
         String stopDate = datee;
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
         Date d1 = null;
         Date d2 = null;
-        try {
-            d1 = format.parse(startDate);
-            d2 = format.parse(stopDate);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
+        if(startDate != null) {
+            try {
+                d1 = format.parse(startDate);
+                d2 = format.parse(stopDate);
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
         }
         assert d2 != null;
         assert d1 != null;
@@ -250,6 +254,10 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             notiData Noti = new notiData(uId, SID,orderID,"delivered",notiDate,"false");
             nDatabase.child(SID).push().setValue(Noti);
             Toast.makeText(context, "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
+
+            context.startActivity(new Intent(context, NewProfile.class));
+            ViewPager viewPager = (ViewPager) ((NewProfile) context).findViewById(R.id.view_pager);
+            viewPager.setCurrentItem(1);
         });
 
 
@@ -479,8 +487,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                                 String owner = data.getuId();
                                 notiData Noti = new notiData(uId, owner, orderID,"deleted",notiDate,"false");
                                 nDatabase.child(owner).push().setValue(Noti);
-
+                                context.startActivity(new Intent(context, NewProfile.class));
                             }
+
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) { }
                         });

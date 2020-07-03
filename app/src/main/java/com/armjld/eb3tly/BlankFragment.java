@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,31 +32,19 @@ import Model.Data;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BlankFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class BlankFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
-    private static ArrayList<Data> listSup;
     private static ArrayList<Data> listDelv;
-    private long countSup;
     private long countDelv;
-    private SupplierAdapter supplierAdapter;
     private DeliveryAdapter deliveryAdapter;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP;
-    private TextView txtUserDate;
-    private TextView uName;
-    private TextView txtNotiCount,txtTotalOrders;
     private String TAG = "Profile";
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout refresh;
+    private TextView txtNoOrders;
     String uType = StartUp.userType;
     String uId;
 
@@ -63,19 +52,8 @@ public class BlankFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public BlankFragment() {
-        // Required empty public constructor
-    }
+    public BlankFragment() { }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BlankFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static BlankFragment newInstance(String param1, String param2) {
         BlankFragment fragment = new BlankFragment();
         Bundle args = new Bundle();
@@ -97,11 +75,9 @@ public class BlankFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-         View view =  inflater.inflate(R.layout.fragment_blank, container, false);
-        //txtTotalOrders = view.findViewById(R.id.txtTotalOrders);
+        View view =  inflater.inflate(R.layout.fragment_blank, container, false);
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
@@ -112,92 +88,56 @@ public class BlankFragment extends Fragment {
         assert mUser != null;
         uId = mUser.getUid();
 
-        //FloatingActionButton btnAdd = view.findViewById(R.id.btnAdd);
-        //btnAdd.setVisibility(View.GONE);
-
-        //ImageView btnNavbarProfile = view.findViewById(R.id.btnNavbarProfile);
-        //ConstraintLayout constNoti = view.findViewById(R.id.constNoti);
-        //ImageView btnOpenNoti = view.findViewById(R.id.btnOpenNoti);
-        //uName = view.findViewById(R.id.txtUsername);
-        //txtUserDate = view.findViewById(R.id.txtUserDate);
-        //TextView txtNoOrders = view.findViewById(R.id.txtNoOrders);
-        //imgSetPP = view.findViewById(R.id.imgPPP);
-        //txtNotiCount = view.findViewById(R.id.txtNotiCount);
-
-
-        //Title Bar
-        //TextView tbTitle = view.findViewById(R.id.toolbar_title);
-        //tbTitle.setText("اوردراتي");
-        //txtNoOrders.setVisibility(View.GONE);
-       // txtNotiCount.setVisibility(View.GONE);
+        recyclerView = view.findViewById(R.id.userRecycle);
+        refresh = view.findViewById(R.id.refresh);
+        txtNoOrders = view.findViewById(R.id.txtNoOrders);
 
         // Adapter
         countDelv = 0;
-        countSup = 0;
         listDelv = new ArrayList<>();
-        listSup = new ArrayList<>();
+
+        // ---- Refresh ----------- //
+        refresh.setOnRefreshListener(() -> {
+            getDlivaryOrders();
+            refresh.setRefreshing(false);
+        });
 
         //Recycler
-        recyclerView=view.findViewById(R.id.userRecycle);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
         getDlivaryOrders();
-        getOrderCountDel();
-
         return view;
     }
 
     private void clearAdapter() {
-        listSup.clear();
         listDelv.clear();
         listDelv.trimToSize();
-        listSup.trimToSize();
-        countSup = 0;
         countDelv = 0;
         recyclerView.setAdapter(null);
     }
-    private void getOrderCountDel() {
-        mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    int count = (int) snapshot.getChildrenCount();
-                    String strCount = String.valueOf(count);
-                    txtTotalOrders.setText( "وصل " + strCount + " اوردر");
-                } else {
-                    txtTotalOrders.setText("لم يقم بتوصيل اي اوردر");
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
     public void getDlivaryOrders() {
-
-
         clearAdapter();
         mDatabase.orderByChild("acceptedTime").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        if(ds.exists() && Objects.requireNonNull(ds.child("uAccepted").getValue()).toString().equals(uId)) {
-                            Data orderData = ds.getValue(Data.class);
-                            assert orderData != null;
-                            listDelv.add((int) countDelv, orderData);
-                            countDelv++;
-
-
-                            deliveryAdapter = new DeliveryAdapter(getContext(), listDelv, getContext(), countDelv);
-                            recyclerView.setAdapter(deliveryAdapter);
-                            //updateNone(mm.size());
+                        if(ds.exists() && ds.child("uAccepted").exists()) {
+                            if(Objects.requireNonNull(ds.child("uAccepted").getValue()).toString().equals(uId)) {
+                                if(Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("accepted") || Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("recived")) {
+                                    Data orderData = ds.getValue(Data.class);
+                                    assert orderData != null;
+                                    listDelv.add((int) countDelv, orderData);
+                                    countDelv++;
+                                    deliveryAdapter = new DeliveryAdapter(getContext(), listDelv, getContext(), countDelv);
+                                    recyclerView.setAdapter(deliveryAdapter);
+                                    updateNone(listDelv.size());
+                                }
+                            }
                         }
                     }
                 }
@@ -247,5 +187,14 @@ public class BlankFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+    }
+
+    private void updateNone(int listSize) {
+        Log.i(TAG, "List size is now : " + listSize);
+        if(listSize > 0) {
+            txtNoOrders.setVisibility(View.GONE);
+        } else {
+            txtNoOrders.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -40,16 +40,16 @@
                 android:text="لا يوجد اوردرات متاحة في الوقت الحالي"
                 android:textColor="@android:color/tertiary_text_light"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/swipeToRefresh"
-                app:layout_constraintEnd_toEndOf="@+id/swipeToRefresh"
-                app:layout_constraintStart_toStartOf="@+id/swipeToRefresh"
+                app:layout_constraintBottom_toBottomOf="@+id/refresh"
+                app:layout_constraintEnd_toEndOf="@+id/refresh"
+                app:layout_constraintStart_toStartOf="@+id/refresh"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar_home" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipeToRefresh"
+                android:id="@+id/refresh"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/filters_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
@@ -64,16 +64,6 @@
                     android:paddingTop="0dp" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-            <ImageView
-                android:id="@+id/filters_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                app:layout_constraintEnd_toStartOf="@+id/btnSort"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_filter_white" />
 
             <ImageView
                 android:id="@+id/btnSort"
@@ -94,6 +84,29 @@
                 app:layout_constraintStart_toStartOf="@+id/toolbar_home"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_menu" />
+
+            <LinearLayout
+                android:id="@+id/filters_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/ic_profile_background"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/textView29"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="تصفية الاوردرات"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView

@@ -34,13 +34,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             Fragment fragment = null;
         switch (position){
             case 0:
-                fragment = new acceptedOrdersSupplier();
+                fragment = new placed_oreders_supplier();
                 break;
             case 1:
-                fragment = new dlivared_orders_supplier();
+                fragment = new acceptedOrdersSupplier();
                 break;
             case 2:
-                fragment = new placed_oreders_supplier();
+                fragment = new dlivared_orders_supplier();
                 break;
         }
         return fragment;

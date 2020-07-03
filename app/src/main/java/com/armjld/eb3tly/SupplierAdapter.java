@@ -202,8 +202,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         };
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
                         builder2.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
-
-
                         break;
                 }
                 return false;

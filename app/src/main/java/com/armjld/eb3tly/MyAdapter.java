@@ -186,7 +186,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             });
 
             //Get the user name & Pic
-            uDatabase.child(rateUID).addValueEventListener(new ValueEventListener() {
+            uDatabase.child(rateUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String dsUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
@@ -221,7 +221,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
 
             //Get the Rate Stars
-            rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addValueEventListener(new ValueEventListener() {
+            rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     long total = 0;
@@ -247,7 +247,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
             listComment.setAdapter(arrayAdapterLessons);
             mArraylistSectionLessons.clear(); // To not dublicate comments
-            rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addValueEventListener(new ValueEventListener() {
+            rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     int comments = 0;
@@ -337,9 +337,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         nDatabase.child(owner).push().setValue(Noti);
 
                                                         Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
-                                                        ((HomeActivity)context).finish();
-
-                                                        context.startActivity(new Intent(context, profile.class));
+                                                        context.startActivity(new Intent(context, NewProfile.class));
                                                         break;
                                                     case DialogInterface.BUTTON_NEGATIVE:
                                                         break;
@@ -359,16 +357,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                             }
                         }
                         @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
+                        public void onCancelled(@NonNull DatabaseError databaseError) { }
                     });
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
+                public void onCancelled(@NonNull DatabaseError databaseError) {}
             });
         });
 

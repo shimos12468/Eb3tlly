@@ -65,12 +65,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         holder.setBody(From, Statue, OrderID, To);
         holder.setDate(Datee);
 
-        holder.myview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context, profile.class));
-            }
-        });
+        holder.myview.setOnClickListener(v -> context.startActivity(new Intent(context, NewProfile.class)));
     }
 
 
@@ -106,7 +101,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()) {
                                 String orderTo = Objects.requireNonNull(dataSnapshot.child("dname").getValue()).toString();
-                                String body = "";
+                                String body;
                                 switch (message) {
                                     case "edited": {
                                         body = " قام " + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته ";

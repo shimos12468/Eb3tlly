@@ -344,6 +344,27 @@ public class Admin extends Activity {
                     int fuckedUp = 0;
                     if(snapshot.exists()) {
                         for(DataSnapshot ds : snapshot.getChildren()) {
+                            if(!ds.child("ddate").exists()) {
+                                fuckedUp ++;
+                                ds.getRef().removeValue();
+                            }
+                        }
+                    }
+                    Toast.makeText(Admin.this, "Just deleted " + fuckedUp + " Gletches", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int fuckedUp = 0;
+                    if(snapshot.exists()) {
+                        for(DataSnapshot ds : snapshot.getChildren()) {
                             if(Objects.requireNonNull(ds.child("ddate").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("gmoney").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("gget").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("dphone").getValue()).toString().contains("(^\\h*)|(\\h*$)")) {
                                 fuckedUp ++;
                                 ds.getRef().removeValue();
@@ -358,7 +379,6 @@ public class Admin extends Activity {
 
                 }
             });
-
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -391,7 +411,7 @@ public class Admin extends Activity {
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            });
+            });*/
         });
 
         // -------------------------- Signing Out of Admin Account -------------------------//

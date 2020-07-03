@@ -36,13 +36,6 @@ public class ChangePassword extends Activity {
     String TAG = "Change Password";
     private DatabaseReference uDatabase;
 
-    public void onBackPressed () {
-        finish();
-        Intent newIntentNB = new Intent(this, profile.class);
-        newIntentNB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(newIntentNB);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +108,7 @@ public class ChangePassword extends Activity {
                                     Log.i(TAG, "pass Updated : " + password.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
                                     mdialog.dismiss();
                                     finish();
-                                    startActivity(new Intent(getApplicationContext(), profile.class));
+                                    whichProfile();
                                 } else {
                                     mdialog.dismiss();
                                     Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
@@ -130,5 +123,13 @@ public class ChangePassword extends Activity {
                 });
             }
         });
+    }
+
+    private void whichProfile () {
+        if(StartUp.userType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
     }
 }

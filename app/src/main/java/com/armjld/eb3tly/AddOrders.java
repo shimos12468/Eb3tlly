@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import Model.Data;
 
@@ -44,7 +45,7 @@ public class AddOrders extends AppCompatActivity {
     private String uID;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
-    private ImageView btnClose;
+    private ImageView btnClose, imgHelpMoney, imgHelpGet;
     DatePickerDialog dpd;
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -54,7 +55,7 @@ public class AddOrders extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(this, profile.class));
+        startActivity(new Intent(this, supplierProfile.class));
     }
 
     @Override
@@ -98,6 +99,8 @@ public class AddOrders extends AppCompatActivity {
 
         btnClose = findViewById(R.id.btnClose);
         btnClose.setVisibility(View.GONE);
+        imgHelpMoney = findViewById(R.id.imgHelpMoney);
+        imgHelpGet = findViewById(R.id.imgHelpGet);
 
         btnsave = findViewById(R.id.btnSave);
         btnSaveAdd = findViewById(R.id.btnSaveAdd);
@@ -107,13 +110,27 @@ public class AddOrders extends AppCompatActivity {
 
         // Firebasee
         mAuth = FirebaseAuth.getInstance();
-        uID = mAuth.getCurrentUser().getUid();
+        uID = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         mDatabase = getInstance().getReference("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
 
+        // ---------------- Help Buttons----------------------//
+        imgHelpGet.setOnClickListener(v -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(AddOrders.this).create();
+            alertDialog.setTitle("مصاريف الشحن");
+            alertDialog.setMessage("حدد مبلغ شحن مناسب كي يوافق المندوبين علي شحن الاوردر الخاص بك.");
+            alertDialog.show();
+        });
+
+        imgHelpMoney.setOnClickListener(v -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(AddOrders.this).create();
+            alertDialog.setTitle("مقدم الاوردر");
+            alertDialog.setMessage("سعر الاوردر الي هيدفعو العميل بتاعك للمندوب عند التسليم");
+            alertDialog.show();
+        });
         // Pick up Government Spinner
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtStates, R.layout.color_spinner_layout);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -583,7 +600,7 @@ public class AddOrders extends AppCompatActivity {
                                 mDatabase.child(id).child("lastedit").setValue(datee);
                                 mdialog.dismiss();
                                 Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(AddOrders.this, profile.class));
+                                startActivity(new Intent(AddOrders.this, supplierProfile.class));
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
                                 mdialog.dismiss();

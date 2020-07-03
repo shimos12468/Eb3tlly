@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,56 +26,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import Model.Data;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link placed_oreders_supplier#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class placed_oreders_supplier extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private static ArrayList<Data> listSup;
-    private static ArrayList<Data> listDelv;
     private long countSup;
-    private long countDelv;
     private SupplierAdapter supplierAdapter;
-    private DeliveryAdapter deliveryAdapter;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP;
-    private TextView txtUserDate;
-    private TextView uName;
-    private TextView txtNotiCount,txtTotalOrders;
     private String TAG = "Profile";
     private RecyclerView recyclerView;
     String uType = StartUp.userType;
+    private SwipeRefreshLayout refresh;
+    private TextView txtNoOrders;
     String uId;
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public placed_oreders_supplier() {
-        // Required empty public constructor
-    }
+    public placed_oreders_supplier() { }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment placed_oreders_supplier.
-     */
-    // TODO: Rename and change types and number of parameters
     public static placed_oreders_supplier newInstance(String param1, String param2) {
         placed_oreders_supplier fragment = new placed_oreders_supplier();
         Bundle args = new Bundle();
@@ -94,8 +72,7 @@ public class placed_oreders_supplier extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_placed_oreders_supplier, container, false);
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
@@ -107,33 +84,21 @@ public class placed_oreders_supplier extends Fragment {
         assert mUser != null;
         uId = mUser.getUid();
 
-        //FloatingActionButton btnAdd = view.findViewById(R.id.btnAdd);
-        //btnAdd.setVisibility(View.GONE);
-
-        //ImageView btnNavbarProfile = view.findViewById(R.id.btnNavbarProfile);
-        //ConstraintLayout constNoti = view.findViewById(R.id.constNoti);
-        //ImageView btnOpenNoti = view.findViewById(R.id.btnOpenNoti);
-        //uName = view.findViewById(R.id.txtUsername);
-        //txtUserDate = view.findViewById(R.id.txtUserDate);
-        //TextView txtNoOrders = view.findViewById(R.id.txtNoOrders);
-        //imgSetPP = view.findViewById(R.id.imgPPP);
-        //txtNotiCount = view.findViewById(R.id.txtNotiCount);
-
-
-        //Title Bar
-        //TextView tbTitle = view.findViewById(R.id.toolbar_title);
-        //tbTitle.setText("اوردراتي");
-        //txtNoOrders.setVisibility(View.GONE);
-        // txtNotiCount.setVisibility(View.GONE);
+        refresh = view.findViewById(R.id.refresh);
+        txtNoOrders = view.findViewById(R.id.txtNoOrders);
+        recyclerView = view.findViewById(R.id.userRecyclr);
 
         // Adapter
-        countDelv = 0;
         countSup = 0;
-        listDelv = new ArrayList<>();
         listSup = new ArrayList<>();
 
-        //Recycler
-        recyclerView=view.findViewById(R.id.userRecyclr);
+        // ------------ Refresh View ---------- //
+        refresh.setOnRefreshListener(() -> {
+            getSupOrders();
+            refresh.setRefreshing(false);
+        });
+
+        // -------------- Recycler
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
@@ -153,14 +118,18 @@ public class placed_oreders_supplier extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        Data orderData = ds.getValue(Data.class);
-                        assert orderData != null;
-                        listSup.add((int) countSup, orderData);
-                        countSup++;
-                        Log.i(TAG, "Inside the Query");
+                        if(Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("placed")) {
+                            Data orderData = ds.getValue(Data.class);
+                            assert orderData != null;
+                            listSup.add((int) countSup, orderData);
+                            countSup++;
+                            Log.i(TAG, "Inside the Query");
 
-                        supplierAdapter = new SupplierAdapter(getContext(), listSup, getContext(), countSup);
-                        recyclerView.setAdapter(supplierAdapter);                     }
+                            supplierAdapter = new SupplierAdapter(getContext(), listSup, getContext(), countSup);
+                            recyclerView.setAdapter(supplierAdapter);
+                            updateNone(listSup.size());
+                        }
+                    }
                 }
             }
             @Override
@@ -210,37 +179,19 @@ public class placed_oreders_supplier extends Fragment {
         });
     }
 
-
-
     private void clearAdapter() {
         listSup.clear();
-        listDelv.clear();
-        listDelv.trimToSize();
         listSup.trimToSize();
         countSup = 0;
-        countDelv = 0;
         recyclerView.setAdapter(null);
     }
 
-
-    private void getOrderCountSup() {
-        mDatabase.orderByChild("uId").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    int count = (int) snapshot.getChildrenCount();
-                    String strCount = String.valueOf(count);
-                    txtTotalOrders.setText( "وصل " + strCount + " اوردر");
-                } else {
-                    txtTotalOrders.setText("لم يقم بتوصيل اي اوردر");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+    private void updateNone(int listSize) {
+        Log.i(TAG, "List size is now : " + listSize);
+        if(listSize > 0) {
+            txtNoOrders.setVisibility(View.GONE);
+        } else {
+            txtNoOrders.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -38,12 +41,14 @@ import java.util.Objects;
 
 import Model.Data;
 
+
 @SuppressWarnings("FieldCanBeLocal")
 public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
-    private ImageView filtrs_btn, btnNavBar, btnSort;
+    private ImageView btnNavBar, btnSort;
+    private LinearLayout filtrs_btn;
     private static ArrayList<Data> mm;
     private long count;
     // import firebase
@@ -53,8 +58,11 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView txtNoOrders;
     private String TAG = "Home Activity";
     private MyAdapter orderAdapter;
+    String filterDate;
+    String uType = StartUp.userType;
+    boolean sortDate = true;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
+    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     //Recycler view
     private RecyclerView recyclerView;
 
@@ -75,8 +83,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             return;
         }
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String filterDate = format.format(Calendar.getInstance().getTime());
+
+        filterDate = format.format(Calendar.getInstance().getTime());
 
         //Find View
         count =0;
@@ -89,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("جميع الاوردرات المتاحة");
 
-        mSwipeRefreshLayout = findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout = findViewById(R.id.refresh);
 
         // ToolBar
         setSupportActionBar(toolbar);
@@ -103,10 +111,35 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         //Recycler
         recyclerView=findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(false);
-        layoutManager.setStackFromEnd(false);
-        recyclerView.setLayoutManager(layoutManager);
+
+        // ----------- sort buttom
+        btnSort.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(this, v);
+            MenuInflater inflater = popup.getMenuInflater();
+            inflater.inflate(R.menu.sort_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.by_date:
+                        sortDate = true;
+                        mm.clear();
+                        mm.trimToSize();
+                        count = 0;
+                        recyclerView.setAdapter(null);
+                        getOrdersByDate();
+                        break;
+                    case R.id.by_latest:
+                        sortDate = false;
+                        mm.clear();
+                        mm.trimToSize();
+                        count = 0;
+                        recyclerView.setAdapter(null);
+                        getOrdersByLatest();
+                        break;
+                }
+                return false;
+            });
+            popup.show();
+        });
 
         // NAV BAR
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -135,7 +168,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             if (id==R.id.nav_profile){
                 finish();
-                startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+                whichProfile();
             }
             if(id == R.id.nav_info) {
                 startActivity(new Intent(getApplicationContext(), UserSetting.class));
@@ -182,41 +215,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             mm.trimToSize();
             count = 0;
             recyclerView.setAdapter(null);
-            mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            if(ds.exists()) {
-                                Data orderData = ds.getValue(Data.class);
-                                assert orderData != null;
-                                Date orderDate = null;
-                                Date myDate = null;
-                                try {
-                                    orderDate= format.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString());
-                                    myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                assert orderDate != null;
-                                assert myDate != null;
-                                Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
-                                if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
-                                    mm.add((int) count, orderData);
-                                    count++;
-                                }
-
-                                orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
-                                recyclerView.setAdapter(orderAdapter);
-                                updateNone(mm.size());
-                            }
-                        }
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
+            if(sortDate) { getOrdersByDate(); } else { getOrdersByLatest(); }
             mSwipeRefreshLayout.setRefreshing(false);
         });
 
@@ -268,6 +267,21 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // ---------------------- GET ALL THE ORDERS -------------------//
+        getOrdersByDate();
+
+        // Filter Button
+        filtrs_btn.setOnClickListener(v -> {
+            finish();
+            startActivity(new Intent(HomeActivity.this, Filters.class));
+        });
+
+    }
+
+    private void getOrdersByDate() {
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(false);
+        layoutManager.setStackFromEnd(false);
+        recyclerView.setLayoutManager(layoutManager);
         mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -302,13 +316,47 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
 
-        // Filter Button
-        filtrs_btn.setOnClickListener(v -> {
-            finish();
-            startActivity(new Intent(HomeActivity.this, Filters.class));
+    private void getOrdersByLatest() {
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if(ds.exists() && ds.child("ddate").exists()) {
+                            Data orderData = ds.getValue(Data.class);
+                            assert orderData != null;
+                            Date orderDate = null;
+                            Date myDate = null;
+                            try {
+                                orderDate = format.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString());
+                                myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            assert orderDate != null;
+                            assert myDate != null;
+                            Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
+                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
+                                mm.add((int) count, orderData);
+                                count++;
+                            }
+                            orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+                            recyclerView.setAdapter(orderAdapter);
+                            updateNone(mm.size());
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
-
     }
 
     private void updateNone(int listSize) {
@@ -330,4 +378,12 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) { }
+
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
+    }
 }

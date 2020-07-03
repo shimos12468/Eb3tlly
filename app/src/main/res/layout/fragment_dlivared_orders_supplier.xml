@@ -5,11 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".dlivared_orders_supplier">
 
+    <TextView
+        android:id="@+id/txtNoOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="لم يتم تسليم اي اوردرات بعد"
+        android:textSize="24sp" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRecyclr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </FrameLayout>

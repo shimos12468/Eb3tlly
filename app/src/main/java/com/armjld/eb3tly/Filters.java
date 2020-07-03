@@ -40,6 +40,7 @@ public class Filters extends AppCompatActivity {
     private MyAdapter filterAdapter;
     private long countFilter;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    String filterDate;
 
     RecyclerView recyclerView;
     TextView txtNoOrders;
@@ -64,7 +65,7 @@ public class Filters extends AppCompatActivity {
         txtNoOrders = findViewById(R.id.txtNoOrders);
         ff = new ArrayList<>();
         countFilter = 0;
-        String filterDate = format.format(Calendar.getInstance().getTime());
+        filterDate = format.format(Calendar.getInstance().getTime());
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         mDatabase.keepSynced(true);
@@ -403,42 +404,6 @@ public class Filters extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        txtFilterMoney.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
-
-
-        spPRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-
-        spDRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-
         mDatabase.orderByChild("ddate").startAt(filterDate).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
@@ -481,9 +446,48 @@ public class Filters extends AppCompatActivity {
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+        tsferAdapter();
+    }
+
+    @Override
+    protected void onStart () {
+        super.onStart();
+
+        spPRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        spDRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        txtFilterMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
         });
     }
 

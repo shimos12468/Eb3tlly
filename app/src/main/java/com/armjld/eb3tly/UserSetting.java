@@ -230,7 +230,7 @@ public class UserSetting extends AppCompatActivity {
                 mdialog.dismiss();
                 Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
-                startActivity(new Intent(getApplicationContext(), profile.class));
+                startActivity(new Intent(getApplicationContext(), NewProfile.class));
                 ppURL = uri.toString();
             }
         });
@@ -366,7 +366,7 @@ public class UserSetting extends AppCompatActivity {
                     Log.i(TAG, "no Photo to update.");
                     Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
                     finish();
-                    startActivity(new Intent(getApplicationContext(), profile.class));
+                    startActivity(new Intent(getApplicationContext(), NewProfile.class));
                 }
             }
         });

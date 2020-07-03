@@ -38,6 +38,7 @@ public class Conatact extends AppCompatActivity {
     DatabaseReference uDatabase, cDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
+    String uType = StartUp.userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +96,20 @@ public class Conatact extends AppCompatActivity {
                 cDatabase.child(userID).child(id).setValue(Noti);
 
                 Toast.makeText(Conatact.this, "شكرا لك تم استلام رسالتك و سيتم الرد عليك في اقرب وقت", Toast.LENGTH_LONG).show();
-
                 finish();
-                startActivity(new Intent(Conatact.this, profile.class));
+                whichProfile();
             }
         });
 
 
 
+    }
+
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
     }
 }

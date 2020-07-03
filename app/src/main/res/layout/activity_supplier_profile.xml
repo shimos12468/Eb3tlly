@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.NewProfile">
+    tools:context="com.armjld.eb3tly.supplierProfile">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -183,6 +183,25 @@
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnAdd"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="28dp"
+                android:background="@drawable/btndesign"
+                android:backgroundTint="@color/ic_profile_background"
+                android:cropToPadding="false"
+                android:src="@drawable/ic_add"
+                app:backgroundTint="#FFFFFF"
+                app:ensureMinTouchTargetSize="false"
+                app:fabCustomSize="50dp"
+                app:fabSize="auto"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.956"
+                app:layout_constraintStart_toStartOf="parent"
+                app:rippleColor="#FFFFFF" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"

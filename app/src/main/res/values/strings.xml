@@ -839,6 +839,7 @@
         <item>البرلس</item>
         <item>بيلا</item>
         <item>الحامول</item>
+        <item>بلطيم</item>
         <item>دسوق</item>
         <item>الرياض</item>
         <item>سيدي سالم</item>
@@ -852,6 +853,7 @@
         <item>البرلس</item>
         <item>بيلا</item>
         <item>الحامول</item>
+        <item>بلطيم</item>
         <item>دسوق</item>
         <item>الرياض</item>
         <item>سيدي سالم</item>
@@ -947,11 +949,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_profile1">profile1</string>
-    <string name="tab_text_1">المقبوله</string>
-    <string name="tab_text_2">المتسلمه</string>
-    <string name="tab_text_3">االمحطوطه</string>
-    <string name="tab_text_4">المقبوله</string>
-    <string name="tab_text_5">المستلمه</string>
+    <string name="tab_text_1">الاوردرات المقبولة</string>
+    <string name="tab_text_2">الاوردرات التي سلمت</string>
+    <string name="tab_text_3">الاوردرات الجديدة</string>
+    <string name="tab_text_4">الاوردرات المقبولة</string>
+    <string name="tab_text_5">الاوردرات التي سلمت</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="title_activity_supplier_profile">supplierProfile</string>
 </resources>

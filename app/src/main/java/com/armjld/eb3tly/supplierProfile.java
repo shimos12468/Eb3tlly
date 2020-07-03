@@ -4,30 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.armjld.eb3tly.ui.main.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,37 +28,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 import java.util.Objects;
-
-import Model.Data;
-
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class supplierProfile extends AppCompatActivity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
-    private static ArrayList<Data> listSup;
-    private static ArrayList<Data> listDelv;
-    private long countSup;
-    private long countDelv;
-    private SupplierAdapter supplierAdapter;
-    private DeliveryAdapter deliveryAdapter;
     private FirebaseAuth mAuth;
     private ImageView imgSetPP;
-    private TextView txtUserDate;
-    private TextView uName;
-    private TextView txtNotiCount,txtTotalOrders;
-    private String TAG = "Profile";
-    private RecyclerView recyclerView;
+    private TextView txtUserDate,uName,txtNotiCount,txtTotalOrders;
+    private String TAG = "Supplier Profile";
     String uType = StartUp.userType;
     String uId;
+    String user_type;
+    @SuppressLint("RtlHardcoded")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_profile);
 
-        txtTotalOrders = findViewById(R.id.txtTotalOrders);
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
@@ -78,7 +57,6 @@ public class supplierProfile extends AppCompatActivity {
         uId = mUser.getUid();
 
         FloatingActionButton btnAdd = findViewById(R.id.btnAdd);
-        btnAdd.setVisibility(View.GONE);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -86,39 +64,18 @@ public class supplierProfile extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-
-
         ImageView btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
         ConstraintLayout constNoti = findViewById(R.id.constNoti);
         ImageView btnOpenNoti = findViewById(R.id.btnOpenNoti);
         uName = findViewById(R.id.txtUsername);
         txtUserDate = findViewById(R.id.txtUserDate);
-        TextView txtNoOrders = findViewById(R.id.txtNoOrders);
         imgSetPP = findViewById(R.id.imgPPP);
         txtNotiCount = findViewById(R.id.txtNotiCount);
-
+        txtTotalOrders = findViewById(R.id.txtTotalOrders);
 
         //Title Bar
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("اوردراتي");
-        txtNoOrders.setVisibility(View.GONE);
-        txtNotiCount.setVisibility(View.GONE);
-
-        // Adapter
-        countDelv = 0;
-        countSup = 0;
-        listDelv = new ArrayList<>();
-        listSup = new ArrayList<>();
-
-       /* //Recycler
-        recyclerView=findViewById(R.id.userRecycler);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(true);
-        layoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(layoutManager);*/
-
-
 
         // NAV BAR
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -153,7 +110,7 @@ public class supplierProfile extends AppCompatActivity {
                 finish();
             }
             if (id==R.id.nav_profile){
-                startActivity(new Intent(getApplicationContext(), NewProfile.class));
+                whichProfile();
             }
             if (id == R.id.nav_info) {
                 startActivity(new Intent(getApplicationContext(), UserSetting.class));
@@ -243,23 +200,28 @@ public class supplierProfile extends AppCompatActivity {
         });
 
         TextView usType = findViewById(R.id.txtUserType);
-        String user_type;
-        if (uType.equals("Supplier")) {
-            user_type = "sId";
-            usType.setText("تاجر");
-            txtNoOrders.setText("لم تقم باضافه اي اوردرات حتي الان");
-            btnAdd.setVisibility(View.VISIBLE);
-            btnNavbarProfile.setVisibility(View.VISIBLE);
-        } else {
-            user_type = "dId";
-            usType.setText("مندوب شحن");
-            txtNoOrders.setText("لم تقم بقبول اي اوردرات حتي الان");
-            Menu nav_menu = navigationView.getMenu();
-            nav_menu.findItem(R.id.nav_how).setVisible(false);
-            btnAdd.setVisibility(View.GONE);
-        }
+        user_type = "sId";
+        usType.setText("تاجر");
+        getOrderCountSup();
+        getRating();
 
-        // ---------------------- Get Ratings -------------------------//
+        btnAdd.setOnClickListener(v -> vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    if(Objects.requireNonNull(dataSnapshot.child("adding").getValue()).toString().equals("false")) {
+                        Toast.makeText(supplierProfile.this, "عذرا لا يمكنك اضافه اوردرات في الوقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
+                    } else {
+                        startActivity(new Intent(supplierProfile.this, AddOrders.class));
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        }));
+    }
+
+    private void getRating () {
         RatingBar rbProfile = findViewById(R.id.rbProfile);
         rDatabase.child(uId).orderByChild(user_type).equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -278,28 +240,40 @@ public class supplierProfile extends AppCompatActivity {
                     }
                     Log.i(TAG, "Average Final : " + average);
                     rbProfile.setRating((int) average);
+                } else {
+                    rbProfile.setRating((int) 5);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+    }
 
-
-        // -------------------------- ADD Order Button --------------------------//
-        btnAdd.setOnClickListener(v -> vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void getOrderCountSup() {
+        mDatabase.orderByChild("uId").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    if(Objects.requireNonNull(dataSnapshot.child("adding").getValue()).toString().equals("false")) {
-                        Toast.makeText(supplierProfile.this, "عذرا لا يمكنك اضافه اوردرات في الوقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
-                    } else {
-                        startActivity(new Intent(supplierProfile.this, AddOrders.class));
-                    }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    int count = (int) snapshot.getChildrenCount();
+                    String strCount = String.valueOf(count);
+                    txtTotalOrders.setText( "اضاف " + strCount + " اوردر");
+                } else {
+                    txtTotalOrders.setText("لم يقم باضافة اي اوردر");
                 }
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        }));
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
     }
 }

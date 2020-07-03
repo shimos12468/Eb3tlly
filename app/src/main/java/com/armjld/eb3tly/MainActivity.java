@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.exists() && mAuth.getCurrentUser() != null){
-                                    uDatabase.child(userID).child("device_token").setValue(deviceToken);
+                                    //uDatabase.child(userID).child("device_token").setValue(deviceToken);
                                     uDatabase.child(userID).child("mpass").setValue(mpass);
                                     String isCompleted = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
                                     if (isCompleted.equals("true")) {
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                                                     StartUp.userType = uType;
                                                     mdialog.dismiss();
                                                     finish();
-                                                    startActivity(new Intent(getApplicationContext(), NewProfile.class));
+                                                    startActivity(new Intent(getApplicationContext(), supplierProfile.class));
                                                     break;
                                                 case "Delivery Worker":
                                                     StartUp.userType = uType;

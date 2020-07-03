@@ -37,11 +37,11 @@ public class Notifications extends AppCompatActivity {
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
     String TAG = "Notifications";
+    String uType = StartUp.userType;
 
     @Override
     public void onBackPressed() {
-        finish();
-        startActivity(new Intent(Notifications.this, NewProfile.class));
+        whichProfile();
     }
     
     @SuppressLint("RtlHardcoded")
@@ -100,7 +100,7 @@ public class Notifications extends AppCompatActivity {
                 startActivity(newIntentNB);
             }
             if (id==R.id.nav_profile){
-                startActivity(new Intent(getApplicationContext(), NewProfile.class));
+                whichProfile();
             }
             if(id == R.id.nav_info) {
                 startActivity(new Intent(getApplicationContext(), UserSetting.class));
@@ -181,5 +181,13 @@ public class Notifications extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
+    }
+
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
     }
 }

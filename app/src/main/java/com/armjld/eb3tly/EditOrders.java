@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import Model.Data;
 import Model.notiData;
@@ -50,7 +51,7 @@ public class EditOrders extends AppCompatActivity {
     private String uID;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
-    private ImageView btnClose;
+    private ImageView btnClose, imgHelpMoney, imgHelpGet;
     String statee, acceptedID;
     String srate, srateid,drate,drateid,orderDate,acceptedTime;
     String notiDate = DateFormat.getDateInstance().format(new Date());
@@ -64,7 +65,7 @@ public class EditOrders extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(this, profile.class));
+        startActivity(new Intent(this, supplierProfile.class));
     }
 
     @Override
@@ -107,6 +108,8 @@ public class EditOrders extends AppCompatActivity {
         spPRegion = (Spinner) findViewById(R.id.txtPRegion);
         spDState = (Spinner) findViewById(R.id.txtDState);
         spDRegion = (Spinner) findViewById(R.id.txtDRegion);
+        imgHelpMoney = findViewById(R.id.imgHelpMoney);
+        imgHelpGet = findViewById(R.id.imgHelpGet);
 
         btnClose = findViewById(R.id.btnClose);
         btnClose.setVisibility(View.GONE);
@@ -123,7 +126,24 @@ public class EditOrders extends AppCompatActivity {
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
 
-        mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
+        // ---------------- Help Buttons----------------------//
+        imgHelpGet.setOnClickListener(v -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(EditOrders.this).create();
+            alertDialog.setTitle("مصاريف الشحن");
+            alertDialog.setMessage("حدد مبلغ شحن مناسب كي يوافق المندوبين علي شحن الاوردر الخاص بك.");
+            alertDialog.show();
+        });
+
+        imgHelpMoney.setOnClickListener(v -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(EditOrders.this).create();
+            alertDialog.setTitle("مقدم الاوردر");
+            alertDialog.setMessage("سعر الاوردر الي هيدفعو العميل بتاعك للمندوب عند التسليم");
+            alertDialog.show();
+        });
+
+        // ------------------- Set the Order Data -------------------- //
+        assert orderID != null;
+        mDatabase.child(Objects.requireNonNull(orderID)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Data orderData = dataSnapshot.getValue(Data.class);
@@ -632,7 +652,7 @@ public class EditOrders extends AppCompatActivity {
                                 }
                                 mdialog.dismiss();
                                 Toast.makeText(EditOrders.this, "تم تعديل الاوردر الخاص بك", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(EditOrders.this, profile.class));
+                                startActivity(new Intent(EditOrders.this, NewProfile.class));
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
                                 mdialog.dismiss();

@@ -10,15 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -28,10 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class ForgetPass extends Activity {
     private String mVerificationId;
@@ -76,67 +71,59 @@ public class ForgetPass extends Activity {
 
         txtViewPhone.setText("ادخل رقم الهاتف");
 
-        btnConfirmPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String mobile = editTextMobile.getText().toString().trim();
-                if(!mobile.isEmpty()) {
-                    String firstFourChars = mobile.substring(0, 2);
-                    if (mobile.length() != 11 && !firstFourChars.equals("01")) {
-                        editTextMobile.setError("ادخل رقم هاتف صحيح");
-                        editTextMobile.requestFocus();
-                        return;
-                    }
+        btnConfirmPhone.setOnClickListener(v -> {
+            String mobile = editTextMobile.getText().toString().trim();
+            if(!mobile.isEmpty()) {
+                String firstFourChars = mobile.substring(0, 2);
+                if (mobile.length() != 11 && !firstFourChars.equals("01")) {
+                    editTextMobile.setError("ادخل رقم هاتف صحيح");
+                    editTextMobile.requestFocus();
+                    return;
                 }
-                else return;
+            }
+            else return;
 
-                final String getMobile = mobile;
-                uDatabase.orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()) {
-                            if (snapshot.getValue() != null) {
-                                txtViewPhone.setText("ضع الرمز المرسل اليك");
-                                linerPhone.setVisibility(View.GONE);
-                                linerPass.setVisibility(View.GONE);
-                                linerVerf.setVisibility(View.VISIBLE);
-                                sendVerificationCode(getMobile);
-                            } else {
-                                Toast.makeText(ForgetPass.this, "رقم الهاتف غير مسجل", Toast.LENGTH_SHORT).show();
-                            }
+            final String getMobile = mobile;
+            uDatabase.orderByChild("phone").equalTo(mobile).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()) {
+                        if (snapshot.getValue() != null) {
+                            txtViewPhone.setText("ضع الرمز المرسل اليك");
+                            linerPhone.setVisibility(View.GONE);
+                            linerPass.setVisibility(View.GONE);
+                            linerVerf.setVisibility(View.VISIBLE);
+                            sendVerificationCode(getMobile);
                         } else {
                             Toast.makeText(ForgetPass.this, "رقم الهاتف غير مسجل", Toast.LENGTH_SHORT).show();
                         }
-
+                    } else {
+                        Toast.makeText(ForgetPass.this, "رقم الهاتف غير مسجل", Toast.LENGTH_SHORT).show();
                     }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
 
-                    }});
-            }});
-
-        btnConfirmCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String code = editTextCode.getText().toString().trim();
-                if (code.length() != 6) {
-                    editTextCode.setError("ادخل كود صحيح");
-                    editTextCode.requestFocus();
-                    return;
                 }
-                    verifyVerificationCode(code);
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }});
         });
 
-        btnReType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editTextCode.setText("");
-                linerVerf.setVisibility(View.GONE);
-                linerPass.setVisibility(View.GONE);
-                linerPhone.setVisibility(View.VISIBLE);
-                txtViewPhone.setText("ادخل رقم الهاتف");
+        btnConfirmCode.setOnClickListener(v -> {
+            String code = editTextCode.getText().toString().trim();
+            if (code.length() != 6) {
+                editTextCode.setError("ادخل كود صحيح");
+                editTextCode.requestFocus();
+                return;
             }
+                verifyVerificationCode(code);
+        });
+
+        btnReType.setOnClickListener(v -> {
+            editTextCode.setText("");
+            linerVerf.setVisibility(View.GONE);
+            linerPass.setVisibility(View.GONE);
+            linerPhone.setVisibility(View.VISIBLE);
+            txtViewPhone.setText("ادخل رقم الهاتف");
         });
     }
 
@@ -183,51 +170,45 @@ public class ForgetPass extends Activity {
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         Log.i(TAG, "Signed Up via phone");
-        mAuth.signInWithCredential(credential).addOnCompleteListener(ForgetPass.this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    txtViewPhone.setText("ادخل الرقم السري الجديد");
-                    linerPass.setVisibility(View.VISIBLE);
-                    linerPhone.setVisibility(View.GONE);
-                    linerVerf.setVisibility(View.GONE);
+        mAuth.signInWithCredential(credential).addOnCompleteListener(ForgetPass.this, task -> {
+            if (task.isSuccessful()) {
+                txtViewPhone.setText("ادخل الرقم السري الجديد");
+                linerPass.setVisibility(View.VISIBLE);
+                linerPhone.setVisibility(View.GONE);
+                linerVerf.setVisibility(View.GONE);
 
-                    btnSetPass.setOnClickListener(new View.OnClickListener() {
+                btnSetPass.setOnClickListener(v -> {
+                    if(TextUtils.isEmpty(newPass1.getText().toString())){
+                        newPass1.setError("يجب ادخال كلمه المرور");
+                        return;
+                    }
+                    if(!newPass1.getText().toString().equals(newPass2.getText().toString())){
+                        newPass2.setError("تاكد ان كلمه المرور نفسها");
+                        return;
+                    }
+
+                    Objects.requireNonNull(mAuth.getCurrentUser()).updatePassword(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onClick(View v) {
-                            if(TextUtils.isEmpty(newPass1.getText().toString())){
-                                newPass1.setError("يجب ادخال كلمه المرور");
-                                return;
+                        public void onComplete(@NonNull Task<Void> task1) {
+                            if (task1.isSuccessful()) {
+                                uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                                Log.i(TAG, "Pass Updated : " + newPass1.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
+                                mAuth.signOut();
+                                Toast.makeText(ForgetPass.this, "تم تغيير الرقم السري بنجاح", Toast.LENGTH_SHORT).show();
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            } else {
+                                Toast.makeText(ForgetPass.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
                             }
-                            if(!newPass1.getText().toString().equals(newPass2.getText().toString())){
-                                newPass2.setError("تاكد ان كلمه المرور نفسها");
-                                return;
-                            }
-
-                            mAuth.getCurrentUser().updatePassword(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                                        Log.i(TAG, "Pass Updated : " + newPass1.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
-                                        mAuth.signOut();
-                                        Toast.makeText(ForgetPass.this, "تم تغيير الرقم السري بنجاح", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                    } else {
-                                        Toast.makeText(ForgetPass.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
                         }
                     });
-                } else {
-                    String message = "Something is wrong, we will fix it soon...";
-                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        message = "Invalid code entered...";
-                    }
-                    Toast.makeText(ForgetPass.this, message, Toast.LENGTH_LONG).show();
+                });
+            } else {
+                String message = "Something is wrong, we will fix it soon...";
+                if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                    message = "Invalid code entered...";
                 }
+                Toast.makeText(ForgetPass.this, message, Toast.LENGTH_LONG).show();
             }
         });
     }
