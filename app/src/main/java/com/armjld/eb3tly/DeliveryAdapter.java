@@ -31,21 +31,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
 import Model.Data;
 import Model.notiData;
 import Model.rateData;
@@ -63,7 +60,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     String uId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
-    String notiDate = DateFormat.getDateInstance().format(new Date());
+    String notiDate = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;
 
     public void addItem(int position , Data data){
@@ -102,18 +99,16 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder,final int position) {
         Data data = filtersData.get(position);
         // Get Post Date
-        String startDate = Objects.requireNonNull(data.getDate().toString());
+        String startDate = Objects.requireNonNull(data.getDate());
         String stopDate = datee;
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
         Date d1 = null;
         Date d2 = null;
-        if(startDate != null) {
-            try {
-                d1 = format.parse(startDate);
-                d2 = format.parse(stopDate);
-            } catch (ParseException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            d1 = format.parse(startDate);
+            d2 = format.parse(stopDate);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
         }
         assert d2 != null;
         assert d1 != null;
@@ -327,7 +322,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             inflater.inflate(R.menu.popup_menu_delv, popup.getMenu());
             Menu popupMenu = popup.getMenu();
 
-            switch (data.getStatue().toString()) {
+            switch (data.getStatue()) {
                 case "accepted" : {
                     popupMenu.findItem(R.id.deleted).setVisible(true);
                     popupMenu.findItem(R.id.doesntanswer).setVisible(true);
@@ -360,12 +355,13 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    reportData repo3 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله");
+                                    String id = reportDatabase.child(data.getuId()).push().getKey();
+                                    reportData repo3 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله", id);
 
                                     mDatabase.child(orderID).child("statue").setValue("placed");
                                     mDatabase.child(orderID).child("uAccepted").setValue("");
 
-                                    reportDatabase.child(data.getuId()).push().setValue(repo3);
+                                    reportDatabase.child(data.getuId()).child(id).setValue(repo3);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
@@ -379,8 +375,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    reportData repo4 = new reportData(uId, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق");
-                                    reportDatabase.child(data.getuId()).push().setValue(repo4);
+                                    String id = reportDatabase.child(data.getuId()).push().getKey();
+                                    reportData repo4 = new reportData(uId, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق", id);
+                                    reportDatabase.child(data.getuId()).child(id).setValue(repo4);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
@@ -394,8 +391,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         DialogInterface.OnClickListener dialogClickListener3 = (dialog, which) -> {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر");
-                                    reportDatabase.child(data.getuId()).push().setValue(repo5);
+                                    String id = reportDatabase.child(data.getuId()).push().getKey();
+                                    reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر", id);
+                                    reportDatabase.child(data.getuId()).child(id).setValue(repo5);
 
 
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
@@ -411,8 +409,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         DialogInterface.OnClickListener dialogClickListener4 = (dialog, which) -> {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    reportData repo6 = new reportData(uId, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود");
-                                    reportDatabase.child(data.getuId()).push().setValue(repo6);
+                                    String id = reportDatabase.child(data.getuId()).push().getKey();
+                                    reportData repo6 = new reportData(uId, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود", id);
+                                    reportDatabase.child(data.getuId()).child(id).setValue(repo6);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
@@ -426,8 +425,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         DialogInterface.OnClickListener dialogClickListener5 = (dialog, which) -> {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    reportData repo7 = new reportData(uId, data.getuId(),orderID,datee,"لم استلم الاوردر بعد");
-                                    reportDatabase.child(data.getuId()).push().setValue(repo7);
+                                    String id = reportDatabase.child(data.getuId()).push().getKey();
+                                    reportData repo7 = new reportData(uId, data.getuId(),orderID,datee,"لم استلم الاوردر بعد", id);
+                                    reportDatabase.child(data.getuId()).child(id).setValue(repo7);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:

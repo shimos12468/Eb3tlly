@@ -453,50 +453,6 @@ public class profile extends AppCompatActivity {
                             if(data.getStatue().equals("placed")) {
                                 myviewholder.mImageButton.setVisibility(View.GONE);
                             }
-                            // Report for Supplier
-                            myviewholder.mImageButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    PopupMenu popup = new PopupMenu(profile.this,v );
-                                    MenuInflater inflater = popup.getMenuInflater();
-                                    inflater.inflate(R.menu.popup_menu, popup.getMenu());
-                                    Menu popupMenu = popup.getMenu();
-                                    popupMenu.findItem(R.id.didnt_reciv).setVisible(false);
-                                    popupMenu.findItem(R.id.didnt_deliv).setVisible(false);
-                                    switch (data.getStatue()) {
-                                        case "accepted" : {
-                                            popupMenu.findItem(R.id.didnt_reciv).setVisible(true);
-                                        }
-                                        case "recived" :
-                                        case "delivered" : {
-                                            popupMenu.findItem(R.id.didnt_deliv).setVisible(true);
-                                        }
-                                    }
-                                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                        @Override
-                                        public boolean onMenuItemClick(MenuItem item) {
-                                            switch (item.getItemId()) {
-                                                case R.id.didnt_reciv:
-                                                    reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين");
-                                                    reportDatabase.child(dilvID).push().setValue(repo);
-
-                                                    mDatabase.child(orderID).child("uAccepted").setValue("");
-                                                    mDatabase.child(orderID).child("statue").setValue("placed");
-
-                                                    Toast.makeText(profile.this, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                                case R.id.didnt_deliv:
-                                                    reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل");
-                                                    reportDatabase.child(dilvID).push().setValue(repo2);
-                                                    Toast.makeText(profile.this, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                            }
-                                            return false;
-                                        }
-                                    });
-                                    popup.show();
-                                }
-                            });
 
                             // Delete Order for Supplier
                                 myviewholder.btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -1064,78 +1020,6 @@ public class profile extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Toast.makeText(profile.this, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                            // --------- Report for Delvery
-                            myviewholder.mImageButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    PopupMenu popup = new PopupMenu(profile.this,v );
-                                    MenuInflater inflater = popup.getMenuInflater();
-                                    inflater.inflate(R.menu.popup_menu_delv, popup.getMenu());
-                                    Menu popupMenu = popup.getMenu();
-
-                                    popupMenu.findItem(R.id.deleted).setVisible(false);
-                                    popupMenu.findItem(R.id.falsemoney).setVisible(false);
-                                    popupMenu.findItem(R.id.doesntanswer).setVisible(false);
-                                    popupMenu.findItem(R.id.idelv).setVisible(false);
-                                    popupMenu.findItem(R.id.didnt_reciv).setVisible(false);
-
-                                    switch (data.getStatue()) {
-                                        case "accepted" : {
-                                            popupMenu.findItem(R.id.deleted).setVisible(true);
-                                            popupMenu.findItem(R.id.doesntanswer).setVisible(true);
-                                            popupMenu.findItem(R.id.idelv).setVisible(true);
-                                        }
-                                        case "recived" : {
-                                            popupMenu.findItem(R.id.didnt_reciv).setVisible(true);
-                                        }
-                                        case "delivered" : {
-                                            popupMenu.findItem(R.id.falsemoney).setVisible(true);
-                                        }
-                                    }
-                                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                        @Override
-                                        public boolean onMenuItemClick(MenuItem item) {
-                                            switch (item.getItemId()) {
-                                                case R.id.deleted:
-                                                    reportData repo3 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله");
-
-                                                    mDatabase.child(orderID).child("statue").setValue("placed");
-                                                    mDatabase.child(orderID).child("uAccepted").setValue("");
-
-                                                    reportDatabase.child(data.getuId()).push().setValue(repo3);
-                                                    Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                                case R.id.falsemoney:
-                                                    reportData repo4 = new reportData(uId, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق");
-                                                    reportDatabase.child(data.getuId()).push().setValue(repo4);
-                                                    Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                                case R.id.doesntanswer:
-                                                    reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر");
-                                                    reportDatabase.child(data.getuId()).push().setValue(repo5);
-
-
-                                                    Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                                case R.id.idelv:
-                                                    reportData repo6 = new reportData(uId, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود");
-                                                    reportDatabase.child(data.getuId()).push().setValue(repo6);
-                                                    Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                                case R.id.didnt_reciv:
-                                                    reportData repo7 = new reportData(uId, data.getuId(),orderID,datee,"لم استلم الاوردر بعد");
-                                                    reportDatabase.child(data.getuId()).push().setValue(repo7);
-                                                    Toast.makeText(profile.this, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                            }
-                                            return false;
-                                        }
-                                    });
-
-                                    popup.show();
                                 }
                             });
 

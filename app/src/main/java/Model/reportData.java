@@ -1,7 +1,7 @@
 package Model;
 
 public class reportData {
-    String userID,reportedID,orderID,date,type;
+    String userID,reportedID,orderID,date,type,id;
     public reportData() {}
 
     public String getUserID() {
@@ -44,11 +44,20 @@ public class reportData {
         this.type = type;
     }
 
-    public reportData(String userID, String reportedID, String orderID, String date, String type) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public reportData(String userID, String reportedID, String orderID, String date, String type, String id) {
         this.userID = userID;
         this.reportedID = reportedID;
         this.orderID= orderID;
         this.date = date;
         this.type = type;
+        this.id = id;
     }
 }

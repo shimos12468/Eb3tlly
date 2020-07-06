@@ -43,11 +43,11 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class Admin extends Activity {
 
     private FirebaseAuth mAuth;
-    private DatabaseReference uDatabase,mDatabase,rDatabase,vDatabase,nDatabase;
+    private DatabaseReference uDatabase,mDatabase,rDatabase,vDatabase,nDatabase,reportDatabase;
     private EditText txtChild,txtValue,txtBody;
     private TextView txtAllOrdersCount,txtAllUsersCount,txtAllDevCount,txtAllSupCount,txtAllProfit;
     Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments,btnDeleteUser;
-    Button btnMessages,btnSendNotficationDel, btnSendNotficationSup;
+    Button btnMessages,btnSendNotficationDel, btnSendNotficationSup, btnReportss;
     ImageView btnRefresh,imgLogo;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     int supCount = 0;
@@ -84,6 +84,7 @@ public class Admin extends Activity {
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         vDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("values");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
+        reportDatabase = getInstance().getReference().child("Pickly").child("reports");
 
         btnResetCounter = findViewById(R.id.btnResetCounter);
         btnAddToOrders = findViewById(R.id.btnAddToOrders);
@@ -104,6 +105,7 @@ public class Admin extends Activity {
         btnMessages = findViewById(R.id.btnMessages);
         btnRefresh = findViewById(R.id.btnRefresh);
         imgLogo = findViewById(R.id.imgLogo);
+        btnReportss = findViewById(R.id.btnReportss);
         txtBody = findViewById(R.id.txtBody);
         btnSendNotficationDel = findViewById(R.id.btnSendNotficationDel);
         btnSendNotficationSup = findViewById(R.id.btnSendNotficationSup);
@@ -168,6 +170,9 @@ public class Admin extends Activity {
             return true;
         });
 
+        btnReportss.setOnClickListener(v -> {
+            startActivity(new Intent(Admin.this, AdminReports.class));
+        });
         // ------------------------ Send notfication to all Delivery Workers ----------------------------//
         btnSendNotficationDel.setOnClickListener(v -> {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
@@ -294,7 +299,28 @@ public class Admin extends Activity {
 
         // ------------------------- Delete Non Completed ---------------------------//
         btnDeleteUser.setOnClickListener(v -> {
-            uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            reportDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot user : snapshot.getChildren()) {
+                        String userID = user.getKey();
+                        for(DataSnapshot reports : user.getChildren()) {
+                            String repoID = reports.getKey();
+                            if(!reports.child("id").exists()) {
+                                assert userID != null;
+                                assert repoID != null;
+                                reportDatabase.child(userID).child(repoID).child("id").setValue(repoID);
+                                Toast.makeText(Admin.this, "Done Boss!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+
+            /*uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -357,7 +383,7 @@ public class Admin extends Activity {
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            });
+            });*/
 
             /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -470,14 +496,17 @@ public class Admin extends Activity {
 
         // ----------------------------------------------- ADD NEW CHILD TO ALL USERS -------------------------//
         btnAddToUsers.setOnClickListener(v -> {
+
             if(TextUtils.isEmpty(txtChild.getText().toString())){
                 txtChild.setError("Can't Be EMPTY !!");
                 return;
             }
+
             if(TextUtils.isEmpty(txtValue.getText().toString())){
                 txtValue.setError("Can't Be EMPTY !!");
                 return;
             }
+
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:

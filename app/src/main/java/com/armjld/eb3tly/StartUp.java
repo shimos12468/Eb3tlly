@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,6 +28,7 @@ public class StartUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     public static String userType;
     DatabaseReference uDatabase;
+    String deviceToken;
     public void onBackPressed() { }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -61,9 +64,12 @@ public class StartUp extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.child("id").exists()) {
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+                        deviceToken = instanceIdResult.getToken();
+                    });
                     String isComplete = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-
+                    uDatabase.child(user.getUid()).child("device_token").setValue(deviceToken);
                     if(isComplete.equals("true")) {
                         if(isActive.equals("true")) {
                             String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();

@@ -60,8 +60,6 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
         String uID = replyAdmin.get(position).getuID();
         String version = replyAdmin.get(position).getCurrentVersion();
 
-
-
         holder.setBody(Name, Phone, Email, Message,TimeStamp,version);
 
         holder.btnClose.setOnClickListener(v -> {

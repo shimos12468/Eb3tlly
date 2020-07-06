@@ -8,11 +8,11 @@
     <item
         android:id="@+id/falsemoney"
         android:orderInCategory="100"
-        android:title="التاجر اخلف بالاتفاق" />
+        android:title="لم استلم المبلغ المتفق عليه" />
     <item
         android:id="@+id/doesntanswer"
         android:orderInCategory="100"
-        android:title="التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر" />
+        android:title="التاجر لا يرد علي الهاتف" />
     <item
         android:id="@+id/idelv"
         android:orderInCategory="100"

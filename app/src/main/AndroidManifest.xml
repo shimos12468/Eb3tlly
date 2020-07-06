@@ -17,11 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity
-            android:name=".supplierProfile"
-            android:label="@string/title_activity_supplier_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".NewProfile" />
+        <activity android:name=".AdminReports"></activity>
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -31,6 +27,12 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".NewProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".supplierProfile"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".IntroFirstRun"
             android:screenOrientation="portrait" />

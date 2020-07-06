@@ -332,7 +332,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         mDatabase.child(gettingID).child("statue").setValue("accepted");
                                                         mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
 
-                                                        // --------------------------- Send Notifications ---------------------//
+                                                        // -------------------------- Send Notifications ---------------------//
                                                         notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",notiDate,"false");
                                                         nDatabase.child(owner).push().setValue(Noti);
 

@@ -289,6 +289,16 @@
                             android:text="Button" />
 
                         <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnReportss"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Check Reports"
+                            android:visibility="visible" />
+
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/btnDeleteUser"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

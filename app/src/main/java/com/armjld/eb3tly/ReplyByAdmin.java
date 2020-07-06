@@ -59,7 +59,7 @@ public class ReplyByAdmin extends AppCompatActivity {
         btnDeactive = findViewById(R.id.btnDeactive);
         btnInfo = findViewById(R.id.btnInfo);
 
-        count =0;
+        count = 0;
         mm = new ArrayList<>();
 
         //Recycler
@@ -127,6 +127,7 @@ public class ReplyByAdmin extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError error) { }
             });
         });
+
         btnToDel.setOnClickListener(v -> {
             String num = txtUserNumber.getText().toString().trim();
             uDatabase.orderByChild("phone").equalTo(num).addListenerForSingleValueEvent(new ValueEventListener() {

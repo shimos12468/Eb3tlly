@@ -173,8 +173,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين");
-                                    reportDatabase.child(dilvID).push().setValue(repo);
+                                    String id = reportDatabase.child(dilvID).push().getKey();
+                                    reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين", id);
+                                    reportDatabase.child(dilvID).child(id).setValue(repo);
 
                                     mDatabase.child(orderID).child("uAccepted").setValue("");
                                     mDatabase.child(orderID).child("statue").setValue("placed");
@@ -192,8 +193,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
                             switch (which){
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل");
-                                    reportDatabase.child(dilvID).push().setValue(repo2);
+                                    String id = reportDatabase.child(dilvID).push().getKey();
+                                    reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل", id);
+                                    reportDatabase.child(dilvID).child(id).setValue(repo2);
                                     Toast.makeText(context, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
@@ -226,6 +228,10 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                                     String orderI = Objects.requireNonNull(Objects.requireNonNull(sn.child("orderid").getValue()).toString());
                                                     if(orderI.equals(orderID)) {
                                                         sn.getRef().removeValue();
+
+                                                        filtersData.remove(position);
+                                                        notifyItemRemoved(position);
+                                                        notifyItemRangeChanged(position, filtersData.size());
                                                     }
                                                 }
                                             }
@@ -557,9 +563,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 case "accepted": {
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setEnabled(true);
-                    DatabaseReference mRef;
-                    mRef = getInstance().getReference("Pickly").child("users").child(uAccepted);
-                    mRef.addValueEventListener(new ValueEventListener() {
+                    uDatabase.child(uAccepted).addValueEventListener(new ValueEventListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

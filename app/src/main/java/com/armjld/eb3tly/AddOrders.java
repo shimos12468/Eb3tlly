@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -131,6 +132,7 @@ public class AddOrders extends AppCompatActivity {
             alertDialog.setMessage("سعر الاوردر الي هيدفعو العميل بتاعك للمندوب عند التسليم");
             alertDialog.show();
         });
+
         // Pick up Government Spinner
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(AddOrders.this, R.array.txtStates, R.layout.color_spinner_layout);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -459,7 +461,19 @@ public class AddOrders extends AppCompatActivity {
             }
         });
 
-        // ---------------------------------- Date Picker
+        SharedPreferences sharedPreferences = this.getSharedPreferences("Location", MODE_PRIVATE);
+        String pState = sharedPreferences.getString("State", null);
+        String pRegion = sharedPreferences.getString("Region", null);
+        String pStroe = sharedPreferences.getString("Store", null);
+        String pAddress = sharedPreferences.getString("Address", null);
+
+        if(pState != null && pRegion != null && pStroe != null && pAddress != null) {
+            PAddress.setText(pAddress);
+            PShop.setText(pStroe);
+            spPState.setSelection(getIndex(spPState, pState));
+            spPRegion.setSelection(getIndex(spPRegion, pRegion));
+        }
+
         final Calendar myCalendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener pdate = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -477,15 +491,12 @@ public class AddOrders extends AppCompatActivity {
             }
         };
 
-        DDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dpd = new DatePickerDialog(AddOrders.this, pdate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                DatePicker dp = dpd.getDatePicker();
-                dp.setMinDate(myCalendar.getTimeInMillis() - 100); // disable all the previos dates
-                dpd.show();
-            }
+        DDate.setOnClickListener(v -> {
+            dpd = new DatePickerDialog(AddOrders.this, pdate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH));
+            DatePicker dp = dpd.getDatePicker();
+            dp.setMinDate(myCalendar.getTimeInMillis() - 100); // disable all the previos dates
+            dpd.show();
         });
 
         // ----------------- Save the Order --------------------//
@@ -598,6 +609,15 @@ public class AddOrders extends AppCompatActivity {
                                         mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
                                 mDatabase.child(id).setValue(data);
                                 mDatabase.child(id).child("lastedit").setValue(datee);
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("Location", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("Store", mPShop);
+                                editor.putString("State", spPState.getSelectedItem().toString());
+                                editor.putString("Region", spPRegion.getSelectedItem().toString());
+                                editor.putString("Address", mPAddress);
+                                editor.apply();
+
                                 mdialog.dismiss();
                                 Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(AddOrders.this, supplierProfile.class));
@@ -750,4 +770,12 @@ public class AddOrders extends AppCompatActivity {
         });
     }
 
+    private int getIndex(Spinner spinner, String value) {
+        for(int i=0;i <spinner.getCount(); i++) {
+            if(spinner.getItemAtPosition(i).toString().equals(value)) {
+                return i;
+            }
+        }
+        return 0;
+    }
 }

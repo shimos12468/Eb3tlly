@@ -186,7 +186,6 @@ public class EditOrders extends AppCompatActivity {
                 spPState.setPrompt("اختار المحافظة");
                 spPState.setAdapter(adapter2);
                 spPState.setSelection(adapter2.getPosition(orderData.getTxtPState()));
-                // Get the Government Regions
                 spPState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -652,7 +651,7 @@ public class EditOrders extends AppCompatActivity {
                                 }
                                 mdialog.dismiss();
                                 Toast.makeText(EditOrders.this, "تم تعديل الاوردر الخاص بك", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(EditOrders.this, NewProfile.class));
+                                startActivity(new Intent(EditOrders.this, supplierProfile.class));
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
                                 mdialog.dismiss();
