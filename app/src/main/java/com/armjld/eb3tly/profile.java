@@ -96,6 +96,8 @@ public class profile extends AppCompatActivity {
     // Disable the Back Button
     @Override
     public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, HomeActivity.class));
     }
 
     @Override

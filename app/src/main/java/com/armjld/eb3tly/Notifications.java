@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.Objects;
 import Model.notiData;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
@@ -32,7 +34,7 @@ public class Notifications extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private DatabaseReference nDatabase;
     private FirebaseAuth mAuth;
-    private static notiData[] mm;
+    private static ArrayList<notiData> mm;
     private long count;
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
@@ -62,7 +64,7 @@ public class Notifications extends AppCompatActivity {
         ImageView btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         count =0;
-        mm = new notiData[1000000];
+        mm = new ArrayList<notiData>();
         txtNoOrders.setVisibility(View.GONE);
 
         //Title Bar
@@ -100,6 +102,7 @@ public class Notifications extends AppCompatActivity {
                 startActivity(newIntentNB);
             }
             if (id==R.id.nav_profile){
+                finish();
                 whichProfile();
             }
             if(id == R.id.nav_info) {
@@ -148,10 +151,10 @@ public class Notifications extends AppCompatActivity {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if(ds.exists()) {
                             notiData notiDB = ds.getValue(notiData.class);
-                            mm[(int) count] = notiDB;
+                            mm.add((int)count,notiDB);
                             count++;
-                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), count);
                             nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
+                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
                             recyclerView.setAdapter(orderAdapter);
                         }
                     }

@@ -49,7 +49,10 @@ public class NewProfile extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, HomeActivity.class));
+    }
 
     @SuppressLint("RtlHardcoded")
     @Override

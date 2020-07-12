@@ -44,6 +44,7 @@ public class AddOrders extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button btnsave,btnSaveAdd;
     private String uID;
+    String uType = StartUp.userType;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
     private ImageView btnClose, imgHelpMoney, imgHelpGet;
@@ -56,7 +57,15 @@ public class AddOrders extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(this, supplierProfile.class));
+        whichProfile();
+    }
+
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
     }
 
     @Override

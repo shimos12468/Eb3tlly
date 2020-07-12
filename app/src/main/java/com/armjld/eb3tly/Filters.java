@@ -30,15 +30,16 @@ import java.util.Locale;
 
 import Model.Data;
 
-public class Filters extends AppCompatActivity {
+public class   Filters extends AppCompatActivity {
 
     private Spinner spPState, spPRegion, spDState, spDRegion;
     private EditText txtFilterMoney;
     private static ArrayList<Data> ff;
     private DatabaseReference mDatabase;
     private String TAG = "Filters";
+     int filterDuplicte =0;
     private MyAdapter filterAdapter;
-    private long countFilter;
+    private long countFilter =0;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     String filterDate;
 
@@ -460,6 +461,7 @@ public class Filters extends AppCompatActivity {
         spPRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(filterDuplicte>=1)
                 applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
             }
 
@@ -470,6 +472,7 @@ public class Filters extends AppCompatActivity {
         spDRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 applyFilter(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
             }
 
@@ -499,14 +502,17 @@ public class Filters extends AppCompatActivity {
                 if(dataSnapshot.exists()) {
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                         final Data filterData = ds.getValue(Data.class);
-                        int filterValue;
+                        final Data testData = null;
+                        int filterValue=0;
                         assert filterData != null;
                         int dbMoney = Integer.parseInt(filterData.getGMoney());
                         if (TextUtils.isEmpty(money) || money.equals("0")) {
                             filterValue = 5000000;
-                        } else {
+                        }
+                        else {
                             filterValue = Integer.parseInt(money);
                         }
+
 
                         // ------------------------ CHECKING AREAS FILTERS --------------------------//
                         if(spRegion.equals("كل المناطق")) {
@@ -514,37 +520,48 @@ public class Filters extends AppCompatActivity {
                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtPState().equals(spState) && filterData.getTxtDState().equals(sdState) ) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
+                                    Log.i(TAG,"first if in all mnat2");
+                                    Log.i(TAG ,filterData.getDName());
                                 }
-                            } else {
+                            }
+                            else {
                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtPState().equals(spState) && filterData.getmDRegion().equals(sdRegion)) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
+                                    Log.i(TAG,"second if in all mnat2");
                                 }
                             }
-                        } else {
+                        }
+
+                        else {
                             if(sdState.equals("كل المناطق")) {
                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getmPRegion().equals(spRegion) && filterData.getTxtDState().equals(sdState)) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
+                                    Log.i(TAG,"first  if in else");
                                 }
-                            } else {
+                            }
+                            else {
                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue &&
                                         filterData.getmPRegion().equals(spRegion) &&
                                         filterData.getmDRegion().equals(sdRegion) ) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
+                                    Log.i(TAG,"second  if in else");
                                 }
                             }
                         }
                     }
                     updateNone(ff.size());
-                    filterAdapter = new MyAdapter(Filters.this, ff, getApplicationContext(), countFilter);
+                    filterAdapter = new MyAdapter(Filters.this, ff, getApplicationContext(), ff.size());
                     recyclerView.setAdapter(filterAdapter);
+                    filterDuplicte++;
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+
     }
 
     private void tsferAdapter() {

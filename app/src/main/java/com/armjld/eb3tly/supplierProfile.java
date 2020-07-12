@@ -40,6 +40,14 @@ public class supplierProfile extends AppCompatActivity {
     String uType = StartUp.userType;
     String uId;
     String user_type;
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, HomeActivity.class));
+    }
+
     @SuppressLint("RtlHardcoded")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

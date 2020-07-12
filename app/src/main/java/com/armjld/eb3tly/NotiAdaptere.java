@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import Model.notiData;
@@ -28,14 +29,15 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
     Context context, context1;
     long count;
-    notiData[] notiData;
+    String uType = StartUp.userType;
+    ArrayList<notiData>notiData;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase, uDatabase, nDatabase;
     private String TAG = "Notification Adapter";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
 
-    public NotiAdaptere(Context context, notiData[] notiData, Context context1, long count) {
+    public NotiAdaptere(Context context, ArrayList<notiData> notiData, Context context1, long count) {
         this.count = count;
         this.context = context;
         this.notiData = notiData;
@@ -56,16 +58,16 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
-        String From = notiData[position].getFrom();
-        String To = notiData[position].getTo();
-        String Datee = notiData[position].getDatee();
-        String Statue = notiData[position].getStatue();
-        String OrderID = notiData[position].getOrderid();
+        String From = notiData.get(position).getFrom();
+        String To = notiData.get(position).getTo();
+        String Datee = notiData.get(position).getDatee();
+        String Statue = notiData.get(position).getStatue();
+        String OrderID =notiData.get(position).getOrderid();
 
         holder.setBody(From, Statue, OrderID, To);
         holder.setDate(Datee);
 
-        holder.myview.setOnClickListener(v -> context.startActivity(new Intent(context, NewProfile.class)));
+        holder.myview.setOnClickListener(v -> whichProfile());
     }
 
 
@@ -151,5 +153,12 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             txtNotidate.setText(date);
         }
 
+    }
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            context.startActivity(new Intent(context, supplierProfile.class));
+        } else {
+            context.startActivity(new Intent(context, NewProfile.class));
+        }
     }
 }
