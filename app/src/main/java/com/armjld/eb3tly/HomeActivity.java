@@ -73,12 +73,12 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+            finishAffinity();
+            System.exit(0);
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "اضغط مرة اخري للخروج من التطبيق", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 

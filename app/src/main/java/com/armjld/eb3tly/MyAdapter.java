@@ -27,8 +27,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -50,9 +53,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      String uType = StartUp.userType;
 
      SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-     SimpleDateFormat notiSDF = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
+    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat notiSDF = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
      String datee = sdf.format(new Date());
      String notiDate = notiSDF.format(new Date());
+    int howMany = 0;
 
     public void addItem(int position , Data data){
         int size = filtersData.size();
@@ -93,6 +98,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String startDate = filtersData.get(position).getDate();
         String stopDate = datee;
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
         Date d1 = null;
         Date d2 = null;
         try {
@@ -337,7 +344,46 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         nDatabase.child(owner).push().setValue(Noti);
 
                                                         Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
-                                                        context.startActivity(new Intent(context, NewProfile.class));
+
+                                                        howMany = 0;
+                                                        mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                if(snapshot.exists()) {
+                                                                    for (DataSnapshot ds : snapshot.getChildren()) {
+                                                                        if(ds.exists() && ds.child("ddate").exists()) {
+                                                                            Data orderData = ds.getValue(Data.class);
+                                                                            assert orderData != null;
+                                                                            Date orderDate = null;
+                                                                            Date myDate = null;
+                                                                            try {
+                                                                                orderDate = format2.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString());
+                                                                                myDate =  format2.parse(sdf2.format(Calendar.getInstance().getTime()));
+                                                                            } catch (ParseException e) {
+                                                                                e.printStackTrace();
+                                                                            }
+                                                                            assert orderDate != null;
+                                                                            assert myDate != null;
+                                                                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
+                                                                                howMany++;
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    if(howMany == 0) {
+                                                                        context.startActivity(new Intent(context, NewProfile.class));
+                                                                    } else {
+                                                                        Intent otherOrders = new Intent(context, OrdersBySameUser.class);
+                                                                        otherOrders.putExtra("userid", owner);
+                                                                        context.startActivity(otherOrders);
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                            }
+                                                        });
+
                                                         break;
                                                     case DialogInterface.BUTTON_NEGATIVE:
                                                         break;

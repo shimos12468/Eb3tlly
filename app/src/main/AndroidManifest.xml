@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".AdminReports"></activity>
+        <activity android:name=".OrdersBySameUser"></activity>
+        <activity android:name=".AdminReports" />
 
         <service
             android:name=".MyFirebaseMessagingService"

@@ -187,7 +187,7 @@ public class ReplyByAdmin extends AppCompatActivity {
                         for(DataSnapshot ds : snapshot.getChildren()) {
                             if(ds.exists()) {
                                 String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                                uDatabase.child(userID).child("accountType").child("canceled").setValue("0");
+                                uDatabase.child(userID).child("canceled").setValue("0");
                                 Toast.makeText(ReplyByAdmin.this, "Reseted Successfully", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(ReplyByAdmin.this, "Wrong Number", Toast.LENGTH_SHORT).show();
