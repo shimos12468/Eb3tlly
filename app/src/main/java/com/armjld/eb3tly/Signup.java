@@ -26,9 +26,11 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,12 +61,12 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class Signup extends AppCompatActivity {
 
     private SOMEUSERDATAPROVIDER impdata;
-    private EditText user,email,pass,con_password , phoneNum,editTextCode;
+    private EditText user,email,pass,con_password , phoneNum;
     private Button btnreg;
-    private TextView logintxt ,timer,txtViewPhone ,txtretype,txtSended;
     private ImageView imgSetPP;
     private String phone;
     private FirebaseAuth mAuth;
+    Spinner spState;
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase,nDatabase;
     private ConstraintLayout linerVerf, linersignUp;
@@ -78,10 +80,12 @@ public class Signup extends AppCompatActivity {
     private String TAG = "Sign Up Activity";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
     int TAKE_IMAGE_CODE = 10001;
+    String state;
 
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
+    String acDate = DateFormat.getDateInstance().format(new Date());
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -246,6 +250,7 @@ public class Signup extends AppCompatActivity {
         reference.getDownloadUrl().addOnSuccessListener(uri -> {
             Log.i("Sign UP", " add Profile URL");
             uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
+            StartUp.userURL = uri.toString();
             mdialog.dismiss();
         });
     }
@@ -261,9 +266,9 @@ public class Signup extends AppCompatActivity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         linersignUp = findViewById(R.id.linearsignUp);
         linerVerf = findViewById(R.id.linerVerf);
-        logintxt = findViewById(R.id.signup_text);
         linerVerf.setVisibility(View.GONE);
         linersignUp.setVisibility(View.VISIBLE);
+        spState = findViewById(R.id.spState);
         tbTitle.setText("تسجيل حساب جديد");
 
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -275,14 +280,9 @@ public class Signup extends AppCompatActivity {
         pass = findViewById(R.id.txtEditPassword);
         con_password = findViewById(R.id.txtEditPassword2);
         btnreg = findViewById(R.id.btnEditInfo);
-        txtretype = findViewById(R.id.btnReType);
         imgSetPP = findViewById(R.id.imgEditPhoto);
         phoneNum = findViewById(R.id.phoneNumber);
-        timer = findViewById(R.id.timer);
-        txtViewPhone = findViewById(R.id.txtViewPhone);
-        editTextCode = findViewById(R.id.txtVerfCode);
         btnConfirmCode = findViewById(R.id.btnConfirmCode);
-        txtSended = findViewById(R.id.txtSended);
         Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
 
 
@@ -291,6 +291,12 @@ public class Signup extends AppCompatActivity {
         rdDlivery = (RadioButton) findViewById(R.id.rdDlivery);
         rdSupplier = (RadioButton) findViewById(R.id.rdSupplier);
         accountType = "Delivery Worker";
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Signup.this, R.array.txtStates, R.layout.color_spinner_layout);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spState.setPrompt("اختار المحافظة");
+        spState.setAdapter(adapter);
+
         rdAccountType.setOnCheckedChangeListener((group, checkedId) -> {
             // find which radio button is selected
             if (checkedId == R.id.rdSupplier) {
@@ -317,6 +323,7 @@ public class Signup extends AppCompatActivity {
             String memail = email.getText().toString().trim();
             String mpass = pass.getText().toString().trim();
             String con_pass = con_password.getText().toString().trim();
+            state = spState.getSelectedItem().toString();
             phone = phoneNum.getText().toString().trim();
             // Check For empty fields
             if(TextUtils.isEmpty(muser)){
@@ -331,7 +338,7 @@ public class Signup extends AppCompatActivity {
                 pass.setError("يجب ادخال كلمه المرور");
                 return;
             }
-            //Toast.makeText(Signup.this, SNN.length(), Toast.LENGTH_SHORT).show();
+
             if(!mpass.equals(con_pass)){
                 con_password.setError("تاكد ان كلمه المرور نفسها");
                 return;
@@ -404,12 +411,12 @@ public class Signup extends AppCompatActivity {
                 String muser = impdata.getUser();
                 String phone = impdata.getPhone();
 
-                datee = DateFormat.getDateInstance().format(new Date());
-                userData data= new userData(muser, phone, memail1, datee, id, accountType, defultPP, mpass1, "0");
+                userData data= new userData(muser, phone, memail1, acDate, id, accountType, defultPP, mpass1, "0");
                 uDatabase.child(id).setValue(data);
                 uDatabase.child(id).child("completed").setValue("true");
                 uDatabase.child(id).child("profit").setValue("0");
                 uDatabase.child(id).child("active").setValue("true");
+                uDatabase.child(id).child("userState").setValue(state);
 
                 if(bitmap != null) {
                     handleUpload(bitmap);
@@ -423,12 +430,15 @@ public class Signup extends AppCompatActivity {
                 notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
                 nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
 
+                StartUp.userName = muser;
+                StartUp.userDate = acDate;
+                StartUp.userType = accountType;
+                StartUp.userURL = defultPP;
+
                 if (accountType.equals("Supplier")) {
-                    StartUp.userType = "Supplier";
                     finish();
                     startActivity(new Intent(getApplicationContext(), introSup.class));
                 } else if (accountType.equals("Delivery Worker")) {
-                    StartUp.userType = "Delivery Worker";
                     finish();
                     startActivity(new Intent(getApplicationContext(), intro2.class));
                 }

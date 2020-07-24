@@ -1,7 +1,9 @@
 package com.armjld.eb3tly;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,6 +15,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -34,13 +38,12 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class supplierProfile extends AppCompatActivity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP;
+    private ImageView imgSetPP, imgStar;
     private TextView txtUserDate,uName,txtNotiCount,txtTotalOrders;
     private String TAG = "Supplier Profile";
     String uType = StartUp.userType;
     String uId;
     String user_type;
-
 
     @Override
     public void onBackPressed() {
@@ -48,11 +51,13 @@ public class supplierProfile extends AppCompatActivity {
         startActivity(new Intent(this, HomeActivity.class));
     }
 
-    @SuppressLint("RtlHardcoded")
+    @SuppressLint({"RtlHardcoded", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_profile);
+
+        Vibrator vibe = (Vibrator) Objects.requireNonNull((supplierProfile)this).getSystemService(Context.VIBRATOR_SERVICE);
 
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
@@ -74,12 +79,12 @@ public class supplierProfile extends AppCompatActivity {
 
         ImageView btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
         ConstraintLayout constNoti = findViewById(R.id.constNoti);
-        ImageView btnOpenNoti = findViewById(R.id.btnOpenNoti);
         uName = findViewById(R.id.txtUsername);
         txtUserDate = findViewById(R.id.txtUserDate);
         imgSetPP = findViewById(R.id.imgPPP);
         txtNotiCount = findViewById(R.id.txtNotiCount);
         txtTotalOrders = findViewById(R.id.txtTotalOrders);
+        imgStar = findViewById(R.id.imgStar);
 
         //Title Bar
         TextView tbTitle = findViewById(R.id.toolbar_title);
@@ -91,6 +96,7 @@ public class supplierProfile extends AppCompatActivity {
         AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_timeline, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
 
         constNoti.setOnClickListener(v -> {
+            vibe.vibrate(40);
             finish();
             startActivity(new Intent(supplierProfile.this, Notifications.class));
         });
@@ -101,11 +107,6 @@ public class supplierProfile extends AppCompatActivity {
             } else {
                 drawer.openDrawer(Gravity.LEFT);
             }
-        });
-
-        btnOpenNoti.setOnClickListener(v -> {
-            finish();
-            startActivity(new Intent(supplierProfile.this, Notifications.class));
         });
 
         // Navigation Bar Buttons Function
@@ -189,44 +190,34 @@ public class supplierProfile extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        // -------------------------- Get user info for profile ------------------------------ //
-        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String ppURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
-                uName.setText(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                txtUserDate.setText("اشترك : " + Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                if (!isFinishing()) {
-                    Log.i(TAG, "Photo " + ppURL);
-                    Picasso.get().load(Uri.parse(ppURL)).into(imgSetPP);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
+        txtUserDate.setText("اشترك : " + StartUp.userDate);
+        uName.setText(StartUp.userName);
+        if (!isFinishing()) {
+            Picasso.get().load(Uri.parse(StartUp.userURL)).into(imgSetPP);
+        }
         TextView usType = findViewById(R.id.txtUserType);
         user_type = "sId";
         usType.setText("تاجر");
         getOrderCountSup();
         getRating();
 
-        btnAdd.setOnClickListener(v -> vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    if(Objects.requireNonNull(dataSnapshot.child("adding").getValue()).toString().equals("false")) {
-                        Toast.makeText(supplierProfile.this, "عذرا لا يمكنك اضافه اوردرات في الوقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
-                    } else {
-                        startActivity(new Intent(supplierProfile.this, AddOrders.class));
+        btnAdd.setOnClickListener(v -> {
+            vibe.vibrate(40);
+            vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()) {
+                        if(Objects.requireNonNull(dataSnapshot.child("adding").getValue()).toString().equals("false")) {
+                            Toast.makeText(supplierProfile.this, "عذرا لا يمكنك اضافه اوردرات في الوقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
+                        } else {
+                            startActivity(new Intent(supplierProfile.this, AddOrders.class));
+                        }
                     }
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        }));
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
+        });
     }
 
     private void getRating () {
@@ -263,12 +254,23 @@ public class supplierProfile extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int cOrders = 0;
                 if (snapshot.exists()) {
                     int count = (int) snapshot.getChildrenCount();
+                    cOrders = count;
                     String strCount = String.valueOf(count);
                     txtTotalOrders.setText( "اضاف " + strCount + " اوردر");
                 } else {
                     txtTotalOrders.setText("لم يقم باضافة اي اوردر");
+                    cOrders = 0;
+                }
+
+                if(cOrders >= 10) {
+                    uName.setTextColor(Color.parseColor("#ffc922"));
+                    imgStar.setVisibility(View.VISIBLE);
+                } else {
+                    uName.setTextColor(Color.WHITE);
+                    imgStar.setVisibility(View.GONE);
                 }
             }
 

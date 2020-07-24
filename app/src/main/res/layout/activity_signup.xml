@@ -243,6 +243,27 @@
                     tools:ignore="MissingConstraints" />
 
                 <TextView
+                    android:id="@+id/textView30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="اختار محافظتك"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
+
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                    android:id="@+id/spState"
+                    android:layout_width="280dp"
+                    android:layout_height="47dp"
+                    android:layout_marginTop="10dp"
+                    android:spinnerMode="dialog"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
                     android:id="@+id/textView28"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,14 +51,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase,nDatabase;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
      private String TAG = "My Adapter";
-
      String uType = StartUp.userType;
 
-     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat notiSDF = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
      String datee = sdf.format(new Date());
-     String notiDate = notiSDF.format(new Date());
     int howMany = 0;
 
     public void addItem(int position , Data data){
@@ -92,6 +92,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+        Vibrator vibe = (Vibrator)(context).getSystemService(Context.VIBRATOR_SERVICE);
         // Get Post Date
         holder.lin1.setVisibility(View.GONE);
         holder.txtWarning.setVisibility(View.GONE);
@@ -121,18 +122,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
 
-        holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setUsername(filtersData.get(position).getuId());
-        holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setFee(filtersData.get(position).getGGet().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
-        holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
-
-        //Hide this order Button
-        holder.btnHide.setOnClickListener(v -> Toast.makeText(context, "Still working on this", Toast.LENGTH_SHORT).show());
-
         final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String rateUID = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
@@ -142,13 +131,67 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
 
+        uDatabase.child(owner).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String uName = Objects.requireNonNull(snapshot.getValue()).toString();
+                holder.setUsername(uName);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
 
-        holder.linerDate.setOnClickListener(v -> Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show());
-        holder.txtgGet.setOnClickListener(v -> Toast.makeText(context, "مصاريف شحن الاوردر : "+ holder.txtgGet.getText().toString(), Toast.LENGTH_SHORT).show());
-        holder.txtgMoney.setOnClickListener(v -> Toast.makeText(context, "مقدم الاوردر : "+ holder.txtgMoney.getText().toString(), Toast.LENGTH_SHORT).show());
+        mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int ordersCount = 0;
+                if (snapshot.exists()) {
+                    ordersCount = (int) snapshot.getChildrenCount();
+                }
+                holder.isTop(ordersCount);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+        holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
+
+        holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setFee(filtersData.get(position).getGGet().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
+        holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
+
+        //Hide this order Button
+        holder.btnHide.setOnClickListener(v -> {
+            Toast.makeText(context, "Still working on this", Toast.LENGTH_SHORT).show();
+            assert vibe != null;
+            vibe.vibrate(20);
+        });
+
+        holder.linerDate.setOnClickListener(v -> {
+            Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
+            assert vibe != null;
+            vibe.vibrate(20);
+        });
+
+        holder.txtgGet.setOnClickListener(v -> {
+            Toast.makeText(context, "مصاريف شحن الاوردر : "+ holder.txtgGet.getText().toString(), Toast.LENGTH_SHORT).show();
+            assert vibe != null;
+            vibe.vibrate(20);
+        });
+        holder.txtgMoney.setOnClickListener(v -> {
+            Toast.makeText(context, "مقدم الاوردر : "+ holder.txtgMoney.getText().toString(), Toast.LENGTH_SHORT).show();
+            assert vibe != null;
+            vibe.vibrate(20);
+        });
 
         //More Info Button
         holder.btnMore.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             View dialogMore = inflater.inflate(R.layout.dialogsupinfo, null);
@@ -161,7 +204,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
             ImageView btnClose = dialogMore.findViewById(R.id.btnClose);
 
-            btnClose.setOnClickListener(v1 -> dialog.dismiss());
+            btnClose.setOnClickListener(v1 -> {
+                vibe.vibrate(20);
+                dialog.dismiss();
+            });
 
             final TextView dsUsername = dialogMore.findViewById(R.id.ddUsername);
             TextView dsPAddress = dialogMore.findViewById(R.id.ddPhone);
@@ -169,6 +215,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             TextView dsOrderNotes = dialogMore.findViewById(R.id.dsOrderNotes);
             TextView txtTitle = dialogMore.findViewById(R.id.txtTitle);
             final ImageView supPP = dialogMore.findViewById(R.id.supPP);
+            final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
             final RatingBar rbUser = dialogMore.findViewById(R.id.ddRate);
             final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
             final TextView txtNoddComments = dialogMore.findViewById(R.id.txtNoddComments);
@@ -179,12 +226,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int oCount = 0;
                     if (dataSnapshot.exists()) {
                         int count = (int) dataSnapshot.getChildrenCount();
+                        oCount = count;
                         String strCount = String.valueOf(count);
                         ddCount.setText( "اضاف "+ strCount + " اوردر");
                     } else {
                         ddCount.setText("لم يقم بأضافه اي اوردرات");
+                    }
+
+                    if(oCount >= 10) {
+                        dsUsername.setTextColor(Color.parseColor("#ffc922"));
+                        ppStar.setVisibility(View.VISIBLE);
+                    } else {
+                        dsUsername.setTextColor(Color.WHITE);
+                        ppStar.setVisibility(View.GONE);
                     }
                 }
                 @Override
@@ -205,9 +262,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
+
             if (PAddress.trim().equals("")) {
                 dsPAddress.setVisibility(View.GONE);
             } else {
@@ -231,16 +288,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    long total = 0;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
-                        total = total + rating;
+                    if(dataSnapshot.exists()) {
+                        long total = 0;
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
+                            total = total + rating;
+                        }
+                        double average = (double) total / dataSnapshot.getChildrenCount();
+                        if(String.valueOf(average).equals("NaN")) {
+                            average = 5;
+                        }
+                        rbUser.setRating((int) average);
+                    } else {
+                        rbUser.setRating(5);
                     }
-                    double average = (double) total / dataSnapshot.getChildrenCount();
-                    if(String.valueOf(average).equals("NaN")) {
-                        average = 5;
-                    }
-                    rbUser.setRating((int) average);
+
                 }
 
                 @Override
@@ -287,10 +349,45 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             });
         });
 
-        holder.icnCar.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالسيارة", Toast.LENGTH_SHORT).show());
-        holder.icnMetro.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show());
-        holder.icnMotor.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالموتسكل", Toast.LENGTH_SHORT).show());
-        holder.icnTrans.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show());
+        holder.icnCar.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالسيارة", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.icnMetro.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.icnMotor.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالموتسكل", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+        holder.icnTrans.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.linerDate.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+        holder.txtgGet.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "مصاريف شحن الاوردر : "+ holder.txtgGet.getText().toString(), Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.txtgMoney.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "مقدم الاوردر : "+ holder.txtgMoney.getText().toString(), Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
 
         if(!uType.equals("Delivery Worker")) {
             holder.lin1.setVisibility(View.GONE);
@@ -308,10 +405,49 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         }
 
+        if(uType.equals("Admin")) {
+            holder.linAdmin.setVisibility(View.VISIBLE);
+        }
+        holder.btnEdit.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
+            Intent editInt = new Intent(context, EditOrders.class);
+            editInt.putExtra("orderid", orderID);
+            context.startActivity(editInt);
+        });
+
+        holder.btnDelete.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
+            mDatabase.child(orderID).child("statue").setValue("deleted");
+            Toast.makeText(context, "Order is Deleted", Toast.LENGTH_SHORT).show();
+        });
+
+        holder.btnOpen.setOnClickListener(v -> {
+            uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String uPass = Objects.requireNonNull(snapshot.child("mpass").getValue()).toString();
+                    String uMail = Objects.requireNonNull(snapshot.child("email").getValue()).toString();
+                    mAuth.signOut();
+                    Intent editInt = new Intent(context, MainActivity.class);
+                    editInt.putExtra("umail", uMail);
+                    editInt.putExtra("upass", uPass);
+                    context.startActivity(editInt);
+                    Log.i(TAG , "User Info : " + uMail + " : " + uPass);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+
+        });
+
         //Accept Order Button
         holder.btnAccept.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             String gettingID = filtersData.get(position).getId();
-
             vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -340,7 +476,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
 
                                                         // -------------------------- Send Notifications ---------------------//
-                                                        notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",notiDate,"false");
+                                                        notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
                                                         nDatabase.child(owner).push().setValue(Noti);
 
                                                         Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
@@ -419,14 +555,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return (int) count;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        View myview;
-        Button btnAccept, btnHide, btnMore;
-        TextView txtWarning,txtgGet, txtgMoney,txtDate;
-        LinearLayout lin1,linerDate;
-        ImageView icnCar,icnMotor,icnMetro,icnTrans;
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        public View myview;
+        public Button btnAccept, btnHide, btnMore, btnEdit,btnDelete,btnOpen;
+        public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom,txtOrderTo,txtPostDate;
+        public LinearLayout lin1,linerDate,linAdmin;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgStar;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -434,59 +575,64 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             btnAccept = myview.findViewById(R.id.btnAccept);
             btnHide = myview.findViewById(R.id.btnHide);
             btnMore = myview.findViewById(R.id.btnMore);
+            btnOpen = myview.findViewById(R.id.btnOpen);
             lin1 = myview.findViewById(R.id.lin1);
+            linAdmin = myview.findViewById(R.id.linAdmin);
+            imgStar = myview.findViewById(R.id.imgStar);
             txtWarning = myview.findViewById(R.id.txtWarning);
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
             txtgMoney = myview.findViewById(R.id.ordercash);
             txtDate = myview.findViewById(R.id.date);
+            btnDelete = myview.findViewById(R.id.btnDelete);
+            btnEdit = myview.findViewById(R.id.btnEdit);
+            txtUsername = myview.findViewById(R.id.txtUsername);
+            txtOrderFrom = myview.findViewById(R.id.OrderFrom);
+            txtOrderTo = myview.findViewById(R.id.orderto);
+            icnCar = myview.findViewById(R.id.icnCar);
+            icnMotor = myview.findViewById(R.id.icnMotor);
+            icnMetro = myview.findViewById(R.id.icnMetro);
+            icnTrans = myview.findViewById(R.id.icnTrans);
+            txtPostDate = myview.findViewById(R.id.txtPostDate);
         }
 
-        void setUsername(String userID){
-            uDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String mName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                    TextView mtitle = myview.findViewById(R.id.txtUsername);
-                    mtitle.setText(mName);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
+        public void setUsername(String name){
+            txtUsername.setText(name);
         }
 
         public void setOrderFrom(String orderFrom){
-            TextView mtitle=myview.findViewById(R.id.OrderFrom);
-            mtitle.setText(orderFrom);
+            txtOrderFrom.setText(orderFrom);
         }
 
         public void setOrderto(String orderto){
-            TextView mtitle=myview.findViewById(R.id.orderto);
-            mtitle.setText(orderto);
+            txtOrderTo.setText(orderto);
         }
 
         public void setDate (String date){
-            TextView mdate= myview.findViewById(R.id.date);
-            mdate.setText(date);
+            txtDate.setText(date);
         }
 
         @SuppressLint("SetTextI18n")
         public void setOrdercash(String ordercash){
-            TextView mtitle=myview.findViewById(R.id.ordercash);
-            mtitle.setText(ordercash + " ج");
+            txtgMoney.setText(ordercash + " ج");
         }
 
         @SuppressLint("SetTextI18n")
         public void setFee(String fees) {
-            TextView mtitle=myview.findViewById(R.id.fees);
-            mtitle.setText(fees + " ج");
+            txtgGet.setText(fees + " ج");
+        }
+
+        public void isTop(int ordersCount) {
+            if(ordersCount >= 10) {
+                imgStar.setVisibility(View.VISIBLE);
+                txtUsername.setTextColor(Color.parseColor("#ffc922"));
+            } else {
+                imgStar.setVisibility(View.GONE);
+                txtUsername.setTextColor(Color.parseColor("#FF0099CC"));
+            }
         }
 
         public void setType(String car, String motor, String metro, String trans) {
-             icnCar = myview.findViewById(R.id.icnCar);
-             icnMotor = myview.findViewById(R.id.icnMotor);
-             icnMetro = myview.findViewById(R.id.icnMetro);
-             icnTrans = myview.findViewById(R.id.icnTrans);
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
             } else {
@@ -512,7 +658,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setPostDate(int dS, int dM, int dH, int dD) {
             String finalDate = "";
-            TextView mtitle = myview.findViewById(R.id.txtPostDate);
             if (dS < 60) {
                 finalDate = "منذ " + dS + " ثوان";
             } else if (dS > 60 && dS < 3600) {
@@ -522,8 +667,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             } else if (dS > 86400) {
                 finalDate = "منذ " +dD + " ايام";
             }
-            mtitle.setText(finalDate);
+            txtPostDate.setText(finalDate);
         }
     }
-
 }

@@ -123,7 +123,6 @@ public class placed_oreders_supplier extends Fragment {
                             assert orderData != null;
                             listSup.add((int) countSup, orderData);
                             countSup++;
-                            Log.i(TAG, "Inside the Query");
 
                             supplierAdapter = new SupplierAdapter(getContext(), listSup, getContext(), countSup);
                             recyclerView.setAdapter(supplierAdapter);

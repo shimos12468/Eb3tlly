@@ -6,6 +6,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class Notifications extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static ArrayList<notiData> mm;
     private long count;
+    private SwipeRefreshLayout refresh;
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
     String TAG = "Notifications";
@@ -63,6 +65,7 @@ public class Notifications extends AppCompatActivity {
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         ImageView btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
+        refresh = findViewById(R.id.refresh);
         count =0;
         mm = new ArrayList<notiData>();
         txtNoOrders.setVisibility(View.GONE);
@@ -142,7 +145,42 @@ public class Notifications extends AppCompatActivity {
             return true;
         });
 
+
+        // ------------ Refresh View ---------- //
+        refresh.setOnRefreshListener(() -> {
+            getNoti();
+            refresh.setRefreshing(false);
+        });
+
+        getNoti();
+
+        Menu nav_menu = navigationView.getMenu();
+        if (StartUp.userType.equals("Supplier")) {
+            nav_menu.findItem(R.id.nav_timeline).setVisible(false);
+        } else {
+            nav_menu.findItem(R.id.nav_how).setVisible(false);
+        }
+
+    }
+
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
+    }
+
+    private void clearAdapter() {
+        mm.clear();
+        mm.trimToSize();
+        count = 0;
+        recyclerView.setAdapter(null);
+    }
+
+    private void getNoti() {
         // ---------------------- GET ALL THE Notifications -------------------//
+        clearAdapter();
         nDatabase.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -167,30 +205,5 @@ public class Notifications extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
-        // ------------------ Show or Hide Buttons depending on the User Type
-        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
-                Menu nav_menu = navigationView.getMenu();
-                if (uType.equals("Supplier")) {
-                    nav_menu.findItem(R.id.nav_timeline).setVisible(false);
-                } else {
-                    nav_menu.findItem(R.id.nav_how).setVisible(false);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-    }
-
-    private void whichProfile () {
-        if(uType.equals("Supplier")) {
-            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
-        } else {
-            startActivity(new Intent(getApplicationContext(), NewProfile.class));
-        }
     }
 }

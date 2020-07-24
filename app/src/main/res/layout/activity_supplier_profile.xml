@@ -26,7 +26,7 @@
             android:layout_width="420dp"
             android:layout_height="400dp"
             android:orientation="vertical"
-            tools:context="com.armjld.eb3tly.profile">
+            tools:context="com.armjld.eb3tly.supplierProfile">
 
             <include
                 android:id="@+id/toolbar_home"
@@ -75,6 +75,7 @@
                     android:text="5"
                     android:textColor="@color/ic_profile_background"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/btnOpenNoti"
                     app:layout_constraintEnd_toEndOf="@+id/btnOpenNoti"
                     app:layout_constraintStart_toStartOf="@+id/btnOpenNoti"
@@ -100,19 +101,38 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
 
-                <TextView
-                    android:id="@+id/txtUsername"
-                    android:layout_width="0dp"
-                    android:layout_height="35dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorBack"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                <LinearLayout
+                    android:id="@+id/linearLayout6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView" />
+                    app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+                    <ImageView
+                        android:id="@+id/imgStar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_baseline_stars_24" />
+
+                    <TextView
+                        android:id="@+id/txtUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBack"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txtTotalOrders"
@@ -131,21 +151,24 @@
                     android:id="@+id/rbProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:clickable="false"
                     android:focusableInTouchMode="false"
                     android:isIndicator="true"
                     android:scaleX="0.5"
                     android:scaleY="0.5"
                     android:theme="@style/RatingBar"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtUserType" />
+                    app:layout_constraintTop_toBottomOf="@+id/txtUserType"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
                     android:id="@+id/txtUserDate"
                     android:layout_width="0dp"
                     android:layout_height="23dp"
-                    android:layout_marginTop="5dp"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold"

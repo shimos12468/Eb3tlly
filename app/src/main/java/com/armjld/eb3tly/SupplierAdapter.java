@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,15 +59,18 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     Context context , context1;
     long count;
     ArrayList<Data>filtersData;
-    private DatabaseReference mDatabase,rDatabase,uDatabase,nDatabase,reportDatabase;
+    private DatabaseReference mDatabase;
+    private DatabaseReference rDatabase;
+    private DatabaseReference uDatabase;
+    private DatabaseReference nDatabase;
+    private DatabaseReference reportDatabase;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
     private String TAG = "Supplier Adapter";
-    String uType = StartUp.userType;
     String uId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;
-    
+
     public void addItem(int position , Data data){
         int size = filtersData.size();
         if(size > position && size != 0) {
@@ -85,9 +89,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         reportDatabase = getInstance().getReference().child("Pickly").child("reports");
-
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
     }
     
     @NonNull
@@ -100,6 +103,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder,final int position) {
+        Vibrator vibe = (Vibrator) Objects.requireNonNull(context).getSystemService(Context.VIBRATOR_SERVICE);
         Log.i(TAG, "Inside the Supplier Adapter");
         Data data = filtersData.get(position);
         String startDate = data.getDate();
@@ -127,7 +131,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         int idiffDays = (int) diffDays;
 
         holder.setDate(filtersData.get(position).getDDate());
-        holder.setUsername(data.getuId(), data.getDName(), uType);
+        holder.setUsername(data.getDName());
         holder.setOrdercash(data.getGMoney());
         holder.setOrderFrom(data.reStateP());
         holder.setOrderto(data.reStateD());
@@ -150,6 +154,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         }
 
         holder.mImageButton.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             PopupMenu popup = new PopupMenu(context,v );
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.popup_menu, popup.getMenu());
@@ -158,16 +164,24 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 case "accepted" : {
                     popupMenu.findItem(R.id.didnt_reciv).setVisible(true);
                     popupMenu.findItem(R.id.didnt_deliv).setVisible(false);
+                    popupMenu.findItem(R.id.already_delv).setVisible(false);
                     break;
                 }
-                case "recived" :
+                case "recived" : {
+                    popupMenu.findItem(R.id.didnt_deliv).setVisible(true);
+                    popupMenu.findItem(R.id.didnt_reciv).setVisible(false);
+                    popupMenu.findItem(R.id.already_delv).setVisible(true);
+                    break;
+                }
                 case "delivered" : {
                     popupMenu.findItem(R.id.didnt_deliv).setVisible(true);
                     popupMenu.findItem(R.id.didnt_reciv).setVisible(false);
+                    popupMenu.findItem(R.id.already_delv).setVisible(false);
                     break;
                 }
             }
             popup.setOnMenuItemClickListener(item -> {
+                vibe.vibrate(20);
                 switch (item.getItemId()) {
                     case R.id.didnt_reciv:
                         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
@@ -175,6 +189,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                 case DialogInterface.BUTTON_POSITIVE:
                                     String id = reportDatabase.child(dilvID).push().getKey();
                                     reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين", id);
+                                    assert id != null;
                                     reportDatabase.child(dilvID).child(id).setValue(repo);
 
                                     mDatabase.child(orderID).child("uAccepted").setValue("");
@@ -195,6 +210,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                 case DialogInterface.BUTTON_POSITIVE:
                                     String id = reportDatabase.child(dilvID).push().getKey();
                                     reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب لم يسلم الاوردر للعميل", id);
+                                    assert id != null;
                                     reportDatabase.child(dilvID).child(id).setValue(repo2);
                                     Toast.makeText(context, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
                                     break;
@@ -205,6 +221,44 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
                         builder2.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
                         break;
+
+                    case R.id.already_delv:
+                        DialogInterface.OnClickListener dialogClickListener3 = (dialog, which) -> {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    String id = reportDatabase.child(dilvID).push().getKey();
+                                    reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب سلم الاوردر و لم يضغط علي زر تم التسليم", id);
+                                    assert id != null;
+                                    reportDatabase.child(dilvID).child(id).setValue(repo2);
+
+                                    // Changing the values in the orders db
+                                    mDatabase.child(orderID).child("statue").setValue("delivered");
+                                    mDatabase.child(orderID).child("dilverTime").setValue(datee);
+
+                                    // Add the Profit of the Dilvery Worker
+                                    uDatabase.child(data.getuAccepted()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.exists() && dataSnapshot.child("profit").exists()) {
+                                                String dbprofits = Objects.requireNonNull(dataSnapshot.child("profit").getValue()).toString();
+                                                int longProfit = Integer.parseInt(dbprofits);
+                                                int finalProfits = (longProfit + Integer.parseInt(data.getGGet()));
+                                                uDatabase.child(data.getuAccepted()).child("profit").setValue(String.valueOf(finalProfits));
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                                    });
+
+                                    Toast.makeText(context, "شكرا لبلاغك", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
+                        builder3.setMessage("هل انت متاكد من انك تريد ان المندوب سلم الاوردر ؟").setPositiveButton("نعم", dialogClickListener3).setNegativeButton("لا", dialogClickListener3).show();
+                        break;
                 }
                 return false;
             });
@@ -213,63 +267,30 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
         // Delete Order for Supplier
         holder.btnDelete.setOnClickListener(v -> {
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        // ------------ Delete the Orders Notfications ------------------- //
-                        nDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()) {
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        if(ds.exists()) {
-                                            for(DataSnapshot sn : ds.getChildren()) {
-                                                if(sn.child("orderid").exists()) {
-                                                    String orderI = Objects.requireNonNull(Objects.requireNonNull(sn.child("orderid").getValue()).toString());
-                                                    if(orderI.equals(orderID)) {
-                                                        sn.getRef().removeValue();
-
-                                                        filtersData.remove(position);
-                                                        notifyItemRemoved(position);
-                                                        notifyItemRangeChanged(position, filtersData.size());
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) { }
-                        });
-
-                        mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                snapshot.getRef().removeValue();
-                                Toast.makeText(context, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) { }
-                        });
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE: break;
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("هل انت متاكد من انك تريد حذف الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+            assert vibe != null;
+            vibe.vibrate(20);
+            Intent deleteAct = new Intent(context, Delete_Reason_Supplier.class);
+            deleteAct.putExtra("orderid", orderID);
+            deleteAct.putExtra("acceptID", data.getuAccepted());
+            context.startActivity(deleteAct);
         });
 
         // ---------------- Set order to Recived
         holder.btnRecived.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             mDatabase.child(orderID).child("statue").setValue("recived");
+
+            notiData Noti = new notiData(uId,data.getuAccepted() , orderID,"recived",datee,"false");
+            nDatabase.child(data.getuAccepted()).push().setValue(Noti);
+
             Toast.makeText(context, "تم تسليم الاوردر للمندوب", Toast.LENGTH_SHORT).show();
         });
 
         //Comment button
         holder.btnRate.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             AlertDialog.Builder myRate = new AlertDialog.Builder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             final View dialogRate = inflater.inflate(R.layout.dialograte, null);
@@ -301,6 +322,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             });
 
             btnSaveRate.setOnClickListener(v13 -> {
+                vibe.vibrate(20);
                 final String rRate = txtRate.getText().toString().trim();
                 final String rId = rDatabase.push().getKey();
                 assert rId != null;
@@ -324,19 +346,22 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
         // ----------------- Edit Order for Supplier ------------------------//
         holder.btnEdit.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             Intent editInt = new Intent(context, EditOrders.class);
             editInt.putExtra("orderid", data.getId());
             context.startActivity(editInt);
         });
 
         // ------------------ Show delivery Worker Info -----------------------//
-        holder.txtGetStat.setOnClickListener((View.OnClickListener) v -> {
+        holder.txtGetStat.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             View dialogMore = inflater.inflate(R.layout.dialogdevinfo, null);
             myDialogMore.setView(dialogMore);
             final AlertDialog dialog = myDialogMore.create();
-            dialog.show();
 
             TextView tbTitle = dialogMore.findViewById(R.id.toolbar_title);
             tbTitle.setText("بيانات المندوب");
@@ -350,11 +375,13 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             final TextView ddPhone = dialogMore.findViewById(R.id.ddPhone);
             ddPhone.setPaintFlags(ddPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
             final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
+            final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
             final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
             final ImageView dPP = dialogMore.findViewById(R.id.dPP);
             final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
 
             ddPhone.setOnClickListener(v1 -> {
+                vibe.vibrate(20);
                 checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + ddPhone.getText().toString()));
@@ -400,6 +427,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                             average = 5;
                         }
                         ddRate.setRating((int) average);
+                    } else {
+                        ddRate.setRating(5);
                     }
                 }
 
@@ -412,12 +441,23 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int oCount = 0;
                     if (dataSnapshot.exists()) {
                         int count = (int) dataSnapshot.getChildrenCount();
+                        oCount = count;
                         String strCount = String.valueOf(count);
                         ddCount.setText( "وصل " + strCount + " اوردر");
                     } else {
+                        count = 0;
                         ddCount.setText("لم يقم بتوصيل اي اوردر");
+                    }
+
+                    if(oCount >= 10) {
+                        ddUsername.setTextColor(Color.parseColor("#ffc922"));
+                        ppStar.setVisibility(View.VISIBLE);
+                    } else {
+                        ddUsername.setTextColor(Color.WHITE);
+                        ppStar.setVisibility(View.GONE);
                     }
                 }
                 @Override
@@ -425,8 +465,10 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 }
             });
 
+
+
             // ------------------------------ Get that user Comments --------------------------- //
-            ListView listComment = (ListView) dialogMore.findViewById(R.id.dsComment);
+            ListView listComment = dialogMore.findViewById(R.id.dsComment);
             final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
             listComment.setAdapter(arrayAdapterLessons);
             mArraylistSectionLessons.clear();
@@ -461,12 +503,19 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
+
+            dialog.show();
         });
     }
 
     @Override
     public int getItemCount() {
         return (int) count;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public void checkPermission(String permission, int requestCode) {
@@ -477,7 +526,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ((profile)context).onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ((supplierProfile)context).onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PHONE_CALL_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(context, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
@@ -488,13 +537,13 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        View myview;
-        Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
-        TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate;
-        LinearLayout linerDate,linerAll;
-        RatingBar drStar;
-        ImageView icnCar,icnMotor,icnMetro,icnTrans;
-        ImageButton mImageButton;
+        public View myview;
+        public Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
+        public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate;
+        public LinearLayout linerDate,linerAll;
+        public RatingBar drStar;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans;
+        public ImageButton mImageButton;
         
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -502,6 +551,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             btnDelivered = myview.findViewById(R.id.btnDelivered);
             btnInfo = myview.findViewById(R.id.btnInfo);
             btnEdit = myview.findViewById(R.id.btnEdit);
+            txtUserName = myview.findViewById(R.id.txtUsername);
             btnRecived = myview.findViewById(R.id.btnRecived);
             btnDelete = myview.findViewById(R.id.btnDelete);
             btnRate = myview.findViewById(R.id.btnRate);
@@ -513,31 +563,22 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
             txtgMoney = myview.findViewById(R.id.ordercash);
+            txtOrderFrom = myview.findViewById(R.id.OrderFrom);
+            txtOrderTo = myview.findViewById(R.id.orderto);
             txtDate = myview.findViewById(R.id.date);
-            mImageButton = (ImageButton) myview.findViewById(R.id.imageButton);
+            icnCar = myview.findViewById(R.id.icnCar);
+            icnMotor = myview.findViewById(R.id.icnMotor);
+            icnMetro = myview.findViewById(R.id.icnMetro);
+            icnTrans = myview.findViewById(R.id.icnTrans);
+            txtPostDate = myview.findViewById(R.id.txtPostDate);
+            mImageButton = myview.findViewById(R.id.imageButton);
         }
 
-        void setUsername(String orderOwner, String DName, String uType){
-            final TextView mtitle = myview.findViewById(R.id.txtUsername);
-            if (uType.equals("Supplier")) {
-                mtitle.setText(DName);
-            } else {
-                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(orderOwner).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
-                            mtitle.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
+        void setUsername(String DName){
+            txtUserName.setText(DName);
         }
 
-        //Get Order Satues in Profile
+
         @SuppressLint("ResourceAsColor")
         public void setStatue(final String getStatue, final String uAccepted, String ddate){
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -591,8 +632,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         }
 
         public void setOrderFrom(String orderFrom){
-            TextView mtitle = myview.findViewById(R.id.OrderFrom);
-            mtitle.setText(orderFrom);
+            txtOrderFrom.setText(orderFrom);
         }
 
         public void setRateButton(String rated, String statue) {
@@ -612,7 +652,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         }
 
         public void setDilveredButton(final String state) {
-            if (uType.equals("Supplier")) {
                 btnDelivered.setVisibility(View.GONE);
                 btnInfo.setVisibility(View.GONE);
                 btnRate.setText("تقييم المندوب");
@@ -637,77 +676,32 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         break;
                     }
                 }
-            } else {
-                btnEdit.setVisibility(View.GONE);
-                btnRecived.setVisibility(View.GONE);
-                btnRate.setText("تقييم التاجر");
-                switch (state) {
-                    case "accepted" : {
-                        btnDelete.setVisibility(View.VISIBLE);
-                        btnDelivered.setVisibility(View.GONE);
-                        btnInfo.setVisibility(View.VISIBLE);
-                        txtGetStat.setVisibility(View.VISIBLE);
-                        txtGetStat.setText("تواصل مع التاجر لاستلام الاوردر");
-                        txtGetStat.setBackgroundColor(Color.RED);
-                        break;
-                    }
-                    case "recived" : {
-                        txtGetStat.setVisibility(View.VISIBLE);
-                        btnDelete.setVisibility(View.GONE);
-                        btnDelivered.setVisibility(View.VISIBLE);
-                        btnInfo.setVisibility(View.VISIBLE);
-                        txtGetStat.setVisibility(View.VISIBLE);
-                        txtGetStat.setText("تم استلام الاوردر من التاجر");
-                        txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
-                        break;
-                    }
-                    case "delivered" : {
-                        btnDelivered.setVisibility(View.GONE);
-                        btnDelete.setVisibility(View.GONE);
-                        btnInfo.setVisibility(View.GONE);
-                        txtGetStat.setVisibility(View.VISIBLE);
-                        txtGetStat.setText("تم توصيل الاوردر بنجاح");
-                        txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
-                        break;
-                    }
-                }
-            }
         }
 
         public void setOrderto(String orderto){
-            TextView mtitle=myview.findViewById(R.id.orderto);
-            mtitle.setText(orderto);
+            txtOrderTo.setText(orderto);
         }
 
         public void setDate (String date){
-            TextView mdate= myview.findViewById(R.id.date);
-            mdate.setText(date);
+            txtDate.setText(date);
         }
 
         @SuppressLint("SetTextI18n")
         public void setOrdercash(String ordercash){
-            TextView mtitle=myview.findViewById(R.id.ordercash);
-            mtitle.setText(ordercash + " ج");
+            txtgMoney.setText(ordercash + " ج");
         }
 
         @SuppressLint("SetTextI18n")
         public void setFee(String fees) {
-            TextView mtitle=myview.findViewById(R.id.fees);
-            mtitle.setText(fees + " ج");
+            txtgGet.setText(fees + " ج");
         }
 
         public void setAccepted() {
-            Button btnDilvered = myview.findViewById(R.id.btnDelivered);
-            Button btnInfo = myview.findViewById(R.id.btnInfo);
-            btnDilvered.setVisibility(View.GONE);
+            btnDelivered.setVisibility(View.GONE);
             btnInfo.setVisibility(View.GONE);
         }
 
         public void setType(String car, String motor, String metro, String trans) {
-            icnCar = myview.findViewById(R.id.icnCar);
-            icnMotor = myview.findViewById(R.id.icnMotor);
-            icnMetro = myview.findViewById(R.id.icnMetro);
-            icnTrans = myview.findViewById(R.id.icnTrans);
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
             } else {
@@ -734,7 +728,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         }
         public void setPostDate(int dS, int dM, int dH, int dD) {
             String finalDate = "";
-            TextView mtitle = myview.findViewById(R.id.txtPostDate);
             if (dS < 60) {
                 finalDate = "منذ " + dS + " ثوان";
             } else if (dS > 60 && dS < 3600) {
@@ -744,7 +737,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             } else if (dS > 86400) {
                 finalDate = "منذ " + dD + " ايام";
             }
-            mtitle.setText(finalDate);
+            txtPostDate.setText(finalDate);
         }
 
         public void checkDeleted(String removed) {

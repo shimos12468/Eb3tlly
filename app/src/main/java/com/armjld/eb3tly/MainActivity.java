@@ -3,8 +3,11 @@ package com.armjld.eb3tly;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -26,7 +29,8 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class MainActivity extends AppCompatActivity {
 
     private TextView signup,txtForgetPass;
-    private EditText email,pass;
+    @SuppressLint("StaticFieldLeak")
+    public static EditText email,pass;
     private Button btnlogin;
     //FireBase
     private FirebaseAuth mAuth;
@@ -86,6 +90,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(forgetIntent);
         });
 
+        String uMail = getIntent().getStringExtra("umail");
+        String uPass = getIntent().getStringExtra("upass");
+
+        if(uMail != null && uPass != null) {
+            email.setText(uMail);
+            pass.setText(uPass);
+        }
+
         btnlogin.setOnClickListener(v -> {
             String memail = email.getText().toString().trim();
             String mpass = pass.getText().toString().trim();
@@ -114,26 +126,28 @@ public class MainActivity extends AppCompatActivity {
                                     //uDatabase.child(userID).child("device_token").setValue(deviceToken);
                                     uDatabase.child(userID).child("mpass").setValue(mpass);
                                     String isCompleted = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
+
                                     if (isCompleted.equals("true")) {
                                         String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                                         String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
+                                        StartUp.userType = uType;
+                                        StartUp.userName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                                        StartUp.userDate = Objects.requireNonNull(snapshot.child("date").getValue()).toString();
+                                        StartUp.userURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
                                         if (isActive.equals("true")) { // Check if the account is Disabled
                                             // --------------------- check account types and send each type to it's activity --------------//
                                             switch (uType) {
                                                 case "Supplier":
-                                                    StartUp.userType = uType;
                                                     mdialog.dismiss();
                                                     finish();
                                                     startActivity(new Intent(getApplicationContext(), supplierProfile.class));
                                                     break;
                                                 case "Delivery Worker":
-                                                    StartUp.userType = uType;
                                                     mdialog.dismiss();
                                                     finish();
                                                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                                                     break;
                                                 case "Admin":
-                                                    StartUp.userType = uType;
                                                     mdialog.dismiss();
                                                     finish();
                                                     startActivity(new Intent(getApplicationContext(), Admin.class));

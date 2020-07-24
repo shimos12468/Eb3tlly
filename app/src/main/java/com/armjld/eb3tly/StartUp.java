@@ -2,6 +2,8 @@ package com.armjld.eb3tly;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +30,9 @@ public class StartUp extends AppCompatActivity {
     SharedPreferences sharedPreferences = null;
     private FirebaseAuth mAuth;
     public static String userType;
+    public static String userName;
+    public static String userDate;
+    public static String userURL;
     DatabaseReference uDatabase;
     String deviceToken;
     boolean doubleBackToExitPressedOnce = false;
@@ -35,12 +40,12 @@ public class StartUp extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+            finishAffinity();
+            System.exit(0);
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "اضغط مرة اخري للخروج من التطبيق", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -92,28 +97,42 @@ public class StartUp extends AppCompatActivity {
                     uDatabase.child(user.getUid()).child("device_token").setValue(deviceToken);
                     if(isComplete.equals("true")) {
                         if(isActive.equals("true")) {
-                            String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
-                            switch (uType) {
+
+                            userType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
+                            userName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                            userDate = Objects.requireNonNull(snapshot.child("date").getValue()).toString();
+                            userURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
+
+                            if(!snapshot.child("userState").exists()) {
+                                Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_SHORT).show();
+                            }
+
+                            try {
+                                PackageInfo pInfo = StartUp.this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                                String version = pInfo.versionName;
+                                uDatabase.child(user.getUid()).child("app_version").setValue(version);
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
+                            switch (userType) {
                                 case "Supplier":
-                                    userType = uType;
                                     finish();
                                     startActivity(new Intent(StartUp.this, supplierProfile.class));
                                     break;
                                 case "Delivery Worker":
-                                    userType = uType;
                                     finish();
                                     startActivity(new Intent(StartUp.this, HomeActivity.class));
                                     break;
                                 case "Admin":
-                                    userType = uType;
                                     finish();
                                     startActivity(new Intent(StartUp.this, Admin.class));
                                     break;
                             }
                         } else {
                             Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
-                            mAuth.signOut();
 
+                            mAuth.signOut();
                             finish();
                             startActivity(new Intent(StartUp.this, MainActivity.class));
                         }

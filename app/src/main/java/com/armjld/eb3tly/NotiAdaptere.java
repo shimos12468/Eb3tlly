@@ -1,14 +1,17 @@
 package com.armjld.eb3tly;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -17,9 +20,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import Model.notiData;
 
@@ -57,7 +68,6 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-
         String From = notiData.get(position).getFrom();
         String To = notiData.get(position).getTo();
         String Datee = notiData.get(position).getDatee();
@@ -65,9 +75,84 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         String OrderID =notiData.get(position).getOrderid();
 
         holder.setBody(From, Statue, OrderID, To);
-        holder.setDate(Datee);
+        if(isValidFormat("yyyy.MM.dd HH:mm:ss", Datee)) {
+            String startDate = notiData.get(position).getDatee();
+            String stopDate = datee;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
 
-        holder.myview.setOnClickListener(v -> whichProfile());
+            Date d1 = null;
+            Date d2 = null;
+            try {
+                d1 = format.parse(startDate);
+                d2 = format.parse(stopDate);
+            } catch (java.text.ParseException ex) {
+                ex.printStackTrace();
+            }
+            assert d2 != null;
+            assert d1 != null;
+            long diff = d2.getTime() - d1.getTime();
+            long diffSeconds = diff / 1000;
+            long diffMinutes = diff / (60 * 1000);
+            long diffHours = diff / (60 * 60 * 1000);
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+
+            int idiffSeconds = (int) diffSeconds;
+            int idiffMinutes = (int) diffMinutes;
+            int idiffHours = (int) diffHours;
+            int idiffDays = (int) diffDays;
+            holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
+        } else {
+            holder.setDate(Datee);
+        }
+        holder.myview.setOnClickListener(v -> {
+            if(StartUp.userType.equals("Supplier")) {
+                switch (Statue) {
+                    case "deleted": {
+                        // ---- go to placed fragment of supplier profile
+                        break;
+                    }
+                    case "delivered": {
+                        // ---- go to delivered fragment of supplier profile
+                        break;
+                    }
+                    case "accepted": {
+                        // ---- go to accepted fragment of supplier profile
+                        break;
+                    }
+                    case "welcome": {
+                        // ---- do nothing
+                        break;
+                    }
+                    default: {
+                        // ---- do nothing
+                        break;
+                    }
+                }
+            } else {
+                switch (Statue) {
+                    case "edited": {
+                        // ------------- go to accepted fragment
+                        break;
+                    }
+                    case "deleted": {
+                        // ------------- do nothing
+                        break;
+                    }
+                    case "recived": {
+                        // ------------- go to recived fragment
+                        break;
+                    }
+                    case "welcome": {
+                        // ------------- do nothing
+                        break;
+                    }
+                    default: {
+                        // ------------- do nothing
+                        break;
+                    }
+                }
+            }
+        });
     }
 
 
@@ -76,25 +161,33 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         return (int) count;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        View myview;
-        TextView txtBody, txtNotidate;
-        ImageView imgEditPhoto;
+        public View myview;
+        public TextView txtBody, txtNotidate,txtName;
+        public ImageView imgEditPhoto;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             myview = itemView;
+
+            txtBody = myview.findViewById(R.id.txtBody);
+            txtNotidate = myview.findViewById(R.id.txtNotidate);
+            imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
+            txtName = myview.findViewById(R.id.txtName);
         }
 
         public void setBody(String sendby, String message, String OrderID, String To) {
-            txtBody = myview.findViewById(R.id.txtBody);
-            imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
-
             uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String nameFrom = Objects.requireNonNull(dataSnapshot.child(sendby).child("name").getValue()).toString();
+                    txtName.setText(nameFrom);
                     String URL = Objects.requireNonNull(dataSnapshot.child(sendby).child("ppURL").getValue()).toString();
                     String ToType = Objects.requireNonNull(dataSnapshot.child(To).child("accountType").getValue()).toString();
                     Picasso.get().load(Uri.parse(URL)).into(imgEditPhoto);
@@ -149,8 +242,21 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         }
 
         public void setDate(String date) {
-            txtNotidate = myview.findViewById(R.id.txtNotidate);
             txtNotidate.setText(date);
+        }
+
+        public void setPostDate(int dS, int dM, int dH, int dD) {
+            String finalDate = "";
+            if (dS < 60) {
+                finalDate = "منذ " + dS + " ثوان";
+            } else if (dS > 60 && dS < 3600) {
+                finalDate = "منذ " + dM + " دقيقة";
+            } else if (dS > 3600 && dS < 86400) {
+                finalDate = "منذ " + dH + " ساعات";
+            } else if (dS > 86400) {
+                finalDate = "منذ " +dD + " ايام";
+            }
+            txtNotidate.setText(finalDate);
         }
 
     }
@@ -159,6 +265,25 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             context.startActivity(new Intent(context, supplierProfile.class));
         } else {
             context.startActivity(new Intent(context, NewProfile.class));
+        }
+    }
+
+    public boolean isValidFormat(String format, String value) {
+        Date date = null;
+        try {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            assert date != null;
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        if (date == null) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

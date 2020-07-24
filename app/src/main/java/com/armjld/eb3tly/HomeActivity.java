@@ -61,7 +61,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private MyAdapter orderAdapter;
     String filterDate;
     String uType = StartUp.userType;
-    boolean sortDate = true;
+    public static boolean sortDate = true;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     //Recycler view

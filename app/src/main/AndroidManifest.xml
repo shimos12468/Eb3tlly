@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -17,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".OrdersBySameUser"></activity>
+        <activity android:name=".Delete_Reaon_Delv"></activity>
+        <activity android:name=".Delete_Reason_Supplier" />
+        <activity android:name=".OrdersBySameUser" />
         <activity android:name=".AdminReports" />
 
         <service
@@ -51,9 +54,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".HowTo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".profile"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Terms"

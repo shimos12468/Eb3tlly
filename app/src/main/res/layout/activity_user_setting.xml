@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="ltr"
-
     android:background="@color/colorBack"
+
+    android:layoutDirection="ltr"
     tools:context="com.armjld.eb3tly.UserSetting">
 
     <include
@@ -23,8 +23,8 @@
         android:id="@+id/txtEditName"
         android:layout_width="280dp"
         android:layout_height="47dp"
-        android:drawableRight="@drawable/ic_add_person"
         android:layout_marginTop="10dp"
+        android:drawableRight="@drawable/ic_add_person"
         android:ems="10"
         android:hint="الاسم"
         android:inputType="textPersonName"
@@ -50,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditEmail"
+        app:layout_constraintTop_toBottomOf="@+id/spState"
         tools:ignore="MissingConstraints" />
 
     <EditText
@@ -58,11 +58,11 @@
         android:layout_width="280dp"
         android:layout_height="47dp"
         android:layout_marginTop="20dp"
+        android:drawableRight="@drawable/ic_add_email"
         android:ems="10"
         android:hint="البريد ألالكتروني"
         android:inputType="textEmailAddress"
         android:textAlignment="textStart"
-        android:drawableRight="@drawable/ic_add_email"
         android:textColor="#000000"
         android:textColorHint="@android:color/tertiary_text_light"
         android:textSize="24sp"
@@ -70,6 +70,19 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtEditName" />
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+        android:id="@+id/spState"
+        android:layout_width="280dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:spinnerMode="dialog"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtEditEmail" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

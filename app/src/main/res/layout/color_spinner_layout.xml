@@ -8,5 +8,5 @@
     android:padding="10dp"
     android:text="اختار"
     android:textAlignment="viewEnd"
-    android:textColor="#000000"
+    android:textColor="#FFFFFF"
     android:textSize="18sp" />

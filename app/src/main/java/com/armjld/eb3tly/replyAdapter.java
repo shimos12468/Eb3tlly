@@ -15,8 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DatabaseReference;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+
 import Model.notiData;
 import Model.replyAdmin;
 
@@ -28,7 +31,8 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
     long count;
     ArrayList<replyAdmin>replyAdmin;
     private DatabaseReference nDatabase,cDatabase;
-    String datee = DateFormat.getDateInstance().format(new Date());
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+    String datee = sdf.format(new Date());
 
     public replyAdapter(Context context, ArrayList<Model.replyAdmin> replyAdmin, Context context1, long count) {
         this.count = count;

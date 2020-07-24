@@ -8,9 +8,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -36,7 +39,7 @@ public class NewProfile extends AppCompatActivity {
 
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP;
+    private ImageView imgSetPP,imgStar;
     private TextView txtUserDate;
     private TextView uName;
     private TextView txtNotiCount,txtTotalOrders;
@@ -45,8 +48,7 @@ public class NewProfile extends AppCompatActivity {
     String uId;
     String user_type;
 
-    public NewProfile() {
-    }
+    public NewProfile() { }
 
     @Override
     public void onBackPressed() {
@@ -59,6 +61,9 @@ public class NewProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_profile);
+
+        Vibrator vibe = (Vibrator) Objects.requireNonNull((NewProfile)this).getSystemService(Context.VIBRATOR_SERVICE);
+
         txtTotalOrders = findViewById(R.id.txtTotalOrders);
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
@@ -81,6 +86,7 @@ public class NewProfile extends AppCompatActivity {
         ImageView btnOpenNoti = findViewById(R.id.btnOpenNoti);
         uName = findViewById(R.id.txtUsername);
         txtUserDate = findViewById(R.id.txtUserDate);
+        imgStar = findViewById(R.id.imgStar);
         imgSetPP = findViewById(R.id.imgPPP);
         txtNotiCount = findViewById(R.id.txtNotiCount);
 
@@ -96,6 +102,7 @@ public class NewProfile extends AppCompatActivity {
         AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_timeline, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
 
         constNoti.setOnClickListener(v -> {
+            vibe.vibrate(40);
             finish();
             startActivity(new Intent(NewProfile.this, Notifications.class));
         });
@@ -109,6 +116,7 @@ public class NewProfile extends AppCompatActivity {
         });
 
         btnOpenNoti.setOnClickListener(v -> {
+            vibe.vibrate(40);
             finish();
             startActivity(new Intent(NewProfile.this, Notifications.class));
         });
@@ -194,24 +202,11 @@ public class NewProfile extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        // -------------------------- Get user info for profile ------------------------------ //
-        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String ppURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
-                uName.setText(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                txtUserDate.setText("اشترك : " + Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                if (!isFinishing()) {
-                    Log.i(TAG, "Photo " + ppURL);
-                    Picasso.get().load(Uri.parse(ppURL)).into(imgSetPP);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
+        txtUserDate.setText("اشترك : " + StartUp.userDate);
+        uName.setText(StartUp.userName);
+        if (!isFinishing()) {
+            Picasso.get().load(Uri.parse(StartUp.userURL)).into(imgSetPP);
+        }
         TextView usType = findViewById(R.id.txtUserType);
         user_type = "dId";
         usType.setText("مندوب شحن");
@@ -256,12 +251,23 @@ public class NewProfile extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int cOrders = 0;
                 if (snapshot.exists()) {
                     int count = (int) snapshot.getChildrenCount();
+                    cOrders = count;
                     String strCount = String.valueOf(count);
                     txtTotalOrders.setText( "وصل " + strCount + " اوردر");
                 } else {
+                    cOrders = 0;
                     txtTotalOrders.setText("لم يقم بتوصيل اي اوردر");
+                }
+
+                if(cOrders >= 10) {
+                    uName.setTextColor(Color.parseColor("#ffc922"));
+                    imgStar.setVisibility(View.VISIBLE);
+                } else {
+                    uName.setTextColor(Color.WHITE);
+                    imgStar.setVisibility(View.GONE);
                 }
             }
 

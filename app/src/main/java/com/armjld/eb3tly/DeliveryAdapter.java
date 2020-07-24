@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,7 +62,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     String uId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
-    String notiDate = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;
 
     public void addItem(int position , Data data){
@@ -97,6 +98,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder,final int position) {
+        Vibrator vibe = (Vibrator) Objects.requireNonNull(context).getSystemService(Context.VIBRATOR_SERVICE);
         Data data = filtersData.get(position);
         // Get Post Date
         String startDate = Objects.requireNonNull(data.getDate());
@@ -123,6 +125,13 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
 
+        final String sId = data.getuId();
+        final String iPShop = data.getmPShop();
+        final String iPAddress = data.getmPAddress();
+        final String iDAddress = data.getDAddress();
+        final String iDPhone = data.getDPhone();
+        final String iDName = data.getDName();
+
         holder.setDate(data.getDDate());
         holder.setUsername(data.getuId());
         holder.setOrdercash(data.getGMoney());
@@ -135,19 +144,24 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         holder.setType(data.getIsCar(), data.getIsMotor(), data.getIsMetro(), data.getIsTrans());
         holder.checkDeleted(data.getRemoved());
 
-        final String sId = data.getuId();
-        final String iPShop = data.getmPShop();
-        final String iPAddress = data.getmPAddress();
-        final String iDAddress = data.getDAddress();
-        final String iDPhone = data.getDPhone();
-        final String iDName = data.getDName();
+        mDatabase.orderByChild("uId").equalTo(data.getuId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int ordersCount = 0;
+                if (snapshot.exists()) {
+                    ordersCount = (int) snapshot.getChildrenCount();
+                }
+                holder.isTop(ordersCount);
+            }
 
-        if(data.getStatue().equals("placed")) {
-            holder.mImageButton.setVisibility(View.GONE);
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
 
-        //Order info
+        // ------------------------------------   Order info
         holder.btnInfo.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             AlertDialog.Builder myInfo = new AlertDialog.Builder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             View infoView = inflater.inflate(R.layout.orderinfo, null);
@@ -174,8 +188,10 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtDPhone.setText(iDPhone);
             txtDPhone.setPaintFlags(txtDPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
             txtPPhone.setPaintFlags(txtPPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
-            // call the Customer
+
+            // --------------------- call the Customer
             txtDPhone.setOnClickListener(v14 -> {
+                vibe.vibrate(20);
                 checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + iDPhone));
@@ -187,6 +203,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
             // -----------------------  call the supplier
             txtPPhone.setOnClickListener(v13 -> {
+                vibe.vibrate(20);
                 checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 String ppPhone = (String) txtPPhone.getText();
@@ -214,14 +231,11 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             });
         });
 
-        holder.linerDate.setOnClickListener(v -> Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show());
-        holder.txtgGet.setOnClickListener(v -> Toast.makeText(context, "مصاريف شحن الاوردر : "+ holder.txtgGet.getText().toString(), Toast.LENGTH_SHORT).show());
-        holder.txtgMoney.setOnClickListener(v -> Toast.makeText(context, "مقدم الاوردر : "+ holder.txtgMoney.getText().toString(), Toast.LENGTH_SHORT).show());
-
-
         // -----------------------   Set ORDER as Delivered
         final String orderID = data.getId();
         holder.btnDelivered.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             final String DID = data.getuAccepted();
             String SID = data.getuId();
 
@@ -246,12 +260,12 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             });
 
             // --------------------------- Send Notifications ---------------------//
-            notiData Noti = new notiData(uId, SID,orderID,"delivered",notiDate,"false");
+            notiData Noti = new notiData(uId, SID,orderID,"delivered",datee,"false");
             nDatabase.child(SID).push().setValue(Noti);
             Toast.makeText(context, "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
-
+            vibe.vibrate(20);
             context.startActivity(new Intent(context, NewProfile.class));
-            ViewPager viewPager = (ViewPager) ((NewProfile) context).findViewById(R.id.view_pager);
+            ViewPager viewPager = ((NewProfile) context).findViewById(R.id.view_pager);
             viewPager.setCurrentItem(1);
         });
 
@@ -270,7 +284,11 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
             ImageView btnClose = dialogRate.findViewById(R.id.btnClose);
 
-            btnClose.setOnClickListener(v1 -> dialog.dismiss());
+            btnClose.setOnClickListener(v1 -> {
+                dialog.dismiss();
+                assert vibe != null;
+                vibe.vibrate(20);
+            });
 
             Button btnSaveRate = dialogRate.findViewById(R.id.btnSaveRate);
             final EditText txtRate = dialogRate.findViewById(R.id.drComment);
@@ -289,6 +307,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             });
 
             btnSaveRate.setOnClickListener(v15 -> {
+                assert vibe != null;
+                vibe.vibrate(20);
                 final String rRate = txtRate.getText().toString().trim();
                 final String rId = rDatabase.push().getKey();
                 final int intRating = (int) drStar.getRating();
@@ -304,19 +324,57 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 } else {
                     rDatabase.child(sId).child(rId).child("isReported").setValue("false");
                 }
-                Toast.makeText(context, "Order Rated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "تم التقييم بالنجاح", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });
         });
 
-        // ----------------------- Transportations Toasts ------------------- //
-        holder.icnCar.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالسيارة", Toast.LENGTH_SHORT).show());
-        holder.icnMetro.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show());
-        holder.icnMotor.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالموتسكل", Toast.LENGTH_SHORT).show());
-        holder.icnTrans.setOnClickListener(v -> Toast.makeText(context, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show());
+        // ----------------------- Toasts ------------------- //
+        holder.icnCar.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالسيارة", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.icnMetro.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.icnMotor.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالموتسكل", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+        holder.icnTrans.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "يمكن توصيل الاوردر بالمواصلات", Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.linerDate.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+        holder.txtgGet.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "مصاريف شحن الاوردر : "+ holder.txtgGet.getText().toString(), Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
+        holder.txtgMoney.setOnClickListener(v -> {
+            assert vibe != null;
+            Toast.makeText(context, "مقدم الاوردر : "+ holder.txtgMoney.getText().toString(), Toast.LENGTH_SHORT).show();
+            vibe.vibrate(20);
+        });
+
 
         // --------- Report for Delvery
         holder.mImageButton.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
             PopupMenu popup = new PopupMenu(context,v );
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.popup_menu_delv, popup.getMenu());
@@ -361,6 +419,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                                     mDatabase.child(orderID).child("statue").setValue("placed");
                                     mDatabase.child(orderID).child("uAccepted").setValue("");
 
+                                    assert id != null;
                                     reportDatabase.child(data.getuId()).child(id).setValue(repo3);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
@@ -377,6 +436,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                                 case DialogInterface.BUTTON_POSITIVE:
                                     String id = reportDatabase.child(data.getuId()).push().getKey();
                                     reportData repo4 = new reportData(uId, data.getuId(),orderID,datee,"التاجر اخل بالاتفاق", id);
+                                    assert id != null;
                                     reportDatabase.child(data.getuId()).child(id).setValue(repo4);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
@@ -393,6 +453,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                                 case DialogInterface.BUTTON_POSITIVE:
                                     String id = reportDatabase.child(data.getuId()).push().getKey();
                                     reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر", id);
+                                    assert id != null;
                                     reportDatabase.child(data.getuId()).child(id).setValue(repo5);
 
 
@@ -411,6 +472,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                                 case DialogInterface.BUTTON_POSITIVE:
                                     String id = reportDatabase.child(data.getuId()).push().getKey();
                                     reportData repo6 = new reportData(uId, data.getuId(),orderID,datee,"وصلت الاوردر و زر تم التوصيل غير موجود", id);
+                                    assert id != null;
                                     reportDatabase.child(data.getuId()).child(id).setValue(repo6);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
@@ -427,6 +489,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                                 case DialogInterface.BUTTON_POSITIVE:
                                     String id = reportDatabase.child(data.getuId()).push().getKey();
                                     reportData repo7 = new reportData(uId, data.getuId(),orderID,datee,"لم استلم الاوردر بعد", id);
+                                    assert id != null;
                                     reportDatabase.child(data.getuId()).child(id).setValue(repo7);
                                     Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
                                     break;
@@ -444,69 +507,25 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         });
 
         // -----------------------  Delete order for Delivery
-        final String DorderID = data.getId();
         holder.btnDelete.setOnClickListener(v -> {
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        // --------------- Add the cencelled order to the counter ----------------------- //
-                        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Date lastedit = null;
-                                Date acceptedDate = null;
-                                try {
-                                    lastedit = format.parse(data.getLastedit());
-                                    acceptedDate = format.parse(data.getAcceptedTime());
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-
-                                // ------------------------------- Adding the order to the worker cancelled orders counter --------------- //
-                                int cancelledCount =  Integer.parseInt(Objects.requireNonNull(dataSnapshot.child("canceled").getValue()).toString());
-                                Log.i(TAG, "You Already Canceled : " + cancelledCount);
-                                int finalCount = (cancelledCount + 1);
-                                int reminCount = 3 - cancelledCount - 1;
-
-                                assert acceptedDate != null;
-                                Log.i(TAG, "acc date : " + acceptedDate + " last edited" + lastedit);
-                                if(acceptedDate.compareTo(lastedit) > 0) { // if the worker accepted the order before it has been edited
-                                    uDatabase.child(uId).child("canceled").setValue(String.valueOf(finalCount));
-                                    Log.i(TAG, "Remining tries : " + reminCount);
-                                    Toast.makeText(context, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(context, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
-                                }
-
-                                // --------------- Setting the order as placed again ---------------- //
-                                mDatabase.child(DorderID).child("statue").setValue("placed");
-                                mDatabase.child(DorderID).child("uAccepted").setValue("");
-                                mDatabase.child(DorderID).child("acceptTime").setValue("");
-
-                                // --------------------------- Send Notifications ---------------------//
-                                String owner = data.getuId();
-                                notiData Noti = new notiData(uId, owner, orderID,"deleted",notiDate,"false");
-                                nDatabase.child(owner).push().setValue(Noti);
-                                context.startActivity(new Intent(context, NewProfile.class));
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) { }
-                        });
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("هل انت متاكد من انك تريد حذف الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+            assert vibe != null;
+            vibe.vibrate(20);
+            Intent deleteAct = new Intent(context, Delete_Reaon_Delv.class);
+            deleteAct.putExtra("orderid", orderID);
+            deleteAct.putExtra("aTime", data.getAcceptedTime());
+            deleteAct.putExtra("eTime", data.getLastedit());
+            context.startActivity(deleteAct);
         });
     }
 
     @Override
     public int getItemCount() {
         return (int) count;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public void checkPermission(String permission, int requestCode) {
@@ -517,7 +536,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ((profile)context).onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ((NewProfile)context).onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PHONE_CALL_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(context, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
@@ -528,13 +547,12 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        View myview;
-        Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
-        TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate;
-        LinearLayout linerDate, linerAll;
-        RatingBar drStar;
-        ImageView icnCar,icnMotor,icnMetro,icnTrans;
-        ImageButton mImageButton;
+        public View myview;
+        public Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
+        public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate;
+        public LinearLayout linerDate, linerAll;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans, imgStar;
+        public ImageButton mImageButton;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -546,7 +564,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             btnDelete = myview.findViewById(R.id.btnDelete);
             btnRate = myview.findViewById(R.id.btnRate);
             txtRate = myview.findViewById(R.id.drComment);
-            drStar = myview.findViewById(R.id.drStar);
             txtGetStat = myview.findViewById(R.id.txtStatue);
             linerAll = myview.findViewById(R.id.linerAll);
 
@@ -554,16 +571,24 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtgGet = myview.findViewById(R.id.fees);
             txtgMoney = myview.findViewById(R.id.ordercash);
             txtDate = myview.findViewById(R.id.date);
-            mImageButton = (ImageButton) myview.findViewById(R.id.imageButton);
+            mImageButton = myview.findViewById(R.id.imageButton);
+            imgStar = myview.findViewById(R.id.imgStar);
+            txtUsername = myview.findViewById(R.id.txtUsername);
+            icnCar = myview.findViewById(R.id.icnCar);
+            icnMotor = myview.findViewById(R.id.icnMotor);
+            icnMetro = myview.findViewById(R.id.icnMetro);
+            icnTrans = myview.findViewById(R.id.icnTrans);
+            txtOrderFrom = myview.findViewById(R.id.OrderFrom);
+            txtOrderTo = myview.findViewById(R.id.orderto);
+            txtPostDate = myview.findViewById(R.id.txtPostDate);
         }
 
         void setUsername(final String orderOwner){
-            final TextView mtitle = myview.findViewById(R.id.txtUsername);
            uDatabase.child(orderOwner).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
-                        mtitle.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
+                        txtUsername.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
                     }
                 }
                 @Override
@@ -573,8 +598,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
 
         public void setOrderFrom(String orderFrom){
-            TextView mtitle=myview.findViewById(R.id.OrderFrom);
-            mtitle.setText(orderFrom);
+            txtOrderFrom.setText(orderFrom);
         }
 
         public void setRateButton(String rated, String statue) {
@@ -630,32 +654,34 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         }
 
         public void setOrderto(String orderto){
-            TextView mtitle=myview.findViewById(R.id.orderto);
-            mtitle.setText(orderto);
+            txtOrderTo.setText(orderto);
         }
 
         public void setDate (String date){
-            TextView mdate= myview.findViewById(R.id.date);
-            mdate.setText(date);
+            txtDate.setText(date);
         }
 
         @SuppressLint("SetTextI18n")
         public void setOrdercash(String ordercash){
-            TextView mtitle=myview.findViewById(R.id.ordercash);
-            mtitle.setText(ordercash + " ج");
+            txtgMoney.setText(ordercash + " ج");
         }
 
         @SuppressLint("SetTextI18n")
         public void setFee(String fees) {
-            TextView mtitle=myview.findViewById(R.id.fees);
-            mtitle.setText(fees + " ج");
+            txtgGet.setText(fees + " ج");
+        }
+
+        public void isTop(int ordersCount) {
+            if(ordersCount >= 10) {
+                imgStar.setVisibility(View.VISIBLE);
+                txtUsername.setTextColor(Color.parseColor("#ffc922"));
+            } else {
+                imgStar.setVisibility(View.GONE);
+                txtUsername.setTextColor(Color.parseColor("#FF0099CC"));
+            }
         }
 
         public void setType(String car, String motor, String metro, String trans) {
-            icnCar = myview.findViewById(R.id.icnCar);
-            icnMotor = myview.findViewById(R.id.icnMotor);
-            icnMetro = myview.findViewById(R.id.icnMetro);
-            icnTrans = myview.findViewById(R.id.icnTrans);
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
             } else {
@@ -682,7 +708,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         }
         public void setPostDate(int dS, int dM, int dH, int dD) {
             String finalDate = "";
-            TextView mtitle = myview.findViewById(R.id.txtPostDate);
             if (dS < 60) {
                 finalDate = "منذ " + dS + " ثوان";
             } else if (dS > 60 && dS < 3600) {
@@ -692,7 +717,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             } else if (dS > 86400) {
                 finalDate = "منذ " + dD + " ايام";
             }
-            mtitle.setText(finalDate);
+            txtPostDate.setText(finalDate);
         }
 
         public void checkDeleted(String removed) {

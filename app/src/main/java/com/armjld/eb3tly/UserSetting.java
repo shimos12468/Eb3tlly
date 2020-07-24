@@ -26,9 +26,11 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public class UserSetting extends AppCompatActivity {
 
@@ -69,6 +72,7 @@ public class UserSetting extends AppCompatActivity {
     private ProgressDialog mdialog;
     private String ppURL = "";
     String oldPass = "";
+    private Spinner spState;
     private static String TAG = "User Settings";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
 
@@ -202,7 +206,7 @@ public class UserSetting extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
 
-        String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("ppUsers").child(uID + ".jpeg");
         final String did = uID;
@@ -227,6 +231,7 @@ public class UserSetting extends AppCompatActivity {
             public void onSuccess(Uri uri) {
                 Log.i("Sign UP", " add Profile URL");
                 uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
+                StartUp.userURL = uri.toString();
                 mdialog.dismiss();
                 Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
@@ -277,38 +282,42 @@ public class UserSetting extends AppCompatActivity {
         Email = findViewById(R.id.txtEditEmail);
         mdialog = new ProgressDialog(this);
         confirm = findViewById(R.id.btnEditInfo);
+        spState = findViewById(R.id.spState);
 
 
-        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(UserSetting.this, R.array.txtStates, R.layout.color_spinner_layout);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spState.setPrompt("اختار المحافظة");
+        spState.setAdapter(adapter);
+
+        // ---------------------- Get Current Data -------------------------- //
+        uDatabase.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String url = dataSnapshot.child("ppURL").getValue().toString();
-                oldPass = dataSnapshot.child("mpass").getValue().toString();
-                name.setText(dataSnapshot.child("name").getValue().toString());
-                Email.setText(dataSnapshot.child("email").getValue().toString());
+                String url = Objects.requireNonNull(dataSnapshot.child("ppURL").getValue()).toString();
+                oldPass = Objects.requireNonNull(dataSnapshot.child("mpass").getValue()).toString();
+                name.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
+                Email.setText(Objects.requireNonNull(dataSnapshot.child("email").getValue()).toString());
                 Picasso.get().load(Uri.parse(url)).into(UserImage);
+
+                if(dataSnapshot.child("userState").exists()) {
+                    spState.setSelection(getIndex(spState, Objects.requireNonNull(dataSnapshot.child("userState").getValue()).toString()));
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        UserImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
-                if (ContextCompat.checkSelfPermission(UserSetting.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    if(intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, TAKE_IMAGE_CODE);
-                    }
+        UserImage.setOnClickListener(view -> {
+            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
+            if (ContextCompat.checkSelfPermission(UserSetting.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if(intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, TAKE_IMAGE_CODE);
                 }
             }
         });
-
-
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -332,6 +341,10 @@ public class UserSetting extends AppCompatActivity {
 
                 // ------------------ Update the Name -----------------//
                 uDatabase.child(id).child("name").setValue(name.getText().toString().trim());
+                uDatabase.child(id).child("userState").setValue(spState.getSelectedItem().toString());
+
+                StartUp.userName = name.getText().toString().trim();
+
 
                 // -------------- Get auth credentials from the user for re-authentication
                 if(!Email.getText().equals(mAuth.getCurrentUser().getEmail())) {
@@ -361,7 +374,7 @@ public class UserSetting extends AppCompatActivity {
                     handleUpload(bitmap);
                     mdialog.setMessage("جاري تحديث الصور الشخصية ...");
                     mdialog.show();
-                    Log.i(TAG, "Photo Updated and current user is : " + mAuth.getInstance().getCurrentUser());
+                    Log.i(TAG, "Photo Updated and current user is : " + FirebaseAuth.getInstance().getCurrentUser());
                 } else {
                     Log.i(TAG, "no Photo to update.");
                     Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
@@ -370,6 +383,15 @@ public class UserSetting extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private int getIndex(Spinner spinner, String value) {
+        for(int i=0;i <spinner.getCount(); i++) {
+            if(spinner.getItemAtPosition(i).toString().equals(value)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     public static Bitmap resizeBitmap(Bitmap source, int maxLength) {

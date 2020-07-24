@@ -9,4 +9,9 @@
         android:id="@+id/didnt_deliv"
         android:orderInCategory="100"
         android:title="المندوب لم يسلم الاوردر للعميل" />
+
+    <item
+        android:id="@+id/already_delv"
+        android:orderInCategory="100"
+        android:title="قام المندوب بتسليم الاوردر بالفعل" />
 </menu>

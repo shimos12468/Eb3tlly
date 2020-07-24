@@ -57,41 +57,68 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:clickable="false"
             android:focusableInTouchMode="false"
             android:isIndicator="true"
             android:stepSize="0.5"
             android:theme="@style/RatingBar"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
-        <TextView
-            android:id="@+id/ddUsername"
+        <LinearLayout
+            android:id="@+id/linearLayout5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="اسم المندوب"
-            android:textAlignment="center"
-            android:textColor="@color/colorBack"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ddRate" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+            <ImageView
+                android:id="@+id/ppStar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:foregroundGravity="center"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_baseline_stars_24" />
+
+            <TextView
+                android:id="@+id/ddUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text="اسم المندوب"
+                android:textAlignment="center"
+                android:textColor="@color/colorBack"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/ddPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:drawableLeft="@drawable/ic_phone_white"
             android:text="رقم التلفون"
             android:textAlignment="center"
             android:textColor="@color/colorBack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ddUsername" />
+            app:layout_constraintTop_toBottomOf="@+id/ddRate" />
 
         <TextView
             android:id="@+id/ddCount"
@@ -103,8 +130,8 @@
             android:textColor="@color/colorBack"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="91dp"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="91dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

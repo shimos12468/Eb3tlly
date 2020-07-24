@@ -1,5 +1,6 @@
 package com.armjld.eb3tly;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,20 +27,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
 import Model.Data;
+import Model.notiData;
 
+import static com.armjld.eb3tly.R.drawable.ic_add_money;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class AddOrders extends AppCompatActivity {
 
+    private static final String TAG = "Add Orders";
     private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
     private CheckBox chkMetro, chkTrans, chkCar, chkMotor;
     private Spinner spPState, spPRegion, spDState, spDRegion;
@@ -68,6 +78,7 @@ public class AddOrders extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -508,138 +519,212 @@ public class AddOrders extends AppCompatActivity {
             dpd.show();
         });
 
-        // ----------------- Save the Order --------------------//
-        btnsave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Txt Fields Strings
-                final String mPAddress = PAddress.getText().toString().trim();
-                final String mNote = txtNotes.getText().toString().trim();
-                final String mPShop = PShop.getText().toString().trim();
-                final String mDAddress = DAddress.getText().toString().trim();
-                final String mDDate = DDate.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mDPhone = DPhone.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mDName = DName.getText().toString().trim();
-                final String mGMoney = GMoney.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mGGet = GGet.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        GGet.setOnFocusChangeListener((v, event) -> {
+            if(!TextUtils.isEmpty(GMoney.getText().toString()) && GGet.isFocused()) {
+                int min = 0;
+                int max = 0;
+                boolean isLess = false;
 
-                // Checkboxes Strings
-                String isTrans = "";
-                String isMotor = "";
-                String isMetro = "";
-                String isCar = "";
+                int cash = Integer.parseInt(GMoney.getText().toString());
+                String from = spPState.getSelectedItem().toString();
+                String to = spDState.getSelectedItem().toString();
 
-                //DEFULT ORDER States ON ADD
-                final String states = "placed";
-                final String uAccepted = "";
-
-                // Check if Empty
-                if (TextUtils.isEmpty(mPAddress) && !spPState.getSelectedItem().toString().equals("مترو")) {
-                    PAddress.setError("الرجاء ادخال البيانات");
-                    PAddress.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mDAddress) && !spDState.getSelectedItem().toString().equals("مترو")) {
-                    DAddress.setError("الرجاء ادخال البيانات");
-                    DAddress.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mDDate)) {
-                    DDate.setError("الرجاء ادخال البيانات");
-                    Toast.makeText(AddOrders.this, "ادخل تاريخ تسليم الاوردر", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(mDPhone.length() != 11) {
-                    DPhone.setError("الرجاء ادخال البيانات");
-                    DPhone.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mDName)) {
-                    DName.setError("الرجاء ادخال البيانات");
-                    DName.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mGMoney)) {
-                    GMoney.setError("الرجاء ادخال البيانات");
-                    GMoney.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mGGet)) {
-                    GGet.setError("الرجاء ادخال البيانات");
-                    GGet.requestFocus();
-                    return;
-                }
-                int intget = Integer.parseInt(mGGet);
-                if(intget == 0) {
-                    GGet.setError("الرجاء وضع سعر للشحن");
-                    GGet.requestFocus();
-                    return;
-                }
-                // Check the way of transportation
-                if (chkTrans.isChecked()) {
-                    isTrans = "مواصلات";
+                if (cash <= 499) {
+                    isLess = true;
+                    min = 30;
+                } else if (cash <= 1000) {
+                    min = (int) (cash * 0.06);
+                } else if (cash <= 1999) {
+                    min = (int) (cash * 0.05);
                 } else {
-                    isTrans = "";
-                }
-                if (chkMetro.isChecked()) {
-                    isMetro = "مترو";
-                } else {
-                    isMetro = "";
-                }
-                if (chkCar.isChecked()) {
-                    isCar = "سياره";
-                } else {
-                    isCar = "";
-                }
-                if (chkMotor.isChecked()) {
-                    isMotor = "موتسكل";
-                } else {
-                    isMotor = "";
+                    min = (int) (cash * 0.03);
                 }
 
-                final String finalIsMetro = isMetro;
-                final String finalIsTrans = isTrans;
-                final String finalIsMotor = isMotor;
-                final String finalIsCar = isCar;
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface confirmDailog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                mdialog.setMessage("جاري اضافة الاوردر");
-                                mdialog.show();
-                                String id = mDatabase.push().getKey().toString(); // create Order ID
-                                String srate = "false";
-                                String srateid = "";
-                                String drate = "false";
-                                String drateid = "";
-                                // Send order to Data Base using the DATA MODEL
-                                Data data = new Data(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), mPAddress, mPShop, spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                        mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
-                                mDatabase.child(id).setValue(data);
-                                mDatabase.child(id).child("lastedit").setValue(datee);
-
-                                SharedPreferences sharedPreferences = getSharedPreferences("Location", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("Store", mPShop);
-                                editor.putString("State", spPState.getSelectedItem().toString());
-                                editor.putString("Region", spPRegion.getSelectedItem().toString());
-                                editor.putString("Address", mPAddress);
-                                editor.apply();
-
-                                mdialog.dismiss();
-                                Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(AddOrders.this, supplierProfile.class));
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                mdialog.dismiss();
-                                break;
-                        }
+                if (!from.equals(to)) {
+                    if ((!from.equals("الجيزة") || !to.equals("القاهرة")) && (!from.equals("القاهرة") || !to.equals("الجيزة"))) {
+                        if(isLess) {min = min + 15;}
+                        Double factor = checkFactor(from,to);
+                        min = (int) (min * factor);
                     }
-                };
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddOrders.this);
-                builder.setMessage("هل انت متاكد من صحه البيانات و انك تريد اضافة الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                }
+                max = (int) (min * 1.4);
+
+                GGet.setError("مصاريف الشحن المقترحه من : " + (Math.round(min/5.0)*5) + " ج الي : " + (Math.round(max/5.0)*5) + " ج");
+            } else if(TextUtils.isEmpty(GMoney.getText().toString())) {
+                GMoney.setError("ضع مقدم الاوردر اولا حتي نتمكن من اقتراح سعر الشحن");
             }
+        });
+
+        // ----------------- Save the Order --------------------//
+        btnsave.setOnClickListener(v -> {
+            // Txt Fields Strings
+            final String mPAddress = PAddress.getText().toString().trim();
+            final String mNote = txtNotes.getText().toString().trim();
+            final String mPShop = PShop.getText().toString().trim();
+            final String mDAddress = DAddress.getText().toString().trim();
+            final String mDDate = DDate.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+            final String mDPhone = DPhone.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+            final String mDName = DName.getText().toString().trim();
+            final String mGMoney = GMoney.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+            final String mGGet = GGet.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
+
+            // Checkboxes Strings
+            String isTrans = "";
+            String isMotor = "";
+            String isMetro = "";
+            String isCar = "";
+
+            //DEFULT ORDER States ON ADD
+            final String states = "placed";
+            final String uAccepted = "";
+
+            // Check if Empty
+            if (TextUtils.isEmpty(mPAddress) && !spPState.getSelectedItem().toString().equals("مترو")) {
+                PAddress.setError("الرجاء ادخال البيانات");
+                PAddress.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(mDAddress) && !spDState.getSelectedItem().toString().equals("مترو")) {
+                DAddress.setError("الرجاء ادخال البيانات");
+                DAddress.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(mDDate)) {
+                DDate.setError("الرجاء ادخال البيانات");
+                Toast.makeText(AddOrders.this, "ادخل تاريخ تسليم الاوردر", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(mDPhone.length() != 11) {
+                DPhone.setError("الرجاء ادخال البيانات");
+                DPhone.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(mDName)) {
+                DName.setError("الرجاء ادخال البيانات");
+                DName.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(mGMoney)) {
+                GMoney.setError("الرجاء ادخال البيانات");
+                GMoney.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(mGGet)) {
+                GGet.setError("الرجاء ادخال البيانات");
+                GGet.requestFocus();
+                return;
+            }
+            int intget = Integer.parseInt(mGGet);
+            if(intget == 0) {
+                GGet.setError("الرجاء وضع سعر للشحن");
+                GGet.requestFocus();
+                return;
+            }
+            // Check the way of transportation
+            if (chkTrans.isChecked()) {
+                isTrans = "مواصلات";
+            } else {
+                isTrans = "";
+            }
+            if (chkMetro.isChecked()) {
+                isMetro = "مترو";
+            } else {
+                isMetro = "";
+            }
+            if (chkCar.isChecked()) {
+                isCar = "سياره";
+            } else {
+                isCar = "";
+            }
+            if (chkMotor.isChecked()) {
+                isMotor = "موتسكل";
+            } else {
+                isMotor = "";
+            }
+
+            final String finalIsMetro = isMetro;
+            final String finalIsTrans = isTrans;
+            final String finalIsMotor = isMotor;
+            final String finalIsCar = isCar;
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface confirmDailog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            mdialog.setMessage("جاري اضافة الاوردر");
+                            mdialog.show();
+
+                            String id = mDatabase.push().getKey().toString(); // create Order ID
+                            String srate = "false";
+                            String srateid = "";
+                            String drate = "false";
+                            String drateid = "";
+                            String pState = spPState.getSelectedItem().toString();
+                            String dState = spDState.getSelectedItem().toString();
+
+                            // Send order to Data Base using the DATA MODEL
+                            Data data = new Data(pState, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
+                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
+                            mDatabase.child(id).setValue(data);
+                            mDatabase.child(id).child("lastedit").setValue(datee);
+
+                            SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences1.edit();
+                            editor.putString("Store", mPShop);
+                            editor.putString("State", spPState.getSelectedItem().toString());
+                            editor.putString("Region", spPRegion.getSelectedItem().toString());
+                            editor.putString("Address", mPAddress);
+                            editor.apply();
+
+                            // --------------------- Send notification to all users in State ---------------//
+                            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            String usId = ds.child("id").getValue().toString();
+                                            String accType = ds.child("accountType").getValue().toString();
+                                            if(accType.equals("Delivery Worker")) {
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                nDatabase.child(usId).push().setValue(Noti);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
+
+                            uDatabase.orderByChild("userState").equalTo(pState).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+
+                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في محافظتك",datee,"false");
+                                            nDatabase.child(usId).push().setValue(Noti);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
+
+                            mdialog.dismiss();
+                            Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(AddOrders.this, supplierProfile.class));
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            mdialog.dismiss();
+                            break;
+                    }
+                }
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(AddOrders.this);
+            builder.setMessage("هل انت متاكد من صحه البيانات و انك تريد اضافة الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
         });
 
         // ------------ Save the Order and Add Another -------------//
@@ -737,16 +822,66 @@ public class AddOrders extends AppCompatActivity {
                             case DialogInterface.BUTTON_POSITIVE:
                                 mdialog.setMessage("جاري اضافة الاوردر");
                                 mdialog.show();
+
                                 String id = mDatabase.push().getKey().toString(); // create Order ID
                                 String srate = "false";
                                 String srateid = "";
                                 String drate = "false";
                                 String drateid = "";
+                                String pState = spPState.getSelectedItem().toString();
+                                String dState = spDState.getSelectedItem().toString();
+
+                                SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences1.edit();
+                                editor.putString("Store", mPShop);
+                                editor.putString("State", spPState.getSelectedItem().toString());
+                                editor.putString("Region", spPRegion.getSelectedItem().toString());
+                                editor.putString("Address", mPAddress);
+                                editor.apply();
+
                                 // Send order to Data Base using the DATA MODEL
-                                Data data = new Data(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), mPAddress, mPShop, spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
+                                Data data = new Data(pState, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
                                         mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
                                 mDatabase.child(id).setValue(data);
                                 mDatabase.child(id).child("lastedit").setValue(datee);
+
+                                // --------------------- Send notification to all users in State ---------------//
+                                uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                                String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                                                String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                                                if(accType.equals("Delivery Worker")) {
+                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                    nDatabase.child(usId).push().setValue(Noti);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) { }
+                                });
+
+                                uDatabase.orderByChild("userState").equalTo(pState).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                                String usId = ds.child("id").getValue().toString();
+
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                nDatabase.child(usId).push().setValue(Noti);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) { }
+                                });
+
                                 clearText();
                                 mdialog.dismiss();
                                 Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن يمكنك الان اضافه اوردر اخر", Toast.LENGTH_LONG).show();
@@ -786,5 +921,51 @@ public class AddOrders extends AppCompatActivity {
             }
         }
         return 0;
+    }
+
+    private Double checkFactor(String from, String to) {
+        String Region = "";
+        Double factor;
+        factor = (double) 0;
+
+        if(from.equals("اسوان") || from.equals("الاقصر") || to.equals("اسوان") || to.equals("الاقصر")) {
+            Region = "الصعيد";
+        } else if(from.equals("الأسكندرية") || from.equals("البحيرة") || to.equals("الأسكندرية") || to.equals("البحيرة")) {
+            Region = "بحري";
+        } else if (from.equals("جنوب سيناء") || from.equals("شمال سيناء") || from.equals("البحر الاحمر") || from.equals("الوادي الجديد") || to.equals("جنوب سيناء") || to.equals("شمال سيناء") || to.equals("البحر الاحمر") || to.equals("الوادي الجديد")) {
+            Region = "المنبوذين";
+        } else if(from.equals("القليوبية") || from.equals("الشرقية") || from.equals("المنوفية") || to.equals("القليوبية") || to.equals("الشرقية") || to.equals("المنوفية")) {
+            Region = "القاهرة الكبري";
+        } else if(from.equals("الاسماعلية") || from.equals("السويس") || from.equals("بور سعيد")) {
+            Region = "السويس";
+        }
+
+        switch (Region) {
+            case "الصعيد" : {
+                factor = (Double) 1.4;
+                break;
+            }
+            case "بحري" : {
+                factor = (Double) 1.2;
+                break;
+            }
+            case "المنبوذين" : {
+                factor = (Double) 1.6;
+                break;
+            }
+            case "القاهرة الكبري" : {
+                factor = (Double) 1.1;
+                break;
+            }
+            case "السويس" : {
+                factor = (Double) 1.3;
+                break;
+            }
+            default: {
+                factor = (Double) 1.3;
+                break;
+            }
+        }
+    return factor;
     }
 }

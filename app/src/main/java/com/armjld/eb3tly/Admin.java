@@ -64,6 +64,9 @@ public class Admin extends Activity {
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String datee = sdf.format(new Date());
 
+    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+    String datee2 = sdf2.format(new Date());
+
     public void onBackPressed() { }
 
     @SuppressLint({"SetTextI18n", "RtlHardcoded"})
@@ -187,7 +190,7 @@ public class Admin extends Activity {
                                         if(ds.exists() && ds.child("id").exists()) {
                                                 String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                                 if(Objects.requireNonNull(ds.child("accountType").getValue()).toString().equals("Delivery Worker")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee, "false");
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee2, "false");
                                                 nDatabase.child(userID).push().setValue(Noti);
                                             }
                                         }
@@ -225,7 +228,7 @@ public class Admin extends Activity {
                                         if(ds.exists() && ds.child("id").exists()) {
                                             String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                             if(Objects.requireNonNull(ds.child("accountType").getValue()).toString().equals("Supplier")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee, "false");
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee2, "false");
                                                 nDatabase.child(userID).push().setValue(Noti);
                                             }
                                         }
@@ -299,7 +302,7 @@ public class Admin extends Activity {
 
         // ------------------------- Delete Non Completed ---------------------------//
         btnDeleteUser.setOnClickListener(v -> {
-            reportDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            /*reportDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for(DataSnapshot user : snapshot.getChildren()) {
@@ -318,7 +321,7 @@ public class Admin extends Activity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
-            });
+            });*/
 
             /*uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -405,7 +408,9 @@ public class Admin extends Activity {
 
                 }
             });
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            */
+
+            mDatabase.orderByChild("statue").equalTo("recived").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int ToBeDelv = 0;
@@ -422,9 +427,25 @@ public class Admin extends Activity {
                                     e.printStackTrace();
                                 }
                                 assert orderDate != null;
-                                if(orderDate.compareTo(myDate) < 0 && Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("accepted")) {
+                                if(orderDate.compareTo(myDate) < 0) {
                                     String orderI = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                     mDatabase.child(orderI).child("statue").setValue("delivered");
+                                    mDatabase.child(orderI).child("dilverTime").setValue(datee2);
+                                    // Add the Profit of the Dilvery Worker
+                                    uDatabase.child(ds.child("uAccepted").getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.exists() && dataSnapshot.child("profit").exists()) {
+                                                String dbprofits = Objects.requireNonNull(dataSnapshot.child("profit").getValue()).toString();
+                                                int longProfit = Integer.parseInt(dbprofits);
+                                                int finalProfits = (longProfit + Integer.parseInt(ds.child("gget").getValue().toString()));
+                                                uDatabase.child(ds.child("uAccepted").getValue().toString()).child("profit").setValue(String.valueOf(finalProfits));
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) { }
+                                    });
+
                                     ToBeDelv++;
                                 }
                             }
@@ -437,6 +458,35 @@ public class Admin extends Activity {
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
+            });
+
+           /* uDatabase.orderByChild("accountType").equalTo("Supplier").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot user : snapshot.getChildren()) {
+                        String id = user.child("id").getValue().toString();
+                        String name = user.child("name").getValue().toString();
+                        String phone = user.child("phone").getValue().toString();
+
+                        mDatabase.orderByChild("uId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()) {
+                                    int ordersCount = (int) snapshot.getChildrenCount();
+                                    if(ordersCount >= 5) {
+                                        Log.i(TAG, "Name : " + name + " | Phone : " + phone);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
             });*/
         });
 

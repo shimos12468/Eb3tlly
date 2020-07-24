@@ -33,7 +33,7 @@ public class HowTo extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(HowTo.this, profile.class));
+        startActivity(new Intent(HowTo.this, supplierProfile.class));
     }
 
     @Override

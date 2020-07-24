@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,6 +44,7 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class EditOrders extends AppCompatActivity {
 
+    private static final String TAG = "Edit Orders";
     private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
     private CheckBox chkMetro, chkTrans, chkCar, chkMotor;
     private Spinner spPState, spPRegion, spDState, spDRegion;
@@ -54,19 +56,11 @@ public class EditOrders extends AppCompatActivity {
     private ImageView btnClose, imgHelpMoney, imgHelpGet;
     String statee, acceptedID;
     String srate, srateid,drate,drateid,orderDate,acceptedTime;
-    String notiDate = DateFormat.getDateInstance().format(new Date());
-    
+
     DatePickerDialog dpd;
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
-
-    // Disable the Back Button
-    @Override
-    public void onBackPressed() {
-        finish();
-        startActivity(new Intent(this, supplierProfile.class));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +113,6 @@ public class EditOrders extends AppCompatActivity {
 
         // Firebasee
         mAuth = FirebaseAuth.getInstance();
-        uID = mAuth.getCurrentUser().getUid();
         mDatabase = getInstance().getReference("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
@@ -157,6 +150,7 @@ public class EditOrders extends AppCompatActivity {
                 acceptedTime = orderData.getAcceptedTime();
                 acceptedID = orderData.getuAccepted();
                 statee = orderData.getStatue();
+                uID = orderData.getuId();
                 PAddress.setText(orderData.getmPAddress().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                 PShop.setText(orderData.getmPShop().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                 DAddress.setText(orderData.getDAddress().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
@@ -180,12 +174,14 @@ public class EditOrders extends AppCompatActivity {
                     chkTrans.setChecked(true);
                 }
 
-                // Pick up Government Spinner
+                // ---------------------------- Pick up Government Spinner ----------------------------------------//
                 ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtStates, R.layout.color_spinner_layout);
                 adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spPState.setPrompt("اختار المحافظة");
                 spPState.setAdapter(adapter2);
-                spPState.setSelection(adapter2.getPosition(orderData.getTxtPState()));
+                spPState.setSelection(getIndex(spPState, orderData.getTxtPState()));
+
+                // --------------------------- Drop Government Spinner -------------------------------------------//
                 spPState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -339,19 +335,18 @@ public class EditOrders extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
+                    public void onNothingSelected(AdapterView<?> parent) { }
                 });
 
-                // Drop Government Spinner
+                // --------------------------- Drop Government Spinner -------------------------------------------//
                 ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtStates, R.layout.color_spinner_layout);
                 adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spDState.setPrompt("اختار المحافظة");
                 spDState.setAdapter(adapter3);
-                spDState.setSelection(adapter3.getPosition(orderData.getTxtDState()));
-                // Get the Government Regions
-                spDState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                spDState.setSelection(getIndex(spDState, orderData.getTxtDState()));
 
+                // ---------------------------- Drop Region Spinner -------------------------------------------//
+                spDState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         int itemSelected = spDState.getSelectedItemPosition();
@@ -506,15 +501,19 @@ public class EditOrders extends AppCompatActivity {
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) { }
                 });
+
+                if(spDRegion.getAdapter() != null && spPRegion.getAdapter() != null) {
+                    spDRegion.setSelection(getIndex(spDRegion, orderData.getmDRegion()));
+                    spPRegion.setSelection(getIndex(spPRegion, orderData.getmPRegion()));
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-        
-        
-        
 
-        // ---------------------------------- Date Picker
+
+
+        // ---------------------------------- Date Picker --------------------------------- //
         final Calendar myCalendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener pdate = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -646,12 +645,16 @@ public class EditOrders extends AppCompatActivity {
 
                                 if(!uAccepted.equals("")) {
                                     // --------------------------- Send Notifications ---------------------//
-                                    notiData Noti = new notiData(mAuth.getCurrentUser().getUid().toString(), uAccepted,orderID,"edited",notiDate,"false");
+                                    notiData Noti = new notiData(mAuth.getCurrentUser().getUid().toString(), uAccepted,orderID,"edited",datee,"false");
                                     nDatabase.child(uAccepted).push().setValue(Noti);
                                 }
                                 mdialog.dismiss();
+                                if(StartUp.userType.equals("Admin")) {
+                                    startActivity(new Intent(EditOrders.this, HomeActivity.class));
+                                } else {
+                                    startActivity(new Intent(EditOrders.this, supplierProfile.class));
+                                }
                                 Toast.makeText(EditOrders.this, "تم تعديل الاوردر الخاص بك", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(EditOrders.this, supplierProfile.class));
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
                                 mdialog.dismiss();
@@ -663,5 +666,16 @@ public class EditOrders extends AppCompatActivity {
                 builder.setMessage("هل انت متاكد من صحه البيانات و انك تريد تعديل الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
             }
         });
+    }
+
+    private int getIndex(Spinner spinner, String value) {
+        Log.i(TAG, "Value : " + value);
+        for(int i=0;i <spinner.getCount(); i++) {
+            Log.i(TAG, "List : " + spinner.getItemAtPosition(i).toString());
+            if(spinner.getItemAtPosition(i).toString().equals(value)) {
+                return i;
+            }
+        }
+        return 0;
     }
 }
