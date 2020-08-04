@@ -37,7 +37,8 @@ public class StartUp extends AppCompatActivity {
     public static String userName;
     public static String userDate;
     public static String userURL;
-    DatabaseReference uDatabase;
+
+    DatabaseReference uDatabase , Database;
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -68,8 +69,11 @@ public class StartUp extends AppCompatActivity {
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            ImportBlockedUsers();
             reRoute();
-        } else {
+
+        }
+        else {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -83,7 +87,38 @@ public class StartUp extends AppCompatActivity {
                 }
                 }, 2500);
         }
+
+
+
     }
+
+    private void ImportBlockedUsers() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("Blocked");
+        Database.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.exists()){
+                    BlockManeger blocedUsers = new BlockManeger();
+                    blocedUsers.clear();
+                    for(DataSnapshot ds : snapshot.getChildren()){
+                       blocedUsers.adduser(ds.getValue().toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
 
     public void reRoute () {
         mAuth = FirebaseAuth.getInstance();
