@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".Delete_Reaon_Delv"></activity>
+        <activity android:name=".Delete_Delivery_From_Sup"></activity>
+        <activity android:name=".Delete_Reaon_Delv" />
         <activity android:name=".Delete_Reason_Supplier" />
         <activity android:name=".OrdersBySameUser" />
         <activity android:name=".AdminReports" />

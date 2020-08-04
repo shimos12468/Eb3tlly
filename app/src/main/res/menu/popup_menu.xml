@@ -4,7 +4,7 @@
     <item
         android:id="@+id/didnt_reciv"
         android:orderInCategory="100"
-        android:title="المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين" />
+        android:title="الغاء المندوب" />
     <item
         android:id="@+id/didnt_deliv"
         android:orderInCategory="100"

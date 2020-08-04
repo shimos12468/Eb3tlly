@@ -36,7 +36,7 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class Delete_Reaon_Delv extends AppCompatActivity {
 
     private RadioGroup rdGroup;
-    private RadioButton rd1,rd2,rd3,rd4;
+    private RadioButton rd1,rd2,rd3,rd4,rd5,rd6;
     private String Msg = "";
     private EditText txtContact;
     private DatabaseReference dDatabase,mDatabase,nDatabase,uDatabase;
@@ -62,6 +62,8 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
         rd2 = findViewById(R.id.rd2);
         rd3 = findViewById(R.id.rd3);
         rd4 = findViewById(R.id.rd4);
+        rd5 = findViewById(R.id.rd5);
+        rd6 = findViewById(R.id.rd6);
 
         String orderID = getIntent().getStringExtra("orderid");
         String owner = getIntent().getStringExtra("owner");
@@ -94,6 +96,10 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                     return;
                 }
                 Msg = txtContact.getText().toString();
+            } else if(rd5.isChecked()) {
+                Msg = "التاجر سلم الاوردر لمندوب اخر";
+            } else if(rd6.isChecked()) {
+                Msg = "التاجر لا يرد علي الهاتف";
             }
 
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
@@ -112,8 +118,8 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                                 Date lastedit = null;
                                 Date acceptedDate = null;
                                 try {
-                                    lastedit = sdf.parse(acceptTime);
-                                    acceptedDate = sdf.parse(editTime);
+                                    lastedit = sdf.parse(editTime);
+                                    acceptedDate = sdf.parse(acceptTime);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
@@ -124,7 +130,7 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                                 int reminCount = 3 - cancelledCount - 1;
 
                                 assert acceptedDate != null;
-                                if(acceptedDate.compareTo(lastedit) > 0) { // if the worker accepted the order before it has been edited
+                                if(acceptedDate.compareTo(lastedit) > 0 && !rd6.isChecked() && !rd5.isChecked()) { // if the worker accepted the order before it has been edited
                                     uDatabase.child(mAuth.getCurrentUser().getUid()).child("canceled").setValue(String.valueOf(finalCount));
                                     Toast.makeText(Delete_Reaon_Delv.this, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
                                 } else {

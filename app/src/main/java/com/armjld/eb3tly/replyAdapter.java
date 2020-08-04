@@ -90,6 +90,10 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
         return (int) count;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         View myview;

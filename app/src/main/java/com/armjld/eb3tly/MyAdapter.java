@@ -460,14 +460,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             int cancelledCount =  Integer.parseInt(Objects.requireNonNull(dataSnapshot.child("canceled").getValue()).toString());
                             if(cancelledCount >= 3) {
-                                // Number of allowed canceled orders
                                 Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الاسبوع , لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
                             } else {
                                 mDatabase.orderByChild("uAccepted").equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        int acceptedCount = (int) snapshot.getChildrenCount();
-                                        if(acceptedCount <= 7) {
+                                        int zcount  = 0;
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            if(ds.child("statue").getValue().toString().equals("accepted")) {
+                                                zcount++;
+                                            }
+                                        }
+
+                                        if(zcount <= 7) {
                                             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                                                 switch (which){
                                                     case DialogInterface.BUTTON_POSITIVE:

@@ -2,6 +2,7 @@ package com.armjld.eb3tly;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ public class About extends AppCompatActivity {
     ImageView imgFacebook;
     String fbLink = "https://www.facebook.com/Eb3tlyy/";
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -113,10 +113,10 @@ public class AddOrders extends AppCompatActivity {
         chkTrans = findViewById(R.id.chkTrans);
 
         //Spinners
-        spPState = (Spinner) findViewById(R.id.txtPState);
-        spPRegion = (Spinner) findViewById(R.id.txtPRegion);
-        spDState = (Spinner) findViewById(R.id.txtDState);
-        spDRegion = (Spinner) findViewById(R.id.txtDRegion);
+        spPState =  findViewById(R.id.txtPState);
+        spPRegion = findViewById(R.id.txtPRegion);
+        spDState =  findViewById(R.id.txtDState);
+        spDRegion = findViewById(R.id.txtDRegion);
 
         btnClose = findViewById(R.id.btnClose);
         btnClose.setVisibility(View.GONE);
@@ -521,8 +521,8 @@ public class AddOrders extends AppCompatActivity {
 
         GGet.setOnFocusChangeListener((v, event) -> {
             if(!TextUtils.isEmpty(GMoney.getText().toString()) && GGet.isFocused()) {
-                int min = 0;
-                int max = 0;
+                int min;
+                int max;
                 boolean isLess = false;
 
                 int cash = Integer.parseInt(GMoney.getText().toString());
@@ -569,10 +569,10 @@ public class AddOrders extends AppCompatActivity {
             final String mGGet = GGet.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
 
             // Checkboxes Strings
-            String isTrans = "";
-            String isMotor = "";
-            String isMetro = "";
-            String isCar = "";
+            String isTrans;
+            String isMotor;
+            String isMetro;
+            String isCar;
 
             //DEFULT ORDER States ON ADD
             final String states = "placed";
@@ -646,81 +646,81 @@ public class AddOrders extends AppCompatActivity {
             final String finalIsTrans = isTrans;
             final String finalIsMotor = isMotor;
             final String finalIsCar = isCar;
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface confirmDailog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            mdialog.setMessage("جاري اضافة الاوردر");
-                            mdialog.show();
+            DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        mdialog.setMessage("جاري اضافة الاوردر");
+                        mdialog.show();
 
-                            String id = mDatabase.push().getKey().toString(); // create Order ID
-                            String srate = "false";
-                            String srateid = "";
-                            String drate = "false";
-                            String drateid = "";
-                            String pState = spPState.getSelectedItem().toString();
-                            String dState = spDState.getSelectedItem().toString();
+                        String id = mDatabase.push().getKey(); // create Order ID
+                        String srate = "false";
+                        String srateid = "";
+                        String drate = "false";
+                        String drateid = "";
+                        String pState12 = spPState.getSelectedItem().toString();
+                        String dState = spDState.getSelectedItem().toString();
 
-                            // Send order to Data Base using the DATA MODEL
-                            Data data = new Data(pState, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
-                            mDatabase.child(id).setValue(data);
-                            mDatabase.child(id).child("lastedit").setValue(datee);
+                        // Send order to Data Base using the DATA MODEL
+                        Data data = new Data(pState12, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
+                                mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
+                        mDatabase.child(id).setValue(data);
+                        mDatabase.child(id).child("lastedit").setValue(datee);
 
-                            SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences1.edit();
-                            editor.putString("Store", mPShop);
-                            editor.putString("State", spPState.getSelectedItem().toString());
-                            editor.putString("Region", spPRegion.getSelectedItem().toString());
-                            editor.putString("Address", mPAddress);
-                            editor.apply();
+                        SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences1.edit();
+                        editor.putString("Store", mPShop);
+                        editor.putString("State", spPState.getSelectedItem().toString());
+                        editor.putString("Region", spPRegion.getSelectedItem().toString());
+                        editor.putString("Address", mPAddress);
+                        editor.apply();
 
-                            // --------------------- Send notification to all users in State ---------------//
-                            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
-                                            String usId = ds.child("id").getValue().toString();
-                                            String accType = ds.child("accountType").getValue().toString();
-                                            if(accType.equals("Delivery Worker")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
-                                                nDatabase.child(usId).push().setValue(Noti);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) { }
-                            });
-
-                            uDatabase.orderByChild("userState").equalTo(pState).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
-                                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-
-                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في محافظتك",datee,"false");
+                        // --------------------- Send notification to all users in State ---------------//
+                        uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    for(DataSnapshot ds : snapshot.getChildren()) {
+                                        String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                                        String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                                        if(accType.equals("Delivery Worker")) {
+                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
                                             nDatabase.child(usId).push().setValue(Noti);
                                         }
                                     }
                                 }
+                            }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) { }
-                            });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+                        });
 
-                            mdialog.dismiss();
-                            Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(AddOrders.this, supplierProfile.class));
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            mdialog.dismiss();
-                            break;
-                    }
+                        uDatabase.orderByChild("userState").equalTo(pState12).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    for(DataSnapshot ds : snapshot.getChildren()) {
+                                        String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                                        String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+
+                                        if(accType.equals("Delivery Worker")) {
+                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                            nDatabase.child(usId).push().setValue(Noti);
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+                        });
+
+                        mdialog.dismiss();
+                        Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(AddOrders.this, supplierProfile.class));
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        mdialog.dismiss();
+                        break;
                 }
             };
             AlertDialog.Builder builder = new AlertDialog.Builder(AddOrders.this);
@@ -815,81 +815,82 @@ public class AddOrders extends AppCompatActivity {
                 final String finalIsTrans = isTrans;
                 final String finalIsMotor = isMotor;
                 final String finalIsCar = isCar;
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface confirmDailog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                mdialog.setMessage("جاري اضافة الاوردر");
-                                mdialog.show();
+                DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            mdialog.setMessage("جاري اضافة الاوردر");
+                            mdialog.show();
 
-                                String id = mDatabase.push().getKey().toString(); // create Order ID
-                                String srate = "false";
-                                String srateid = "";
-                                String drate = "false";
-                                String drateid = "";
-                                String pState = spPState.getSelectedItem().toString();
-                                String dState = spDState.getSelectedItem().toString();
+                            String id = mDatabase.push().getKey(); // create Order ID
+                            String srate = "false";
+                            String srateid = "";
+                            String drate = "false";
+                            String drateid = "";
+                            String pState1 = spPState.getSelectedItem().toString();
+                            String dState = spDState.getSelectedItem().toString();
 
-                                SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences1.edit();
-                                editor.putString("Store", mPShop);
-                                editor.putString("State", spPState.getSelectedItem().toString());
-                                editor.putString("Region", spPRegion.getSelectedItem().toString());
-                                editor.putString("Address", mPAddress);
-                                editor.apply();
+                            SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences1.edit();
+                            editor.putString("Store", mPShop);
+                            editor.putString("State", spPState.getSelectedItem().toString());
+                            editor.putString("Region", spPRegion.getSelectedItem().toString());
+                            editor.putString("Address", mPAddress);
+                            editor.apply();
 
-                                // Send order to Data Base using the DATA MODEL
-                                Data data = new Data(pState, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                        mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
-                                mDatabase.child(id).setValue(data);
-                                mDatabase.child(id).child("lastedit").setValue(datee);
+                            // Send order to Data Base using the DATA MODEL
+                            Data data = new Data(pState1, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
+                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
+                            assert id != null;
+                            mDatabase.child(id).setValue(data);
+                            mDatabase.child(id).child("lastedit").setValue(datee);
 
-                                // --------------------- Send notification to all users in State ---------------//
-                                uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            for(DataSnapshot ds : snapshot.getChildren()) {
-                                                String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                                                String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
-                                                if(accType.equals("Delivery Worker")) {
-                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
-                                                    nDatabase.child(usId).push().setValue(Noti);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) { }
-                                });
-
-                                uDatabase.orderByChild("userState").equalTo(pState).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            for(DataSnapshot ds : snapshot.getChildren()) {
-                                                String usId = ds.child("id").getValue().toString();
-
+                            // --------------------- Send notification to all users in State ---------------//
+                            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                                            if(accType.equals("Delivery Worker")) {
                                                 notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
                                                 nDatabase.child(usId).push().setValue(Noti);
                                             }
                                         }
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) { }
-                                });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
 
-                                clearText();
-                                mdialog.dismiss();
-                                Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن يمكنك الان اضافه اوردر اخر", Toast.LENGTH_LONG).show();
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                mdialog.dismiss();
-                                break;
-                        }
+                            uDatabase.orderByChild("userState").equalTo(pState1).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        for(DataSnapshot ds : snapshot.getChildren()) {
+                                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+
+                                            if(accType.equals("Delivery Worker")) {
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                nDatabase.child(usId).push().setValue(Noti);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) { }
+                            });
+
+                            clearText();
+                            mdialog.dismiss();
+                            Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن يمكنك الان اضافه اوردر اخر", Toast.LENGTH_LONG).show();
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            mdialog.dismiss();
+                            break;
                     }
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddOrders.this);
@@ -925,7 +926,7 @@ public class AddOrders extends AppCompatActivity {
 
     private Double checkFactor(String from, String to) {
         String Region = "";
-        Double factor;
+        double factor;
         factor = (double) 0;
 
         if(from.equals("اسوان") || from.equals("الاقصر") || to.equals("اسوان") || to.equals("الاقصر")) {

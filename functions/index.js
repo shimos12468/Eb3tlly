@@ -19,15 +19,17 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
     const deviceToken = admin.database().ref(`Pickly/users/${to}/device_token`).once('value');
     const orderTo = admin.database().ref(`Pickly/orders/${orderid}/DName`).once('value');
 
-
-      //console.log('notifying ' + to + ' about ' + statue + ' from ' + userName + '  ' + from + ' order id ' + orderid );
-
+    return deviceToken.then(result => {
+    if (!result.exists() || result.val() === "") return false;
+	
+	const token_id = result.val();
+	
 	const payload = {
     			notification: {
     			  title : 'Eb3tly',
     			  body: 'لديك اشعار جديد',
     			  icon: "default",
-    			  click_action : "com.armjld.eb3tly.Notifications",
+    			  click_action : "com.armjld.eb3tly_Notifications",
     			},
     data : {
          'title': sendName + '',
@@ -38,13 +40,13 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
           'sendto' : to
           }
        };
+	   
 
-    return Promise.all([orderTo, deviceToken]).then(result => {
-    //const userName = result[0].val();
-    const token_id = result[1].val();
-    return admin.messaging().sendToDevice(token_id, payload).then(response => {
+	return admin.messaging().sendToDevice(token_id, payload).then(response => {
     	console.log('This was the notification Feature');
     	return null;
-        });
+    });	
 	});
+
+	
 });

@@ -382,8 +382,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
             switch (data.getStatue()) {
                 case "accepted" : {
-                    popupMenu.findItem(R.id.deleted).setVisible(true);
-                    popupMenu.findItem(R.id.doesntanswer).setVisible(true);
                     popupMenu.findItem(R.id.idelv).setVisible(true);
                     popupMenu.findItem(R.id.falsemoney).setVisible(false);
                     popupMenu.findItem(R.id.didnt_reciv).setVisible(false);
@@ -391,16 +389,12 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 }
                 case "recived" : {
                     popupMenu.findItem(R.id.didnt_reciv).setVisible(true);
-                    popupMenu.findItem(R.id.deleted).setVisible(false);
                     popupMenu.findItem(R.id.falsemoney).setVisible(false);
-                    popupMenu.findItem(R.id.doesntanswer).setVisible(false);
                     popupMenu.findItem(R.id.idelv).setVisible(false);
                     break;
                 }
                 case "delivered" : {
                     popupMenu.findItem(R.id.falsemoney).setVisible(true);
-                    popupMenu.findItem(R.id.deleted).setVisible(false);
-                    popupMenu.findItem(R.id.doesntanswer).setVisible(false);
                     popupMenu.findItem(R.id.idelv).setVisible(false);
                     popupMenu.findItem(R.id.didnt_reciv).setVisible(false);
                     break;
@@ -409,27 +403,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
-                    case R.id.deleted:
-                        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                            switch (which){
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    String id = reportDatabase.child(data.getuId()).push().getKey();
-                                    reportData repo3 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لغي الاوردر او شخص اخر استمله", id);
-
-                                    mDatabase.child(orderID).child("statue").setValue("placed");
-                                    mDatabase.child(orderID).child("uAccepted").setValue("");
-
-                                    assert id != null;
-                                    reportDatabase.child(data.getuId()).child(id).setValue(repo3);
-                                    Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    break;
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-                        break;
                     case R.id.falsemoney:
                         DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
                             switch (which){
@@ -446,25 +419,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         };
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
                         builder2.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
-                        break;
-                    case R.id.doesntanswer:
-                        DialogInterface.OnClickListener dialogClickListener3 = (dialog, which) -> {
-                            switch (which){
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    String id = reportDatabase.child(data.getuId()).push().getKey();
-                                    reportData repo5 = new reportData(uId, data.getuId(),orderID,datee,"التاجر لا يريد تسليم الاوردر و اريد الغاء الاوردر", id);
-                                    assert id != null;
-                                    reportDatabase.child(data.getuId()).child(id).setValue(repo5);
-
-
-                                    Toast.makeText(context, "تم تقديم البلاغ", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    break;
-                            }
-                        };
-                        AlertDialog.Builder builder3 = new AlertDialog.Builder(context);
-                        builder3.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener3).setNegativeButton("لا", dialogClickListener3).show();
                         break;
                     case R.id.idelv:
                         DialogInterface.OnClickListener dialogClickListener4 = (dialog, which) -> {
@@ -512,6 +466,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             vibe.vibrate(20);
             Intent deleteAct = new Intent(context, Delete_Reaon_Delv.class);
             deleteAct.putExtra("orderid", orderID);
+            deleteAct.putExtra("owner", data.getuId());
             deleteAct.putExtra("aTime", data.getAcceptedTime());
             deleteAct.putExtra("eTime", data.getLastedit());
             context.startActivity(deleteAct);

@@ -155,12 +155,11 @@ public class Notifications extends AppCompatActivity {
         getNoti();
 
         Menu nav_menu = navigationView.getMenu();
-        if (StartUp.userType.equals("Supplier")) {
-            nav_menu.findItem(R.id.nav_timeline).setVisible(false);
-        } else {
-            nav_menu.findItem(R.id.nav_how).setVisible(false);
+        if (uType != null) {
+            if(!uType.equals("Supplier")) {
+                nav_menu.findItem(R.id.nav_how).setVisible(false);
+            }
         }
-
     }
 
     private void whichProfile () {

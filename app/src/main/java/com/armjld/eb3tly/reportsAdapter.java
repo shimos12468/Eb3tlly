@@ -227,6 +227,11 @@ public class reportsAdapter extends RecyclerView.Adapter<reportsAdapter.MyViewHo
         return (int) count;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         View myview;
         ImageButton btnClose;

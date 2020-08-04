@@ -28,8 +28,6 @@ import java.util.Objects;
 
 public class HowTo extends AppCompatActivity {
 
-    private Button btnGoToProfile;
-
     @Override
     public void onBackPressed() {
         finish();
@@ -48,17 +46,22 @@ public class HowTo extends AppCompatActivity {
             return;
         }
 
-        btnGoToProfile = findViewById(R.id.btnGoToProfile);
+        Button btnGoToProfile = findViewById(R.id.btnGoToProfile);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("طريقة استعمال البرنامج");
 
-        btnGoToProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                startActivity(new Intent(HowTo.this, supplierProfile.class));
-            }
+        btnGoToProfile.setOnClickListener(v -> {
+            finish();
+            whichProfile();
         });
+    }
+
+    private void whichProfile() {
+        if(StartUp.userType.equals("Supplier")) {
+            startActivity(new Intent(HowTo.this, supplierProfile.class));
+        } else {
+            startActivity(new Intent(HowTo.this, NewProfile.class));
+        }
     }
 }

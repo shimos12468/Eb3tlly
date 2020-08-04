@@ -11,6 +11,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,12 +32,12 @@ public class StartUp extends AppCompatActivity {
 
     SharedPreferences sharedPreferences = null;
     private FirebaseAuth mAuth;
+    private ConstraintLayout startConst;
     public static String userType;
     public static String userName;
     public static String userDate;
     public static String userURL;
     DatabaseReference uDatabase;
-    String deviceToken;
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -61,6 +64,7 @@ public class StartUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_startup);
+        startConst = findViewById(R.id.startConst);
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -89,22 +93,25 @@ public class StartUp extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.child("id").exists()) {
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
-                        deviceToken = instanceIdResult.getToken();
+
+                    // ------------------ Set Device Token ----------------- //
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(StartUp.this, instanceIdResult -> {
+                        String deviceToken = instanceIdResult.getToken();
+                        uDatabase.child(user.getUid()).child("device_token").setValue(deviceToken);
                     });
+
                     String isComplete = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-                    uDatabase.child(user.getUid()).child("device_token").setValue(deviceToken);
+
                     if(isComplete.equals("true")) {
                         if(isActive.equals("true")) {
-
                             userType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                             userName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                             userDate = Objects.requireNonNull(snapshot.child("date").getValue()).toString();
                             userURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
 
                             if(!snapshot.child("userState").exists()) {
-                                Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();
                             }
 
                             try {

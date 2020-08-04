@@ -184,25 +184,11 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 vibe.vibrate(20);
                 switch (item.getItemId()) {
                     case R.id.didnt_reciv:
-                        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                            switch (which){
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    String id = reportDatabase.child(dilvID).push().getKey();
-                                    reportData repo = new reportData(uId, dilvID,orderID,datee,"المندوب لم يستلم الاوردر , اريد عرضه علي باقي المندوبين", id);
-                                    assert id != null;
-                                    reportDatabase.child(dilvID).child(id).setValue(repo);
-
-                                    mDatabase.child(orderID).child("uAccepted").setValue("");
-                                    mDatabase.child(orderID).child("statue").setValue("placed");
-
-                                    Toast.makeText(context, "تم الابلاغ عن المندوب", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    break;
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage("هل انت متاكد من انك تريد تقديم البلاغ ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                        Intent deleteAct = new Intent(context, Delete_Delivery_From_Sup.class);
+                        deleteAct.putExtra("orderid", orderID);
+                        deleteAct.putExtra("acceptID", data.getuAccepted());
+                        deleteAct.putExtra("owner", data.getuId());
+                        context.startActivity(deleteAct);
                         break;
                     case R.id.didnt_deliv:
                         DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
@@ -234,6 +220,10 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     // Changing the values in the orders db
                                     mDatabase.child(orderID).child("statue").setValue("delivered");
                                     mDatabase.child(orderID).child("dilverTime").setValue(datee);
+
+                                    // ------------ Send Notification
+                                    notiData Noti = new notiData(uId,data.getuAccepted(), orderID,"لا تنسي ان تضغط علي زر تم التسليم عند تسليم الاوردر",datee,"false");
+                                    nDatabase.child(data.getuAccepted()).push().setValue(Noti);
 
                                     // Add the Profit of the Dilvery Worker
                                     uDatabase.child(data.getuAccepted()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -277,14 +267,26 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
         // ---------------- Set order to Recived
         holder.btnRecived.setOnClickListener(v -> {
+
             assert vibe != null;
             vibe.vibrate(20);
-            mDatabase.child(orderID).child("statue").setValue("recived");
 
-            notiData Noti = new notiData(uId,data.getuAccepted() , orderID,"recived",datee,"false");
-            nDatabase.child(data.getuAccepted()).push().setValue(Noti);
+            DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        mDatabase.child(orderID).child("statue").setValue("recived");
 
-            Toast.makeText(context, "تم تسليم الاوردر للمندوب", Toast.LENGTH_SHORT).show();
+                        notiData Noti = new notiData(uId,data.getuAccepted() , orderID,"recived",datee,"false");
+                        nDatabase.child(data.getuAccepted()).push().setValue(Noti);
+
+                        Toast.makeText(context, "تم تسليم الاوردر للمندوب", Toast.LENGTH_SHORT).show();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            };
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
+            builder2.setMessage("هل قام امندوب بالتسلام الاوردر منك ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
         });
 
         //Comment button

@@ -108,7 +108,8 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             if(StartUp.userType.equals("Supplier")) {
                 switch (Statue) {
                     case "deleted": {
-                        // ---- go to placed fragment of supplier profile
+                        // ------- go to the order
+                        context.startActivity(new Intent(context, supplierProfile.class));
                         break;
                     }
                     case "delivered": {
@@ -120,7 +121,19 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                         break;
                     }
                     case "welcome": {
-                        // ---- do nothing
+                        context.startActivity(new Intent(context, supplierProfile.class));
+                        break;
+                    }
+                    case "متنساش تعمل لايك لصفحتنا علي الفيس بوك": {
+                        String fbLink = "https://www.facebook.com/Eb3tlyy/";
+                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse(fbLink));
+                        context.startActivity(browse);
+                        break;
+                    }
+                    case "يوجد تحديث جديد للبرنامج": {
+                        String psLink = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
+                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse(psLink));
+                        context.startActivity(browse);
                         break;
                     }
                     default: {
@@ -143,7 +156,19 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                         break;
                     }
                     case "welcome": {
-                        // ------------- do nothing
+                        context.startActivity(new Intent(context, HomeActivity.class));
+                        break;
+                    }
+                    case "متنساش تعمل لايك لصفحتنا علي الفيس بوك": {
+                        String fbLink = "https://www.facebook.com/Eb3tlyy/";
+                        Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(fbLink));
+                        context.startActivity(browse);
+                        break;
+                    }
+                    case "يوجد تحديث جديد للبرنامج": {
+                        String psLink = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
+                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse(psLink));
+                        context.startActivity(browse);
                         break;
                     }
                     default: {
