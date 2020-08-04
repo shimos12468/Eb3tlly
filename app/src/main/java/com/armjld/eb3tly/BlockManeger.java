@@ -6,8 +6,17 @@ import java.util.function.UnaryOperator;
 
 public class BlockManeger {
 
-    private ArrayList<String>blockedId = new ArrayList<String>();
+    private static ArrayList<String>blockedId = new ArrayList<String>();
     private static long num_Blocked_users=0;
+    private static Boolean firstTime = false;
+
+    public static Boolean getFirstTime() {
+        return firstTime;
+    }
+
+    public static void setFirstTime(Boolean firstTime) {
+        BlockManeger.firstTime = firstTime;
+    }
 
     public static long getNum_Blocked_users() {
         return num_Blocked_users;

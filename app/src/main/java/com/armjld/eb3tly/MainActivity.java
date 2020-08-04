@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnlogin;
     //FireBase
     private FirebaseAuth mAuth;
-    private DatabaseReference uDatabase;
+    private DatabaseReference uDatabase,Database;
     private ProgressDialog mdialog;
 
     boolean doubleBackToExitPressedOnce = false;
@@ -103,7 +104,35 @@ public class MainActivity extends AppCompatActivity {
             String memail = email.getText().toString().trim();
             String mpass = pass.getText().toString().trim();
             login(memail, mpass);
+
         });
+    }
+
+    private void ImportBlockedUsers() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("Blocked");
+        Database.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.exists()){
+                    BlockManeger blocedUsers = new BlockManeger();
+                    blocedUsers.clear();
+                    for(DataSnapshot ds : snapshot.getChildren()){
+                        blocedUsers.adduser(ds.getValue().toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void login(String memail, String mpass) {
@@ -142,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
                                     StartUp.userURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
                                     if (isActive.equals("true")) { // Check if the account is Disabled
                                         // --------------------- check account types and send each type to it's activity --------------//
+                                        ImportBlockedUsers();
                                         switch (uType) {
                                             case "Supplier":
                                                 mdialog.dismiss();

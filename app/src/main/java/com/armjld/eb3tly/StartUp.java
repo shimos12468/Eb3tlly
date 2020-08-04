@@ -69,7 +69,7 @@ public class StartUp extends AppCompatActivity {
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-            ImportBlockedUsers();
+            //ImportBlockedUsers();
             reRoute();
 
         }
