@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
@@ -34,6 +35,7 @@ public class ReplyByAdmin extends AppCompatActivity {
     String TAG = "ReplyByAdmin";
     Button btnToDel,btnToSupplier,btnResetUser,btnDeactive,btnInfo;
     EditText txtUserNumber;
+    ProgressDialog mdialog;
 
     public void onBackPressed() {
         Intent i = new Intent(this, Admin.class);
@@ -47,6 +49,7 @@ public class ReplyByAdmin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply_by_admin);
 
+        mdialog = new ProgressDialog(this);
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
@@ -72,6 +75,7 @@ public class ReplyByAdmin extends AppCompatActivity {
 
         cDatabase = getInstance().getReference().child("Pickly").child("messages");
 
+        getMsg();
         btnInfo.setOnClickListener(v -> {
             String num = txtUserNumber.getText().toString().trim();
             uDatabase.orderByChild("phone").equalTo(num).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -207,28 +211,32 @@ public class ReplyByAdmin extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+    }
 
-        // ---------------------- GET ALL THE Opened Messages -------------------//
-        cDatabase.addValueEventListener(new ValueEventListener() {
+    // ---------------------- GET ALL THE Opened Messages -------------------//
+    private void getMsg () {
+        count = 0;
+        mdialog.setMessage("Getting Messages ..");
+        mdialog.show();
+        cDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     for (DataSnapshot snap : ds.getChildren()) {
                         if(Objects.requireNonNull(snap.child("statue").getValue()).toString().equals("opened")) {
-                            Log.i(TAG, " Message " + Objects.requireNonNull(snap.getValue()).toString());
                             replyAdmin replyAdmins = snap.getValue(replyAdmin.class);
                             mm.add((int) count, replyAdmins);
                             count++;
                             replyAdapter rep = new replyAdapter(ReplyByAdmin.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(rep);
+                            mdialog.dismiss();
+                            Toast.makeText(ReplyByAdmin.this, "Messages Loaded", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-                count = 0;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
     }
 }

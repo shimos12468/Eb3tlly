@@ -3,9 +3,11 @@ package com.armjld.eb3tly;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -82,6 +84,7 @@ public class Admin extends Activity {
             return;
         }
 
+        Vibrator vibe = (Vibrator) Objects.requireNonNull((Admin)this).getSystemService(Context.VIBRATOR_SERVICE);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -410,6 +413,7 @@ public class Admin extends Activity {
             });
             */
 
+            mdialog.setMessage("deleting glitches ..");
             mDatabase.orderByChild("statue").equalTo("recived").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -517,17 +521,27 @@ public class Admin extends Activity {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        mdialog.setMessage("Reseting ...");
+                        mdialog.show();
+                        uDatabase.orderByChild("accountType").equalTo("Delivery Worker").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 int userCount = (int) dataSnapshot.getChildrenCount();
                                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                                     if(ds.exists() && ds.child("id").exists()) {
                                         String isCompleted = Objects.requireNonNull(ds.child("completed").getValue()).toString();
-                                        if(isCompleted.equals("true")) {
+                                        String declined = Objects.requireNonNull(ds.child("canceled").getValue()).toString();
+                                        if(isCompleted.equals("true") && !declined.equals("0")) {
                                             String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                             uDatabase.child(userID).child("canceled").setValue("0");
+
+                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID,"-MAPQWoKEfmHIQG9xv-v","لديك الان 3 فرص لالغاْ الاوردرات هذا الاسبوع",datee,"false");
+                                            nDatabase.child(userID).push().setValue(Noti);
+
+                                            vibe.vibrate(40);
+                                            mdialog.dismiss();
                                             Toast.makeText(Admin.this, "Counter Reseted for : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+
                                         }
                                     }
                                 }
@@ -560,6 +574,8 @@ public class Admin extends Activity {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
+                        mdialog.setMessage("Adding Child ...");
+                        mdialog.show();
                         uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -570,6 +586,7 @@ public class Admin extends Activity {
                                             String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                             uDatabase.child(userID).child(txtChild.getText().toString()).setValue(txtValue.getText().toString());
                                             Toast.makeText(Admin.this, "Add Childs to : " + userCount + " Users", Toast.LENGTH_SHORT).show();
+                                            mdialog.dismiss();
                                         }
                                     }
                                 }
@@ -600,6 +617,8 @@ public class Admin extends Activity {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
+                        mdialog.setMessage("Adding Child ...");
+                        mdialog.show();
                         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -608,6 +627,7 @@ public class Admin extends Activity {
                                     String orderID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                     mDatabase.child(orderID).child(txtChild.getText().toString()).setValue(txtValue.getText().toString());
                                     Toast.makeText(Admin.this, "Add Childs to : " + userCount + " Orders", Toast.LENGTH_SHORT).show();
+                                    mdialog.dismiss();
                                 }
                             }
                             @Override
@@ -636,6 +656,8 @@ public class Admin extends Activity {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
+                        mdialog.setMessage("Adding Child ...");
+                        mdialog.show();
                         rDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -648,6 +670,7 @@ public class Admin extends Activity {
                                         Log.i(TAG, "Comment Id " + rateID);
                                         rDatabase.child(userRateID).child(rateID).child(txtChild.getText().toString()).setValue(txtValue.getText().toString());
                                         Toast.makeText(Admin.this, "Added Childs to : " + ratings + " Comments", Toast.LENGTH_SHORT).show();
+                                        mdialog.dismiss();
                                     }
                                 }
                             }
@@ -753,6 +776,8 @@ public class Admin extends Activity {
 
     public void getStatics() {
         // -------------------------------------- Get users Counts --------------------------//
+        mdialog.setMessage("Getting Statics ...");
+        mdialog.show();
         uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -824,6 +849,7 @@ public class Admin extends Activity {
                 int deOrders = 0;
                 int reOrders = 0;
                 int DelWorth = 0;
+                int deletedOrders = 0;
                 if(dataSnapshot.exists()) {
                     allOrders = (int) dataSnapshot.getChildrenCount();
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -842,6 +868,8 @@ public class Admin extends Activity {
                                 case "recived":
                                     reOrders++;
                                     break;
+                                case "deleted":
+                                    deletedOrders++;
                                 case "delivered":
                                     deOrders++;
                                     break;
@@ -849,7 +877,7 @@ public class Admin extends Activity {
                         }
                     }
                 }
-                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP | Delv Fees " + DelWorth + " EGP | " + plOrders + " Placed | " + acOrders + " Accepted | " + reOrders + " Recived | " + deOrders + " Delivered." );
+                txtAllOrdersCount.setText("We Have " + allOrders + " Orders in Our System | Worth : " + ordersWorth + " EGP | Delv Fees " + DelWorth + " EGP | " + plOrders + " Placed | " + acOrders + " Accepted | " + reOrders + " Recived | " + deOrders + " Delivered | " + deletedOrders + " Deleted Orders." );
             }
 
             @Override

@@ -83,19 +83,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView31"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="5dp"
-                android:text="برنامج إبعتلي هو اول ابلكيشن حر بيعمل علي توصيل مندوب الشحن بالتاجر و بيساهم في حل مشاكل الشحن الحر."
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-
-            <TextView
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

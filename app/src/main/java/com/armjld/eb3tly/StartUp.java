@@ -1,6 +1,7 @@
 package com.armjld.eb3tly;
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,6 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -68,12 +75,32 @@ public class StartUp extends AppCompatActivity {
         startConst = findViewById(R.id.startConst);
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
+        // ---------------- Check for Updates ----------------------//
+        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(StartUp.this);
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                try {
+                    appUpdateManager.startUpdateFlowForResult(
+                            appUpdateInfo,
+                            AppUpdateType.IMMEDIATE,
+                            this,
+                            10001);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(this, "يوجد تحديث جديد متاح", Toast.LENGTH_SHORT).show();
+            } else {
+                whatToDo();
+            }
+        });
+    }
+
+    private void whatToDo() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
             //ImportBlockedUsers();
             reRoute();
-
-        }
-        else {
+        } else {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -85,11 +112,8 @@ public class StartUp extends AppCompatActivity {
                         startActivity(new Intent(StartUp.this, MainActivity.class));
                     }
                 }
-                }, 2500);
+            }, 2500);
         }
-
-
-
     }
 
     private void ImportBlockedUsers() {
@@ -190,5 +214,16 @@ public class StartUp extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10001) {
+            if (resultCode != RESULT_OK) {
+                whatToDo();
+                Toast.makeText(this, "لم يتم تحديث التطبيق", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

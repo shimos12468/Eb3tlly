@@ -113,6 +113,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSort = findViewById(R.id.btnSort);
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
+        txtNoOrders.setVisibility(View.GONE);
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("جميع الاوردرات المتاحة");
 
@@ -286,6 +287,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // ---------------------- GET ALL THE ORDERS -------------------//
+        mSwipeRefreshLayout.setRefreshing(true);
         getOrdersByDate();
 
         // Filter Button
@@ -327,6 +329,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(orderAdapter);
                             updateNone(mm.size());
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }
                 }
@@ -368,6 +371,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(orderAdapter);
                             updateNone(mm.size());
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }
                 }
