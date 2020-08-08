@@ -683,8 +683,15 @@ public class AddOrders extends AppCompatActivity {
                                         String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                         String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
                                         if(accType.equals("Delivery Worker")) {
-                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
-                                            nDatabase.child(usId).push().setValue(Noti);
+                                            String sendOrderNoti = "true";
+                                            if(ds.child("sendOrderNoti").exists()) {
+                                                sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                                            }
+
+                                            if(sendOrderNoti.equals("true")) {
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                nDatabase.child(usId).push().setValue(Noti);
+                                            }
                                         }
                                     }
                                 }
@@ -703,8 +710,15 @@ public class AddOrders extends AppCompatActivity {
                                         String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
 
                                         if(accType.equals("Delivery Worker")) {
-                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
-                                            nDatabase.child(usId).push().setValue(Noti);
+                                            String sendOrderNoti = "true";
+                                            if(ds.child("sendOrderNoti").exists()) {
+                                                sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                                            }
+
+                                            if(sendOrderNoti.equals("true")) {
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                nDatabase.child(usId).push().setValue(Noti);
+                                            }
                                         }
                                     }
                                 }
@@ -853,8 +867,15 @@ public class AddOrders extends AppCompatActivity {
                                             String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                             String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
                                             if(accType.equals("Delivery Worker")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
-                                                nDatabase.child(usId).push().setValue(Noti);
+                                                String sendOrderNoti = "true";
+                                                if(ds.child("sendOrderNoti").exists()) {
+                                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                                                }
+
+                                                if(sendOrderNoti.equals("true")) {
+                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                    nDatabase.child(usId).push().setValue(Noti);
+                                                }
                                             }
                                         }
                                     }
@@ -873,8 +894,15 @@ public class AddOrders extends AppCompatActivity {
                                             String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
 
                                             if(accType.equals("Delivery Worker")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
-                                                nDatabase.child(usId).push().setValue(Noti);
+                                                String sendOrderNoti = "true";
+                                                if(ds.child("sendOrderNoti").exists()) {
+                                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                                                }
+
+                                                if(sendOrderNoti.equals("true")) {
+                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                    nDatabase.child(usId).push().setValue(Noti);
+                                                }
                                             }
                                         }
                                     }

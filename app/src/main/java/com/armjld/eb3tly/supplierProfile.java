@@ -191,7 +191,7 @@ public class supplierProfile extends AppCompatActivity {
         });
 
         txtUserDate.setText("اشترك : " + UserInFormation.getUserDate());
-        uName.setText(UserInFormation.getAccountType());
+        uName.setText(UserInFormation.getUserName());
         if (!isFinishing() && UserInFormation.getUserURL() != null) {
             Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
         }

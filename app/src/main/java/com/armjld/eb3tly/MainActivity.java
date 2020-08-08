@@ -51,13 +51,7 @@ public class MainActivity extends AppCompatActivity {
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
     }
 
     @Override
@@ -121,16 +115,14 @@ public class MainActivity extends AppCompatActivity {
                     BlockManeger blocedUsers = new BlockManeger();
                     blocedUsers.clear();
                     for(DataSnapshot ds : snapshot.getChildren()){
-                        blocedUsers.adduser(ds.getValue().toString());
+                        blocedUsers.adduser(Objects.requireNonNull(ds.getValue()).toString());
                     }
 
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
 
 
@@ -166,10 +158,10 @@ public class MainActivity extends AppCompatActivity {
                                 if (isCompleted.equals("true")) {
                                     String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-                                    userInfo.setAccountType(uType);
-                                    userInfo.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                                    userInfo.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                                    userInfo.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
+                                    UserInFormation.setAccountType(uType);
+                                    UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
+                                    UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
+                                    UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
                                     if (isActive.equals("true")) { // Check if the account is Disabled
                                         // --------------------- check account types and send each type to it's activity --------------//
                                         ImportBlockedUsers();

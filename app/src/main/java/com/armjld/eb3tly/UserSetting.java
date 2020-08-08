@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -60,11 +61,10 @@ import java.util.Objects;
 
 public class UserSetting extends AppCompatActivity {
 
-    EditText name;
-    EditText Email;
+    EditText name,Email;
     Button confirm;
     private ImageView UserImage;
-    String  email,Name;
+    String email,Name;
     int TAKE_IMAGE_CODE = 10001;
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase;
@@ -72,6 +72,7 @@ public class UserSetting extends AppCompatActivity {
     private ProgressDialog mdialog;
     private String ppURL = "";
     String oldPass = "";
+    private CheckBox chkStateNoti;
     private Spinner spState;
     private static String TAG = "User Settings";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
@@ -97,6 +98,7 @@ public class UserSetting extends AppCompatActivity {
             if(uri != null) {
                 bitmap = rotateImage(bitmap , uri , photoUri);
             }
+            assert uri != null;
             Log.i(TAG,"uri : " + uri.toString());
             UserImage.setImageBitmap(bitmap);
         }
@@ -210,33 +212,22 @@ public class UserSetting extends AppCompatActivity {
 
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("ppUsers").child(uID + ".jpeg");
         final String did = uID;
-        reference.putBytes(baos.toByteArray()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                getDownUrl(did, reference);
-                Log.i("Updating ", " onSuccess");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("Upload Error: ", "Fail:", e.getCause());
-            }
-        });
+        reference.putBytes(baos.toByteArray()).addOnSuccessListener(taskSnapshot -> {
+            getDownUrl(did, reference);
+            Log.i("Updating ", " onSuccess");
+        }).addOnFailureListener(e -> Log.e("Upload Error: ", "Fail:", e.getCause()));
         Log.i("Updating", " Handel Upload");
     }
 
     private void getDownUrl(final String uIDd, StorageReference reference) {
-        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Log.i("Sign UP", " add Profile URL");
-                uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
-                UserInFormation.setUserURL(uri.toString());
-                mdialog.dismiss();
-                Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
-                whichProfile();
-            }
+        reference.getDownloadUrl().addOnSuccessListener(uri -> {
+            Log.i("Sign UP", " add Profile URL");
+            uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
+            UserInFormation.setUserURL(uri.toString());
+            mdialog.dismiss();
+            Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
+            finish();
+            whichProfile();
         });
     }
 
@@ -265,7 +256,7 @@ public class UserSetting extends AppCompatActivity {
         setContentView(R.layout.activity_user_setting);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
-        tbTitle.setText("تغيير بيانات الحساب");
+        tbTitle.setText("تغيير البيانات الشخصية");
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
@@ -282,6 +273,7 @@ public class UserSetting extends AppCompatActivity {
         mdialog = new ProgressDialog(this);
         confirm = findViewById(R.id.btnEditInfo);
         spState = findViewById(R.id.spState);
+        chkStateNoti = findViewById(R.id.chkStateNoti);
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(UserSetting.this, R.array.txtStates, R.layout.color_spinner_layout);
@@ -289,11 +281,18 @@ public class UserSetting extends AppCompatActivity {
         spState.setPrompt("اختار المحافظة");
         spState.setAdapter(adapter);
 
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            chkStateNoti.setVisibility(View.GONE);
+        }
         // ---------------------- Get Current Data -------------------------- //
         uDatabase.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = Objects.requireNonNull(dataSnapshot.child("ppURL").getValue()).toString();
+                String sendOrderNoti = "true";
+                if(dataSnapshot.child("sendOrderNoti").exists()) {
+                    sendOrderNoti = Objects.requireNonNull(dataSnapshot.child("sendOrderNoti").getValue()).toString();
+                }
                 oldPass = Objects.requireNonNull(dataSnapshot.child("mpass").getValue()).toString();
                 name.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
                 Email.setText(Objects.requireNonNull(dataSnapshot.child("email").getValue()).toString());
@@ -301,6 +300,12 @@ public class UserSetting extends AppCompatActivity {
 
                 if(dataSnapshot.child("userState").exists()) {
                     spState.setSelection(getIndex(spState, Objects.requireNonNull(dataSnapshot.child("userState").getValue()).toString()));
+                }
+
+                if(sendOrderNoti.equals("false")) {
+                    chkStateNoti.setChecked(false);
+                } else if (sendOrderNoti.equals("true")){
+                    chkStateNoti.setChecked(true);
                 }
             }
 
@@ -318,69 +323,70 @@ public class UserSetting extends AppCompatActivity {
             }
         });
 
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String Id = mAuth.getCurrentUser().getUid().toString();
-                email = Email.getText().toString().trim();
-                Name = name.getText().toString().trim();
-                Log.i(TAG, "Old Pass : " + oldPass);
+        confirm.setOnClickListener(view -> {
+            email = Email.getText().toString().trim();
+            Name = name.getText().toString().trim();
+            Log.i(TAG, "Old Pass : " + oldPass);
 
-                if(TextUtils.isEmpty(Name)){
-                    name.setError("يجب ادخال اسم المستخدم");
-                    return;
-                }
-                if(TextUtils.isEmpty(email)){
-                    Email.setError("يجب ادخال البريد ألالكتروني");
-                    return;
-                }
-
-                final String id = mAuth.getCurrentUser().getUid();
-                FirebaseUser user = mAuth.getCurrentUser();
-
-                // ------------------ Update the Name -----------------//
-                uDatabase.child(id).child("name").setValue(name.getText().toString().trim());
-                uDatabase.child(id).child("userState").setValue(spState.getSelectedItem().toString());
-
-                UserInFormation.setUserName(name.getText().toString());
-
-
-                // -------------- Get auth credentials from the user for re-authentication
-                if(!Email.getText().equals(mAuth.getCurrentUser().getEmail())) {
-                    AuthCredential credential = EmailAuthProvider.getCredential(mAuth.getCurrentUser().getEmail(), oldPass); // Current Login Credentials \\
-                    user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.i(TAG, "Auth Success");
-                            Log.i(TAG, "Prev Email " + FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
-                            //----------------Code for Changing Email Address----------\\
-                            mAuth.getCurrentUser().updateEmail(Email.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        uDatabase.child(mAuth.getCurrentUser().getUid()).child("email").setValue(Email.getText().toString().trim());
-                                        Log.i(TAG, "New Email " + FirebaseAuth.getInstance().getCurrentUser().getEmail().toString() + " ID : " + mAuth.getCurrentUser().getUid());
-                                    }
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    Log.i(TAG, "The Email is the same no need to re auth");
-                }
-
-                if(bitmap != null) {
-                    handleUpload(bitmap);
-                    mdialog.setMessage("جاري تحديث الصور الشخصية ...");
-                    mdialog.show();
-                    Log.i(TAG, "Photo Updated and current user is : " + FirebaseAuth.getInstance().getCurrentUser());
-                } else {
-                    Log.i(TAG, "no Photo to update.");
-                    Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
-                    finish();
-                    whichProfile();
-                }
+            if(TextUtils.isEmpty(Name)){
+                name.setError("يجب ادخال اسم المستخدم");
+                return;
             }
+            if(TextUtils.isEmpty(email)){
+                Email.setError("يجب ادخال البريد ألالكتروني");
+                return;
+            }
+
+            final String id = mAuth.getCurrentUser().getUid();
+            FirebaseUser user = mAuth.getCurrentUser();
+
+            // ------------------ Update the Name -----------------//
+            uDatabase.child(id).child("name").setValue(name.getText().toString().trim());
+            uDatabase.child(id).child("userState").setValue(spState.getSelectedItem().toString());
+
+            UserInFormation.setUserName(name.getText().toString());
+
+
+            // -------------- Get auth credentials from the user for re-authentication
+            if(!Email.getText().toString().equals(mAuth.getCurrentUser().getEmail())) {
+                AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()), oldPass); // Current Login Credentials \\
+                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //----------------Code for Changing Email Address----------\\
+                        mAuth.getCurrentUser().updateEmail(Email.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("email").setValue(Email.getText().toString().trim());
+                                    Log.i(TAG, "New Email " + FirebaseAuth.getInstance().getCurrentUser().getEmail() + " ID : " + mAuth.getCurrentUser().getUid());
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                Log.i(TAG, "The Email is the same no need to re auth");
+            }
+
+            if(bitmap != null) {
+                handleUpload(bitmap);
+                mdialog.setMessage("جاري تحديث الصور الشخصية ...");
+                mdialog.show();
+                Log.i(TAG, "Photo Updated and current user is : " + FirebaseAuth.getInstance().getCurrentUser());
+            } else {
+                Log.i(TAG, "no Photo to update.");
+                Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
+                finish();
+                whichProfile();
+            }
+
+            if(chkStateNoti.isChecked()) {
+                uDatabase.child(id).child("sendOrderNoti").setValue("true");
+            } else {
+                uDatabase.child(id).child("sendOrderNoti").setValue("false");
+            }
+
         });
     }
 
