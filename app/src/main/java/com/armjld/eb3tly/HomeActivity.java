@@ -145,6 +145,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                         mm.trimToSize();
                         count = 0;
                         recyclerView.setAdapter(null);
+                        mSwipeRefreshLayout.setRefreshing(true);
                         getOrdersByDate();
                         break;
                     case R.id.by_latest:
@@ -153,6 +154,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                         mm.trimToSize();
                         count = 0;
                         recyclerView.setAdapter(null);
+                        mSwipeRefreshLayout.setRefreshing(true);
                         getOrdersByLatest();
                         break;
                 }

@@ -49,7 +49,7 @@ public class Admin extends Activity {
     private EditText txtChild,txtValue,txtBody;
     private TextView txtAllOrdersCount,txtAllUsersCount,txtAllDevCount,txtAllSupCount,txtAllProfit;
     Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments,btnDeleteUser;
-    Button btnMessages,btnSendNotficationDel, btnSendNotficationSup, btnReportss;
+    Button btnMessages,btnSendNotficationDel, btnSendNotficationSup, btnReportss,btnDeleteStats;
     ImageView btnRefresh,imgLogo;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     int supCount = 0;
@@ -90,7 +90,7 @@ public class Admin extends Activity {
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         vDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("values");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
-        reportDatabase = getInstance().getReference().child("Pickly").child("reports");
+        reportDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("reports");
 
         btnResetCounter = findViewById(R.id.btnResetCounter);
         btnAddToOrders = findViewById(R.id.btnAddToOrders);
@@ -102,6 +102,7 @@ public class Admin extends Activity {
         txtAllDevCount  = findViewById(R.id.txtAllDevCount);
         txtAllSupCount  = findViewById(R.id.txtAllSupCount);
         txtAllProfit = findViewById(R.id.txtAllProfit);
+        btnDeleteStats = findViewById(R.id.btnDeleteStats);
         btnAccepting = findViewById(R.id.btnAccepting);
         btnAdding = findViewById(R.id.btnAdding);
         btnAdminSignOut = findViewById(R.id.btnAdminSignOut);
@@ -176,6 +177,9 @@ public class Admin extends Activity {
             return true;
         });
 
+        btnDeleteStats.setOnClickListener(v -> {
+            startActivity(new Intent(Admin.this, Admin_Delete_Statics.class));
+        });
         btnReportss.setOnClickListener(v -> {
             startActivity(new Intent(Admin.this, AdminReports.class));
         });

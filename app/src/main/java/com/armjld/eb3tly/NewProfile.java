@@ -204,7 +204,7 @@ public class NewProfile extends AppCompatActivity {
 
         txtUserDate.setText("اشترك : " + StartUp.userDate);
         uName.setText(StartUp.userName);
-        if (!isFinishing()) {
+        if (!isFinishing() && StartUp.userURL != null) {
             Picasso.get().load(Uri.parse(StartUp.userURL)).into(imgSetPP);
         }
         TextView usType = findViewById(R.id.txtUserType);

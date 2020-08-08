@@ -78,11 +78,11 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
 
         btnSend.setOnClickListener(v -> {
             if(rd1.isChecked()) {
-                Msg = "معاد الاستلام لا يناسبني";
+                Msg = "المندوب بيفاصل في سعر الشحن";
             } else if (rd2.isChecked()) {
-                Msg = "معاد التسليم لا يناسبني";
+                Msg = "المندوب عايز يغير معاد التسليم";
             } else if (rd3.isChecked()) {
-                Msg = "التاجر ادخل خطأ في البيانات";
+                Msg = "تقيمات المندوب غير مناسبه";
             } else if (rd4.isChecked()) {
                 if(txtContact.getText().toString().isEmpty()) {
                     Toast.makeText(this, "الرحاء توضيح سبب الالغاء", Toast.LENGTH_SHORT).show();

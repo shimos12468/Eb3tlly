@@ -5,10 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     android:visibility="visible"
     android:layoutDirection="ltr"
-    app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark"
     tools:context=".Admin">
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -251,6 +249,15 @@
                             android:layout_marginBottom="5dp"
                             android:background="@drawable/btn_defult"
                             android:text="Check Messages" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btnDeleteStats"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@drawable/btn_defult"
+                            android:text="Delete Statics" />
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/btnReports"

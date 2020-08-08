@@ -389,25 +389,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             vibe.vibrate(20);
         });
 
-        if(!uType.equals("Delivery Worker")) {
+        if(uType.equals("Supplier")) {
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setVisibility(View.GONE);
-        }
-
-        if(uType.equals("Delivery Worker")) {
+        } else if(uType.equals("Delivery Worker")) {
             if(removed.equals("true") || !statues.equals("placed")){
-                Log.i(TAG, "You're inside the if of GGMONEY" + filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
                 holder.lin1.setVisibility(View.GONE);
                 holder.txtWarning.setVisibility(View.VISIBLE);
             } else {
                 holder.lin1.setVisibility(View.VISIBLE);
                 holder.txtWarning.setVisibility(View.GONE);
             }
-        }
-
-        if(uType.equals("Admin")) {
+        } else if(uType.equals("Admin")) {
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setVisibility(View.GONE);
             holder.linAdmin.setVisibility(View.VISIBLE);
         }
+
         holder.btnEdit.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
