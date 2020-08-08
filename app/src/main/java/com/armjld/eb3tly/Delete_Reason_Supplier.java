@@ -33,6 +33,8 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
     FirebaseAuth mAuth;
     Button btnSend;
 
+    String uId = UserInFormation.getId();
+
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
@@ -88,7 +90,7 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
 
                         assert orderID != null;
                         String id = dDatabase.child(orderID).push().getKey();
-                        DeleteData deleteData = new DeleteData(Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), orderID, Msg, datee, UserInFormation.getAccountType(), id);
+                        DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         assert id != null;
                         dDatabase.child(orderID).child(id).setValue(deleteData);
 
@@ -97,7 +99,7 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
                         startActivity(new Intent(Delete_Reason_Supplier.this, supplierProfile.class));
 
                         if(acceptID != "") {
-                            notiData Noti = new notiData(mAuth.getCurrentUser().getUid(), acceptID, orderID,"deleted",datee,"false");
+                            notiData Noti = new notiData(uId, acceptID, orderID,"deleted",datee,"false");
                             nDatabase.child(acceptID).push().setValue(Noti);
                         }
                         break;

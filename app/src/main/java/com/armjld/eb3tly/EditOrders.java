@@ -56,6 +56,8 @@ public class EditOrders extends AppCompatActivity {
     private ImageView btnClose, imgHelpMoney, imgHelpGet;
     String statee, acceptedID;
     String srate, srateid,drate,drateid,orderDate,acceptedTime;
+    String uId = UserInFormation.getId();
+
 
     DatePickerDialog dpd;
     @SuppressLint("SimpleDateFormat")
@@ -645,7 +647,7 @@ public class EditOrders extends AppCompatActivity {
 
                                 if(!uAccepted.equals("")) {
                                     // --------------------------- Send Notifications ---------------------//
-                                    notiData Noti = new notiData(mAuth.getCurrentUser().getUid().toString(), uAccepted,orderID,"edited",datee,"false");
+                                    notiData Noti = new notiData(uID, uAccepted,orderID,"edited",datee,"false");
                                     nDatabase.child(uAccepted).push().setValue(Noti);
                                 }
                                 mdialog.dismiss();

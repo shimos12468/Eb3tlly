@@ -36,6 +36,8 @@ public class ForgetPass extends Activity {
     private TextView txtViewPhone, btnReType;
     private ConstraintLayout linerVerf, linerPhone,linerPass;
     private String TAG = "Forget Pass";
+    String uId = UserInFormation.getId();
+
     private DatabaseReference uDatabase;
 
     @Override
@@ -191,7 +193,7 @@ public class ForgetPass extends Activity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task1) {
                             if (task1.isSuccessful()) {
-                                uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                                uDatabase.child(uId).child("mpass").setValue(newPass1.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                                 Log.i(TAG, "Pass Updated : " + newPass1.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
                                 mAuth.signOut();
                                 Toast.makeText(ForgetPass.this, "تم تغيير الرقم السري بنجاح", Toast.LENGTH_SHORT).show();

@@ -76,6 +76,7 @@ public class UserSetting extends AppCompatActivity {
     private Spinner spState;
     private static String TAG = "User Settings";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
+    String uId = UserInFormation.getId();
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -207,11 +208,8 @@ public class UserSetting extends AppCompatActivity {
     private void handleUpload (Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
-
-        String uID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-
-        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("ppUsers").child(uID + ".jpeg");
-        final String did = uID;
+        final StorageReference reference = FirebaseStorage.getInstance().getReference().child("ppUsers").child(uId + ".jpeg");
+        final String did = uId;
         reference.putBytes(baos.toByteArray()).addOnSuccessListener(taskSnapshot -> {
             getDownUrl(did, reference);
             Log.i("Updating ", " onSuccess");
@@ -285,7 +283,7 @@ public class UserSetting extends AppCompatActivity {
             chkStateNoti.setVisibility(View.GONE);
         }
         // ---------------------- Get Current Data -------------------------- //
-        uDatabase.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = Objects.requireNonNull(dataSnapshot.child("ppURL").getValue()).toString();
@@ -337,12 +335,11 @@ public class UserSetting extends AppCompatActivity {
                 return;
             }
 
-            final String id = mAuth.getCurrentUser().getUid();
             FirebaseUser user = mAuth.getCurrentUser();
 
             // ------------------ Update the Name -----------------//
-            uDatabase.child(id).child("name").setValue(name.getText().toString().trim());
-            uDatabase.child(id).child("userState").setValue(spState.getSelectedItem().toString());
+            uDatabase.child(uId).child("name").setValue(name.getText().toString().trim());
+            uDatabase.child(uId).child("userState").setValue(spState.getSelectedItem().toString());
 
             UserInFormation.setUserName(name.getText().toString());
 
@@ -358,8 +355,7 @@ public class UserSetting extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("email").setValue(Email.getText().toString().trim());
-                                    Log.i(TAG, "New Email " + FirebaseAuth.getInstance().getCurrentUser().getEmail() + " ID : " + mAuth.getCurrentUser().getUid());
+                                    uDatabase.child(uId).child("email").setValue(Email.getText().toString().trim());
                                 }
                             }
                         });
@@ -382,9 +378,9 @@ public class UserSetting extends AppCompatActivity {
             }
 
             if(chkStateNoti.isChecked()) {
-                uDatabase.child(id).child("sendOrderNoti").setValue("true");
+                uDatabase.child(uId).child("sendOrderNoti").setValue("true");
             } else {
-                uDatabase.child(id).child("sendOrderNoti").setValue("false");
+                uDatabase.child(uId).child("sendOrderNoti").setValue("false");
             }
 
         });

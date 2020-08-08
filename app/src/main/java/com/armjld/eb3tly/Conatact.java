@@ -58,7 +58,7 @@ public class Conatact extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSend);
         txtContact = findViewById(R.id.txtContact);
         mAuth = FirebaseAuth.getInstance();
-        userID = mAuth.getCurrentUser().getUid();
+        userID = UserInFormation.getId();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         cDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("messages");
 
@@ -74,31 +74,29 @@ public class Conatact extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnSend.setOnClickListener(v -> {
 
-                if(TextUtils.isEmpty(txtContact.getText().toString().trim())) {
-                    Toast.makeText(Conatact.this, "الرجاء كتابه رسالتك بالكامل", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                String version = "";
-                try {
-                    PackageInfo pInfo = Conatact.this.getPackageManager().getPackageInfo(getPackageName(), 0);
-                    version = pInfo.versionName;
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                String id = cDatabase.push().getKey().toString();
-                replyAdmin Noti = new replyAdmin(strEmail,txtContact.getText().toString().trim(),strName,strPhone,"opened",datee,id,version,mAuth.getCurrentUser().getUid());
-                cDatabase.child(userID).child(id).setValue(Noti);
-
-                Toast.makeText(Conatact.this, "شكرا لك تم استلام رسالتك و سيتم الرد عليك في اقرب وقت", Toast.LENGTH_LONG).show();
-                finish();
-                whichProfile();
+            if(TextUtils.isEmpty(txtContact.getText().toString().trim())) {
+                Toast.makeText(Conatact.this, "الرجاء كتابه رسالتك بالكامل", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            String version = "";
+            try {
+                PackageInfo pInfo = Conatact.this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                version = pInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            String id = cDatabase.push().getKey();
+            replyAdmin Noti = new replyAdmin(strEmail,txtContact.getText().toString().trim(),strName,strPhone,"opened",datee,id,version,userID);
+            assert id != null;
+            cDatabase.child(userID).child(id).setValue(Noti);
+
+            Toast.makeText(Conatact.this, "شكرا لك تم استلام رسالتك و سيتم الرد عليك في اقرب وقت", Toast.LENGTH_LONG).show();
+            finish();
+            whichProfile();
         });
 
 

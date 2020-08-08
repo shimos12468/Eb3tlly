@@ -66,7 +66,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     private DatabaseReference reportDatabase;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
     private String TAG = "Supplier Adapter";
-    String uId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+    String uId = UserInFormation.getId();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;

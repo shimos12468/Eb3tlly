@@ -36,6 +36,7 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
     private EditText txtContact;
     private DatabaseReference dDatabase,mDatabase,nDatabase,uDatabase;
     FirebaseAuth mAuth;
+    private String uId = UserInFormation.getId();
     Button btnSend;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -106,7 +107,7 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
                         mDatabase.child(orderID).child("statue").setValue("placed");
 
                         String id = dDatabase.child(orderID).push().getKey();
-                        DeleteData deleteData = new DeleteData(Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), orderID, Msg, datee, UserInFormation.getAccountType(), id);
+                        DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         assert id != null;
                         dDatabase.child(orderID).child(id).setValue(deleteData);
 

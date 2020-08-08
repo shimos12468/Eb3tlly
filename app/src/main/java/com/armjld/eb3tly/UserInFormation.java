@@ -5,6 +5,7 @@ public class UserInFormation {
     private static String AccountType;
     private static String userDate;
     private static String userURL;
+    private static String id;
 
     public UserInFormation() {
     }
@@ -39,5 +40,13 @@ public class UserInFormation {
 
     public static void setUserURL(String userURL) {
         UserInFormation.userURL = userURL;
+    }
+
+    public static String getId() {
+        return id;
+    }
+
+    public static void setId(String id) {
+        UserInFormation.id = id;
     }
 }

@@ -438,10 +438,11 @@ public class Signup extends AppCompatActivity {
                 notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
                 nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
 
-                userInfo.setAccountType(accountType);
-                userInfo.setUserName(muser);
-                userInfo.setUserDate(acDate);
-                userInfo.setUserURL(defultPP);
+                UserInFormation.setAccountType(accountType);
+                UserInFormation.setUserName(muser);
+                UserInFormation.setUserDate(acDate);
+                UserInFormation.setUserURL(defultPP);
+                UserInFormation.setId(id);
 
                 if (accountType.equals("Supplier")) {
                     finish();

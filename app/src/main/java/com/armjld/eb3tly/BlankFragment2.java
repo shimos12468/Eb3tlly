@@ -73,7 +73,7 @@ public class BlankFragment2 extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
-        uId = mUser.getUid();
+        uId = UserInFormation.getId();
 
         recyclerView=view.findViewById(R.id.userRecyclr);
         refresh = view.findViewById(R.id.refresh);

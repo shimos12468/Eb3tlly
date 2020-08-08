@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class ChangePassword extends Activity {
 
     EditText password , con_password,old_pass;
@@ -35,7 +37,7 @@ public class ChangePassword extends Activity {
     private ProgressDialog mdialog;
     String TAG = "Change Password";
     private DatabaseReference uDatabase;
-
+    private String uId = UserInFormation.getId();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,7 @@ public class ChangePassword extends Activity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تغيير الرقم السري");
 
-        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 oldPass = dataSnapshot.child("mpass").getValue().toString();
@@ -94,31 +96,24 @@ public class ChangePassword extends Activity {
                 mdialog.setMessage("جاري تغيير الرقم السري ...");
                 mdialog.show();
 
-                AuthCredential credential2 = EmailAuthProvider.getCredential(mAuth.getCurrentUser().getEmail(),oldPass); // Current Login Credentials \\
-                mAuth.getCurrentUser().reauthenticate(credential2).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ------------------- Code for changing the password -------------//
-                        if (!pass.isEmpty()) {
-                        mAuth.getCurrentUser().updatePassword(pass).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("mpass").setValue(password.getText().toString().trim());
-                                    Log.i(TAG, "pass Updated : " + password.getText().toString().trim() + " and current user id : " + mAuth.getCurrentUser().getUid());
-                                    mdialog.dismiss();
-                                    finish();
-                                    whichProfile();
-                                } else {
-                                    mdialog.dismiss();
-                                    Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else{
+                AuthCredential credential2 = EmailAuthProvider.getCredential(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()),oldPass); // Current Login Credentials \\
+                mAuth.getCurrentUser().reauthenticate(credential2).addOnCompleteListener(task -> {
+                    // ------------------- Code for changing the password -------------//
+                    if (!pass.isEmpty()) {
+                    mAuth.getCurrentUser().updatePassword(pass).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            uDatabase.child(uId).child("mpass").setValue(password.getText().toString().trim());
+                            mdialog.dismiss();
+                            finish();
+                            whichProfile();
+                        } else {
                             mdialog.dismiss();
                             Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
                         }
+                    });
+                } else{
+                        mdialog.dismiss();
+                        Toast.makeText(ChangePassword.this, "حدث خطأ في تغير الرقم السري", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

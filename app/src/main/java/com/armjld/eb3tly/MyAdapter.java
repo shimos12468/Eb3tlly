@@ -52,6 +52,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
      private String TAG = "My Adapter";
      String uType = UserInFormation.getAccountType();
+    String uId = UserInFormation.getId();
 
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -453,14 +454,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         Toast.makeText(context, "لا يمكن قبول اي اوردرات الان حاول بعد قليل", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    uDatabase.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             int cancelledCount =  Integer.parseInt(Objects.requireNonNull(dataSnapshot.child("canceled").getValue()).toString());
                             if(cancelledCount >= 3) {
                                 Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الاسبوع , لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
                             } else {
-                                mDatabase.orderByChild("uAccepted").equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         int zcount  = 0;
@@ -474,12 +475,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                                                 switch (which){
                                                     case DialogInterface.BUTTON_POSITIVE:
-                                                        mDatabase.child(gettingID).child("uAccepted").setValue(mAuth.getCurrentUser().getUid());
+                                                        mDatabase.child(gettingID).child("uAccepted").setValue(uId);
                                                         mDatabase.child(gettingID).child("statue").setValue("accepted");
                                                         mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
 
                                                         // -------------------------- Send Notifications ---------------------//
-                                                        notiData Noti = new notiData( mAuth.getUid(), owner, orderID,"accepted",datee,"false");
+                                                        notiData Noti = new notiData(uId, owner, orderID,"accepted",datee,"false");
                                                         nDatabase.child(owner).push().setValue(Noti);
 
                                                         Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();

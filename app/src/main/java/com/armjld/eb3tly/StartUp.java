@@ -165,6 +165,7 @@ public class StartUp extends AppCompatActivity {
                         UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
                         UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
                         UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
+                        UserInFormation.setId(mAuth.getCurrentUser().getUid());
                         if(isActive.equals("true")) {
                             if(!snapshot.child("userState").exists()) {
                                 Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();

@@ -82,7 +82,7 @@ public class placed_oreders_supplier extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
-        uId = mUser.getUid();
+        uId = UserInFormation.getId();
 
         refresh = view.findViewById(R.id.refresh);
         txtNoOrders = view.findViewById(R.id.txtNoOrders);

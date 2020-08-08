@@ -73,7 +73,7 @@ public class NewProfile extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
-        uId = mUser.getUid();
+        uId = UserInFormation.getId();
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -174,7 +174,7 @@ public class NewProfile extends AppCompatActivity {
         });
 
         // -------------------------- Get users Notifications Count -------------------//
-        nDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        nDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

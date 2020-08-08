@@ -162,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
                                     UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
                                     UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
                                     UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
+                                    UserInFormation.setId(mAuth.getCurrentUser().getUid());
+
                                     if (isActive.equals("true")) { // Check if the account is Disabled
                                         // --------------------- check account types and send each type to it's activity --------------//
                                         ImportBlockedUsers();

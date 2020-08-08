@@ -53,7 +53,7 @@ public class AddOrders extends AppCompatActivity {
     private Spinner spPState, spPRegion, spDState, spDRegion;
     private FirebaseAuth mAuth;
     private Button btnsave,btnSaveAdd;
-    private String uID;
+    private String uId;
     String uType = UserInFormation.getAccountType();
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
@@ -131,7 +131,7 @@ public class AddOrders extends AppCompatActivity {
 
         // Firebasee
         mAuth = FirebaseAuth.getInstance();
-        uID = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+        uId = UserInFormation.getId();
         mDatabase = getInstance().getReference("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
@@ -662,7 +662,7 @@ public class AddOrders extends AppCompatActivity {
 
                         // Send order to Data Base using the DATA MODEL
                         Data data = new Data(pState12, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
+                                mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
                         mDatabase.child(id).setValue(data);
                         mDatabase.child(id).child("lastedit").setValue(datee);
 
@@ -853,7 +853,7 @@ public class AddOrders extends AppCompatActivity {
 
                             // Send order to Data Base using the DATA MODEL
                             Data data = new Data(pState1, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
+                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
                             assert id != null;
                             mDatabase.child(id).setValue(data);
                             mDatabase.child(id).child("lastedit").setValue(datee);

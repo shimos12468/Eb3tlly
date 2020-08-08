@@ -89,7 +89,7 @@ public class dlivared_orders_supplier extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
-        uId = mUser.getUid();
+        uId = UserInFormation.getId();
 
         recyclerView = view.findViewById(R.id.userRecyclr);
         refresh = view.findViewById(R.id.refresh);

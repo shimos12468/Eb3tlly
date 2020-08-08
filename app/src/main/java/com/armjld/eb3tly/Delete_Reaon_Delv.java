@@ -70,6 +70,7 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
         String acceptTime =  getIntent().getStringExtra("aTime");
         String editTime =  getIntent().getStringExtra("eTime");
         mAuth = FirebaseAuth.getInstance();
+        String uId = UserInFormation.getId();
         btnSend = findViewById(R.id.btnSend);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
@@ -108,11 +109,11 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
 
                         assert orderID != null;
                         String id = dDatabase.child(orderID).push().getKey();
-                        DeleteData deleteData = new DeleteData(mAuth.getCurrentUser().getUid(), orderID, Msg, datee, UserInFormation.getAccountType(), id);
+                        DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         dDatabase.child(orderID).child(id).setValue(deleteData);
 
                         // --------------- Add the cencelled order to the counter ----------------------- //
-                        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 Date lastedit = null;
@@ -131,7 +132,7 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
 
                                 assert acceptedDate != null;
                                 if(acceptedDate.compareTo(lastedit) > 0 && !rd6.isChecked() && !rd5.isChecked()) { // if the worker accepted the order before it has been edited
-                                    uDatabase.child(mAuth.getCurrentUser().getUid()).child("canceled").setValue(String.valueOf(finalCount));
+                                    uDatabase.child(uId).child("canceled").setValue(String.valueOf(finalCount));
                                     Toast.makeText(Delete_Reaon_Delv.this, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(Delete_Reaon_Delv.this, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
@@ -143,7 +144,7 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                                 mDatabase.child(orderID).child("acceptTime").setValue("");
 
                                 // --------------------------- Send Notifications ---------------------//
-                                notiData Noti = new notiData(mAuth.getCurrentUser().getUid(), owner, orderID,"deleted",datee,"false");
+                                notiData Noti = new notiData(uId, owner, orderID,"deleted",datee,"false");
                                 nDatabase.child(owner).push().setValue(Noti);
                                 startActivity(new Intent(Delete_Reaon_Delv.this, NewProfile.class));
                             }

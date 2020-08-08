@@ -59,7 +59,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     ArrayList<Data>filtersData;
     private DatabaseReference mDatabase,rDatabase,uDatabase,nDatabase,reportDatabase;
     private String TAG = "Supplier Adapter";
-    String uId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+    String uId = UserInFormation.getId();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;

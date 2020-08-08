@@ -42,6 +42,8 @@ public class Notifications extends AppCompatActivity {
     private RecyclerView recyclerView;
     String TAG = "Notifications";
     String uType = UserInFormation.getAccountType();
+    String uId = UserInFormation.getId();
+
 
     @Override
     public void onBackPressed() {
@@ -180,7 +182,7 @@ public class Notifications extends AppCompatActivity {
     private void getNoti() {
         // ---------------------- GET ALL THE Notifications -------------------//
         clearAdapter();
-        nDatabase.child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        nDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -190,7 +192,7 @@ public class Notifications extends AppCompatActivity {
                             notiData notiDB = ds.getValue(notiData.class);
                             mm.add((int)count,notiDB);
                             count++;
-                            nDatabase.child(mAuth.getCurrentUser().getUid()).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
+                            nDatabase.child(uId).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
                             NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
                             recyclerView.setAdapter(orderAdapter);
                         }
