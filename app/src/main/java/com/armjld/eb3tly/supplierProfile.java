@@ -41,7 +41,7 @@ public class supplierProfile extends AppCompatActivity {
     private ImageView imgSetPP, imgStar;
     private TextView txtUserDate,uName,txtNotiCount,txtTotalOrders;
     private String TAG = "Supplier Profile";
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     String uId;
     String user_type;
 
@@ -190,10 +190,10 @@ public class supplierProfile extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        txtUserDate.setText("اشترك : " + StartUp.userDate);
-        uName.setText(StartUp.userName);
-        if (!isFinishing() && StartUp.userURL != null) {
-            Picasso.get().load(Uri.parse(StartUp.userURL)).into(imgSetPP);
+        txtUserDate.setText("اشترك : " + UserInFormation.getUserDate());
+        uName.setText(UserInFormation.getAccountType());
+        if (!isFinishing() && UserInFormation.getUserURL() != null) {
+            Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
         }
         TextView usType = findViewById(R.id.txtUserType);
         user_type = "sId";

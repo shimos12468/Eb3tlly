@@ -108,7 +108,7 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
 
                         assert orderID != null;
                         String id = dDatabase.child(orderID).push().getKey();
-                        DeleteData deleteData = new DeleteData(mAuth.getCurrentUser().getUid(), orderID, Msg, datee, StartUp.userType, id);
+                        DeleteData deleteData = new DeleteData(mAuth.getCurrentUser().getUid(), orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         dDatabase.child(orderID).child(id).setValue(deleteData);
 
                         // --------------- Add the cencelled order to the counter ----------------------- //

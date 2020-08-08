@@ -40,7 +40,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
     Context context, context1;
     long count;
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     ArrayList<notiData>notiData;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase, uDatabase, nDatabase;
@@ -105,7 +105,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             holder.setDate(Datee);
         }
         holder.myview.setOnClickListener(v -> {
-            if(StartUp.userType.equals("Supplier")) {
+            if(UserInFormation.getAccountType().equals("Supplier")) {
                 switch (Statue) {
                     case "deleted": {
                         // ------- go to the order

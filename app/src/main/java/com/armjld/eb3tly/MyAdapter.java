@@ -51,7 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase,nDatabase;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
      private String TAG = "My Adapter";
-     String uType = StartUp.userType;
+     String uType = UserInFormation.getAccountType();
 
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -631,7 +631,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 txtUsername.setTextColor(Color.parseColor("#ffc922"));
             } else {
                 imgStar.setVisibility(View.GONE);
-                txtUsername.setTextColor(Color.parseColor("#FF0099CC"));
+                txtUsername.setTextColor(Color.parseColor("#0099CC"));
             }
         }
 

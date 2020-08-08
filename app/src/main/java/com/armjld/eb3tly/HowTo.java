@@ -58,7 +58,7 @@ public class HowTo extends AppCompatActivity {
     }
 
     private void whichProfile() {
-        if(StartUp.userType.equals("Supplier")) {
+        if(UserInFormation.getAccountType().equals("Supplier")) {
             startActivity(new Intent(HowTo.this, supplierProfile.class));
         } else {
             startActivity(new Intent(HowTo.this, NewProfile.class));

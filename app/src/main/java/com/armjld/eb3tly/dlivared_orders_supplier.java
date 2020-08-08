@@ -50,7 +50,7 @@ public class dlivared_orders_supplier extends Fragment {
     private FirebaseAuth mAuth;
     private String TAG = "Profile";
     private RecyclerView recyclerView;
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     private SwipeRefreshLayout refresh;
     private TextView txtNoOrders;
     String uId;

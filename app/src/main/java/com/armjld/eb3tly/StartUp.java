@@ -40,10 +40,6 @@ public class StartUp extends AppCompatActivity {
     SharedPreferences sharedPreferences = null;
     private FirebaseAuth mAuth;
     private ConstraintLayout startConst;
-    public static String userType;
-    public static String userName;
-    public static String userDate;
-    public static String userURL;
     public UserInFormation userInfo = new UserInFormation();
 
     DatabaseReference uDatabase , Database;
@@ -164,16 +160,12 @@ public class StartUp extends AppCompatActivity {
                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
 
                     if(isComplete.equals("true")) {
+                        String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
+                        UserInFormation.setAccountType(uType);
+                        UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
+                        UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
+                        UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
                         if(isActive.equals("true")) {
-                            if(!userInfo.getAccountType().equals(null) && !Objects.requireNonNull(snapshot.child("accountType").getValue()).toString().equals(null)){
-
-                                if(!userInfo.getAccountType().equals(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString())){
-
-                                    userInfo.setAccountType(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString());
-                                }
-                            }
-
-
                             if(!snapshot.child("userState").exists()) {
                                 Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();
                             }
@@ -186,7 +178,7 @@ public class StartUp extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            switch (userType) {
+                            switch (UserInFormation.getAccountType()) {
                                 case "Supplier":
                                     finish();
                                     startActivity(new Intent(StartUp.this, supplierProfile.class));

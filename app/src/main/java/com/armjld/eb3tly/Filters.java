@@ -502,7 +502,6 @@ public class   Filters extends AppCompatActivity {
                 if(dataSnapshot.exists()) {
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                         final Data filterData = ds.getValue(Data.class);
-                        final Data testData = null;
                         int filterValue=0;
                         assert filterData != null;
                         int dbMoney = Integer.parseInt(filterData.getGMoney());

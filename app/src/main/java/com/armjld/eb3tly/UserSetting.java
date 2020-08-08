@@ -231,12 +231,11 @@ public class UserSetting extends AppCompatActivity {
             public void onSuccess(Uri uri) {
                 Log.i("Sign UP", " add Profile URL");
                 uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
-                StartUp.userURL = uri.toString();
+                UserInFormation.setUserURL(uri.toString());
                 mdialog.dismiss();
                 Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
-                startActivity(new Intent(getApplicationContext(), NewProfile.class));
-                ppURL = uri.toString();
+                whichProfile();
             }
         });
     }
@@ -343,8 +342,7 @@ public class UserSetting extends AppCompatActivity {
                 uDatabase.child(id).child("name").setValue(name.getText().toString().trim());
                 uDatabase.child(id).child("userState").setValue(spState.getSelectedItem().toString());
 
-                UserInFormation userinfo = new UserInFormation();
-                userinfo.setUserName(name.getText().toString());
+                UserInFormation.setUserName(name.getText().toString());
 
 
                 // -------------- Get auth credentials from the user for re-authentication
@@ -380,7 +378,7 @@ public class UserSetting extends AppCompatActivity {
                     Log.i(TAG, "no Photo to update.");
                     Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
                     finish();
-                    startActivity(new Intent(getApplicationContext(), NewProfile.class));
+                    whichProfile();
                 }
             }
         });
@@ -427,6 +425,14 @@ public class UserSetting extends AppCompatActivity {
         {
             Log.i("SignUp", "Returned the source Photo");
             return source;
+        }
+    }
+
+    private void whichProfile () {
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
         }
     }
 }

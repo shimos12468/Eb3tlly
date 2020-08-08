@@ -54,7 +54,7 @@ public class AddOrders extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button btnsave,btnSaveAdd;
     private String uID;
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
     private ImageView btnClose, imgHelpMoney, imgHelpGet;

@@ -44,7 +44,7 @@ public class NewProfile extends AppCompatActivity {
     private TextView uName;
     private TextView txtNotiCount,txtTotalOrders;
     private String TAG = "Delivery Profile";
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     String uId;
     String user_type;
 
@@ -202,10 +202,10 @@ public class NewProfile extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        txtUserDate.setText("اشترك : " + StartUp.userDate);
-        uName.setText(StartUp.userName);
-        if (!isFinishing() && StartUp.userURL != null) {
-            Picasso.get().load(Uri.parse(StartUp.userURL)).into(imgSetPP);
+        txtUserDate.setText("اشترك : " + UserInFormation.getUserDate());
+        uName.setText(UserInFormation.getUserName());
+        if (!isFinishing() && UserInFormation.getUserURL()!= null) {
+            Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
         }
         TextView usType = findViewById(R.id.txtUserType);
         user_type = "dId";

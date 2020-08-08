@@ -126,7 +126,7 @@ public class ChangePassword extends Activity {
     }
 
     private void whichProfile () {
-        if(StartUp.userType.equals("Supplier")) {
+        if(UserInFormation.getAccountType().equals("Supplier")) {
             startActivity(new Intent(getApplicationContext(), supplierProfile.class));
         } else {
             startActivity(new Intent(getApplicationContext(), NewProfile.class));

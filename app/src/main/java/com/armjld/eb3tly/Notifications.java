@@ -41,7 +41,7 @@ public class Notifications extends AppCompatActivity {
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
     String TAG = "Notifications";
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
 
     @Override
     public void onBackPressed() {

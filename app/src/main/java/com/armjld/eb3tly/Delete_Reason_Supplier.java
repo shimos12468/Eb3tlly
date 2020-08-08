@@ -88,7 +88,7 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
 
                         assert orderID != null;
                         String id = dDatabase.child(orderID).push().getKey();
-                        DeleteData deleteData = new DeleteData(Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), orderID, Msg, datee, StartUp.userType, id);
+                        DeleteData deleteData = new DeleteData(Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         assert id != null;
                         dDatabase.child(orderID).child(id).setValue(deleteData);
 

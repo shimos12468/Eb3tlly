@@ -45,7 +45,7 @@ public class BlankFragment extends Fragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
     private TextView txtNoOrders;
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     String uId;
 
     // TODO: Rename and change types of parameters

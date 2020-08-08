@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private String TAG = "Home Activity";
     private MyAdapter orderAdapter;
     String filterDate;
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     public static boolean sortDate = true;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

@@ -649,7 +649,7 @@ public class EditOrders extends AppCompatActivity {
                                     nDatabase.child(uAccepted).push().setValue(Noti);
                                 }
                                 mdialog.dismiss();
-                                if(StartUp.userType.equals("Admin")) {
+                                if(UserInFormation.getAccountType().equals("Admin")) {
                                     startActivity(new Intent(EditOrders.this, HomeActivity.class));
                                 } else {
                                     startActivity(new Intent(EditOrders.this, supplierProfile.class));

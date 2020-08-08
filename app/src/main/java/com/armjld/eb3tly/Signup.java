@@ -252,7 +252,7 @@ public class Signup extends AppCompatActivity {
         reference.getDownloadUrl().addOnSuccessListener(uri -> {
             Log.i("Sign UP", " add Profile URL");
             uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
-            StartUp.userURL = uri.toString();
+            UserInFormation.setUserURL(uri.toString());
             mdialog.dismiss();
         });
     }

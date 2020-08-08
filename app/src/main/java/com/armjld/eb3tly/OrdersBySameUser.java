@@ -44,7 +44,7 @@ public class OrdersBySameUser extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     //Recycler view
     private RecyclerView recyclerView;
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
     private TextView txtNoOrders;
     private String TAG = "Other Orders";
     private MyAdapter orderAdapter;

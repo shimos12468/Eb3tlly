@@ -38,7 +38,7 @@ public class Conatact extends AppCompatActivity {
     DatabaseReference uDatabase, cDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
-    String uType = StartUp.userType;
+    String uType = UserInFormation.getAccountType();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
