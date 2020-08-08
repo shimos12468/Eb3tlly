@@ -68,6 +68,7 @@ public class Signup extends AppCompatActivity {
     private String phone;
     private FirebaseAuth mAuth;
     Spinner spState;
+    public UserInFormation userInfo = new UserInFormation();
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase,nDatabase;
     private ConstraintLayout linerVerf, linersignUp;
@@ -437,10 +438,10 @@ public class Signup extends AppCompatActivity {
                 notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
                 nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
 
-                StartUp.userName = muser;
-                StartUp.userDate = acDate;
-                StartUp.userType = accountType;
-                StartUp.userURL = defultPP;
+                userInfo.setAccountType(accountType);
+                userInfo.setUserName(muser);
+                userInfo.setUserDate(acDate);
+                userInfo.setUserURL(defultPP);
 
                 if (accountType.equals("Supplier")) {
                     finish();

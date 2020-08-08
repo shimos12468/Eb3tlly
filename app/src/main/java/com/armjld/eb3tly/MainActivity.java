@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static EditText email,pass;
     private Button btnlogin;
+    public UserInFormation userInfo = new UserInFormation();
     //FireBase
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase,Database;
@@ -165,10 +166,10 @@ public class MainActivity extends AppCompatActivity {
                                 if (isCompleted.equals("true")) {
                                     String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
                                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-                                    StartUp.userType = uType;
-                                    StartUp.userName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                                    StartUp.userDate = Objects.requireNonNull(snapshot.child("date").getValue()).toString();
-                                    StartUp.userURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
+                                    userInfo.setAccountType(uType);
+                                    userInfo.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
+                                    userInfo.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
+                                    userInfo.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
                                     if (isActive.equals("true")) { // Check if the account is Disabled
                                         // --------------------- check account types and send each type to it's activity --------------//
                                         ImportBlockedUsers();

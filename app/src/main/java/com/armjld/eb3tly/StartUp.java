@@ -44,6 +44,7 @@ public class StartUp extends AppCompatActivity {
     public static String userName;
     public static String userDate;
     public static String userURL;
+    public UserInFormation userInfo = new UserInFormation();
 
     DatabaseReference uDatabase , Database;
     boolean doubleBackToExitPressedOnce = false;
@@ -164,10 +165,14 @@ public class StartUp extends AppCompatActivity {
 
                     if(isComplete.equals("true")) {
                         if(isActive.equals("true")) {
-                            userType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
-                            userName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                            userDate = Objects.requireNonNull(snapshot.child("date").getValue()).toString();
-                            userURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
+                            if(!userInfo.getAccountType().equals(null) && !Objects.requireNonNull(snapshot.child("accountType").getValue()).toString().equals(null)){
+
+                                if(!userInfo.getAccountType().equals(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString())){
+
+                                    userInfo.setAccountType(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString());
+                                }
+                            }
+
 
                             if(!snapshot.child("userState").exists()) {
                                 Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();

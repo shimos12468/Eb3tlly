@@ -343,7 +343,8 @@ public class UserSetting extends AppCompatActivity {
                 uDatabase.child(id).child("name").setValue(name.getText().toString().trim());
                 uDatabase.child(id).child("userState").setValue(spState.getSelectedItem().toString());
 
-                StartUp.userName = name.getText().toString().trim();
+                UserInFormation userinfo = new UserInFormation();
+                userinfo.setUserName(name.getText().toString());
 
 
                 // -------------- Get auth credentials from the user for re-authentication
