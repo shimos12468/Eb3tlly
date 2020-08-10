@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
@@ -159,6 +161,25 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                         context.startActivity(new Intent(context, HomeActivity.class));
                         break;
                     }
+
+                    case "يوجد اوردر جديد في منطقتك" : {
+                        mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String statue = snapshot.child("statue").getValue().toString();
+                                if(!statue.equals("placed")) {
+                                    Toast.makeText(context, "نعتذر, لقد تم قبول الاوردر بالفعل من مندوب اخر", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    context.startActivity(new Intent(context, HomeActivity.class));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+                        });
+                        break;
+                    }
+
                     case "متنساش تعمل لايك لصفحتنا علي الفيس بوك": {
                         String fbLink = "https://www.facebook.com/Eb3tlyy/";
                         Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(fbLink));

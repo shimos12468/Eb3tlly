@@ -419,6 +419,7 @@ public class Signup extends AppCompatActivity {
                 uDatabase.child(id).child("profit").setValue("0");
                 uDatabase.child(id).child("active").setValue("true");
                 uDatabase.child(id).child("userState").setValue(state);
+                uDatabase.child(id).child("isConfirmed").setValue("false");
 
                 // ------------------ Set Device Token ----------------- //
                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Signup.this, instanceIdResult -> {
@@ -443,6 +444,11 @@ public class Signup extends AppCompatActivity {
                 UserInFormation.setUserDate(acDate);
                 UserInFormation.setUserURL(defultPP);
                 UserInFormation.setId(id);
+
+                UserInFormation.setEmail(memail1);
+                UserInFormation.setPass(mpass1);
+                UserInFormation.setPhone(phone);
+                UserInFormation.setisConfirm("false");
 
                 if (accountType.equals("Supplier")) {
                     finish();

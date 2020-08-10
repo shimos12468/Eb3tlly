@@ -54,14 +54,7 @@ public class StartUp extends AppCompatActivity {
 
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "اضغط مرة اخري للخروج من التطبيق", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -95,7 +88,6 @@ public class StartUp extends AppCompatActivity {
 
     private void whatToDo() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-            //ImportBlockedUsers();
             reRoute();
         } else {
             new Timer().schedule(new TimerTask() {
@@ -132,9 +124,7 @@ public class StartUp extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
 
 
@@ -166,6 +156,15 @@ public class StartUp extends AppCompatActivity {
                         UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
                         UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
                         UserInFormation.setId(mAuth.getCurrentUser().getUid());
+
+                        UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
+                        UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
+                        UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
+                        UserInFormation.setisConfirm("false");
+                        if(snapshot.child("isConfirmed").exists()) {
+                            UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
+                        }
+
                         if(isActive.equals("true")) {
                             if(!snapshot.child("userState").exists()) {
                                 Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();

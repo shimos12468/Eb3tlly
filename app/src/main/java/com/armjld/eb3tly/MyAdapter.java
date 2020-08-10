@@ -228,13 +228,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     int oCount = 0;
-                    if (dataSnapshot.exists()) {
-                        int count = (int) dataSnapshot.getChildrenCount();
-                        oCount = count;
-                        String strCount = String.valueOf(count);
-                        ddCount.setText( "اضاف "+ strCount + " اوردر");
-                    } else {
+                    if(dataSnapshot.exists()) {
+                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if(!ds.child("statue").getValue().toString().equals("deleted")) {
+                                oCount ++;
+                            }
+                        }
+                    }
+
+                    if(oCount == 0) {
                         ddCount.setText("لم يقم بأضافه اي اوردرات");
+
+                    } else {
+                        ddCount.setText( "اضاف "+ oCount + " اوردر");
                     }
 
                     if(oCount >= 10) {
@@ -246,8 +252,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     }
                 }
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
 
             //Get the user name & Pic

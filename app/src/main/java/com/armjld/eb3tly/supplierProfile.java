@@ -42,7 +42,7 @@ public class supplierProfile extends AppCompatActivity {
     private TextView txtUserDate,uName,txtNotiCount,txtTotalOrders;
     private String TAG = "Supplier Profile";
     String uType = UserInFormation.getAccountType();
-    String uId;
+    private String uId = UserInFormation.getId();
     String user_type;
 
     @Override
@@ -67,7 +67,6 @@ public class supplierProfile extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
-        String uId = UserInFormation.getId();
 
 
         FloatingActionButton btnAdd = findViewById(R.id.btnAdd);
@@ -256,14 +255,18 @@ public class supplierProfile extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int cOrders = 0;
-                if (snapshot.exists()) {
-                    int count = (int) snapshot.getChildrenCount();
-                    cOrders = count;
-                    String strCount = String.valueOf(count);
-                    txtTotalOrders.setText( "اضاف " + strCount + " اوردر");
-                } else {
+                if(snapshot.exists()) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        if(!ds.child("statue").getValue().toString().equals("deleted")) {
+                            cOrders++;
+                        }
+                    }
+                }
+
+                if(cOrders == 0) {
                     txtTotalOrders.setText("لم يقم باضافة اي اوردر");
-                    cOrders = 0;
+                } else {
+                    txtTotalOrders.setText( "اضاف " + cOrders + " اوردر");
                 }
 
                 if(cOrders >= 10) {

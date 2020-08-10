@@ -3,6 +3,7 @@ package com.armjld.eb3tly;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -35,10 +37,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.ui.main.Account_Confirm;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -59,10 +63,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE;
+
 public class UserSetting extends AppCompatActivity {
 
     EditText name,Email;
-    Button confirm;
+    Button confirm,btnConfirmAccount;
     private ImageView UserImage;
     String email,Name;
     int TAKE_IMAGE_CODE = 10001;
@@ -77,6 +83,8 @@ public class UserSetting extends AppCompatActivity {
     private static String TAG = "User Settings";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
     String uId = UserInFormation.getId();
+    String isConfirmed = UserInFormation.getisConfirm();
+    private ConstraintLayout constUserSettings;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -272,7 +280,28 @@ public class UserSetting extends AppCompatActivity {
         confirm = findViewById(R.id.btnEditInfo);
         spState = findViewById(R.id.spState);
         chkStateNoti = findViewById(R.id.chkStateNoti);
+        constUserSettings = findViewById(R.id.constUserSettings);
+        btnConfirmAccount = findViewById(R.id.btnConfirmAccount);
+        btnConfirmAccount.setVisibility(View.GONE);
 
+        if(isConfirmed.equals("false")) {
+            Snackbar snackbar = Snackbar.make(constUserSettings, "لم تقم بتأكيد حسابك", LENGTH_INDEFINITE).setAction("تاكير الحساب", view -> {
+                finish();
+                startActivity(new Intent(this, Account_Confirm.class));
+            });
+            snackbar.getView().setBackgroundColor(Color.RED);
+            snackbar.show();
+            btnConfirmAccount.setVisibility(View.VISIBLE);
+        } else if (isConfirmed.equals("pending")) {
+            Snackbar snackbar = Snackbar.make(constUserSettings, "جاري التحقق من البطاقة", LENGTH_INDEFINITE);
+            snackbar.getView().setBackgroundColor(Color.YELLOW);
+            snackbar.show();
+        }
+
+        btnConfirmAccount.setOnClickListener(v ->{
+            finish();
+            startActivity(new Intent(this, Account_Confirm.class));
+        });
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(UserSetting.this, R.array.txtStates, R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -7,8 +7,12 @@ public class UserInFormation {
     private static String userURL;
     private static String id;
 
-    public UserInFormation() {
-    }
+    private static String uPhone;
+    private static String isConfirm;
+    private static String email;
+    private static String pass;
+
+    public UserInFormation() { }
 
     public static String getUserName() {
         return userName;
@@ -46,7 +50,22 @@ public class UserInFormation {
         return id;
     }
 
-    public static void setId(String id) {
-        UserInFormation.id = id;
-    }
+    public static void setId(String id) { UserInFormation.id = id; }
+
+    public static String getisConfirm() { return isConfirm; }
+
+    public static void setisConfirm(String isConfirm) { UserInFormation.isConfirm = isConfirm; }
+
+    public static String getPhone() { return uPhone; }
+
+    public static void setPhone(String uPhone) { UserInFormation.uPhone = uPhone; }
+
+    public static String getEmail() { return email; }
+
+    public static void setEmail(String email) { UserInFormation.email = email; }
+
+    public static String getPass() { return pass; }
+
+    public static void setPass(String pass) { UserInFormation.pass = pass; }
+
 }
