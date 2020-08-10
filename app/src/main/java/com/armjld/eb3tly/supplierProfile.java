@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+
+import com.armjld.eb3tly.ui.main.Account_Confirm;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -33,17 +36,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.util.Objects;
+
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class supplierProfile extends AppCompatActivity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP, imgStar;
+    private ImageView imgSetPP, imgStar,imgVerf;
     private TextView txtUserDate,uName,txtNotiCount,txtTotalOrders;
     private String TAG = "Supplier Profile";
     String uType = UserInFormation.getAccountType();
+    private ConstraintLayout constSupProfile;
     private String uId = UserInFormation.getId();
     String user_type;
+    private String isConfirmed = UserInFormation.getisConfirm();
 
     @Override
     public void onBackPressed() {
@@ -64,6 +71,7 @@ public class supplierProfile extends AppCompatActivity {
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        constSupProfile= findViewById(R.id.constSupProfile);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
@@ -85,10 +93,30 @@ public class supplierProfile extends AppCompatActivity {
         txtNotiCount = findViewById(R.id.txtNotiCount);
         txtTotalOrders = findViewById(R.id.txtTotalOrders);
         imgStar = findViewById(R.id.imgStar);
+        imgVerf= findViewById(R.id.imgVerf);
 
         //Title Bar
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("اوردراتي");
+
+        if(isConfirmed.equals("false")) {
+            Snackbar snackbar = Snackbar.make(constSupProfile, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
+                finish();
+                startActivity(new Intent(this, Account_Confirm.class));
+            });
+            snackbar.getView().setBackgroundColor(Color.RED);
+            snackbar.show();
+        } else if (isConfirmed.equals("pending")) {
+            Snackbar snackbar = Snackbar.make(constSupProfile, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
+            snackbar.getView().setBackgroundColor(Color.YELLOW);
+            snackbar.show();
+        } else if(isConfirmed.equals("true")) {
+            imgVerf.setVisibility(View.VISIBLE);
+        }
+
+        imgVerf.setOnClickListener(v -> {
+            Toast.makeText(this, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
+        });
 
         // NAV BAR
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);

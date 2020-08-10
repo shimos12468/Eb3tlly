@@ -285,15 +285,14 @@ public class UserSetting extends AppCompatActivity {
         btnConfirmAccount.setVisibility(View.GONE);
 
         if(isConfirmed.equals("false")) {
-            Snackbar snackbar = Snackbar.make(constUserSettings, "لم تقم بتأكيد حسابك", LENGTH_INDEFINITE).setAction("تاكير الحساب", view -> {
+            Snackbar snackbar = Snackbar.make(constUserSettings, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
                 finish();
                 startActivity(new Intent(this, Account_Confirm.class));
             });
             snackbar.getView().setBackgroundColor(Color.RED);
             snackbar.show();
-            btnConfirmAccount.setVisibility(View.VISIBLE);
         } else if (isConfirmed.equals("pending")) {
-            Snackbar snackbar = Snackbar.make(constUserSettings, "جاري التحقق من البطاقة", LENGTH_INDEFINITE);
+            Snackbar snackbar = Snackbar.make(constUserSettings, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
             snackbar.getView().setBackgroundColor(Color.YELLOW);
             snackbar.show();
         }

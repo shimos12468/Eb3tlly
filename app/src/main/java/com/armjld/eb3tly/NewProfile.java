@@ -6,6 +6,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
+
+import com.armjld.eb3tly.ui.main.Account_Confirm;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,20 +36,25 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class NewProfile extends AppCompatActivity {
 
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP,imgStar;
+    private ImageView imgSetPP,imgStar, imgVerf;
     private TextView txtUserDate;
     private TextView uName;
     private TextView txtNotiCount,txtTotalOrders;
+    private ConstraintLayout constNewProfile;
     private String TAG = "Delivery Profile";
     String uType = UserInFormation.getAccountType();
     String uId;
     String user_type;
+    String isConfirmed = UserInFormation.getisConfirm();
+
 
     public NewProfile() { }
 
@@ -70,10 +78,31 @@ public class NewProfile extends AppCompatActivity {
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        constNewProfile = findViewById(R.id.constNewProfile);
+        imgVerf = findViewById(R.id.imgVerf);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
         uId = UserInFormation.getId();
+
+        if(isConfirmed.equals("false")) {
+            Snackbar snackbar = Snackbar.make(constNewProfile, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
+                finish();
+                startActivity(new Intent(this, Account_Confirm.class));
+            });
+            snackbar.getView().setBackgroundColor(Color.RED);
+            snackbar.show();
+        } else if (isConfirmed.equals("pending")) {
+            Snackbar snackbar = Snackbar.make(constNewProfile, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
+            snackbar.getView().setBackgroundColor(Color.YELLOW);
+            snackbar.show();
+        } else if(isConfirmed.equals("true")) {
+            imgVerf.setVisibility(View.VISIBLE);
+        }
+
+        imgVerf.setOnClickListener(v -> {
+            Toast.makeText(this, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
+        });
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -89,7 +118,6 @@ public class NewProfile extends AppCompatActivity {
         imgStar = findViewById(R.id.imgStar);
         imgSetPP = findViewById(R.id.imgPPP);
         txtNotiCount = findViewById(R.id.txtNotiCount);
-
 
         //Title Bar
         TextView tbTitle = findViewById(R.id.toolbar_title);

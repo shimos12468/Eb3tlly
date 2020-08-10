@@ -137,6 +137,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String uName = Objects.requireNonNull(snapshot.getValue()).toString();
                 holder.setUsername(uName);
+
+                String isConfirm = "false";
+                if(snapshot.child("isConfirmed").exists()) {
+                    isConfirm = snapshot.child("isConfirmed").getValue().toString();
+                }
+                holder.setVerf(isConfirm);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -155,6 +161,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+
+
 
         holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
 
@@ -217,6 +225,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             TextView txtTitle = dialogMore.findViewById(R.id.txtTitle);
             final ImageView supPP = dialogMore.findViewById(R.id.supPP);
             final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
+            final ImageView imgVerf = dialogMore.findViewById(R.id.imgVerf);
             final RatingBar rbUser = dialogMore.findViewById(R.id.ddRate);
             final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
             final TextView txtNoddComments = dialogMore.findViewById(R.id.txtNoddComments);
@@ -265,6 +274,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     Log.i(TAG, "Photo URL : " + dsPP);
                     Picasso.get().load(Uri.parse(dsPP)).into(supPP);
                     dsUsername.setText(dsUser);
+
+                    // Check if account is Verfied
+                    if(snapshot.child("isConfirmed").exists()) {
+                        String isConfirmed = "false";
+                        isConfirmed = snapshot.child("isConfirmed").getValue().toString();
+                        if(isConfirmed.equals("true")) {
+                            imgVerf.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
 
                 @Override
@@ -576,7 +594,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public Button btnAccept, btnHide, btnMore, btnEdit,btnDelete,btnOpen;
         public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom,txtOrderTo,txtPostDate;
         public LinearLayout lin1,linerDate,linAdmin;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgStar;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgStar,imgVerf;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -588,6 +606,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             lin1 = myview.findViewById(R.id.lin1);
             linAdmin = myview.findViewById(R.id.linAdmin);
             imgStar = myview.findViewById(R.id.imgStar);
+            imgVerf = myview.findViewById(R.id.imgVerf);
             txtWarning = myview.findViewById(R.id.txtWarning);
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
@@ -678,5 +697,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
             txtPostDate.setText(finalDate);
         }
+
+        public void setVerf(String isConfirm) {
+            if(isConfirm.equals("true")) {
+                imgVerf.setVisibility(View.VISIBLE);
+            } else {
+                imgVerf.setVisibility(View.GONE);
+            }
+        }
+
     }
 }

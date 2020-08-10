@@ -33,9 +33,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.armjld.eb3tly.NewProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.UserInFormation;
 import com.armjld.eb3tly.UserSetting;
+import com.armjld.eb3tly.supplierProfile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -60,6 +62,7 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Account_Confirm extends AppCompatActivity {
@@ -84,6 +87,7 @@ public class Account_Confirm extends AppCompatActivity {
     int TAKE_IMAGE_CODE = 10001;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
+    private String uType = UserInFormation.getAccountType();
 
 
     private String mVerificationId;
@@ -166,11 +170,18 @@ public class Account_Confirm extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> {
             finish();
-            startActivity(new Intent(this, UserSetting.class));
+            whichProfile();
         });
 
     }
 
+    private void whichProfile () {
+        if(uType.equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
+    }
 
 
     // --------------------------------- Phone Number Functions -------------------------- //
@@ -228,14 +239,13 @@ public class Account_Confirm extends AppCompatActivity {
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         reauthenticate();
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, (OnCompleteListener<AuthResult>) task -> {
+        Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(credential).addOnCompleteListener(this, (OnCompleteListener<AuthResult>) task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "تم تفعيل رقم هاتفك", Toast.LENGTH_SHORT).show();
                 scrPhone.setVisibility(View.GONE);
                 scrSsn.setVisibility(View.VISIBLE);
                 scrFinish.setVisibility(View.GONE);
             } else {
-                Log.w(TAG, "signInWithCredential:failure", task.getException());
                 if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(this, "كود التفعيل غير صحيح", Toast.LENGTH_SHORT).show();
                 }

@@ -267,7 +267,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
         // ---------------- Set order to Recived
         holder.btnRecived.setOnClickListener(v -> {
-
             assert vibe != null;
             vibe.vibrate(20);
 
@@ -289,7 +288,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             builder2.setMessage("هل قام امندوب بالتسلام الاوردر منك ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
         });
 
-        //Comment button
+        // ------------------------------------- Comment button ---------------------------------- //
         holder.btnRate.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
@@ -378,6 +377,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             ddPhone.setPaintFlags(ddPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
             final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
             final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
+            final ImageView imgVerf = dialogMore.findViewById(R.id.imgVerf);
             final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
             final ImageView dPP = dialogMore.findViewById(R.id.dPP);
             final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
@@ -405,6 +405,16 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         Picasso.get().load(Uri.parse(sPP)).into(dPP);
                         ddUsername.setText(dUser);
                         ddPhone.setText(dPhone);
+
+                        // Check if account is Verfied
+                        if(snapshot.child("isConfirmed").exists()) {
+                            String isConfirmed = "false";
+                            isConfirmed = snapshot.child("isConfirmed").getValue().toString();
+                            if(isConfirmed.equals("true")) {
+                                imgVerf.setVisibility(View.VISIBLE);
+                            }
+                        }
+
                     }
                 }
 
@@ -544,7 +554,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate,linerAll;
         public RatingBar drStar;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgVerf;
         public ImageButton mImageButton;
         
         public MyViewHolder(@NonNull View itemView) {
@@ -574,6 +584,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             icnTrans = myview.findViewById(R.id.icnTrans);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
             mImageButton = myview.findViewById(R.id.imageButton);
+            imgVerf = myview.findViewById(R.id.imgVerf);
         }
 
         void setUsername(String DName){
@@ -747,6 +758,14 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 linerAll.setVisibility(View.GONE);
             } else {
                 linerAll.setVisibility(View.VISIBLE);
+            }
+        }
+
+        public void setVerf(String isConfirm) {
+            if(isConfirm.equals("true")) {
+                imgVerf.setVisibility(View.VISIBLE);
+            } else {
+                imgVerf.setVisibility(View.GONE);
             }
         }
     }
