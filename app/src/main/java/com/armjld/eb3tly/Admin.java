@@ -49,7 +49,7 @@ public class Admin extends Activity {
     private EditText txtChild,txtValue,txtBody;
     private TextView txtAllOrdersCount,txtAllUsersCount,txtAllDevCount,txtAllSupCount,txtAllProfit;
     Button btnResetCounter,btnAddToUsers,btnAddToOrders,btnAccepting,btnAdding,btnAdminSignOut,btnReports,btnAddToComments,btnDeleteUser;
-    Button btnMessages,btnSendNotficationDel, btnSendNotficationSup, btnReportss,btnDeleteStats;
+    Button btnMessages,btnSendNotficationDel, btnSendNotficationSup, btnReportss,btnDeleteStats,btnConfirm;
     ImageView btnRefresh,imgLogo;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<String>();
     int supCount = 0;
@@ -116,6 +116,7 @@ public class Admin extends Activity {
         txtBody = findViewById(R.id.txtBody);
         btnSendNotficationDel = findViewById(R.id.btnSendNotficationDel);
         btnSendNotficationSup = findViewById(R.id.btnSendNotficationSup);
+        btnConfirm = findViewById(R.id.btnConfirm);
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
 
 
@@ -177,6 +178,9 @@ public class Admin extends Activity {
             return true;
         });
 
+        btnConfirm.setOnClickListener(v ->{
+            startActivity(new Intent(Admin.this, Admin_Confirm.class));
+        });
         btnDeleteStats.setOnClickListener(v -> {
             startActivity(new Intent(Admin.this, Admin_Delete_Statics.class));
         });

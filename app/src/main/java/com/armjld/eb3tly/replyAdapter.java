@@ -87,7 +87,7 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        return (int) count;
+        return this.replyAdmin.size();
     }
 
     @Override

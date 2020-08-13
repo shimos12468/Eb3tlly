@@ -224,7 +224,7 @@ public class reportsAdapter extends RecyclerView.Adapter<reportsAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return (int) count;
+        return this.reportData.size();
     }
 
     @Override

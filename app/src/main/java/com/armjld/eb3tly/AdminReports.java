@@ -84,6 +84,5 @@ public class AdminReports extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 }

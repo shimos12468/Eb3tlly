@@ -50,6 +50,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private Toolbar toolbar;
     private ImageView btnNavBar, btnSort;
     private LinearLayout filtrs_btn;
+    private LinearLayout footer;
     private static ArrayList<Data> mm;
     private long count;
     // import firebase
@@ -114,6 +115,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSort = findViewById(R.id.btnSort);
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
+        footer = findViewById(R.id.footer);
         txtNoOrders.setVisibility(View.GONE);
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("جميع الاوردرات المتاحة");
@@ -230,6 +232,24 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         // ----------------- Hide the How to For Delivery
         Menu nav_menu = navigationView.getMenu();
         nav_menu.findItem(R.id.nav_how).setVisible(false);
+
+        footer.setVisibility(View.GONE);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                LinearLayoutManager layoutManager=LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisible = layoutManager.findLastVisibleItemPosition();
+
+                boolean endHasBeenReached = lastVisible + 5 >= totalItemCount;
+                if (totalItemCount > 0 && endHasBeenReached) {
+                    footer.setVisibility(View.VISIBLE);
+                } else {
+                    footer.setVisibility(View.GONE);
+                }
+            }
+        });
 
         // ------------------------ Refresh the recycler view ------------------------------- //
         mSwipeRefreshLayout.setOnRefreshListener(() -> {

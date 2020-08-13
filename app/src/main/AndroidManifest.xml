@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".ui.main.Account_Confirm"></activity>
+        <activity android:name=".Admin_Confirm"></activity>
+        <activity android:name=".Account_Confirm" />
         <activity android:name=".Admin_Delete_Statics" />
         <activity android:name=".Delete_Delivery_From_Sup" />
         <activity android:name=".Delete_Reaon_Delv" />

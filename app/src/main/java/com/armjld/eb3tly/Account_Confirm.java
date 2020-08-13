@@ -1,8 +1,7 @@
-package com.armjld.eb3tly.ui.main;
+package com.armjld.eb3tly;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -33,13 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.armjld.eb3tly.NewProfile;
-import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.UserInFormation;
-import com.armjld.eb3tly.UserSetting;
-import com.armjld.eb3tly.supplierProfile;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
@@ -445,6 +438,7 @@ public class Account_Confirm extends AppCompatActivity {
 
     private void getDownUrl(StorageReference reference) {
         reference.getDownloadUrl().addOnSuccessListener(uri -> {
+
             confirmDatabase.child(uId).child("ssnURL").setValue(uri.toString());
             confirmDatabase.child(uId).child("isConfirmed").setValue("pending");
             confirmDatabase.child(uId).child("id").setValue(uId);

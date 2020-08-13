@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="تغيير البيانات الشخصيه" />
+            android:title="تغيير البيانات الشخصية" />
         <item
             android:id="@+id/nav_changepass"
             android:icon="@drawable/ic_pass"
@@ -45,5 +45,5 @@
             android:icon="@drawable/ic_close"
             android:title="الخروج من التطبيق" />
 
-\    </group>
+ </group>
 </menu>
