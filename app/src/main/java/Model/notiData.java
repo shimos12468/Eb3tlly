@@ -2,7 +2,7 @@ package Model;
 
 public class notiData {
 
-    String from, to, orderid, statue,datee,isRead;
+    String from, to, orderid, statue,datee,isRead,action;
     public notiData () {};
 
     public String getFrom() {
@@ -53,12 +53,17 @@ public class notiData {
         this.isRead = isRead;
     }
 
-    public notiData(String from, String to, String orderid, String statue, String datee, String isRead) {
+    public String getAction() { return action; }
+
+    public void setAction(String action) { this.action = action; }
+
+    public notiData(String from, String to, String orderid, String statue, String datee, String isRead, String action) {
         this.from = from;
         this.orderid = orderid;
         this.statue = statue;
         this.to = to;
         this.datee = datee;
         this.isRead = isRead.toString();
+        this.action = action;
     }
 }

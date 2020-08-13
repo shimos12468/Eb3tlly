@@ -197,7 +197,7 @@ public class Admin extends Activity {
                                         if(ds.exists() && ds.child("id").exists()) {
                                                 String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                                 if(Objects.requireNonNull(ds.child("accountType").getValue()).toString().equals("Delivery Worker")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee2, "false");
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee2, "false", "nothing");
                                                 nDatabase.child(userID).push().setValue(Noti);
                                             }
                                         }
@@ -235,7 +235,7 @@ public class Admin extends Activity {
                                         if(ds.exists() && ds.child("id").exists()) {
                                             String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                             if(Objects.requireNonNull(ds.child("accountType").getValue()).toString().equals("Supplier")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee2, "false");
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID, "-MAPQWoKEfmHIQG9xv-v", theMsg, datee2, "false","nothing");
                                                 nDatabase.child(userID).push().setValue(Noti);
                                             }
                                         }
@@ -539,7 +539,7 @@ public class Admin extends Activity {
                                             String userID = Objects.requireNonNull(ds.child("id").getValue()).toString();
                                             uDatabase.child(userID).child("canceled").setValue("0");
 
-                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID,"-MAPQWoKEfmHIQG9xv-v","لديك الان 3 فرص لالغاْ الاوردرات هذا الاسبوع",datee,"false");
+                                            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", userID,"-MAPQWoKEfmHIQG9xv-v","لديك الان 3 فرص لالغاْ الاوردرات هذا الاسبوع",datee,"false","nothing");
                                             nDatabase.child(userID).push().setValue(Noti);
 
                                             vibe.vibrate(40);

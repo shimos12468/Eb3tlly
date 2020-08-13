@@ -647,7 +647,7 @@ public class EditOrders extends AppCompatActivity {
 
                                 if(!uAccepted.equals("")) {
                                     // --------------------------- Send Notifications ---------------------//
-                                    notiData Noti = new notiData(uID, uAccepted,orderID,"edited",datee,"false");
+                                    notiData Noti = new notiData(uID, uAccepted,orderID,"edited",datee,"false", "order");
                                     nDatabase.child(uAccepted).push().setValue(Noti);
                                 }
                                 mdialog.dismiss();

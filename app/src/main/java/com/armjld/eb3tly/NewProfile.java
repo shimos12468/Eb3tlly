@@ -186,12 +186,7 @@ public class NewProfile extends AppCompatActivity {
                 startActivity(new Intent(NewProfile.this, About.class));
             }
             if (id == R.id.nav_signout) {
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    mAuth.signOut();
-                }
-                finish();
-                startActivity(new Intent(NewProfile.this, MainActivity.class));
-                Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
+                signOut();
             }
             if (id==R.id.nav_exit){
                 finishAffinity();
@@ -312,5 +307,13 @@ public class NewProfile extends AppCompatActivity {
         } else {
             startActivity(new Intent(getApplicationContext(), NewProfile.class));
         }
+    }
+
+    private void signOut() {
+        uDatabase.child(uId).child("device_token").setValue("");
+        finish();
+        mAuth.signOut();
+        startActivity(new Intent(this, MainActivity.class));
+        Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }
 }

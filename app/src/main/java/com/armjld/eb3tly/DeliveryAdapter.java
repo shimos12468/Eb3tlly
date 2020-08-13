@@ -260,7 +260,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             });
 
             // --------------------------- Send Notifications ---------------------//
-            notiData Noti = new notiData(uId, SID,orderID,"delivered",datee,"false");
+            notiData Noti = new notiData(uId, SID,orderID,"delivered",datee,"false","profile");
             nDatabase.child(SID).push().setValue(Noti);
             Toast.makeText(context, "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
             vibe.vibrate(20);

@@ -503,7 +503,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
 
                                                         // -------------------------- Send Notifications ---------------------//
-                                                        notiData Noti = new notiData(uId, owner, orderID,"accepted",datee,"false");
+                                                        notiData Noti = new notiData(uId, owner, orderID,"accepted",datee,"false", "profile");
                                                         nDatabase.child(owner).push().setValue(Noti);
 
                                                         Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();

@@ -436,7 +436,7 @@ public class Signup extends AppCompatActivity {
 
                 // ------------- Welcome message in Notfications----------------------//
 
-                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false");
+                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false", "nothing");
                 nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
 
                 UserInFormation.setAccountType(accountType);
@@ -505,5 +505,11 @@ public class Signup extends AppCompatActivity {
         if(mAuth.getCurrentUser() != null) {
             mAuth.signOut();
         }
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

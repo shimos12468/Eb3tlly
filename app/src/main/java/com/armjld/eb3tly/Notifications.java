@@ -33,7 +33,7 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class Notifications extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private DatabaseReference nDatabase;
+    private DatabaseReference nDatabase,uDatabase;
     private FirebaseAuth mAuth;
     private static ArrayList<notiData> mm;
     private long count;
@@ -65,6 +65,11 @@ public class Notifications extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        uDatabase = getInstance().getReference().child("Pickly").child("users");
+
+        uDatabase.keepSynced(true);
+        nDatabase.keepSynced(true);
+
         ImageView btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         refresh = findViewById(R.id.refresh);
@@ -135,9 +140,7 @@ public class Notifications extends AppCompatActivity {
                 startActivity(new Intent(Notifications.this, About.class));
             }
             if (id==R.id.nav_signout){
-                finish();
-                startActivity(new Intent(Notifications.this, MainActivity.class));
-                mAuth.signOut();
+                signOut();
             }
             if (id==R.id.nav_exit){
                 finishAffinity();
@@ -206,5 +209,13 @@ public class Notifications extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+    }
+
+    private void signOut() {
+        uDatabase.child(uId).child("device_token").setValue("");
+        finish();
+        mAuth.signOut();
+        startActivity(new Intent(this, MainActivity.class));
+        Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }
 }

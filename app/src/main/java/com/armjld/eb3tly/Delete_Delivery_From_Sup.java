@@ -97,7 +97,7 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
 
                         // --------------------------- Send Notifications ---------------------//
-                        notiData Noti = new notiData(owner, acceptedID, orderID,"deleted",datee,"false");
+                        notiData Noti = new notiData(owner, acceptedID, orderID,"deleted",datee,"false", "profile");
                         assert acceptedID != null;
                         nDatabase.child(acceptedID).push().setValue(Noti);
 

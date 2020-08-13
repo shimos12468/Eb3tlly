@@ -199,7 +199,7 @@ public class reportsAdapter extends RecyclerView.Adapter<reportsAdapter.MyViewHo
         });
 
         holder.btnReply.setOnClickListener(v -> {
-            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",whoID, "-MAPQWoKEfmHIQG9xv-v", holder.txtReply.getText().toString(), datee, "false");
+            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",whoID, "-MAPQWoKEfmHIQG9xv-v", holder.txtReply.getText().toString(), datee, "false", "contact");
             nDatabase.child(whoID).push().setValue(Noti);
             Toast.makeText(context, "Reply Send Successful", Toast.LENGTH_SHORT).show();
         });

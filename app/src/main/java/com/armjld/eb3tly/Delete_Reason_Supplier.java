@@ -99,7 +99,7 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
                         startActivity(new Intent(Delete_Reason_Supplier.this, supplierProfile.class));
 
                         if(acceptID != "") {
-                            notiData Noti = new notiData(uId, acceptID, orderID,"deleted",datee,"false");
+                            notiData Noti = new notiData(uId, acceptID, orderID,"deleted",datee,"false", "profile");
                             nDatabase.child(acceptID).push().setValue(Noti);
                         }
                         break;

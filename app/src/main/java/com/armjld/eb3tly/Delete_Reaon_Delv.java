@@ -144,7 +144,7 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                                 mDatabase.child(orderID).child("acceptTime").setValue("");
 
                                 // --------------------------- Send Notifications ---------------------//
-                                notiData Noti = new notiData(uId, owner, orderID,"deleted",datee,"false");
+                                notiData Noti = new notiData(uId, owner, orderID,"deleted",datee,"false", "profile");
                                 nDatabase.child(owner).push().setValue(Noti);
                                 startActivity(new Intent(Delete_Reaon_Delv.this, NewProfile.class));
                             }

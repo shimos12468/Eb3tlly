@@ -689,7 +689,7 @@ public class AddOrders extends AppCompatActivity {
                                             }
 
                                             if(sendOrderNoti.equals("true")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false", "order");
                                                 nDatabase.child(usId).push().setValue(Noti);
                                             }
                                         }
@@ -716,7 +716,7 @@ public class AddOrders extends AppCompatActivity {
                                             }
 
                                             if(sendOrderNoti.equals("true")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order");
                                                 nDatabase.child(usId).push().setValue(Noti);
                                             }
                                         }
@@ -873,7 +873,7 @@ public class AddOrders extends AppCompatActivity {
                                                 }
 
                                                 if(sendOrderNoti.equals("true")) {
-                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order");
                                                     nDatabase.child(usId).push().setValue(Noti);
                                                 }
                                             }
@@ -900,7 +900,7 @@ public class AddOrders extends AppCompatActivity {
                                                 }
 
                                                 if(sendOrderNoti.equals("true")) {
-                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false");
+                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false", "order");
                                                     nDatabase.child(usId).push().setValue(Noti);
                                                 }
                                             }

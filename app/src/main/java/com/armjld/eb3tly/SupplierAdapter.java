@@ -222,7 +222,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     mDatabase.child(orderID).child("dilverTime").setValue(datee);
 
                                     // ------------ Send Notification
-                                    notiData Noti = new notiData(uId,data.getuAccepted(), orderID,"لا تنسي ان تضغط علي زر تم التسليم عند تسليم الاوردر",datee,"false");
+                                    notiData Noti = new notiData(uId,data.getuAccepted(), orderID,"لا تنسي ان تضغط علي زر تم التسليم عند تسليم الاوردر",datee,"false", "nothing");
                                     nDatabase.child(data.getuAccepted()).push().setValue(Noti);
 
                                     // Add the Profit of the Dilvery Worker
@@ -275,7 +275,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                     case DialogInterface.BUTTON_POSITIVE:
                         mDatabase.child(orderID).child("statue").setValue("recived");
 
-                        notiData Noti = new notiData(uId,data.getuAccepted() , orderID,"recived",datee,"false");
+                        notiData Noti = new notiData(uId,data.getuAccepted() , orderID,"recived",datee,"false", "profile");
                         nDatabase.child(data.getuAccepted()).push().setValue(Noti);
 
                         Toast.makeText(context, "تم تسليم الاوردر للمندوب", Toast.LENGTH_SHORT).show();

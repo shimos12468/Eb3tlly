@@ -54,7 +54,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private long count;
     // import firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase, uDatabase;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView txtNoOrders;
     private String TAG = "Home Activity";
@@ -126,8 +126,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Database
         mAuth= FirebaseAuth.getInstance();
+        uDatabase  = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         mDatabase.keepSynced(true);
+        uDatabase.keepSynced(true);
 
         //Recycler
         recyclerView=findViewById(R.id.recycler);
@@ -201,9 +203,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(new Intent(getApplicationContext(), HowTo.class));
             }
             if (id==R.id.nav_signout){
-                finish();
-                startActivity(new Intent(HomeActivity.this, MainActivity.class));
-                mAuth.signOut();
+                signOut();
             }
             if (id==R.id.nav_about){
                 startActivity(new Intent(HomeActivity.this, About.class));
@@ -411,5 +411,13 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         } else {
             startActivity(new Intent(getApplicationContext(), NewProfile.class));
         }
+    }
+
+    private void signOut() {
+        uDatabase.child(uId).child("device_token").setValue("");
+        finish();
+        mAuth.signOut();
+        startActivity(new Intent(this, MainActivity.class));
+        Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }
 }
