@@ -152,8 +152,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int ordersCount = 0;
-                if (snapshot.exists()) {
-                    ordersCount = (int) snapshot.getChildrenCount();
+                if(snapshot.exists()) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        if(!Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("deleted")) { ordersCount++; }
+                    }
                 }
                 holder.isTop(ordersCount);
             }

@@ -126,7 +126,7 @@ public class confirm_adapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adap
             confirmDatabase.child(id).child("isConfirmed").setValue("true");
 
 
-            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",id, "-MAPQWoKEfmHIQG9xv-v", "شكرا لك, تم تأكيد حسابك بصورة البطاقة و رقم الهاتفز", datee, "false", "profile");
+            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",id, "-MAPQWoKEfmHIQG9xv-v", "شكرا لك, تم تأكيد حسابك بصورة البطاقة و رقم الهاتف", datee, "false", "profile");
             nDatabase.child(id).push().setValue(Noti);
 
             Toast.makeText(context, "Activated Successfully", Toast.LENGTH_SHORT).show();

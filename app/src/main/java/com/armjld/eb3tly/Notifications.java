@@ -157,6 +157,7 @@ public class Notifications extends AppCompatActivity {
             refresh.setRefreshing(false);
         });
 
+        refresh.setRefreshing(true);
         getNoti();
 
         Menu nav_menu = navigationView.getMenu();
@@ -204,6 +205,7 @@ public class Notifications extends AppCompatActivity {
                     txtNoOrders.setVisibility(View.VISIBLE);
                     Log.i(TAG, "No Notifications for this user");
                 }
+                refresh.setRefreshing(false);
                 count = 0;
             }
             @Override

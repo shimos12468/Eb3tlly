@@ -8,8 +8,10 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +38,7 @@ public class ReplyByAdmin extends AppCompatActivity {
     Button btnToDel,btnToSupplier,btnResetUser,btnDeactive,btnInfo;
     EditText txtUserNumber;
     ProgressDialog mdialog;
+    Vibrator vibe;
 
     public void onBackPressed() {
         Intent i = new Intent(this, Admin.class);
@@ -61,6 +64,9 @@ public class ReplyByAdmin extends AppCompatActivity {
         btnResetUser = findViewById(R.id.btnResetUser);
         btnDeactive = findViewById(R.id.btnDeactive);
         btnInfo = findViewById(R.id.btnInfo);
+
+        vibe = (Vibrator) Objects.requireNonNull((ReplyByAdmin)this).getSystemService(Context.VIBRATOR_SERVICE);
+
 
         count = 0;
         mm = new ArrayList<>();
@@ -221,6 +227,7 @@ public class ReplyByAdmin extends AppCompatActivity {
         cDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int done = 0;
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     for (DataSnapshot snap : ds.getChildren()) {
                         if(Objects.requireNonNull(snap.child("statue").getValue()).toString().equals("opened")) {
@@ -229,9 +236,16 @@ public class ReplyByAdmin extends AppCompatActivity {
                             count++;
                             replyAdapter rep = new replyAdapter(ReplyByAdmin.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(rep);
+                            Toast.makeText(ReplyByAdmin.this, "Messages Loaded", Toast.LENGTH_LONG).show();
                             mdialog.dismiss();
-                            Toast.makeText(ReplyByAdmin.this, "Messages Loaded", Toast.LENGTH_SHORT).show();
+
                         }
+
+                        if(count == 0) {
+                            Toast.makeText(ReplyByAdmin.this, "No Messages", Toast.LENGTH_LONG).show();
+                            mdialog.dismiss();
+                        }
+
                     }
                 }
             }

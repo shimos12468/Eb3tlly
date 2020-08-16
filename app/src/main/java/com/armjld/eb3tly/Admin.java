@@ -313,6 +313,36 @@ public class Admin extends Activity {
 
         // ------------------------- Delete Non Completed ---------------------------//
         btnDeleteUser.setOnClickListener(v -> {
+            mDatabase.orderByChild("ddate").limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Log.i(TAG, ds.getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+            /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        mdialog.setMessage("fdsds");
+                        mdialog.show();
+                        if(!ds.child("ddate").exists()) {
+                            Toast.makeText(Admin.this, "Sad", Toast.LENGTH_SHORT).show();
+                        }
+                        mdialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });*/
             /*reportDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -399,19 +429,19 @@ public class Admin extends Activity {
                 }
             });*/
 
-            /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int fuckedUp = 0;
                     if(snapshot.exists()) {
                         for(DataSnapshot ds : snapshot.getChildren()) {
-                            if(Objects.requireNonNull(ds.child("ddate").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("gmoney").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("gget").getValue()).toString().contains("(^\\h*)|(\\h*$)") || Objects.requireNonNull(ds.child("dphone").getValue()).toString().contains("(^\\h*)|(\\h*$)")) {
+                            if(!ds.child("ddate").exists()) {
                                 fuckedUp ++;
                                 ds.getRef().removeValue();
                             }
                         }
                     }
-                    //Toast.makeText(Admin.this, "Just deleted " + fuckedUp + " Gletches", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Admin.this, "Just deleted " + fuckedUp + " Gletches", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -419,8 +449,9 @@ public class Admin extends Activity {
 
                 }
             });
-            */
 
+
+            /*
             mdialog.setMessage("deleting glitches ..");
             mDatabase.orderByChild("statue").equalTo("recived").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -470,7 +501,7 @@ public class Admin extends Activity {
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            });
+            });*/
 
            /* uDatabase.orderByChild("accountType").equalTo("Supplier").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

@@ -674,59 +674,7 @@ public class AddOrders extends AppCompatActivity {
                         editor.putString("Address", mPAddress);
                         editor.apply();
 
-                        // --------------------- Send notification to all users in State ---------------//
-                        uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    for(DataSnapshot ds : snapshot.getChildren()) {
-                                        String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                                        String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
-                                        if(accType.equals("Delivery Worker")) {
-                                            String sendOrderNoti = "true";
-                                            if(ds.child("sendOrderNoti").exists()) {
-                                                sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
-                                            }
-
-                                            if(sendOrderNoti.equals("true")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false", "order");
-                                                nDatabase.child(usId).push().setValue(Noti);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) { }
-                        });
-
-                        uDatabase.orderByChild("userState").equalTo(pState12).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    for(DataSnapshot ds : snapshot.getChildren()) {
-                                        String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                                        String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
-
-                                        if(accType.equals("Delivery Worker")) {
-                                            String sendOrderNoti = "true";
-                                            if(ds.child("sendOrderNoti").exists()) {
-                                                sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
-                                            }
-
-                                            if(sendOrderNoti.equals("true")) {
-                                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order");
-                                                nDatabase.child(usId).push().setValue(Noti);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) { }
-                        });
+                        sendNotiState(pState12, dState, id);
 
                         mdialog.dismiss();
                         Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
@@ -858,59 +806,7 @@ public class AddOrders extends AppCompatActivity {
                             mDatabase.child(id).setValue(data);
                             mDatabase.child(id).child("lastedit").setValue(datee);
 
-                            // --------------------- Send notification to all users in State ---------------//
-                            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
-                                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
-                                            if(accType.equals("Delivery Worker")) {
-                                                String sendOrderNoti = "true";
-                                                if(ds.child("sendOrderNoti").exists()) {
-                                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
-                                                }
-
-                                                if(sendOrderNoti.equals("true")) {
-                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order");
-                                                    nDatabase.child(usId).push().setValue(Noti);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) { }
-                            });
-
-                            uDatabase.orderByChild("userState").equalTo(pState1).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
-                                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
-
-                                            if(accType.equals("Delivery Worker")) {
-                                                String sendOrderNoti = "true";
-                                                if(ds.child("sendOrderNoti").exists()) {
-                                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
-                                                }
-
-                                                if(sendOrderNoti.equals("true")) {
-                                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false", "order");
-                                                    nDatabase.child(usId).push().setValue(Noti);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) { }
-                            });
+                            sendNotiState(pState1, dState, id);
 
                             clearText();
                             mdialog.dismiss();
@@ -996,5 +892,89 @@ public class AddOrders extends AppCompatActivity {
             }
         }
     return factor;
+    }
+
+    private void sendNotiState(String pState, String dState, String id) {
+        if(!pState.equals(dState)) {
+            // --------------------- Send notification to all users in State ---------------//
+            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for(DataSnapshot ds : snapshot.getChildren()) {
+                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                            if(accType.equals("Delivery Worker")) {
+                                String sendOrderNoti = "true";
+                                if(ds.child("sendOrderNoti").exists()) {
+                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                                }
+
+                                if(sendOrderNoti.equals("true")) {
+                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order");
+                                    nDatabase.child(usId).push().setValue(Noti);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+
+            uDatabase.orderByChild("userState").equalTo(pState).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for(DataSnapshot ds : snapshot.getChildren()) {
+                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+
+                            if(accType.equals("Delivery Worker")) {
+                                String sendOrderNoti = "true";
+                                if(ds.child("sendOrderNoti").exists()) {
+                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                                }
+
+                                if(sendOrderNoti.equals("true")) {
+                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false", "order");
+                                    nDatabase.child(usId).push().setValue(Noti);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        } else {
+            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for(DataSnapshot ds : snapshot.getChildren()) {
+                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                            if(accType.equals("Delivery Worker")) {
+                                String sendOrderNoti = "true";
+                                if(ds.child("sendOrderNoti").exists()) {
+                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                                }
+
+                                if(sendOrderNoti.equals("true")) {
+                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order");
+                                    nDatabase.child(usId).push().setValue(Noti);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        }
     }
 }

@@ -235,22 +235,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         footer.setVisibility(View.GONE);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                LinearLayoutManager layoutManager=LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
-                int totalItemCount = layoutManager.getItemCount();
-                int lastVisible = layoutManager.findLastVisibleItemPosition();
-
-                boolean endHasBeenReached = lastVisible + 5 >= totalItemCount;
-                if (totalItemCount > 0 && endHasBeenReached) {
-                    footer.setVisibility(View.VISIBLE);
-                } else {
-                    footer.setVisibility(View.GONE);
-                }
-            }
-        });
-
         // ------------------------ Refresh the recycler view ------------------------------- //
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             tbTitle.setText("جميع الاوردرات المتاحة");
@@ -321,6 +305,32 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    private void checkForAdvice() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                int totalItemCount = layoutManager.getItemCount();
+
+                int lastVisible = layoutManager.findLastVisibleItemPosition();
+                int firstVisible = layoutManager.findFirstVisibleItemPosition();
+                boolean endHasBeenReached;
+                if(!sortDate) {
+                    endHasBeenReached = firstVisible >= totalItemCount;
+                } else {
+                    endHasBeenReached = lastVisible + 2 >= totalItemCount;
+                }
+
+                if (totalItemCount > 0 && endHasBeenReached) {
+                    footer.setVisibility(View.VISIBLE);
+                } else {
+                    footer.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
     private void getOrdersByDate() {
         LinearLayoutManager layoutManager= new LinearLayoutManager(this);
         layoutManager.setReverseLayout(false);
@@ -351,6 +361,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             }
                             orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(orderAdapter);
+                            checkForAdvice();
                             updateNone(mm.size());
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
@@ -368,7 +379,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.orderByChild("datee").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -394,6 +405,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(orderAdapter);
                             updateNone(mm.size());
+                            checkForAdvice();
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }

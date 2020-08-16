@@ -71,7 +71,7 @@ public class Account_Confirm extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase, confirmDatabase;
     private EditText txtCode;
-    private TextView txtPhone;
+    private TextView txtPhone,txtDone;
     private Button btnNext,btnAddSSN,btnFinish,btnBack;
     private ScrollView scrPhone,scrSsn,scrFinish;
     private boolean mVerificationInProgress = false;
@@ -108,6 +108,7 @@ public class Account_Confirm extends AppCompatActivity {
         btnAddSSN = findViewById(R.id.btnAddSSN);
         btnFinish = findViewById(R.id.btnFinish);
         txtPhone = findViewById(R.id.txtPhone);
+        txtDone = findViewById(R.id.txtDone);
 
         scrSsn = findViewById(R.id.scrSsn);
         scrPhone = findViewById(R.id.scrPhone);
@@ -123,8 +124,19 @@ public class Account_Confirm extends AppCompatActivity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تفعيل الحساب");
 
+        btnNext.setEnabled(false);
+        btnNext.setClickable(false);
+        btnNext.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_bad));
+
         mCallBack();
-        sendCode(uPhone);
+        if(uPhone != null) {
+            mdialog.setMessage("جاري ارسال رمز التاكيد الي رقمك ..");
+            mdialog.show();
+            sendCode(uPhone);
+        } else {
+            startActivity(new Intent(this, StartUp.class));
+        }
+
 
         btnNext.setOnClickListener(v -> {
             String code = txtCode.getText().toString();
@@ -137,7 +149,8 @@ public class Account_Confirm extends AppCompatActivity {
                 txtCode.setError("ادخل كود صحيح");
                 return;
             }
-
+            mdialog.setMessage("جاري التأكد من الكود ..");
+            mdialog.show();
             verifyPhoneNumberWithCode(mVerificationId, code);
         });
 
@@ -201,8 +214,12 @@ public class Account_Confirm extends AppCompatActivity {
 
             @Override
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                Log.d(TAG, "onCodeSent:" + verificationId);
+                Toast.makeText(Account_Confirm.this, "تم ارسال الرمز", Toast.LENGTH_SHORT).show();
+                mdialog.dismiss();
                 mVerificationId = verificationId;
+                btnNext.setEnabled(true);
+                btnNext.setClickable(true);
+                btnNext.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_defult));
                 mResendToken = token;
             }
         };
@@ -234,6 +251,7 @@ public class Account_Confirm extends AppCompatActivity {
         reauthenticate();
         Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(credential).addOnCompleteListener(this, (OnCompleteListener<AuthResult>) task -> {
             if (task.isSuccessful()) {
+                mdialog.dismiss();
                 Toast.makeText(this, "تم تفعيل رقم هاتفك", Toast.LENGTH_SHORT).show();
                 scrPhone.setVisibility(View.GONE);
                 scrSsn.setVisibility(View.VISIBLE);
@@ -242,13 +260,13 @@ public class Account_Confirm extends AppCompatActivity {
                 if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(this, "كود التفعيل غير صحيح", Toast.LENGTH_SHORT).show();
                 }
+                mdialog.dismiss();
             }
         });
     }
 
 
     // -------------------------- SSN Code Functions -------------------------------- //
-
     private Bitmap resizeBitmap(Bitmap source, int maxLength) {
         try {
             if (source.getHeight() >= source.getWidth()) {
@@ -460,8 +478,18 @@ public class Account_Confirm extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(bitmap == null) {
+            btnFinish.setEnabled(false);
+            btnFinish.setClickable(false);
+            btnFinish.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_bad));
+            btnAddSSN.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_defult));
+            txtDone.setVisibility(View.GONE);
             btnAddSSN.setText("اضف صورة البطاقة الشخصية");
         } else {
+            btnFinish.setEnabled(true);
+            btnFinish.setClickable(true);
+            btnFinish.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_defult));
+            btnAddSSN.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_bad));
+            txtDone.setVisibility(View.VISIBLE);
             btnAddSSN.setText("تغيير الصورة");
         }
     }
