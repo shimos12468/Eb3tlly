@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+
+import Model.Data;
 import Model.notiData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
@@ -49,6 +53,8 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     private String TAG = "Notification Adapter";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     String datee = sdf.format(new Date());
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
 
     public NotiAdaptere(Context context, ArrayList<notiData> notiData, Context context1, long count) {
         this.count = count;
@@ -110,20 +116,19 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             if(UserInFormation.getAccountType().equals("Supplier")) {
                 switch (Statue) {
                     case "deleted": {
-                        // ------- go to the order
                         context.startActivity(new Intent(context, supplierProfile.class));
                         break;
                     }
                     case "delivered": {
-                        // ---- go to delivered fragment of supplier profile
+                        context.startActivity(new Intent(context, supplierProfile.class));
                         break;
                     }
                     case "accepted": {
-                        // ---- go to accepted fragment of supplier profile
+                        context.startActivity(new Intent(context, supplierProfile.class));
                         break;
                     }
                     case "welcome": {
-                        context.startActivity(new Intent(context, supplierProfile.class));
+                        context.startActivity(new Intent(context, AddOrders.class));
                         break;
                     }
                     case "متنساش تعمل لايك لصفحتنا علي الفيس بوك": {
@@ -146,15 +151,15 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             } else {
                 switch (Statue) {
                     case "edited": {
-                        // ------------- go to accepted fragment
+                        context.startActivity(new Intent(context, NewProfile.class));
                         break;
                     }
                     case "deleted": {
-                        // ------------- do nothing
+                        context.startActivity(new Intent(context, NewProfile.class));
                         break;
                     }
                     case "recived": {
-                        // ------------- go to recived fragment
+                        context.startActivity(new Intent(context, NewProfile.class));
                         break;
                     }
                     case "welcome": {
@@ -166,11 +171,35 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                         mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String statue = snapshot.child("statue").getValue().toString();
-                                if(!statue.equals("placed")) {
-                                    Toast.makeText(context, "نعتذر, لقد تم قبول الاوردر بالفعل من مندوب اخر", Toast.LENGTH_SHORT).show();
+                                if((int) snapshot.getChildrenCount() > 1) {
+                                    Data orderData = snapshot.getValue(Data.class);
+                                    assert orderData != null;
+                                    Log.i(TAG, orderData.getId() + " : " +orderData.getDDate());
+                                    if(!orderData.getStatue().equals("placed")) {
+                                        Toast.makeText(context, "نعتذر, لقد تم قبول الاوردر بالفعل من مندوب اخر", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Date orderDate = null;
+                                        Date myDate = null;
+                                        try {
+                                            orderDate = format.parse(orderData.getDDate());
+                                            myDate =  format.parse(format.format(Calendar.getInstance().getTime()));
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        assert orderDate != null;
+                                        assert myDate != null;
+                                        if(orderDate.compareTo(myDate) >= 0) {
+                                            Log.i(TAG, orderData.getId());
+                                            Intent OneOrder = new Intent(context, OneOrder.class);
+                                            OneOrder.putExtra("oID", orderData.getId().toString());
+                                            context.startActivity(OneOrder);
+                                        } else {
+                                            Toast.makeText(context, "معاد تسليم الاوردر قد فات", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
                                 } else {
-                                    context.startActivity(new Intent(context, HomeActivity.class));
+                                    Toast.makeText(context, "تم حذف هذا الاوردر", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -180,7 +209,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                         break;
                     }
 
-                    case "متنساش تعمل لايك لصفحتنا علي الفيس بوك": {
+                    case "متنساش تعمل لايك لصفحتنا علي الفيس بوك" : {
                         String fbLink = "https://www.facebook.com/Eb3tlyy/";
                         Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(fbLink));
                         context.startActivity(browse);

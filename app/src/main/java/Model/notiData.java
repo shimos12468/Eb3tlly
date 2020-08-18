@@ -63,7 +63,7 @@ public class notiData {
         this.statue = statue;
         this.to = to;
         this.datee = datee;
-        this.isRead = isRead.toString();
+        this.isRead = isRead;
         this.action = action;
     }
 }

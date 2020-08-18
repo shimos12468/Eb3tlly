@@ -336,6 +336,10 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             vibe.vibrate(20);
         });
 
+        holder.imgVerf.setOnClickListener(v -> {
+            Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
+        });
+
         holder.icnMetro.setOnClickListener(v -> {
             assert vibe != null;
             Toast.makeText(context, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show();
@@ -506,7 +510,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         public Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate, linerAll;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans, imgStar;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans, imgStar,imgVerf;
         public ImageButton mImageButton;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -521,6 +525,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtRate = myview.findViewById(R.id.drComment);
             txtGetStat = myview.findViewById(R.id.txtStatue);
             linerAll = myview.findViewById(R.id.linerAll);
+            imgVerf = myview.findViewById(R.id.imgVerf);
 
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
@@ -544,6 +549,11 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
                         txtUsername.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
+                        String isConfirm = "false";
+                        if(dataSnapshot.child("isConfirmed").exists()) {
+                            isConfirm = dataSnapshot.child("isConfirmed").getValue().toString();
+                        }
+                        setVerf(isConfirm);
                     }
                 }
                 @Override
@@ -661,6 +671,15 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 icnTrans.setVisibility(View.GONE);
             }
         }
+
+        public void setVerf(String isConfirm) {
+            if(isConfirm.equals("true")) {
+                imgVerf.setVisibility(View.VISIBLE);
+            } else {
+                imgVerf.setVisibility(View.GONE);
+            }
+        }
+
         public void setPostDate(int dS, int dM, int dH, int dD) {
             String finalDate = "";
             if (dS < 60) {

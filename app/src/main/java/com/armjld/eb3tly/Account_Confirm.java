@@ -44,6 +44,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -113,14 +114,8 @@ public class Account_Confirm extends AppCompatActivity {
         scrSsn = findViewById(R.id.scrSsn);
         scrPhone = findViewById(R.id.scrPhone);
         scrFinish = findViewById(R.id.scrFinish);
-
-        scrPhone.setVisibility(View.VISIBLE);
-        scrSsn.setVisibility(View.GONE);
-        scrFinish.setVisibility(View.GONE);
-        txtPhone.setText("+2" + uPhone);
-
         mdialog = new ProgressDialog(this);
-
+        txtPhone.setText("+2" + uPhone);
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تفعيل الحساب");
 
@@ -128,15 +123,25 @@ public class Account_Confirm extends AppCompatActivity {
         btnNext.setClickable(false);
         btnNext.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_bad));
 
-        mCallBack();
-        if(uPhone != null) {
-            mdialog.setMessage("جاري ارسال رمز التاكيد الي رقمك ..");
-            mdialog.show();
-            sendCode(uPhone);
-        } else {
-            startActivity(new Intent(this, StartUp.class));
-        }
 
+        if(!checkPhone()) {
+            scrPhone.setVisibility(View.GONE);
+            scrFinish.setVisibility(View.GONE);
+            scrSsn.setVisibility(View.VISIBLE);
+        } else {
+            scrPhone.setVisibility(View.VISIBLE);
+            scrFinish.setVisibility(View.GONE);
+            scrSsn.setVisibility(View.GONE);
+
+            mCallBack();
+            if(uPhone != null) {
+                mdialog.setMessage("جاري ارسال رمز التاكيد الي رقمك ..");
+                mdialog.show();
+                sendCode(uPhone);
+            } else {
+                startActivity(new Intent(this, StartUp.class));
+            }
+        }
 
         btnNext.setOnClickListener(v -> {
             String code = txtCode.getText().toString();
@@ -196,15 +201,19 @@ public class Account_Confirm extends AppCompatActivity {
 
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
-                Log.d(TAG, "onVerificationCompleted:" + credential);
+                btnNext.setEnabled(true);
+                btnNext.setClickable(true);
+                btnNext.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_defult));
                 mVerificationInProgress = false;
                 signInWithPhoneAuthCredential(credential);
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Log.w(TAG, "onVerificationFailed", e);
                 mVerificationInProgress = false;
+                btnNext.setEnabled(true);
+                btnNext.setClickable(true);
+                btnNext.setBackground(ContextCompat.getDrawable(Account_Confirm.this, R.drawable.btn_defult));
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(Account_Confirm.this, "رقم هاتف غير صحيح", Toast.LENGTH_SHORT).show();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
@@ -235,6 +244,7 @@ public class Account_Confirm extends AppCompatActivity {
     }
 
     private void verifyPhoneNumberWithCode(String verificationId, String code) {
+        mdialog.setMessage("جاري التاكد من الكود ..");
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithPhoneAuthCredential(credential);
     }
@@ -260,6 +270,7 @@ public class Account_Confirm extends AppCompatActivity {
                 if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(this, "كود التفعيل غير صحيح", Toast.LENGTH_SHORT).show();
                 }
+
                 mdialog.dismiss();
             }
         });
@@ -474,6 +485,15 @@ public class Account_Confirm extends AppCompatActivity {
         });
     }
 
+    private boolean checkPhone () {
+        boolean check = true;
+        for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if(user.getProviderId().equals("phone")) {
+                check = false;
+            }
+        }
+        return check;
+    }
     @Override
     protected void onStart() {
         super.onStart();

@@ -20,9 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -63,13 +65,12 @@ public class Notifications extends AppCompatActivity {
             return;
         }
 
+
         mAuth = FirebaseAuth.getInstance();
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-        uDatabase = getInstance().getReference().child("Pickly").child("users");
+        nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
+        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
-        uDatabase.keepSynced(true);
-        nDatabase.keepSynced(true);
-
+        //nDatabase.keepSynced(true);
         ImageView btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         refresh = findViewById(R.id.refresh);
@@ -184,29 +185,23 @@ public class Notifications extends AppCompatActivity {
     }
 
     private void getNoti() {
-        // ---------------------- GET ALL THE Notifications -------------------//
+        count = 0;
         clearAdapter();
         nDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    txtNoOrders.setVisibility(View.GONE);
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        if(ds.exists()) {
-                            notiData notiDB = ds.getValue(notiData.class);
-                            mm.add((int)count,notiDB);
-                            count++;
-                            nDatabase.child(uId).child(Objects.requireNonNull(ds.getKey())).child("isRead").setValue("true");
-                            NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
-                            recyclerView.setAdapter(orderAdapter);
-                        }
-                    }
-                } else {
-                    txtNoOrders.setVisibility(View.VISIBLE);
-                    Log.i(TAG, "No Notifications for this user");
+                txtNoOrders.setVisibility(View.GONE);
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String notiID = ds.getKey();
+                    assert notiID != null;
+                        notiData notiDB = ds.getValue(notiData.class);
+                        mm.add((int) count, notiDB);
+                        NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
+                        recyclerView.setAdapter(orderAdapter);
+                        nDatabase.child(uId).child(notiID).child("isRead").setValue("true");
+                        count++;
                 }
                 refresh.setRefreshing(false);
-                count = 0;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }

@@ -106,7 +106,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         filterDate = format.format(Calendar.getInstance().getTime());
-
         //Find View
         count =0;
         mm = new ArrayList<>();
@@ -237,7 +236,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // ------------------------ Refresh the recycler view ------------------------------- //
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            tbTitle.setText("جميع الاوردرات المتاحة");
             mm.clear();
             mm.trimToSize();
             count = 0;

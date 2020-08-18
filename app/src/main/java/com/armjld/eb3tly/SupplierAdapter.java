@@ -377,10 +377,14 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             ddPhone.setPaintFlags(ddPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
             final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
             final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
-            final ImageView imgVerf = dialogMore.findViewById(R.id.imgVerf);
+            final ImageView imgVerfe = dialogMore.findViewById(R.id.imgVerf);
             final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
             final ImageView dPP = dialogMore.findViewById(R.id.dPP);
             final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
+
+            imgVerfe.setOnClickListener(v1 -> {
+                Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
+            });
 
             ddPhone.setOnClickListener(v1 -> {
                 vibe.vibrate(20);
@@ -397,24 +401,20 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             uDatabase.child(dilvID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()) {
-                        String dUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                        String dPhone = Objects.requireNonNull(snapshot.child("phone").getValue()).toString();
-                        String sPP = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
-                        Log.i(TAG, "Photo " + sPP);
-                        Picasso.get().load(Uri.parse(sPP)).into(dPP);
-                        ddUsername.setText(dUser);
-                        ddPhone.setText(dPhone);
+                    String dUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                    String dPhone = Objects.requireNonNull(snapshot.child("phone").getValue()).toString();
+                    String sPP = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
+                    Picasso.get().load(Uri.parse(sPP)).into(dPP);
+                    ddUsername.setText(dUser);
+                    ddPhone.setText(dPhone);
 
-                        // Check if account is Verfied
-                        if(snapshot.child("isConfirmed").exists()) {
-                            String isConfirmed = "false";
-                            isConfirmed = snapshot.child("isConfirmed").getValue().toString();
-                            if(isConfirmed.equals("true")) {
-                                imgVerf.setVisibility(View.VISIBLE);
-                            }
-                        }
-
+                    // Check if account is Verfied
+                    String isConfirm = "false";
+                    if(snapshot.child("isConfirmed").exists()) {
+                        isConfirm = snapshot.child("isConfirmed").getValue().toString();
+                    }
+                    if(isConfirm.equals("true")) {
+                        imgVerfe.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -473,8 +473,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                     }
                 }
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
 
 
@@ -515,15 +514,12 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
-
             dialog.show();
         });
     }
 
     @Override
-    public int getItemCount() {
-        return (int) count;
-    }
+    public int getItemCount() { return filtersData.size(); }
 
     @Override
     public int getItemViewType(int position) {
@@ -554,7 +550,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate,linerAll;
         public RatingBar drStar;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgVerf;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans;
         public ImageButton mImageButton;
         
         public MyViewHolder(@NonNull View itemView) {
@@ -584,7 +580,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             icnTrans = myview.findViewById(R.id.icnTrans);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
             mImageButton = myview.findViewById(R.id.imageButton);
-            imgVerf = myview.findViewById(R.id.imgVerf);
         }
 
         void setUsername(String DName){
@@ -758,14 +753,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 linerAll.setVisibility(View.GONE);
             } else {
                 linerAll.setVisibility(View.VISIBLE);
-            }
-        }
-
-        public void setVerf(String isConfirm) {
-            if(isConfirm.equals("true")) {
-                imgVerf.setVisibility(View.VISIBLE);
-            } else {
-                imgVerf.setVisibility(View.GONE);
             }
         }
     }

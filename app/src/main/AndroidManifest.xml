@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".Admin_Confirm"></activity>
+        <activity android:name=".OneOrder"></activity>
+        <activity android:name=".Admin_Confirm" />
         <activity android:name=".Account_Confirm" />
         <activity android:name=".Admin_Delete_Statics" />
         <activity android:name=".Delete_Delivery_From_Sup" />

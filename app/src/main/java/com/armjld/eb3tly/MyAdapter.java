@@ -233,6 +233,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             final TextView txtNoddComments = dialogMore.findViewById(R.id.txtNoddComments);
 
 
+            imgVerf.setOnClickListener(v1 -> {
+                Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
+            });
+            
             // Get posted orders count
             mDatabase.orderByChild("uId").equalTo(filtersData.get(position).getuId()).addListenerForSingleValueEvent (new ValueEventListener() {
                 @SuppressLint("SetTextI18n")
@@ -279,11 +283,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                     // Check if account is Verfied
                     if(snapshot.child("isConfirmed").exists()) {
-                        String isConfirmed = "false";
-                        isConfirmed = snapshot.child("isConfirmed").getValue().toString();
+                        String isConfirmed = snapshot.child("isConfirmed").getValue().toString();
                         if(isConfirmed.equals("true")) {
                             imgVerf.setVisibility(View.VISIBLE);
+                        } else {
+                            imgVerf.setVisibility(View.GONE);
                         }
+                    } else {
+                        imgVerf.setVisibility(View.GONE);
                     }
                 }
 

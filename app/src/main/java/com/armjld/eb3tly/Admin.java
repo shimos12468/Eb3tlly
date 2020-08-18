@@ -313,7 +313,7 @@ public class Admin extends Activity {
 
         // ------------------------- Delete Non Completed ---------------------------//
         btnDeleteUser.setOnClickListener(v -> {
-            mDatabase.orderByChild("ddate").limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
+            /*mDatabase.orderByChild("ddate").limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
@@ -323,11 +323,11 @@ public class Admin extends Activity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
-            });
+            });*/
+
             /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         mdialog.setMessage("fdsds");
                         mdialog.show();
@@ -339,10 +339,9 @@ public class Admin extends Activity {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
+                public void onCancelled(@NonNull DatabaseError error) {}
             });*/
+
             /*reportDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -429,7 +428,7 @@ public class Admin extends Activity {
                 }
             });*/
 
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int fuckedUp = 0;
@@ -445,14 +444,11 @@ public class Admin extends Activity {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });*/
 
 
-            /*
-            mdialog.setMessage("deleting glitches ..");
+            /* mdialog.setMessage("deleting glitches ..");
             mDatabase.orderByChild("statue").equalTo("recived").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -498,12 +494,10 @@ public class Admin extends Activity {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
+                public void onCancelled(@NonNull DatabaseError error) {}
             });*/
 
-           /* uDatabase.orderByChild("accountType").equalTo("Supplier").addListenerForSingleValueEvent(new ValueEventListener() {
+           uDatabase.orderByChild("accountType").equalTo("Delivery Worker").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot user : snapshot.getChildren()) {
@@ -511,13 +505,13 @@ public class Admin extends Activity {
                         String name = user.child("name").getValue().toString();
                         String phone = user.child("phone").getValue().toString();
 
-                        mDatabase.orderByChild("uId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabase.orderByChild("uAccepted").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()) {
                                     int ordersCount = (int) snapshot.getChildrenCount();
                                     if(ordersCount >= 5) {
-                                        Log.i(TAG, "Name : " + name + " | Phone : " + phone);
+                                        Log.i(TAG, "Name : " + name + " | Phone : " + phone + " | Orders Account : " + ordersCount);
                                     }
                                 }
                             }
@@ -527,10 +521,9 @@ public class Admin extends Activity {
                         });
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
-            });*/
+            });
         });
 
         // -------------------------- Signing Out of Admin Account -------------------------//
@@ -599,7 +592,6 @@ public class Admin extends Activity {
 
         // ----------------------------------------------- ADD NEW CHILD TO ALL USERS -------------------------//
         btnAddToUsers.setOnClickListener(v -> {
-
             if(TextUtils.isEmpty(txtChild.getText().toString())){
                 txtChild.setError("Can't Be EMPTY !!");
                 return;
