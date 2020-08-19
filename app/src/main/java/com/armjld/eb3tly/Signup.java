@@ -327,6 +327,7 @@ public class Signup extends AppCompatActivity {
             String con_pass = con_password.getText().toString().trim();
             state = spState.getSelectedItem().toString();
             phone = phoneNum.getText().toString().trim();
+
             // Check For empty fields
             if(TextUtils.isEmpty(muser)){
                 user.setError("يجب ادخال اسم المستخدم");
@@ -341,10 +342,16 @@ public class Signup extends AppCompatActivity {
                 return;
             }
 
+            if(mpass.length() < 8) {
+                con_password.setError("رقم سري ضعيف");
+                return;
+            }
+
             if(!mpass.equals(con_pass)){
                 con_password.setError("تاكد ان كلمه المرور نفسها");
                 return;
             }
+
             if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
                 phoneNum.setError("ادخل رقم هاتف صحيح");
                 phoneNum.requestFocus();

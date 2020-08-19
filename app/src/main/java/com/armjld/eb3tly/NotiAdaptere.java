@@ -294,7 +294,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                                         break;
                                     }
                                     case "recived": {
-                                        body = "قام" + nameFrom + " بتسليمك الاوردر";
+                                        body = "قام " + nameFrom + " بتسليمك الاوردر";
                                         break;
                                     }
                                     case "welcome": {

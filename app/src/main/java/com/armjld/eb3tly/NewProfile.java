@@ -83,16 +83,18 @@ public class NewProfile extends AppCompatActivity {
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
         uId = UserInFormation.getId();
+        ViewPager viewPager = findViewById(R.id.view_pager);
+
 
         if(isConfirmed.equals("false")) {
-            Snackbar snackbar = Snackbar.make(constNewProfile, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
+            Snackbar snackbar = Snackbar.make(viewPager, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
                 finish();
                 startActivity(new Intent(this, Account_Confirm.class));
             });
             snackbar.getView().setBackgroundColor(Color.RED);
             snackbar.show();
         } else if (isConfirmed.equals("pending")) {
-            Snackbar snackbar = Snackbar.make(constNewProfile, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
+            Snackbar snackbar = Snackbar.make(viewPager, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
             snackbar.getView().setBackgroundColor(Color.YELLOW);
             snackbar.show();
         } else if(isConfirmed.equals("true")) {
@@ -104,7 +106,6 @@ public class NewProfile extends AppCompatActivity {
         });
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);

@@ -18,16 +18,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".OneOrder"></activity>
-        <activity android:name=".Admin_Confirm" />
-        <activity android:name=".Account_Confirm" />
-        <activity android:name=".Admin_Delete_Statics" />
-        <activity android:name=".Delete_Delivery_From_Sup" />
-        <activity android:name=".Delete_Reaon_Delv" />
-        <activity android:name=".Delete_Reason_Supplier" />
-        <activity android:name=".OrdersBySameUser" />
-        <activity android:name=".AdminReports" />
 
+        <activity android:name=".OneOrder"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Admin_Confirm"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Account_Confirm"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Admin_Delete_Statics"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Delete_Delivery_From_Sup"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Delete_Reaon_Delv"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Delete_Reason_Supplier"
+            android:screenOrientation="portrait" />
+        <activity android:name=".OrdersBySameUser"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AdminReports"
+            android:screenOrientation="portrait" />
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -96,18 +105,25 @@
         <activity
             android:name=".intro2"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".Notifications"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name=".Activities.Notifications" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+        </activity>
+
         <activity
             android:name=".StartUp"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:launchMode="standard"

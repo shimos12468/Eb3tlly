@@ -48,6 +48,7 @@ public class supplierProfile extends AppCompatActivity {
     String uType = UserInFormation.getAccountType();
     private ConstraintLayout constSupProfile;
     private String uId = UserInFormation.getId();
+    private ViewPager view_pager;
     String user_type;
     private String isConfirmed = UserInFormation.getisConfirm();
 
@@ -99,14 +100,14 @@ public class supplierProfile extends AppCompatActivity {
         tbTitle.setText("اوردراتي");
 
         if(isConfirmed.equals("false")) {
-            Snackbar snackbar = Snackbar.make(constSupProfile, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
+            Snackbar snackbar = Snackbar.make(viewPager, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
                 finish();
                 startActivity(new Intent(this, Account_Confirm.class));
             });
             snackbar.getView().setBackgroundColor(Color.RED);
             snackbar.show();
         } else if (isConfirmed.equals("pending")) {
-            Snackbar snackbar = Snackbar.make(constSupProfile, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
+            Snackbar snackbar = Snackbar.make(viewPager, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
             snackbar.getView().setBackgroundColor(Color.YELLOW);
             snackbar.show();
         } else if(isConfirmed.equals("true")) {

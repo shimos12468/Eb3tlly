@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.armjld.eb3tly"
-        minSdkVersion 21
+        minSdkVersion 22
         targetSdkVersion 29
         versionCode 18
-        versionName "2.3"
+        versionName "2.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
