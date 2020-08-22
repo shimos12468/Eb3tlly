@@ -53,7 +53,7 @@ public class AddOrders extends AppCompatActivity {
     private Spinner spPState, spPRegion, spDState, spDRegion;
     private FirebaseAuth mAuth;
     private Button btnsave,btnSaveAdd;
-    private String uId;
+    String uId = UserInFormation.getId();
     String uType = UserInFormation.getAccountType();
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
@@ -83,6 +83,7 @@ public class AddOrders extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_orders);
+
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
@@ -131,12 +132,16 @@ public class AddOrders extends AppCompatActivity {
 
         // Firebasee
         mAuth = FirebaseAuth.getInstance();
-        uId = UserInFormation.getId();
         mDatabase = getInstance().getReference("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+
+        if(uId == null) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
 
         // ---------------- Help Buttons----------------------//
         imgHelpGet.setOnClickListener(v -> {

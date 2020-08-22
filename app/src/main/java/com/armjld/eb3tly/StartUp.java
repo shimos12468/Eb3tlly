@@ -41,6 +41,7 @@ public class StartUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ConstraintLayout startConst;
     public UserInFormation userInfo = new UserInFormation();
+    int codee = 10001;
 
     DatabaseReference uDatabase , Database;
     boolean doubleBackToExitPressedOnce = false;
@@ -75,9 +76,10 @@ public class StartUp extends AppCompatActivity {
                             appUpdateInfo,
                             AppUpdateType.IMMEDIATE,
                             this,
-                            10001);
+                            codee);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
+                    whatToDo();
                 }
                 Toast.makeText(this, "يوجد تحديث جديد متاح", Toast.LENGTH_SHORT).show();
             } else {
@@ -126,79 +128,70 @@ public class StartUp extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
-
-
     }
 
 
     public void reRoute () {
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        assert user != null;
-        uDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.child("id").exists()) {
+                    String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
+                    String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
 
                     // ------------------ Set Device Token ----------------- //
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(StartUp.this, instanceIdResult -> {
                         String deviceToken = instanceIdResult.getToken();
-                        uDatabase.child(user.getUid()).child("device_token").setValue(deviceToken);
+                        uDatabase.child(mAuth.getCurrentUser().getUid()).child("device_token").setValue(deviceToken);
                     });
 
-                    String isComplete = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
-                    String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
+                    UserInFormation.setAccountType(uType);
+                    UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
+                    UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
+                    UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
+                    UserInFormation.setId(mAuth.getCurrentUser().getUid());
+                    UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
+                    UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
+                    UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
+                    UserInFormation.setisConfirm("false");
 
-                    if(isComplete.equals("true")) {
-                        String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
-                        UserInFormation.setAccountType(uType);
-                        UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                        UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                        UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
-                        UserInFormation.setId(mAuth.getCurrentUser().getUid());
+                    if(snapshot.child("isConfirmed").exists()) {
+                        UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
+                    }
 
-                        UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
-                        UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
-                        UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
-                        UserInFormation.setisConfirm("false");
-                        if(snapshot.child("isConfirmed").exists()) {
-                            UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
+                    if(isActive.equals("true")) {
+                        if(!snapshot.child("userState").exists()) {
+                            Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();
                         }
 
-                        if(isActive.equals("true")) {
-                            if(!snapshot.child("userState").exists()) {
-                                Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();
-                            }
-
-                            try {
-                                PackageInfo pInfo = StartUp.this.getPackageManager().getPackageInfo(getPackageName(), 0);
-                                String version = pInfo.versionName;
-                                uDatabase.child(user.getUid()).child("app_version").setValue(version);
-                            } catch (PackageManager.NameNotFoundException e) {
-                                e.printStackTrace();
-                            }
-
-                            switch (UserInFormation.getAccountType()) {
-                                case "Supplier":
-                                    finish();
-                                    startActivity(new Intent(StartUp.this, supplierProfile.class));
-                                    break;
-                                case "Delivery Worker":
-                                    finish();
-                                    startActivity(new Intent(StartUp.this, HomeActivity.class));
-                                    break;
-                                case "Admin":
-                                    finish();
-                                    startActivity(new Intent(StartUp.this, Admin.class));
-                                    break;
-                            }
-                        } else {
-                            Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
-
-                            mAuth.signOut();
-                            finish();
-                            startActivity(new Intent(StartUp.this, MainActivity.class));
+                        try {
+                            PackageInfo pInfo = StartUp.this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                            String version = pInfo.versionName;
+                            uDatabase.child(mAuth.getCurrentUser().getUid()).child("app_version").setValue(version);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
                         }
+
+                        switch (UserInFormation.getAccountType()) {
+                            case "Supplier":
+                                finish();
+                                startActivity(new Intent(StartUp.this, supplierProfile.class));
+                                break;
+                            case "Delivery Worker":
+                                finish();
+                                startActivity(new Intent(StartUp.this, HomeActivity.class));
+                                break;
+                            case "Admin":
+                                finish();
+                                startActivity(new Intent(StartUp.this, Admin.class));
+                                break;
+                        }
+                    } else {
+                        Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                        finish();
+                        startActivity(new Intent(StartUp.this, MainActivity.class));
                     }
                 } else {
                     mAuth.signOut();
@@ -208,15 +201,14 @@ public class StartUp extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10001) {
+        if (requestCode == codee) {
             if (resultCode != RESULT_OK) {
                 whatToDo();
                 Toast.makeText(this, "لم يتم تحديث التطبيق", Toast.LENGTH_SHORT).show();

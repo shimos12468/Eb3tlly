@@ -313,7 +313,7 @@ public class Admin extends Activity {
 
         // ------------------------- Delete Non Completed ---------------------------//
         btnDeleteUser.setOnClickListener(v -> {
-            /*mDatabase.orderByChild("ddate").limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
@@ -323,7 +323,7 @@ public class Admin extends Activity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
-            });*/
+            });
 
             /*mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -497,7 +497,7 @@ public class Admin extends Activity {
                 public void onCancelled(@NonNull DatabaseError error) {}
             });*/
 
-           uDatabase.orderByChild("accountType").equalTo("Delivery Worker").addListenerForSingleValueEvent(new ValueEventListener() {
+           /*uDatabase.orderByChild("accountType").equalTo("Delivery Worker").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot user : snapshot.getChildren()) {
@@ -523,7 +523,7 @@ public class Admin extends Activity {
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
-            });
+            });*/
         });
 
         // -------------------------- Signing Out of Admin Account -------------------------//
@@ -821,9 +821,17 @@ public class Admin extends Activity {
                     notCompleted = 0;
                     profitCount = 0;
                     isAcitve = 0;
+                    int verfied = 0;
                     for(DataSnapshot ds : dataSnapshot.getChildren()) {
                         if(ds.exists() && ds.child("id").exists() ) {
                             String userType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                            if(ds.child("isConfirmed").exists()) {
+                                String isVerf = ds.child("isConfirmed").getValue().toString();
+                                if(isVerf.equals("true")) {
+                                    verfied++;
+                                }
+                            }
+
                             int intProfit = (int) Integer.parseInt(Objects.requireNonNull(ds.child("profit").getValue()).toString());
                             profitCount = profitCount + intProfit;
                             if(intProfit > 0) {
@@ -857,7 +865,7 @@ public class Admin extends Activity {
                     if(usedUsers != 0) {
                         forEach = profitCount / usedUsers;
                     }
-                    txtAllUsersCount.setText("Users Count : " + allUsers);
+                    txtAllUsersCount.setText("Users Count : " + allUsers + " | Verfied Users : " + verfied);
                     txtAllProfit.setText("Total Profit = " + profitCount + " EGP | " + forEach + " EGP For Each Active Delivery User");
                     txtAllSupCount.setText("Suppliers Count : " + supCount + " | Active Users : " + isAcitve);
                     txtAllDevCount.setText("Delivery Workers Count : " + devCount + " | Active Count : " + usedUsers);

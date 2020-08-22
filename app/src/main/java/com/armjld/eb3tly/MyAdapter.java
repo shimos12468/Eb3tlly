@@ -125,7 +125,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        final String rateUID = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String notes = filtersData.get(position).getNotes().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String statues = filtersData.get(position).getStatue().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String removed = filtersData.get(position).getRemoved().replaceAll("(^\\h*)|(\\h*$)","").trim();
@@ -271,7 +270,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             });
 
             //Get the user name & Pic
-            uDatabase.child(rateUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String dsUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
@@ -318,7 +317,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
 
             //Get the Rate Stars
-            rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            rDatabase.child(owner).orderByChild("sId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
@@ -349,7 +348,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
             listComment.setAdapter(arrayAdapterLessons);
             mArraylistSectionLessons.clear(); // To not dublicate comments
-            rDatabase.child(rateUID).orderByChild("sId").equalTo(rateUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            rDatabase.child(owner).orderByChild("sId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     int comments = 0;

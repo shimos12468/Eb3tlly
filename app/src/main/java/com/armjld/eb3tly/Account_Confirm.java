@@ -487,13 +487,14 @@ public class Account_Confirm extends AppCompatActivity {
 
     private boolean checkPhone () {
         boolean check = true;
-        for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+        for (UserInfo user: Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getProviderData()) {
             if(user.getProviderId().equals("phone")) {
                 check = false;
             }
         }
         return check;
     }
+
     @Override
     protected void onStart() {
         super.onStart();
