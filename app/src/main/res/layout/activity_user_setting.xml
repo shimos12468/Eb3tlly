@@ -8,7 +8,7 @@
 
     android:background="@color/colorBack"
     android:layoutDirection="ltr"
-    tools:context="com.armjld.eb3tly.UserSetting">
+    tools:context="com.armjld.eb3tly.Utilites.UserSetting">
 
     <include
         android:id="@+id/addToolbar"

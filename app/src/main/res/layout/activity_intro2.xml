@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layoutDirection="ltr"
     android:layout_height="match_parent"
-    tools:context=".intro2">
+    tools:context=".Intros.intro2">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

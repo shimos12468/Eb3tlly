@@ -7,7 +7,7 @@
     android:background="@color/colorWhite"
     android:visibility="visible"
     android:layoutDirection="ltr"
-    tools:context=".Admin">
+    tools:context=".admin.Admin">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"

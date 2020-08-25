@@ -6,7 +6,7 @@
     android:layoutDirection="ltr"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.Signup">
+    tools:context="com.armjld.eb3tly.SignUp.Signup">
 
     <include
         android:id="@+id/addToolbar"

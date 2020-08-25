@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.UserInFormation;
+import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

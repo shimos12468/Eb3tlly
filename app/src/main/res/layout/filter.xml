@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBack"
     android:layoutDirection="ltr"
-    tools:context="com.armjld.eb3tly.Filters">
+    tools:context="com.armjld.eb3tly.Utilites.Filters">
 
     <include
         android:id="@+id/dsToolbar"

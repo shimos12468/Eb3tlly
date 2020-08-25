@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBack"
     android:layoutDirection="ltr"
-    tools:context="com.armjld.eb3tly.NewProfile">
+    tools:context="com.armjld.eb3tly.Profiles.NewProfile">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -27,7 +27,7 @@
             android:layout_width="420dp"
             android:layout_height="400dp"
             android:orientation="vertical"
-            tools:context="com.armjld.eb3tly.NewProfile">
+            tools:context="com.armjld.eb3tly.Profiles.NewProfile">
 
             <include
                 android:id="@+id/toolbar_home"

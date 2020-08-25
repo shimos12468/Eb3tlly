@@ -18,51 +18,37 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-
-        <activity android:name=".Messages"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".Chats"
-            android:screenOrientation="portrait" />
-
+        <activity android:name=".Passaword.Forget_Password"></activity>
         <activity
-            android:name=".OneOrder"
+            android:name=".messeges.Messages"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".Admin_Confirm"
+            android:name=".Chat.Chats"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".Account_Confirm"
+            android:name=".admin.Admin_Confirm"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".Admin_Delete_Statics"
+            android:name=".confermations.Account_Confirm"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".Delete_Delivery_From_Sup"
+            android:name=".admin.Admin_Delete_Statics"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".Delete_Reaon_Delv"
+            android:name=".delets.Delete_Delivery_From_Sup"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".Delete_Reason_Supplier"
+            android:name=".delets.Delete_Reaon_Delv"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".OrdersBySameUser"
+            android:name=".delets.Delete_Reason_Supplier"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".AdminReports"
+            android:name=".admin.AdminReports"
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".Utilites.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -70,72 +56,64 @@
         </service>
 
         <activity
-            android:name=".NewProfile"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".supplierProfile"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".IntroFirstRun"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".EditOrders"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".Filters"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ReplyByAdmin"
+            android:name=".Profiles.NewProfile"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddOrders"
+            android:name=".Profiles.supplierProfile"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HowTo"
+            android:name=".Intros.IntroFirstRun"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Terms"
+            android:name=".Orders.EditOrders"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".Utilites.Filters"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Admin"
+            android:name=".admin.ReplyByAdmin"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Signup"
+            android:name=".Utilites.HowTo"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Utilites.Terms"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UserSetting"
+            android:name=".main.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ChangePassword"
+            android:name=".admin.Admin"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ForgetPass"
+            android:name=".SignUp.Signup"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".About"
+            android:name=".main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".introSup"
+            android:name=".Utilites.UserSetting"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Conatact"
+            android:name=".Passaword.ChangePassword"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".intro2"
+            android:name=".Passaword.ForgetPass"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Notifications"
+            android:name=".Utilites.About"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Intros.introSup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Utilites.Conatact"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Intros.intro2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Notifications.Notifications"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name=".Activities.Notifications" />
@@ -144,7 +122,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".StartUp"
+            android:name=".Utilites.StartUp"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

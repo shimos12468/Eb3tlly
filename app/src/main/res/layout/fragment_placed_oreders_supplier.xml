@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".placed_oreders_supplier">
+    tools:context=".Orders.placed_oreders_supplier">
 
     <TextView
         android:id="@+id/txtNoOrders"

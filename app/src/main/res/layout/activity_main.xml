@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.MainActivity">
+    tools:context="com.armjld.eb3tly.main.MainActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,7 +67,6 @@
             android:gravity="left"
             android:hint="البريد الالكتروني"
             android:inputType="textEmailAddress"
-            android:textAlignment="textStart"
             android:textColor="#000000"
             android:textColorHint="@android:color/tertiary_text_light"
             android:textSize="24sp"
@@ -89,7 +88,7 @@
             android:gravity="left"
             android:hint="كلمة السر"
             android:inputType="textPassword"
-            android:textAlignment="textStart"
+
             android:textColor="#000000"
             android:textColorHint="@android:color/tertiary_text_light"
             android:textSize="24sp"
@@ -147,7 +146,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

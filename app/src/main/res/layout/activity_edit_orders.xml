@@ -7,7 +7,7 @@
     android:layoutDirection="ltr"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.EditOrders">
+    tools:context=".Orders.EditOrders">
 
 
     <ScrollView

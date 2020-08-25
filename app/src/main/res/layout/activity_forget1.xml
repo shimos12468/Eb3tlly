@@ -9,7 +9,7 @@
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     android:visibility="visible"
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark"
-    tools:context="com.armjld.eb3tly.ForgetPass">
+    tools:context="com.armjld.eb3tly.Passaword.ForgetPass">
 
     <TextView
         android:id="@+id/txtViewPhone"

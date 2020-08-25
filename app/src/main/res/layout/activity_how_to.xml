@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".HowTo">
+    tools:context=".Utilites.HowTo">
 
   <include
       android:id="@+id/toolbar_home"

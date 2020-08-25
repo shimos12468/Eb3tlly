@@ -8,11 +8,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.armjld.eb3tly.Orders.acceptedOrdersSupplier;
+import com.armjld.eb3tly.Orders.dlivared_orders_supplier;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.acceptedOrdersSupplier;
-import com.armjld.eb3tly.dlivared_orders_supplier;
-import com.armjld.eb3tly.placed_oreders_supplier;
-import com.armjld.eb3tly.supplierProfile;
+import com.armjld.eb3tly.Orders.placed_oreders_supplier;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
