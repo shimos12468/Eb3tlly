@@ -121,30 +121,6 @@ public class StartUp extends AppCompatActivity {
         Toast.makeText(this, "555555555555555 b2a", Toast.LENGTH_SHORT).show();
     }
 
-    private void ImportBlockedUsers() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        assert user != null;
-        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("Blocked");
-        Database.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if(snapshot.exists()){
-                    BlockManeger blocedUsers = new BlockManeger();
-                    blocedUsers.clear();
-                    for(DataSnapshot ds : snapshot.getChildren()){
-                       blocedUsers.adduser(ds.getValue().toString());
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
-    }
-
-
     public void reRoute () {
         mAuth = FirebaseAuth.getInstance();
         uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -186,7 +162,7 @@ public class StartUp extends AppCompatActivity {
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
                         }
-
+                        ImportBlockedUsers();
                         switch (UserInFormation.getAccountType()) {
                             case "Supplier":
                                 finish();
@@ -228,5 +204,31 @@ public class StartUp extends AppCompatActivity {
                 Toast.makeText(this, "لم يتم تحديث التطبيق", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void ImportBlockedUsers() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(user.getUid());
+        Database.child("Blocked").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.exists()){
+                    BlockManeger blocedUsers = new BlockManeger();
+                    blocedUsers.clear();
+                    for(DataSnapshot ds : snapshot.getChildren()){
+                        blocedUsers.add(ds.child("id").getValue().toString());
+                        //Toast.makeText(context, ds.child("id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+
     }
 }

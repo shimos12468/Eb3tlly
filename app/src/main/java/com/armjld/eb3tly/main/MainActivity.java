@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
     private void ImportBlockedUsers() {
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
-        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("Blocked");
-        Database.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(user.getUid());
+        Database.child("Blocked").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
                     BlockManeger blocedUsers = new BlockManeger();
                     blocedUsers.clear();
                     for(DataSnapshot ds : snapshot.getChildren()){
-                        blocedUsers.adduser(Objects.requireNonNull(ds.getValue()).toString());
+                        blocedUsers.add(ds.child("id").getValue().toString());
+                        //Toast.makeText(context, ds.child("id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 }

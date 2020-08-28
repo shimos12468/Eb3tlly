@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.Utilites.Conatact;
@@ -37,6 +38,7 @@ import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Utilites.UserSetting;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,9 +67,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private LinearLayout footer;
     private static ArrayList<Data> mm;
     private long count;
+    BlockManeger block = new BlockManeger();
     // import firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase, uDatabase;
+    private DatabaseReference mDatabase, uDatabase ,Database;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView txtNoOrders;
     private String TAG = "Home Activity";
@@ -267,8 +270,9 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 assert orderData != null;
                 for(int i = 0;i<mm.size();i++){
                     if(mm.get(i).getId().equals(orderData.getId())) {
-                        if(orderAdapter!=null)
+                        if(orderAdapter!=null){
                             orderAdapter.addItem(i, orderData);
+                        }
                         else{
                             Log.i(TAG,"adapter is null here");
                             orderAdapter  = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
@@ -350,6 +354,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
+                    //ImportBlockedUsers();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if(ds.exists()) {
                             Data orderData = ds.getValue(Data.class);
@@ -365,7 +370,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             assert orderDate != null;
                             assert myDate != null;
                             Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
-                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
+                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")&&!block.check(orderData.getuId())) {
                                 mm.add((int) count, orderData);
                                 count++;
                             }
@@ -383,6 +388,31 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
     }
+    private void ImportBlockedUsers() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(user.getUid());
+        Database.child("Blocked").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.exists()){
+                    BlockManeger blocedUsers = new BlockManeger();
+                    blocedUsers.clear();
+                    for(DataSnapshot ds : snapshot.getChildren()){
+                        blocedUsers.add(ds.child("id").getValue().toString());
+                        //Toast.makeText(context, ds.child("id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+
+    }
 
     private void getOrdersByLatest() {
         LinearLayoutManager layoutManager= new LinearLayoutManager(this);
@@ -393,6 +423,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
+                   // ImportBlockedUsers();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         if(ds.exists() && ds.child("ddate").exists()) {
                             Data orderData = ds.getValue(Data.class);
@@ -407,8 +438,9 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             }
                             assert orderDate != null;
                             assert myDate != null;
+
                             Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
-                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
+                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")&&!block.check(orderData.getuId())) {
                                 mm.add((int) count, orderData);
                                 count++;
                             }

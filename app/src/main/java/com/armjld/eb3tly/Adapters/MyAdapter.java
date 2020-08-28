@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Orders.EditOrders;
@@ -30,6 +31,7 @@ import com.armjld.eb3tly.Orders.OrdersBySameUser;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,11 +57,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      long count;
      ArrayList<Data>filtersData;
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-     private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase,nDatabase;
+     private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase,nDatabase ,Database;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
      private String TAG = "My Adapter";
      String uType = UserInFormation.getAccountType();
-    String uId = UserInFormation.getId();
+     String uId = UserInFormation.getId();
+     private BlockManeger block = new BlockManeger();
 
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -70,6 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void addItem(int position , Data data){
         int size = filtersData.size();
         if(size > position && size != 0) {
+
             filtersData.set(position,data);
             notifyItemChanged(position);
             Log.i(TAG, "Filter Data Statue : " + data.getStatue());
@@ -79,9 +83,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count) {
         this.count = count;
         this.context = context;
-        this.filtersData = filtersData;
+        this.filtersData =filtersData;
         this.context1 = context1;
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
@@ -108,7 +111,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String stopDate = datee;
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
         Date d1 = null;
         Date d2 = null;
         try {
@@ -129,6 +131,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffMinutes = (int) diffMinutes;
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
+
+
 
         final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
@@ -241,6 +245,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
             imgVerf.setOnClickListener(v1 -> {
                 Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
+            });
+
+            holder.btnMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   boolean flag=block.addUser(filtersData.get(position).getuId());
+                   if(flag)
+                       Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show();
+                   else
+                       Toast.makeText(context, "Didntwork", Toast.LENGTH_SHORT).show();
+
+                }
+
             });
             
             // Get posted orders count
