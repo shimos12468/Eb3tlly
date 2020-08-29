@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Orders.EditOrders;
@@ -177,7 +178,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
         holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
-
         holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)","").trim());
@@ -224,6 +224,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             tbTitle.setText("بيانات الاوردر");
 
             ImageView btnClose = dialogMore.findViewById(R.id.btnClose);
+            ImageView btnBlock = dialogMore.findViewById(R.id.btnBlock);
 
             btnClose.setOnClickListener(v1 -> {
                 vibe.vibrate(20);
@@ -242,22 +243,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
             final TextView txtNoddComments = dialogMore.findViewById(R.id.txtNoddComments);
 
+            btnBlock.setOnClickListener(v1 -> {
+                DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            boolean flag=block.addUser(filtersData.get(position).getuId());
+                            if(flag)
+                                Toast.makeText(context, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(context, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            break;
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+            });
 
             imgVerf.setOnClickListener(v1 -> {
                 Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
-            });
-
-            holder.btnMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                   boolean flag=block.addUser(filtersData.get(position).getuId());
-                   if(flag)
-                       Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show();
-                   else
-                       Toast.makeText(context, "Didntwork", Toast.LENGTH_SHORT).show();
-
-                }
-
             });
             
             // Get posted orders count
