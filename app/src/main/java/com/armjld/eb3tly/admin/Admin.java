@@ -28,6 +28,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Passaword.ChangePassword;
 import com.armjld.eb3tly.Utilites.Conatact;
+import com.armjld.eb3tly.Utilites.StartUp;
+import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.MainActivity;
@@ -67,6 +69,7 @@ public class Admin extends Activity {
     int profitCount = 0;
     int usedUsers = 0;
     int isAcitve = 0;
+    String uId = UserInFormation.getId();
     private ProgressDialog mdialog;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
@@ -80,6 +83,15 @@ public class Admin extends Activity {
     String datee2 = sdf2.format(new Date());
 
     public void onBackPressed() { }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(uId == null) {
+            StartUp startUp = new StartUp();
+            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        }
+    }
 
     @SuppressLint({"SetTextI18n", "RtlHardcoded"})
     @Override

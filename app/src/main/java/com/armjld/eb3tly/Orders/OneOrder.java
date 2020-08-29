@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +41,7 @@ public class OneOrder extends AppCompatActivity {
     DatabaseReference mDatabase;
     private RecyclerView recyclerView;
     TextView toolbar_title;
+    FirebaseAuth mAuth;
 
 
     @SuppressLint("SimpleDateFormat")
@@ -47,12 +50,22 @@ public class OneOrder extends AppCompatActivity {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if(uId == null) {
+            StartUp startUp = new StartUp();
+            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_order);
         recyclerView = findViewById(R.id.recyclerView);
         toolbar_title = findViewById(R.id.toolbar_title);
         toolbar_title.setText("اوردر جديد");
+        mAuth = FirebaseAuth.getInstance();
         mDatabase = getInstance().getReference("Pickly").child("orders");
 
         String orderID = getIntent().getStringExtra("oID");

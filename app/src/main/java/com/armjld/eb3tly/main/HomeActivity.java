@@ -35,6 +35,7 @@ import com.armjld.eb3tly.Passaword.ChangePassword;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Utilites.UserSetting;
 import com.google.android.material.navigation.NavigationView;
@@ -104,6 +105,15 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(uId == null) {
+            StartUp startUp = new StartUp();
+            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        }
     }
 
     // On Create Fun

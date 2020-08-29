@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Adapters.MyAdapter;
+import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.database.ChildEventListener;
@@ -46,6 +47,7 @@ public class   Filters extends AppCompatActivity {
     private long countFilter =0;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     String filterDate;
+    BlockManeger block = new BlockManeger();
 
     RecyclerView recyclerView;
     TextView txtNoOrders;
@@ -520,7 +522,7 @@ public class   Filters extends AppCompatActivity {
                         // ------------------------ CHECKING AREAS FILTERS --------------------------//
                         if(spRegion.equals("كل المناطق")) {
                             if(sdRegion.equals("كل المناطق")) {
-                                if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtPState().equals(spState) && filterData.getTxtDState().equals(sdState) ) {
+                                if (filterData.getStatue().equals("placed")&&!block.check(filterData.getuId()) && dbMoney <= filterValue && filterData.getTxtPState().equals(spState) && filterData.getTxtDState().equals(sdState) ) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
                                     Log.i(TAG,"first if in all mnat2");
@@ -528,7 +530,7 @@ public class   Filters extends AppCompatActivity {
                                 }
                             }
                             else {
-                                if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getTxtPState().equals(spState) && filterData.getmDRegion().equals(sdRegion)) {
+                                if (filterData.getStatue().equals("placed")&&!block.check(filterData.getuId()) && dbMoney <= filterValue && filterData.getTxtPState().equals(spState) && filterData.getmDRegion().equals(sdRegion)) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
                                     Log.i(TAG,"second if in all mnat2");
@@ -538,7 +540,7 @@ public class   Filters extends AppCompatActivity {
 
                         else {
                             if(sdState.equals("كل المناطق")) {
-                                if (filterData.getStatue().equals("placed") && dbMoney <= filterValue && filterData.getmPRegion().equals(spRegion) && filterData.getTxtDState().equals(sdState)) {
+                                if (filterData.getStatue().equals("placed")&&!block.check(filterData.getuId())&& dbMoney <= filterValue && filterData.getmPRegion().equals(spRegion) && filterData.getTxtDState().equals(sdState)) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
                                     Log.i(TAG,"first  if in else");
@@ -547,7 +549,7 @@ public class   Filters extends AppCompatActivity {
                             else {
                                 if (filterData.getStatue().equals("placed") && dbMoney <= filterValue &&
                                         filterData.getmPRegion().equals(spRegion) &&
-                                        filterData.getmDRegion().equals(sdRegion) ) {
+                                        filterData.getmDRegion().equals(sdRegion) &&!block.check(filterData.getuId())) {
                                     ff.add((int) countFilter, filterData);
                                     countFilter++;
                                     Log.i(TAG,"second  if in else");
