@@ -108,7 +108,7 @@ public class StartUp extends AppCompatActivity {
                 public void run() {
                     sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
                     if(sharedPreferences.getBoolean("firstrun", true)) {
-                        Log.i("AZA" ,IntroFirstRun.class.toString());
+                        Log.i("c" ,IntroFirstRun.class.toString());
                         startActivity(new Intent(StartUp.this, IntroFirstRun.class));
                         sharedPreferences.edit().putBoolean("firstrun", false).apply();
                     } else {
@@ -118,7 +118,6 @@ public class StartUp extends AppCompatActivity {
                 }
             }, 2500);
         }
-        Toast.makeText(this, "555555555555555 b2a", Toast.LENGTH_SHORT).show();
     }
 
     public void reRoute () {
@@ -135,6 +134,20 @@ public class StartUp extends AppCompatActivity {
                         String deviceToken = instanceIdResult.getToken();
                         uDatabase.child(mAuth.getCurrentUser().getUid()).child("device_token").setValue(deviceToken);
                     });
+
+                    UserInFormation.setAccountType(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString());
+                    UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
+                    UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
+                    UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
+                    UserInFormation.setId(mAuth.getCurrentUser().getUid());
+                    UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
+                    UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
+                    UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
+                    UserInFormation.setisConfirm("false");
+
+                    if(snapshot.child("isConfirmed").exists()) {
+                        UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
+                    }
 
                     setUserData(mAuth.getCurrentUser().getUid());
 

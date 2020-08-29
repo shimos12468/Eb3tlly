@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.admin.Admin;
+import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Orders.EditOrders;
@@ -147,13 +148,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String uName = Objects.requireNonNull(snapshot.getValue()).toString();
-                holder.setUsername(uName);
-
                 String isConfirm = "false";
                 if(snapshot.child("isConfirmed").exists()) {
                     isConfirm = snapshot.child("isConfirmed").getValue().toString();
                 }
-                holder.setVerf(isConfirm);
+                holder.setUsername(uName, isConfirm);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -248,17 +247,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
                             boolean flag=block.addUser(filtersData.get(position).getuId());
-                            if(flag)
+                            if(flag) {
                                 Toast.makeText(context, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
-                            else
+                                context.startActivity(new Intent(context, HomeActivity.class));
+                            } else {
                                 Toast.makeText(context, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
+
+                            }
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
                             break;
                     }
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+                builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
             });
 
             imgVerf.setOnClickListener(v1 -> {
@@ -661,8 +663,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             txtPostDate = myview.findViewById(R.id.txtPostDate);
         }
 
-        public void setUsername(String name){
+        public void setUsername(String name, String isConfirm){
             txtUsername.setText(name);
+            setVerf(isConfirm);
         }
 
         public void setOrderFrom(String orderFrom){
