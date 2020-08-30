@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Fragments.SectionsPagerAdapter;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.MainActivity;
@@ -327,5 +328,14 @@ public class NewProfile extends AppCompatActivity {
         mAuth.signOut();
         startActivity(new Intent(this, MainActivity.class));
         Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(uId == null) {
+            StartUp startUp = new StartUp();
+            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        }
     }
 }

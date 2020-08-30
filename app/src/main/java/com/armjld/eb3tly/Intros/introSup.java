@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.Profiles.*;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.R;
@@ -31,7 +32,7 @@ public class introSup extends AppIntro {
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), HowTo.class));
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
         } else {
             Toast.makeText(this, "االرجاء تسجيل الدخول مجددا ..", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -43,7 +44,7 @@ public class introSup extends AppIntro {
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), HowTo.class));
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
         } else {
             Toast.makeText(this, "االرجاء تسجيل الدخول مجددا ..", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));

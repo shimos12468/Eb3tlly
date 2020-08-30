@@ -34,6 +34,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
@@ -76,6 +77,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;
+    private BlockManeger block = new BlockManeger();
+
 
     public void addItem(int position , Data data){
         int size = filtersData.size();
@@ -387,6 +390,37 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
             final ImageView dPP = dialogMore.findViewById(R.id.dPP);
             final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
+            final ImageView btnBlock = dialogMore.findViewById(R.id.btnBlock);
+
+            btnBlock.setOnClickListener(v1 -> {
+                DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+
+                            // --------------------------- Send Notifications ---------------------//
+                            notiData Noti = new notiData(uId, filtersData.get(position).getuAccepted(), orderID,"deleted",datee,"false", "profile");
+                            nDatabase.child(filtersData.get(position).getuAccepted()).push().setValue(Noti);
+
+
+                            // -------------------------- Delete the Acceptance -------------------//
+                            assert orderID != null;
+                            mDatabase.child(orderID).child("uAccepted").setValue("");
+                            mDatabase.child(orderID).child("statue").setValue("placed");
+
+                            // -------------------------- Start Blocking ---------------------//
+                            boolean flag=block.addUser(filtersData.get(position).getuId());
+                            if(flag)
+                                Toast.makeText(context, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(context, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            break;
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+            });
 
             imgVerfe.setOnClickListener(v1 -> {
                 Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();

@@ -136,19 +136,7 @@ public class StartUp extends AppCompatActivity {
                         uDatabase.child(mAuth.getCurrentUser().getUid()).child("device_token").setValue(deviceToken);
                     });
 
-                    UserInFormation.setAccountType(uType);
-                    UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                    UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                    UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
-                    UserInFormation.setId(mAuth.getCurrentUser().getUid());
-                    UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
-                    UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
-                    UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
-                    UserInFormation.setisConfirm("false");
-
-                    if(snapshot.child("isConfirmed").exists()) {
-                        UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
-                    }
+                    setUserData(mAuth.getCurrentUser().getUid());
 
                     if(isActive.equals("true")) {
                         if(!snapshot.child("userState").exists()) {
@@ -228,7 +216,29 @@ public class StartUp extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+    }
 
+    public void setUserData(String uid) {
+        uDatabase.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserInFormation.setAccountType(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString());
+                UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
+                UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
+                UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
+                UserInFormation.setId(uid);
+                UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
+                UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
+                UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
+                UserInFormation.setisConfirm("false");
 
+                if(snapshot.child("isConfirmed").exists()) {
+                    UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 }

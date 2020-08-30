@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.MainActivity;
@@ -68,6 +69,15 @@ public class supplierProfile extends AppCompatActivity {
     public void onBackPressed() {
         finish();
         startActivity(new Intent(this, HomeActivity.class));
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(uId == null) {
+            StartUp startUp = new StartUp();
+            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        }
     }
 
     @SuppressLint({"RtlHardcoded", "SetTextI18n"})
