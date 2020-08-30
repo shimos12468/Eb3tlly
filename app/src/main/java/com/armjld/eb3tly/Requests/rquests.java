@@ -30,7 +30,7 @@ public class rquests {
         rquests.requests = requests;
     }
 
-    public boolean addrequest(String num , String orderid , String id ,String date){
+    public boolean addrequest(String num , String orderid ,String date){
         String uId = UserInFormation.getId();
 
         if(num == null){
