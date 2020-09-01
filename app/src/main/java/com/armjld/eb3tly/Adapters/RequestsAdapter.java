@@ -60,7 +60,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     long count;
     String orderId;
     ArrayList<requestsData>requestsData;
-    private DatabaseReference uDatabase,mDatabase,rDatabase,reportDatabase;
+    private DatabaseReference uDatabase,mDatabase,rDatabase,reportDatabase,nDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     private BlockManeger block = new BlockManeger();
@@ -77,6 +77,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
+        nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
         reportDatabase = getInstance().getReference().child("Pickly").child("reports");
         String TAG = "Requests Adapter";
 
@@ -94,9 +95,35 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         String id = requestsData.get(position).getId();
-        String date = requestsData.get(position).getDate();
         String offer = requestsData.get(position).getOffer();
+        String date = requestsData.get(position).getDate();
 
+        String startDate = date;
+        String stopDate = datee;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+
+        Date d1 = null;
+        Date d2 = null;
+        try {
+            d1 = format.parse(startDate);
+            d2 = format.parse(stopDate);
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        assert d2 != null;
+        assert d1 != null;
+        long diff = d2.getTime() - d1.getTime();
+        long diffSeconds = diff / 1000;
+        long diffMinutes = diff / (60 * 1000);
+        long diffHours = diff / (60 * 60 * 1000);
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        int idiffSeconds = (int) diffSeconds;
+        int idiffMinutes = (int) diffMinutes;
+        int idiffHours = (int) diffHours;
+        int idiffDays = (int) diffDays;
+
+        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setUserInfo(id);
         holder.setBody(offer);
 
@@ -285,6 +312,17 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                         mDatabase.child(orderId).child("uAccepted").setValue(id);
                         mDatabase.child(orderId).child("statue").setValue("accepted");
                         mDatabase.child(orderId).child("acceptedTime").setValue(datee);
+
+                        // ------------------ Notificatiom ------------------ //
+                        notiData Noti = new notiData(UserInFormation.getId(), id,orderId,"قام " + UserInFormation.getUserName() + " بقبول طلبك لاستلام الاوردر ",datee,"false","order");
+                        nDatabase.child(id).push().setValue(Noti);
+
+                        // ----------------- Set the new Shipping Price --------//
+                        mDatabase.child(orderId).child("gget").setValue(offer);
+
+                        //------------------ se request as accepted in user db ----------- //
+                        uDatabase.child(id).child("requests").child(orderId).child("statue").setValue("accepted");
+
                         Toast.makeText(context, "تم قبول المندوب", Toast.LENGTH_SHORT).show();
                         context.startActivity(new Intent(context, supplierProfile.class));
                         break;
@@ -312,7 +350,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         View myview;
         ImageView imgEditPhoto;
-        TextView txtName, txtBody;
+        TextView txtName, txtBody,txtDate;
         Button btnAccept;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -321,6 +359,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
             txtName = myview.findViewById(R.id.txtName);
             txtBody = myview.findViewById(R.id.txtBody);
             btnAccept = myview.findViewById(R.id.btnAccept);
+            txtDate = myview.findViewById(R.id.txtDate);
             imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
 
         }
@@ -344,6 +383,20 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
             });
+        }
+
+        public void setPostDate(int dS, int dM, int dH, int dD) {
+            String finalDate = "";
+            if (dS < 60) {
+                finalDate = "منذ " + dS + " ثوان";
+            } else if (dS > 60 && dS < 3600) {
+                finalDate = "منذ " + dM + " دقيقة";
+            } else if (dS > 3600 && dS < 86400) {
+                finalDate = "منذ " + dH + " ساعات";
+            } else if (dS > 86400) {
+                finalDate = "منذ " +dD + " ايام";
+            }
+            txtDate.setText(finalDate);
         }
     }
 

@@ -381,7 +381,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
         // ------------------ Show delivery Worker Info -----------------------//
         holder.txtGetStat.setOnClickListener(v -> {
-            if(filtersData.get(position).getStatue().equals("accepted")) {
+            if(filtersData.get(position).getStatue().equals("accepted") || filtersData.get(position).getStatue().equals("recived")) {
                 getInfo(filtersData.get(position).getuId(), orderID,filtersData.get(position).getuAccepted());
             } else if (filtersData.get(position).getStatue().equals("placed") && requestNumber > 0){
                 getRequestss(filtersData.get(position).getId());

@@ -84,14 +84,6 @@ public class Admin extends Activity {
 
     public void onBackPressed() { }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        if(uId == null) {
-            StartUp startUp = new StartUp();
-            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
-        }
-    }
 
     @SuppressLint({"SetTextI18n", "RtlHardcoded"})
     @Override

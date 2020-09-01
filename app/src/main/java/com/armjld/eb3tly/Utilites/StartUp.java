@@ -22,12 +22,6 @@ import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.MainActivity;
-import com.google.android.play.core.appupdate.AppUpdateInfo;
-import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -73,7 +67,6 @@ public class StartUp extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
         startConst = findViewById(R.id.startConst);
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        Toast.makeText(this, "a7a b2a", Toast.LENGTH_SHORT).show();
         // ---------------- Check for Updates ----------------------//
        /* AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(StartUp.this);
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
@@ -92,7 +85,6 @@ public class StartUp extends AppCompatActivity {
                 Toast.makeText(this, "يوجد تحديث جديد متاح", Toast.LENGTH_SHORT).show();
             } else {
                 whatToDo();
-                Toast.makeText(this, "what to do b2a", Toast.LENGTH_SHORT).show();
             }
         });*/
         whatToDo();
@@ -101,7 +93,6 @@ public class StartUp extends AppCompatActivity {
     private void whatToDo() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
             reRoute();
-            Toast.makeText(this, "route drb2a", Toast.LENGTH_SHORT).show();
         } else {
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -220,7 +211,6 @@ public class StartUp extends AppCompatActivity {
                     blocedUsers.clear();
                     for(DataSnapshot ds : snapshot.getChildren()){
                         blocedUsers.add(ds.child("id").getValue().toString());
-                        //Toast.makeText(context, ds.child("id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 }

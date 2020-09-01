@@ -106,7 +106,7 @@
                 android:textColor="#FFFFFF" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnAccept"
+                android:id="@+id/btnDelete"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -117,7 +117,6 @@
                 android:text="Delete Request"
                 android:textColor="#000000" />
         </LinearLayout>
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -107,15 +107,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         }, 2000);
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        if(uId == null) {
-            StartUp startUp = new StartUp();
-            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
-        }
-    }
-
     // On Create Fun
     @SuppressLint("RtlHardcoded")
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,7 +310,11 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // ---------------------- GET ALL THE ORDERS -------------------//
         mSwipeRefreshLayout.setRefreshing(true);
-        getOrdersByDate();
+        if(sortDate) {
+            getOrdersByDate();
+        } else {
+            getOrdersByLatest();
+        }
 
         // Filter Button
         filtrs_btn.setOnClickListener(v -> {
