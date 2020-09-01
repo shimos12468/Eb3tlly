@@ -106,7 +106,7 @@
                 android:textColor="#FFFFFF" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnDelete"
+                android:id="@+id/btnAccept"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

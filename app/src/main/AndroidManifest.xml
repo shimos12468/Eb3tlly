@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".Passaword.Forget_Password"></activity>
+        <activity android:name=".Requests.RequestsForSup"></activity>
+        <activity android:name=".Passaword.Forget_Password" />
         <activity
             android:name=".messeges.Messages"
             android:screenOrientation="portrait" />
@@ -66,6 +67,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Orders.EditOrders"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Orders.AddOrders"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Utilites.Filters"

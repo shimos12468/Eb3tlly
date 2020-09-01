@@ -51,7 +51,7 @@ public class AddOrders extends AppCompatActivity {
 
     private static final String TAG = "Add Orders";
     private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
-    private CheckBox chkMetro, chkTrans, chkCar, chkMotor;
+    private CheckBox chkMetro, chkTrans, chkCar, chkMotor, chkBid;
     private Spinner spPState, spPRegion, spDState, spDRegion;
     private FirebaseAuth mAuth;
     private Button btnsave,btnSaveAdd;
@@ -114,6 +114,7 @@ public class AddOrders extends AppCompatActivity {
         chkCar = findViewById(R.id.chkCar);
         chkMotor = findViewById(R.id.chkMotor);
         chkTrans = findViewById(R.id.chkTrans);
+        chkBid = findViewById(R.id.chkBid);
 
         //Spinners
         spPState =  findViewById(R.id.txtPState);
@@ -666,12 +667,20 @@ public class AddOrders extends AppCompatActivity {
                         String drateid = "";
                         String pState12 = spPState.getSelectedItem().toString();
                         String dState = spDState.getSelectedItem().toString();
+                        String type;
+
+                        if(chkBid.isChecked()) {
+                            type = "Bid";
+                        } else {
+                            type = "Normal";
+                        }
 
                         // Send order to Data Base using the DATA MODEL
                         Data data = new Data(pState12, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
+                                mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type);
                         mDatabase.child(id).setValue(data);
                         mDatabase.child(id).child("lastedit").setValue(datee);
+
 
                         SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences1.edit();
@@ -797,6 +806,13 @@ public class AddOrders extends AppCompatActivity {
                             String drateid = "";
                             String pState1 = spPState.getSelectedItem().toString();
                             String dState = spDState.getSelectedItem().toString();
+                            String type;
+
+                            if(chkBid.isChecked()) {
+                                type = "Bid";
+                            } else {
+                                type = "Normal";
+                            }
 
                             SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences1.edit();
@@ -808,10 +824,16 @@ public class AddOrders extends AppCompatActivity {
 
                             // Send order to Data Base using the DATA MODEL
                             Data data = new Data(pState1, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote);
+                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type);
                             assert id != null;
                             mDatabase.child(id).setValue(data);
                             mDatabase.child(id).child("lastedit").setValue(datee);
+
+                            if(chkBid.isChecked()) {
+                                mDatabase.child(id).child("type").setValue("Bid");
+                            } else {
+                                mDatabase.child(id).child("type").setValue("Normal");
+                            }
 
                             sendNotiState(pState1, dState, id);
 

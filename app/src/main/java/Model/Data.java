@@ -29,6 +29,8 @@ public class Data {
     private String uAccepted;
     private String srated;
     private String srateid;
+
+    private String type = "Normal";
     public static String removed = "false";
 
     public String getRemoved() {
@@ -48,9 +50,17 @@ public class Data {
 
     public Data(){ }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Data(String txtPState, String mPRegion, String mPAddress, String mPShop, String txtDState, String mDRegion, String DAddress, String DDate, String DPhone, String DName,
                 String GMoney, String GGet, String date, String id, String uId, String isTrans, String isMetro, String isMotor, String isCar, String statue, String uAccepted, String srated,
-                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes) {
+                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type) {
 
         //PICK
         this.txtPState = txtPState;
@@ -91,6 +101,7 @@ public class Data {
 
         this.drated = drated;
         this.drateid = drateid;
+        this.type = type;
     }
 
     public String getTxtPState() {

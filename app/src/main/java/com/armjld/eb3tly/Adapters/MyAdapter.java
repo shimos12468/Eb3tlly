@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.MainActivity;
@@ -106,6 +108,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         Vibrator vibe = (Vibrator)(context).getSystemService(Context.VIBRATOR_SERVICE);
+        holder.btnBid.setVisibility(View.GONE);
         // Get Post Date
         holder.lin1.setVisibility(View.GONE);
         holder.txtWarning.setVisibility(View.GONE);
@@ -134,8 +137,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
 
-
-
         final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
         final String notes = filtersData.get(position).getNotes().replaceAll("(^\\h*)|(\\h*$)","").trim();
@@ -143,6 +144,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String removed = filtersData.get(position).getRemoved().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        String type = filtersData.get(position).getType();
 
         uDatabase.child(owner).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -174,8 +176,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-
-
         holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)","").trim());
@@ -183,6 +183,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setFee(filtersData.get(position).getGGet().replaceAll("(^\\h*)|(\\h*$)","").trim());
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
+        holder.setBid(type);
 
         //Hide this order Button
         holder.btnHide.setOnClickListener(v -> {
@@ -207,6 +208,73 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             assert vibe != null;
             vibe.vibrate(20);
         });
+
+        // ------------------ Bidding Dialog -------------------- //
+        holder.btnBid.setOnClickListener(v-> {
+            assert vibe != null;
+            vibe.vibrate(20);
+            AlertDialog.Builder dialogBid = new AlertDialog.Builder(context);
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View viewBid = inflater.inflate(R.layout.dialog_bid, null);
+            dialogBid.setView(viewBid);
+            final AlertDialog dialog = dialogBid.create();
+            dialog.show();
+
+            EditText txtBid = viewBid.findViewById(R.id.txtBid);
+            Button btnBid = viewBid.findViewById(R.id.btnBid);
+            ImageView btnClose = viewBid.findViewById(R.id.btnClose);
+
+            TextView tbTitle = viewBid.findViewById(R.id.toolbar_title);
+            tbTitle.setText("اقترح سعر توصيل");
+
+            btnClose.setOnClickListener(v1 -> {
+                vibe.vibrate(20);
+                dialog.dismiss();
+            });
+
+            mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists() && snapshot.child("offer").exists()) {
+                        txtBid.setText(snapshot.child("offer").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+
+            btnBid.setOnClickListener(v1 -> {
+                if(txtBid.getText().toString().length() == 0) {
+                    txtBid.setError("الرجاء ادخال قيمة");
+                    txtBid.requestFocus();
+                    return;
+                }
+
+                DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            // ------------------- Send Request -------------------- //
+                            String numBid = txtBid.getText().toString().trim();
+                            rquests _rquests = new rquests();
+                            _rquests.addrequest(numBid, orderID, datee);
+
+                            // ------------------ Notificatiom ------------------ //
+                            notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " يأقتراح سعر " + numBid + " ج لتوصيل اوردر " + filtersData.get(position).getDName(),datee,"false","order");
+                            nDatabase.child(owner).push().setValue(Noti);
+
+                            Toast.makeText(context, "تم ارسال اقتراح سعرك للتاجر", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            break;
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("هل انت متأكد من انك تريج اقتراح هذا السعر علي التاجر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+            });
+        });
+
 
         //More Info Button
         holder.btnMore.setOnClickListener(v -> {
@@ -452,6 +520,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             vibe.vibrate(20);
         });
 
+
+
         if(uType.equals("Supplier")) {
             holder.lin1.setVisibility(View.GONE);
             holder.txtWarning.setVisibility(View.GONE);
@@ -468,6 +538,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.txtWarning.setVisibility(View.GONE);
             holder.linAdmin.setVisibility(View.VISIBLE);
         }
+
 
         holder.btnEdit.setOnClickListener(v -> {
             assert vibe != null;
@@ -630,7 +701,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public View myview;
-        public Button btnAccept, btnHide, btnMore, btnEdit,btnDelete,btnOpen;
+        public Button btnAccept, btnHide, btnMore, btnEdit,btnDelete,btnOpen, btnBid;
         public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom,txtOrderTo,txtPostDate;
         public LinearLayout lin1,linerDate,linAdmin;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgStar,imgVerf;
@@ -661,11 +732,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             icnMetro = myview.findViewById(R.id.icnMetro);
             icnTrans = myview.findViewById(R.id.icnTrans);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
+            btnBid = myview.findViewById(R.id.btnBid);
         }
 
         public void setUsername(String name, String isConfirm){
             txtUsername.setText(name);
             setVerf(isConfirm);
+        }
+
+        public void setBid(String type) {
+            if(type.equals("Normal")) {
+                btnBid.setVisibility(View.GONE);
+            } else {
+                btnBid.setVisibility(View.VISIBLE);
+            }
         }
 
         public void setOrderFrom(String orderFrom){
@@ -747,4 +827,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
     }
+
 }

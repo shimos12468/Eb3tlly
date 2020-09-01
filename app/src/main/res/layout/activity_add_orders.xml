@@ -7,7 +7,7 @@
     android:layoutDirection="ltr"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.AddOrders">
+    tools:context="com.armjld.eb3tly.Orders.AddOrders">
 
 
     <ScrollView
@@ -225,7 +225,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textView15"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
 
                 <TextView
                     android:id="@+id/textView15"
@@ -238,7 +239,8 @@
                     android:textAlignment="viewEnd"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -271,7 +273,8 @@
                     android:textAlignment="viewEnd"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlCompat" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <EditText
@@ -466,7 +469,21 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/chkCar"
                     app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <CheckBox
+                android:id="@+id/chkBid"
+                android:gravity="right|center"
+                android:layoutDirection="rtl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:buttonTint="#000000"
+                android:checked="true"
+                android:text="قبول اقتراحات المندوبين"
+                android:textColor="#000000" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constButtons"

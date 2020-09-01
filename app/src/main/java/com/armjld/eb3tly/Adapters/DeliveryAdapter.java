@@ -134,6 +134,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         final String iDAddress = data.getDAddress();
         final String iDPhone = data.getDPhone();
         final String iDName = data.getDName();
+        final String iDNote = data.getNotes();
 
         holder.setDate(data.getDDate());
         holder.setUsername(data.getuId());
@@ -185,12 +186,14 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             TextView txtDPhone = infoView.findViewById(R.id.itxtDPhone);
             TextView txtDName = infoView.findViewById(R.id.itxtDName);
             ImageView btniClose = infoView.findViewById(R.id.btniClose);
+            TextView itxtNote = infoView.findViewById(R.id.itxtNote);
 
             // Set Data
             PShop.setText(iPShop);
             txtPAddress.setText("عنوان الاستلام : " + iPAddress);
             txtDAddress.setText("عنوان التسليم : " + iDAddress);
             txtDPhone.setText(iDPhone);
+            itxtNote.setText(iDNote);
             txtDPhone.setPaintFlags(txtDPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
             txtPPhone.setPaintFlags(txtPPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
 

@@ -231,35 +231,58 @@
         <LinearLayout
             android:id="@+id/lin1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
             android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/Lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnBid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_bad"
+                    android:text="اقترح سعر"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAccept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="قبول الاوردر"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnMore"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:layout_alignParentTop="false"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/btn_defult"
                 android:text="المزيد"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnAccept"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/btn_defult"
-                android:text="قبول الاوردر"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 

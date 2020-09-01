@@ -50,7 +50,7 @@ public class EditOrders extends AppCompatActivity {
 
     private static final String TAG = "Edit Orders";
     private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
-    private CheckBox chkMetro, chkTrans, chkCar, chkMotor;
+    private CheckBox chkMetro, chkTrans, chkCar, chkMotor,chkBid;
     private Spinner spPState, spPRegion, spDState, spDRegion;
     private FirebaseAuth mAuth;
     private Button btnsave;
@@ -102,6 +102,7 @@ public class EditOrders extends AppCompatActivity {
         chkCar = findViewById(R.id.chkCar);
         chkMotor = findViewById(R.id.chkMotor);
         chkTrans = findViewById(R.id.chkTrans);
+        chkBid = findViewById(R.id.chkBid);
 
         //Spinners
         spPState = (Spinner) findViewById(R.id.txtPState);
@@ -165,6 +166,17 @@ public class EditOrders extends AppCompatActivity {
                 DName.setText(orderData.getDName().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                 GMoney.setText(orderData.getGMoney().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
                 GGet.setText(orderData.getGGet().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+
+                if(orderData.getType() == null) {
+                    chkBid.setChecked(false);
+                } else {
+                    if(!orderData.getType().equals("Normal")) {
+                        chkBid.setChecked(true);
+                    } else {
+                        chkBid.setChecked(false);
+                    }
+                }
+
                 txtNotes.setText(orderData.getNotes());
 
                 if(!orderData.getIsMetro().equals("")) {
@@ -644,8 +656,16 @@ public class EditOrders extends AppCompatActivity {
                                 mdialog.setMessage("جاري اضافة الاوردر");
                                 mdialog.show();
 
+                                String type;
+
+                                if(chkBid.isChecked()) {
+                                    type = "Bid";
+                                } else {
+                                    type = "Normal";
+                                }
+
                                 Data data = new Data(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), mPAddress, mPShop, spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                        mDPhone, mDName, mGMoney, mGGet, orderDate, orderID, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, acceptedTime, "", mNote);
+                                        mDPhone, mDName, mGMoney, mGGet, orderDate, orderID, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, acceptedTime, "", mNote,type);
                                 mDatabase.child(orderID).setValue(data);
                                 mDatabase.child(orderID).child("lastedit").setValue(datee);
 
