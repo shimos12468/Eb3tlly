@@ -146,15 +146,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
         String type = filtersData.get(position).getType();
 
-        uDatabase.child(owner).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String uName = Objects.requireNonNull(snapshot.getValue()).toString();
+                String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                 String isConfirm = "false";
                 if(snapshot.child("isConfirmed").exists()) {
                     isConfirm = snapshot.child("isConfirmed").getValue().toString();
                 }
                 holder.setUsername(uName, isConfirm);
+                Log.i(TAG, uName + " : " + isConfirm);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -737,7 +738,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setUsername(String name, String isConfirm){
             txtUsername.setText(name);
-            setVerf(isConfirm);
+            if(isConfirm.equals("true")) {
+                imgVerf.setVisibility(View.VISIBLE);
+                Log.i("Home", "Visible");
+            } else {
+                imgVerf.setVisibility(View.GONE);
+                Log.i("Home", "Gone");
+            }
         }
 
         public void setBid(String type) {
@@ -816,14 +823,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 finalDate = "منذ " +dD + " ايام";
             }
             txtPostDate.setText(finalDate);
-        }
-
-        public void setVerf(String isConfirm) {
-            if(isConfirm.equals("true")) {
-                imgVerf.setVisibility(View.VISIBLE);
-            } else {
-                imgVerf.setVisibility(View.GONE);
-            }
         }
 
     }

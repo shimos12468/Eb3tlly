@@ -72,6 +72,9 @@
             android:name=".Orders.AddOrders"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Orders.OneOrder"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Utilites.Filters"
             android:screenOrientation="portrait" />
         <activity
