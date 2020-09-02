@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.R;
@@ -68,6 +69,15 @@ public class EditOrders extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

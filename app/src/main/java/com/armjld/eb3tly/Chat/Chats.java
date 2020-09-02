@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.armjld.eb3tly.Adapters.chatsAdapter;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.Objects;
 
 import Model.ChatsData;
 
@@ -27,6 +31,15 @@ public class Chats extends AppCompatActivity {
     chatsAdapter chatsAdapter;
     RecyclerView recyclerChat;
     List<ChatsData> mChat;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

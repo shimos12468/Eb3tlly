@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import Model.notiData;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
@@ -65,11 +66,11 @@ public class Notifications extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(uId == null) {
-            StartUp startUp = new StartUp();
-            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
         }
     }
 

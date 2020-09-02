@@ -44,9 +44,12 @@ public class StartUp extends AppCompatActivity {
     private ConstraintLayout startConst;
     public UserInFormation userInfo = new UserInFormation();
     int codee = 10001;
+    public static boolean dataset = false;
 
-    DatabaseReference uDatabase , Database;
+    static DatabaseReference uDatabase;
+    DatabaseReference Database;
     boolean doubleBackToExitPressedOnce = false;
+
 
     @Override
     public void onBackPressed() {
@@ -139,6 +142,7 @@ public class StartUp extends AppCompatActivity {
                     if(snapshot.child("isConfirmed").exists()) {
                         UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                     }
+                    dataset = true;
 
                     setUserData(mAuth.getCurrentUser().getUid());
 
@@ -221,7 +225,7 @@ public class StartUp extends AppCompatActivity {
         });
     }
 
-    public void setUserData(String uid) {
+    public static void setUserData(String uid) {
         uDatabase.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -238,6 +242,7 @@ public class StartUp extends AppCompatActivity {
                 if(snapshot.child("isConfirmed").exists()) {
                     UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                 }
+                dataset = true;
             }
 
             @Override

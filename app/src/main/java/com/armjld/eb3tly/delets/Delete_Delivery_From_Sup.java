@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import Model.DeleteData;
 import Model.notiData;
@@ -43,6 +45,15 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

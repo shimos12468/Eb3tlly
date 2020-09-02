@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Passaword.ChangePassword;
 import com.armjld.eb3tly.Utilites.Conatact;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.MainActivity;
@@ -68,6 +69,15 @@ public class OrdersBySameUser extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView btnNavBar;
     String userID;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -95,6 +95,15 @@ public class Account_Confirm extends AppCompatActivity {
     private ProgressDialog mdialog;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+    }
+    
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account__confirm);

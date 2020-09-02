@@ -59,7 +59,7 @@ import Model.Data;
 
 
 @SuppressWarnings("FieldCanBeLocal")
-public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener  {
 
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
@@ -80,6 +80,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     String uType = UserInFormation.getAccountType();
     String uId = UserInFormation.getId();
     public static boolean sortDate = true;
+    private Thread t = null;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     //Recycler view
@@ -94,22 +95,24 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             finishAffinity();
             System.exit(0);
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "اضغط مرة اخري للخروج من التطبيق", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+    }
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
     }
 
     // On Create Fun
     @SuppressLint("RtlHardcoded")
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -406,7 +409,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     blocedUsers.clear();
                     for(DataSnapshot ds : snapshot.getChildren()){
                         blocedUsers.add(ds.child("id").getValue().toString());
-                        //Toast.makeText(context, ds.child("id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -465,7 +467,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void updateNone(int listSize) {
-        Log.i(TAG, "List size is now : " + listSize);
         if(listSize > 0) {
             txtNoOrders.setVisibility(View.GONE);
         } else {
@@ -473,10 +474,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { }

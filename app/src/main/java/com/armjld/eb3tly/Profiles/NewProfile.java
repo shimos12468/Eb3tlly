@@ -331,11 +331,11 @@ public class NewProfile extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(uId == null) {
-            StartUp startUp = new StartUp();
-            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
         }
     }
 }

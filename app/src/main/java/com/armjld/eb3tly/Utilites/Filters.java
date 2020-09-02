@@ -22,6 +22,7 @@ import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.main.HomeActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 import Model.Data;
 
@@ -51,7 +53,16 @@ public class   Filters extends AppCompatActivity {
 
     RecyclerView recyclerView;
     TextView txtNoOrders;
-
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+    }
+    
     // Disable the Back Button
     @Override
     public void onBackPressed() {

@@ -1,6 +1,7 @@
 package com.armjld.eb3tly.Orders;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import Model.Data;
 
@@ -50,11 +52,11 @@ public class OneOrder extends AppCompatActivity {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     @Override
-    public void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(uId == null) {
-            StartUp startUp = new StartUp();
-            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
         }
     }
 

@@ -72,6 +72,15 @@ public class AddOrders extends AppCompatActivity {
         whichProfile();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!StartUp.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+    }
+    
     private void whichProfile () {
         if(uType.equals("Supplier")) {
             startActivity(new Intent(getApplicationContext(), supplierProfile.class));

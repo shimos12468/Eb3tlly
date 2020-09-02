@@ -87,11 +87,10 @@ public class UserSetting extends AppCompatActivity {
     private ConstraintLayout constUserSettings;
 
     @Override
-    public void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(uId == null) {
-            StartUp startUp = new StartUp();
-            startUp.setUserData(mAuth.getCurrentUser().getUid().toString());
+        if(!StartUp.dataset) {
+            StartUp.setUserData(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         }
     }
 
