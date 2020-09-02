@@ -8,8 +8,8 @@ android {
         applicationId "com.armjld.eb3tly"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 21
-        versionName "2.5.1"
+        versionCode 22
+        versionName "2.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
