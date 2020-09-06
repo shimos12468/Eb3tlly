@@ -1,12 +1,19 @@
 package com.armjld.eb3tly.Orders;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
@@ -41,26 +49,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
 import Model.Data;
 import Model.notiData;
-
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class AddOrders extends AppCompatActivity {
+
+    Location gps_loc;
+    Location network_loc;
+    Location final_loc;
+    private double longitude;
+    private double latitude;
 
     private static final String TAG = "Add Orders";
     private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
     private CheckBox chkMetro, chkTrans, chkCar, chkMotor, chkBid;
     private Spinner spPState, spPRegion, spDState, spDRegion;
     private FirebaseAuth mAuth;
-    private Button btnsave,btnSaveAdd;
+    private Button btnsave, btnSaveAdd;
     String uId = UserInFormation.getId();
     String uType = UserInFormation.getAccountType();
     private ProgressDialog mdialog;
     private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
     private ImageView btnClose, imgHelpMoney, imgHelpGet;
     DatePickerDialog dpd;
+    int GPS_CODE = 8822;
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
@@ -75,14 +88,14 @@ public class AddOrders extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if (!StartUp.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
     }
-    
-    private void whichProfile () {
-        if(uType.equals("Supplier")) {
+
+    private void whichProfile() {
+        if (uType.equals("Supplier")) {
             startActivity(new Intent(getApplicationContext(), supplierProfile.class));
         } else {
             startActivity(new Intent(getApplicationContext(), NewProfile.class));
@@ -95,8 +108,7 @@ public class AddOrders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_orders);
 
-
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
             startActivity(new Intent(this, MainActivity.class));
             Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
@@ -126,9 +138,9 @@ public class AddOrders extends AppCompatActivity {
         chkBid = findViewById(R.id.chkBid);
 
         //Spinners
-        spPState =  findViewById(R.id.txtPState);
+        spPState = findViewById(R.id.txtPState);
         spPRegion = findViewById(R.id.txtPRegion);
-        spDState =  findViewById(R.id.txtDState);
+        spDState = findViewById(R.id.txtDState);
         spDRegion = findViewById(R.id.txtDRegion);
 
         btnClose = findViewById(R.id.btnClose);
@@ -141,6 +153,7 @@ public class AddOrders extends AppCompatActivity {
 
         mdialog = new ProgressDialog(this);
 
+        getLocation();
 
         // Firebasee
         mAuth = FirebaseAuth.getInstance();
@@ -659,6 +672,7 @@ public class AddOrders extends AppCompatActivity {
                 isMotor = "";
             }
 
+            
             final String finalIsMetro = isMetro;
             final String finalIsTrans = isTrans;
             final String finalIsMotor = isMotor;
@@ -689,7 +703,8 @@ public class AddOrders extends AppCompatActivity {
                                 mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type);
                         mDatabase.child(id).setValue(data);
                         mDatabase.child(id).child("lastedit").setValue(datee);
-
+                        mDatabase.child(id).child("lat").setValue(longitude);
+                        mDatabase.child(id).child("long").setValue(latitude);
 
                         SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences1.edit();
@@ -777,6 +792,7 @@ public class AddOrders extends AppCompatActivity {
                     return;
                 }
 
+
                 // Check the way of transportation
                 if (chkTrans.isChecked()) {
                     isTrans = "مواصلات";
@@ -798,6 +814,8 @@ public class AddOrders extends AppCompatActivity {
                 } else {
                     isMotor = "";
                 }
+
+
                 final String finalIsMetro = isMetro;
                 final String finalIsTrans = isTrans;
                 final String finalIsMotor = isMotor;
@@ -836,6 +854,10 @@ public class AddOrders extends AppCompatActivity {
                                     mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type);
                             assert id != null;
                             mDatabase.child(id).setValue(data);
+
+                            mDatabase.child(id).child("lat").setValue(latitude);
+                            mDatabase.child(id).child("long").setValue(longitude);
+
                             mDatabase.child(id).child("lastedit").setValue(datee);
 
                             if(chkBid.isChecked()) {
@@ -875,6 +897,51 @@ public class AddOrders extends AppCompatActivity {
                 spDRegion.setSelection(0);
             }
         });
+    }
+
+    private void getLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(this, "nope", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+        if(!provider.contains("gps")){ //if gps is disabled
+            final Intent poke = new Intent();
+            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+            poke.setData(Uri.parse("3"));
+            sendBroadcast(poke);
+        }
+
+        try {
+            gps_loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            network_loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (gps_loc != null) {
+            final_loc = gps_loc;
+            latitude = final_loc.getLatitude();
+            longitude = final_loc.getLongitude();
+        }
+        else if (network_loc != null) {
+            final_loc = network_loc;
+            latitude = final_loc.getLatitude();
+            longitude = final_loc.getLongitude();
+        }
+        else {
+            latitude = 0.0;
+            longitude = 0.0;
+        }
+
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE}, 1);
     }
 
     private int getIndex(Spinner spinner, String value) {

@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Orders.MapsActivity;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.Utilites.Conatact;
@@ -63,7 +64,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
-    private ImageView btnNavBar, btnSort;
+    private ImageView btnNavBar, btnSort,btnMaps;
     private LinearLayout filtrs_btn;
     private LinearLayout footer;
     private static ArrayList<Data> mm;
@@ -133,6 +134,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         btnSort = findViewById(R.id.btnSort);
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
+        btnMaps = findViewById(R.id.btnMaps);
         footer = findViewById(R.id.footer);
         txtNoOrders.setVisibility(View.GONE);
         TextView tbTitle = findViewById(R.id.toolbar_title);
@@ -154,6 +156,11 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         //Recycler
         recyclerView=findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
+
+        btnMaps.setOnClickListener(v -> {
+            finish();
+            startActivity(new Intent(this, MapsActivity.class));
+        });
 
         // ----------- sort buttom
         btnSort.setOnClickListener(v -> {

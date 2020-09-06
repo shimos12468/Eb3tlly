@@ -255,7 +255,7 @@
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_bad"
                     android:text="اقترح سعر"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#000000"
                     android:textSize="20sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
