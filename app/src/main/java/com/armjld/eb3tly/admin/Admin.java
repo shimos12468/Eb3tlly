@@ -325,9 +325,11 @@ public class Admin extends Activity {
 
         });
 
+
+
         // ------------------------- Delete Non Completed ---------------------------//
         btnDeleteUser.setOnClickListener(v -> {
-            mDatabase.limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.orderByKey().limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
