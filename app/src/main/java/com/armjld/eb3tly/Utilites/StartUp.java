@@ -21,6 +21,7 @@ import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
+import com.armjld.eb3tly.main.Login_Options;
 import com.armjld.eb3tly.main.MainActivity;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -102,12 +103,10 @@ public class StartUp extends AppCompatActivity {
                 public void run() {
                     sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
                     if(sharedPreferences.getBoolean("firstrun", true)) {
-                        Log.i("c" ,IntroFirstRun.class.toString());
                         startActivity(new Intent(StartUp.this, IntroFirstRun.class));
                         sharedPreferences.edit().putBoolean("firstrun", false).apply();
                     } else {
-                        Log.i("AZA" ,MainActivity.class.toString());
-                        startActivity(new Intent(StartUp.this, MainActivity.class));
+                        startActivity(new Intent(StartUp.this, Login_Options.class));
                     }
                 }
             }, 2500);
@@ -177,12 +176,12 @@ public class StartUp extends AppCompatActivity {
                         Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
                         mAuth.signOut();
                         finish();
-                        startActivity(new Intent(StartUp.this, MainActivity.class));
+                        startActivity(new Intent(StartUp.this, Login_Options.class));
                     }
                 } else {
                     mAuth.signOut();
                     finish();
-                    startActivity(new Intent(StartUp.this, MainActivity.class));
+                    startActivity(new Intent(StartUp.this, Login_Options.class));
                 }
             }
 

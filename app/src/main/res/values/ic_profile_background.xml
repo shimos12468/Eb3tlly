@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_profile_background">@android:color/holo_blue_dark</color>
+    <color name="ic_profile_background">#ffd334</color>
 </resources>
