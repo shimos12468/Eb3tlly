@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.armjld.eb3tly.MyLocation;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
@@ -108,12 +109,42 @@ public class AddOrders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_orders);
 
+        // Firebasee
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = getInstance().getReference("Pickly").child("orders");
+        uDatabase = getInstance().getReference().child("Pickly").child("users");
+        rDatabase = getInstance().getReference().child("Pickly").child("comments");
+        vDatabase = getInstance().getReference().child("Pickly").child("values");
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+
+        // ----------------- Check for Data Loss ------------------- //
+        if(uId == null) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
+        }
+
+        // --------------- Check for logout -----------------------------//
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
             startActivity(new Intent(this, MainActivity.class));
             Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // ------------------- Check if there is a locations ---------------------- //
+        uDatabase.child(uId).child("locations").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()) {
+                    finish();
+                    startActivity(new Intent(AddOrders.this, MyLocation.class));
+                    Toast.makeText(AddOrders.this, "الرجاء اضافة عنوان علي الاقل", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
 
         // Toolbar
         TextView toolbar_title = findViewById(R.id.toolbar_title);
@@ -153,20 +184,9 @@ public class AddOrders extends AppCompatActivity {
 
         mdialog = new ProgressDialog(this);
 
-        getLocation();
+        //getLocation();
 
-        // Firebasee
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = getInstance().getReference("Pickly").child("orders");
-        uDatabase = getInstance().getReference().child("Pickly").child("users");
-        rDatabase = getInstance().getReference().child("Pickly").child("comments");
-        vDatabase = getInstance().getReference().child("Pickly").child("values");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
 
-        if(uId == null) {
-            finish();
-            startActivity(new Intent(this, StartUp.class));
-        }
 
         // ---------------- Help Buttons----------------------//
         imgHelpGet.setOnClickListener(v -> {

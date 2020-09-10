@@ -39,8 +39,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".MyLocation"
+            android:label="@string/title_activity_my_location"></activity>
+        <activity
             android:name=".Orders.Maps_User_Location"
-            android:label="@string/title_activity_maps__user__location"></activity>
+            android:label="@string/title_activity_maps__user__location" />
         <activity android:name=".Orders.MapsActivity" />
         <activity android:name=".Requests.RequestsForSup" />
         <activity android:name=".Passaword.Forget_Password" />

@@ -323,6 +323,8 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                         //------------------ se request as accepted in user db ----------- //
                         uDatabase.child(id).child("requests").child(orderId).child("statue").setValue("accepted");
 
+
+
                         Toast.makeText(context, "تم قبول المندوب", Toast.LENGTH_SHORT).show();
                         context.startActivity(new Intent(context, supplierProfile.class));
                         break;

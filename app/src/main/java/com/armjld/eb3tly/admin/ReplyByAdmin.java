@@ -239,13 +239,10 @@ public class ReplyByAdmin extends AppCompatActivity {
                             count++;
                             replyAdapter rep = new replyAdapter(ReplyByAdmin.this, mm, getApplicationContext(), count);
                             recyclerView.setAdapter(rep);
-                            Toast.makeText(ReplyByAdmin.this, "Messages Loaded", Toast.LENGTH_LONG).show();
                             mdialog.dismiss();
-
                         }
 
                         if(count == 0) {
-                            Toast.makeText(ReplyByAdmin.this, "No Messages", Toast.LENGTH_LONG).show();
                             mdialog.dismiss();
                         }
 

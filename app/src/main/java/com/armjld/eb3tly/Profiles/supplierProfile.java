@@ -1,12 +1,14 @@
 package com.armjld.eb3tly.Profiles;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.armjld.eb3tly.MyLocation;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Utilites.StartUp;
@@ -63,6 +65,7 @@ public class supplierProfile extends AppCompatActivity {
     private String uId = UserInFormation.getId();
     private ViewPager view_pager;
     String user_type;
+    private ProgressDialog mdialog;
     private String isConfirmed = UserInFormation.getisConfirm();
 
     @Override
@@ -96,6 +99,7 @@ public class supplierProfile extends AppCompatActivity {
         constSupProfile= findViewById(R.id.constSupProfile);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
+        mdialog = new ProgressDialog(this);
         assert mUser != null;
 
 
@@ -248,7 +252,11 @@ public class supplierProfile extends AppCompatActivity {
 
         btnAdd.setOnClickListener(v -> {
             vibe.vibrate(40);
-            vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            //mdialog.setMessage("جاري التاكد من اتصال الانترنت ..");
+            //mdialog.show();
+            finish();
+            startActivity(new Intent(this, MyLocation.class));
+            /*vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
@@ -257,11 +265,12 @@ public class supplierProfile extends AppCompatActivity {
                         } else {
                             startActivity(new Intent(supplierProfile.this, AddOrders.class));
                         }
+                        mdialog.dismiss();
                     }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
+            });*/
         });
     }
 

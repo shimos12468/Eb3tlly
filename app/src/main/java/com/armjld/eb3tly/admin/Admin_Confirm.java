@@ -75,7 +75,6 @@ public class Admin_Confirm extends AppCompatActivity {
                         count++;
                         confirm_adapter rep = new confirm_adapter(Admin_Confirm.this, mm, getApplicationContext(), count);
                         recyclerView.setAdapter(rep);
-                        Toast.makeText(Admin_Confirm.this, "Data Loaded", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -64,6 +64,7 @@ public class LocationManeger {
               Bdatabase.child("Address").setValue(loc.getAddress());
               Bdatabase.child("region").child(loc.getRegion());
               Bdatabase.child("state").child(loc.getState());
+              Bdatabase.child("title").child(loc.getTitle());
               Bdatabase.child("LocationID").setValue(loc.getId());
               Bdatabase.child("name").setValue(loc.getName());
               location = "Location";
@@ -127,6 +128,7 @@ public class LocationManeger {
                               loc.setRegion(ds.child("region").getValue().toString());
                               loc.setId(ds.child("LocationID").getValue().toString());
                               loc.setName(ds.child("name").getValue().toString());
+                              loc.setName(ds.child("title").getValue().toString());
                               locHolder.add(loc);
                           }
 

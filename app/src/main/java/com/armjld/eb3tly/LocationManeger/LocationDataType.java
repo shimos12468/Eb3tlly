@@ -9,6 +9,7 @@ public class LocationDataType {
     private String state;
     private String name;
     private String id;
+    private String title;
 
     public String getId() {
         return id;
@@ -64,5 +65,13 @@ public class LocationDataType {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
