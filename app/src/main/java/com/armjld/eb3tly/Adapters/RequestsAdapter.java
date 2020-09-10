@@ -318,10 +318,24 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                         nDatabase.child(id).push().setValue(Noti);
 
                         // ----------------- Set the new Shipping Price --------//
-                        mDatabase.child(orderId).child("gget").setValue(offer);
+                        //mDatabase.child(orderId).child("gget").setValue(offer);
 
                         //------------------ se request as accepted in user db ----------- //
                         uDatabase.child(id).child("requests").child(orderId).child("statue").setValue("accepted");
+                        for(int i = 0;i<requestsData.size();i++){
+                            if(!requestsData.get(i).getId().equals(id)){
+                                mDatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderId).child("requests").child(requestsData.get(i).getId());
+                                mDatabase.child("statue").setValue("declined");
+                                uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(requestsData.get(i).getId()).child("requests").child(orderId);
+                                uDatabase.child("statue").setValue("declined");
+                            }
+                            else{
+                                mDatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderId).child("requests").child(requestsData.get(i).getId());
+                                mDatabase.child("statue").setValue("accepted");
+                                uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(requestsData.get(i).getId()).child("requests").child(orderId);
+                                uDatabase.child("statue").setValue("accepted");
+                            }
+                        }
 
 
 
