@@ -21,6 +21,7 @@ import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.SignUp.Signup;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.Terms;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.admin.Admin;
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         pass = findViewById(R.id.txtEditPassword);
         btnlogin = findViewById(R.id.btnEditInfo);
         txtForgetPass = findViewById(R.id.txtForgetPass);
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("تسجيل الدخول");
 
         final Intent signIntent = new Intent(this, New_SignUp.class);
         signup.setOnClickListener(v -> {
@@ -164,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                                     UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
                                     UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
                                     UserInFormation.setId(mAuth.getCurrentUser().getUid());
-
                                     UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
                                     UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
                                     UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
@@ -172,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                                     if(snapshot.child("isConfirmed").exists()) {
                                         UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                                     }
+                                    StartUp.dataset = true;
 
                                     if (isActive.equals("true")) { // Check if the account is Disabled
                                         // --------------------- check account types and send each type to it's activity --------------//

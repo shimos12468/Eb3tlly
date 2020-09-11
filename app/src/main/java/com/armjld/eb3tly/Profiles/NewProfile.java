@@ -327,7 +327,9 @@ public class NewProfile extends AppCompatActivity {
         uDatabase.child(uId).child("device_token").setValue("");
         finish();
         mAuth.signOut();
-        Login_Options.mGoogleSignInClient.signOut();
+        if(Login_Options.mGoogleSignInClient != null) {
+            Login_Options.mGoogleSignInClient.signOut();
+        }
         startActivity(new Intent(this, Login_Options.class));
         Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }

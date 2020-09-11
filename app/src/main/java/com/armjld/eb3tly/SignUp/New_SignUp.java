@@ -35,6 +35,7 @@ import android.widget.ViewFlipper;
 import com.armjld.eb3tly.Intros.intro2;
 import com.armjld.eb3tly.Intros.introSup;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.main.Login_Options;
 import com.armjld.eb3tly.main.MainActivity;
@@ -60,6 +61,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -120,11 +122,12 @@ public class New_SignUp extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-        TextView tbTitle = findViewById(R.id.toolbar_home);
+        TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("حساب جديد");
 
         btnNext = findViewById(R.id.btnNext);
         btnPrev = findViewById(R.id.btnPrev);
+        btnBack = findViewById(R.id.btnBack);
 
         btnDelivery = findViewById(R.id.btnDelivery);
         btnSupplier = findViewById(R.id.btnSupplier);
@@ -141,6 +144,8 @@ public class New_SignUp extends AppCompatActivity {
         btnNext.setVisibility(View.GONE);
         btnPrev.setVisibility(View.GONE);
         viewFlipper.setDisplayedChild(0);
+
+        Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
 
         btnBack.setOnClickListener(v-> {
             startActivity(new Intent(this, MainActivity.class));
@@ -332,6 +337,7 @@ public class New_SignUp extends AppCompatActivity {
                        UserInFormation.setEmail(memail);
                        UserInFormation.setPass(mpass);
                        UserInFormation.setPhone(mPhone);
+                       StartUp.dataset = true;
                        UserInFormation.setisConfirm("false");
                        if (newType.equals("Supplier")) {
                            finish();
