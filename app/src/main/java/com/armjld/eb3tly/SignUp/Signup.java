@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.armjld.eb3tly.Intros.intro2;
 import com.armjld.eb3tly.Intros.introSup;
+import com.armjld.eb3tly.Utilites.Terms;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.SOMEUSERDATAPROVIDER;
@@ -96,25 +97,10 @@ public class Signup extends AppCompatActivity {
     String datee = sdf.format(new Date());
     String acDate = DateFormat.getDateInstance().format(new Date());
 
-    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        startActivity(new Intent(this, Terms.class));
     }
 
     @Override

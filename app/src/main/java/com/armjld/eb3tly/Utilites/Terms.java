@@ -21,10 +21,7 @@ public class Terms extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent MainIntent = new Intent(this, MainActivity.class);
-        MainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        finish();
-        startActivity(MainIntent);
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     protected void onCreate(Bundle savedInstanceState) {

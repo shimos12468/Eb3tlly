@@ -500,6 +500,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         uDatabase.child(uId).child("device_token").setValue("");
         finish();
         mAuth.signOut();
+        Login_Options.mGoogleSignInClient.signOut();
         startActivity(new Intent(this, MainActivity.class));
         Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }

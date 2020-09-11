@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".main.Login_Options">
 
-    <include
-        android:id="@+id/toolbar_home"
-        layout="@layout/toolbar"
-        android:layout_width="0dp"
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/received_1275415962803777"
+        tools:srcCompat="@drawable/received_1275415962803777" />
 
     <LinearLayout
         android:id="@+id/parentLinear"
@@ -26,8 +26,9 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
+        app:layout_constraintTop_toBottomOf="@+id/imageView13">
 
         <TextView
             android:id="@+id/textView54"
@@ -39,7 +40,7 @@
             android:gravity="center"
             android:text="Quicker"
             android:textColor="@color/colorAccent"
-            android:textSize="50sp" />
+            android:textSize="75sp" />
 
         <TextView
             android:id="@+id/textView55"
@@ -53,56 +54,71 @@
             android:id="@+id/textView56"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="40dp"
             android:gravity="center"
             android:text="تسجيل الدخول او انشاء حساب جديد"
             android:textColor="@color/colorAccent"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnGoogle"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/btn_good"
-            android:drawableLeft="@drawable/ic_google_circle"
-            android:fontFamily="@font/homemade_apple"
-            android:text="تسجيل بجوجل"
+            android:background="@drawable/btn_blue"
+            android:drawableLeft="@drawable/ic_google"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="10dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="تسجيل الدخول بجوجل"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorWhite"
             android:textSize="18sp"
-            android:textStyle="normal"
-            tools:ignore="MissingConstraints" />
+            android:textStyle="normal" />
 
-        <com.facebook.login.widget.LoginButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnFacebook"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="0dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_bad"
+            android:drawableLeft="@drawable/ic_facebook"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="10dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="تسجيل الدخول بالفيس بوك"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnEmail"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/btn_defult"
             android:drawableLeft="@drawable/ic_add_email"
-            android:fontFamily="@font/homemade_apple"
-            android:text="تسجيل بالبريد الالكتروني"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="10dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="تسجيل الدخول بالبريد الالكتروني"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorAccent"
             android:textSize="18sp"
-            android:textStyle="normal"
-            tools:ignore="MissingConstraints" />
+            android:textStyle="normal" />
 
     </LinearLayout>
 

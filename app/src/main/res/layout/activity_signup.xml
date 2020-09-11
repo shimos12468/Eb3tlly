@@ -139,7 +139,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center|top"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -148,7 +148,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     app:cardCornerRadius="50dp">
 
@@ -338,7 +338,7 @@
                     android:background="@drawable/btn_defult"
                     android:text="تسجيل الحساب"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorAccent"
                     tools:ignore="MissingConstraints" />
 
             </LinearLayout>
