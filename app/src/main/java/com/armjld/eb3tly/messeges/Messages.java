@@ -37,7 +37,6 @@ public class Messages extends AppCompatActivity {
     ImageView btnSend;
     String uName = UserInFormation.getUserName();
     String uId = UserInFormation.getId();
-    Toolbar toolbar_home;
     boolean f = true;
     String rId = "";
     String roomId ;
@@ -56,8 +55,7 @@ public class Messages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         btnSend = findViewById(R.id.btnSend);
-        //toolbar_home = findViewById(R.id.toolbar_home);
-        //TextView tbTitle = findViewById(R.id.toolbar_title);
+        TextView tbTitle = findViewById(R.id.toolbar_title);
         editWriteMessage = findViewById(R.id.editWriteMessage);
         recyclerMsg = findViewById(R.id.recyclerMsg);
         recyclerMsg.setHasFixedSize(true);
@@ -92,12 +90,12 @@ public class Messages extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //userData uData = snapshot.getValue(.class);
                 //String uName = uData.getname();
-                //String uType = uData.getAccountType();
+                String namee =  snapshot.child("name").getValue().toString();
                 String ppURL = snapshot.child("ppURL").getValue().toString();
                 Log.d("MMMMM" , ppURL);
 
                 // ---- Set the Data in the Header
-                //tbTitle.setText(uName + "(" + uType + ")");
+                tbTitle.setText(namee);
                 readMessage(uId, rId, ppURL);
             }
 
@@ -111,7 +109,7 @@ public class Messages extends AppCompatActivity {
         messageDatabase.child(roomId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mChat.clear();
+                 mChat.clear();
                 if(snapshot.exists()) {
                     for(DataSnapshot ds : snapshot.getChildren()) {
                         Chat chat = ds.getValue(Chat.class);
@@ -128,4 +126,5 @@ public class Messages extends AppCompatActivity {
             }
         });
     }
+
 }

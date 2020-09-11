@@ -192,21 +192,60 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.txtUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final String[] room = new String[1];
                 String id = filtersData.get(position).getuId();
                 String uId = UserInFormation.getId();
                 DatabaseReference Bdatabase;
+                final boolean[] found = {false};
                 Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                String chat = Bdatabase.push().getKey();
-                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
-                Bdatabase.child("userId").setValue(id);
-                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
-                Bdatabase.child("userId").setValue(uId);
-                //Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(chat);
+                Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            for (DataSnapshot ds:snapshot.getChildren()) {
+                                if(ds.child("orderid").exists() && ds.child("roomid").exists()){
+                                        if(ds.child("orderid").getValue().toString().equals(orderID)) {
+                                        room[0] = ds.child("roomid").getValue().toString();
+                                            Intent intent = new Intent(context, Messages.class);
+                                            intent.putExtra("roomid", room[0]);
+                                            intent.putExtra("rid", id);
+                                            context.startActivity(intent);
+                                            Toast.makeText(context, "second time", Toast.LENGTH_SHORT).show();
+                                            found[0] = true;
+                                            break;
+                                    }
 
-                Intent intent = new Intent(context, Messages.class);
-                intent.putExtra("roomid" ,chat);
-                intent.putExtra("rid" , id);
-                context.startActivity(intent);
+                                }
+                            }
+                            if(!found[0]){
+                                DatabaseReference Bdatabase;
+                                Log.d("mnfol"," we are here2" );
+                                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                                String chat = Bdatabase.push().getKey();
+                                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                                Bdatabase.child("userId").setValue(id);
+                                Bdatabase.child("orderid").setValue(orderID);
+                                Bdatabase.child("roomid").setValue(chat);
+                                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
+                                Bdatabase.child("userId").setValue(uId);
+                                Bdatabase.child("orderid").setValue(orderID);
+                                Bdatabase.child("roomid").setValue(chat);
+                                Intent intent = new Intent(context, Messages.class);
+                                intent.putExtra("roomid", chat);
+                                intent.putExtra("rid", id);
+                                context.startActivity(intent);
+                                Toast.makeText(context, "first time", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
         //Hide this order Button
