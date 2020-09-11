@@ -2,6 +2,7 @@ package com.armjld.eb3tly.Adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,8 @@ public class MessageAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapt
     public void onBindViewHolder(@NonNull com.armjld.eb3tly.Adapters.MessageAdapter.MyViewHolder holder, final int position) {
         Chat chat = chatData.get(position);
         holder.txtMsg.setText(chat.getMsg());
-        Picasso.get().load(Uri.parse(imgURL)).into(holder.imgSend);
+        Log.i("MMMM", imgURL);
+        //Picasso.get().load(Uri.parse(imgURL)).into(holder.imgSend);
     }
 
     @Override

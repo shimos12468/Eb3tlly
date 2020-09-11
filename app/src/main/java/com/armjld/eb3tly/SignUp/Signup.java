@@ -112,7 +112,6 @@ public class Signup extends AppCompatActivity {
 
         Log.i(TAG, "Reached Signup");
         mAuth = FirebaseAuth.getInstance();
-
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تسجيل حساب جديد");
         //linersignUp = findViewById(R.id.linearsignUp);

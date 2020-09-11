@@ -26,14 +26,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Requests.rquests;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
+import com.armjld.eb3tly.main.Login_Options;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.Orders.OrdersBySameUser;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -186,6 +189,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
 
+        holder.txtUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = filtersData.get(position).getuId();
+                String uId = UserInFormation.getId();
+                DatabaseReference Bdatabase;
+                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                String chat = Bdatabase.push().getKey();
+                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                Bdatabase.child("userId").setValue(id);
+                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
+                Bdatabase.child("userId").setValue(uId);
+                //Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(chat);
+
+                Intent intent = new Intent(context, Messages.class);
+                intent.putExtra("roomid" ,chat);
+                intent.putExtra("rid" , id);
+                context.startActivity(intent);
+            }
+        });
         //Hide this order Button
         holder.btnHide.setOnClickListener(v -> {
             Toast.makeText(context, "Still working on this", Toast.LENGTH_SHORT).show();
@@ -209,6 +232,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             assert vibe != null;
             vibe.vibrate(20);
         });
+
+
+
+
+
 
         // ------------------ Bidding Dialog -------------------- //
         holder.btnBid.setOnClickListener(v-> {

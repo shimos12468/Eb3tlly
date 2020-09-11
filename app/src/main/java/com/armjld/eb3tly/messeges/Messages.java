@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,9 +38,9 @@ public class Messages extends AppCompatActivity {
     String uName = UserInFormation.getUserName();
     String uId = UserInFormation.getId();
     Toolbar toolbar_home;
-
+    boolean f = true;
     String rId = "";
-    String roomId = "";
+    String roomId ;
 
     EditText editWriteMessage;
     RecyclerView recyclerMsg;
@@ -55,18 +56,18 @@ public class Messages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         btnSend = findViewById(R.id.btnSend);
-        toolbar_home = findViewById(R.id.toolbar_home);
-        TextView tbTitle = findViewById(R.id.toolbar_title);
+        //toolbar_home = findViewById(R.id.toolbar_home);
+        //TextView tbTitle = findViewById(R.id.toolbar_title);
         editWriteMessage = findViewById(R.id.editWriteMessage);
         recyclerMsg = findViewById(R.id.recyclerMsg);
         recyclerMsg.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerMsg.setLayoutManager(linearLayoutManager);
-
+        roomId = getIntent().getStringExtra("roomid");
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-
+        rId = getIntent().getStringExtra("rid");
 
 
         btnSend.setOnClickListener(v -> {
@@ -76,24 +77,27 @@ public class Messages extends AppCompatActivity {
                 return;
             }
 
+
             HashMap<String, Object> mHashmap = new HashMap<>();
             mHashmap.put("senderid", uId);
             mHashmap.put("reciverid", rId);
             mHashmap.put("msg", msg);
             mHashmap.put("timestamp", datee);
             messageDatabase.child(roomId).push().setValue(mHashmap);
+            editWriteMessage.setText("");
         });
 
         uDatabase.child(rId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userData uData = snapshot.getValue(userData.class);
-                String uName = uData.getname();
-                String uType = uData.getAccountType();
-                String ppURL = uData.getPpURL();
+                //userData uData = snapshot.getValue(.class);
+                //String uName = uData.getname();
+                //String uType = uData.getAccountType();
+                String ppURL = snapshot.child("ppURL").getValue().toString();
+                Log.d("MMMMM" , ppURL);
 
                 // ---- Set the Data in the Header
-                tbTitle.setText(uName + "(" + uType + ")");
+                //tbTitle.setText(uName + "(" + uType + ")");
                 readMessage(uId, rId, ppURL);
             }
 
@@ -108,11 +112,13 @@ public class Messages extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mChat.clear();
-                for(DataSnapshot ds : snapshot.getChildren()) {
-                    Chat chat = ds.getValue(Chat.class);
-                    mChat.add(chat);
-                    messageAdapter = new MessageAdapter(Messages.this, mChat, imgURL);
-                    recyclerMsg.setAdapter(messageAdapter);
+                if(snapshot.exists()) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        Chat chat = ds.getValue(Chat.class);
+                        mChat.add(chat);
+                        messageAdapter = new MessageAdapter(Messages.this, mChat, imgURL);
+                        recyclerMsg.setAdapter(messageAdapter);
+                    }
                 }
             }
 
