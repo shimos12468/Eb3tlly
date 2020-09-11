@@ -39,116 +39,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    app:cardCornerRadius="50dp">
-
-                    <ImageView
-                        android:id="@+id/imgEditPhoto"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@color/colorWhite" />
-
-                </androidx.cardview.widget.CardView>
-
-                <EditText
-                    android:id="@+id/txtFirstName"
-                    android:layout_width="match_parent"
-                    android:layout_height="47dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginBottom="0dp"
-                    android:ems="10"
-                    android:hint="الاسم"
-                    android:inputType="textPersonName"
-                    android:textAlignment="viewEnd"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/tertiary_text_light"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints" />
-
-                <EditText
-                    android:id="@+id/txtEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="47dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginBottom="0dp"
-                    android:ems="10"
-                    android:hint="البريد ألالكتروني"
-                    android:inputType="textEmailAddress"
-                    android:textAlignment="viewEnd"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/tertiary_text_light"
-                    android:textSize="24sp" />
-
-                <EditText
-                    android:id="@+id/txtPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="47dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginBottom="0dp"
-                    android:ems="10"
-                    android:gravity="right"
-                    android:hint="رقم الهاتف"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/tertiary_text_light"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints,RtlCompat" />
-
-                <EditText
-                    android:id="@+id/txtPass1"
-                    android:layout_width="match_parent"
-                    android:layout_height="47dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginBottom="0dp"
-                    android:ems="10"
-                    android:gravity="right"
-                    android:hint="كلمة المرور"
-                    android:inputType="textPassword"
-                    android:textAlignment="viewEnd"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/tertiary_text_light"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints,RtlCompat" />
-
-                <TextView
-                    android:id="@+id/textView66"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="12dp"
-                    android:text="يجب ان يكون الرقم السري 6 ارقام علي الاقل" />
-
-
-            </LinearLayout>
-        </ScrollView>
-
         <LinearLayout
             android:id="@+id/layout1"
             android:layout_width="match_parent"
@@ -171,7 +61,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/btn_blue"
+                android:background="@drawable/btn_defult"
                 android:text="مندوب شحن"
                 android:textSize="30sp"
                 android:visibility="visible" />
@@ -181,12 +71,127 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/btn_bad"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/btn_defult"
                 android:text="تاجر"
                 android:textSize="30sp"
                 android:visibility="visible" />
 
         </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardCornerRadius="50dp">
+
+                    <ImageView
+                        android:id="@+id/imgEditPhoto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@color/colorWhite" />
+
+                </androidx.cardview.widget.CardView>
+
+                <EditText
+                    android:id="@+id/txtFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="0dp"
+                    android:backgroundTint="@android:color/secondary_text_dark"
+                    android:ems="10"
+                    android:hint="الاسم"
+                    android:inputType="textPersonName"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#000000"
+                    android:textColorHint="@android:color/secondary_text_dark"
+                    android:textSize="24sp"
+                    tools:ignore="MissingConstraints" />
+
+                <EditText
+                    android:id="@+id/txtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="0dp"
+                    android:backgroundTint="@android:color/secondary_text_dark"
+                    android:ems="10"
+                    android:hint="البريد ألالكتروني"
+                    android:inputType="textEmailAddress"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#000000"
+                    android:textColorHint="@android:color/secondary_text_dark"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/txtPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="0dp"
+                    android:backgroundTint="@android:color/secondary_text_dark"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:hint="رقم الهاتف"
+                    android:inputType="number"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#000000"
+                    android:textColorHint="@android:color/secondary_text_dark"
+                    android:textSize="24sp"
+                    tools:ignore="MissingConstraints,RtlCompat" />
+
+                <EditText
+                    android:id="@+id/txtPass1"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="0dp"
+                    android:backgroundTint="@android:color/secondary_text_dark"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:hint="كلمة المرور"
+                    android:inputType="textPassword"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#000000"
+                    android:textColorHint="@android:color/secondary_text_dark"
+                    android:textSize="24sp"
+                    tools:ignore="MissingConstraints,RtlCompat" />
+
+                <TextView
+                    android:id="@+id/textView66"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:text="يجب ان يكون الرقم السري 6 ارقام علي الاقل" />
+
+
+            </LinearLayout>
+        </ScrollView>
 
         <LinearLayout
             android:id="@+id/layout6"

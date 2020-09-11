@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.SignUp.Signup;
+import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.admin.Admin;
 import com.facebook.AccessToken;
@@ -232,6 +233,7 @@ public class Login_Options extends AppCompatActivity {
                         if(snapshot.child("isConfirmed").exists()) {
                             UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                         }
+                        StartUp.dataset = true;
 
                         if (isActive.equals("true")) { // Check if the account is Disabled
                             // --------------------- check account types and send each type to it's activity --------------//
