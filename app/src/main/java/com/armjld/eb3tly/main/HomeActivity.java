@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.Orders.MapsActivity;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Adapters.MyAdapter;
@@ -164,6 +165,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // ----------- sort buttom
         btnSort.setOnClickListener(v -> {
+            startActivity(new Intent(this, Chats.class));
             PopupMenu popup = new PopupMenu(this, v);
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.sort_menu, popup.getMenu());

@@ -49,19 +49,25 @@ public class Chats extends AppCompatActivity {
         recyclerChat = findViewById(R.id.recyclerChat);
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
 
-        messageDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("roomid").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if((int) ds.getChildrenCount() > 1) {
-                        if(ds.child("senderid").getValue().toString().equals(uId) || ds.child("reciverid").getValue().toString().equals(uId)) {
-                            // --- add to adapter
-                            ChatsData cchatData = ds.getValue(ChatsData.class);
+                for(DataSnapshot ds:snapshot.getChildren()) {
+                    String roomID = ds.child("roomid").getValue().toString();
+                    messageDatabase.child(roomID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot ss) {
+                            ChatsData cchatData = ss.getValue(ChatsData.class);
                             mChat.add(cchatData);
                             chatsAdapter = new chatsAdapter(Chats.this, mChat);
                             recyclerChat.setAdapter(chatsAdapter);
                         }
-                    }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 
