@@ -19,7 +19,7 @@ public class About extends AppCompatActivity {
     String version;
     TextView txtVersion;
     ImageView imgFacebook;
-    String fbLink = "https://www.facebook.com/Eb3tlyy/";
+    String fbLink = "https://www.facebook.com/Quicker-235774907739290/";
 
     @SuppressLint("SetTextI18n")
     @Override

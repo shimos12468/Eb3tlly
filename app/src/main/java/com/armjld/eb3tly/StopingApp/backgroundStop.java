@@ -11,9 +11,4 @@ public class backgroundStop {
 
     private float  time;
     boolean isInBackground = false;
-
-
-
-
-
 }

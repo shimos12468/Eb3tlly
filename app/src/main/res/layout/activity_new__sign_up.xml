@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layoutDirection="ltr"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.SignUp.Signup">
+    android:textAlignment="center"
+    tools:context=".SignUp.New_SignUp">
 
     <include
         android:id="@+id/toolbar_home"
@@ -45,13 +45,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
-
-            <include
-                android:id="@+id/logo"
-                layout="@layout/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -114,7 +107,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <EditText
-                    android:id="@+id/txtEditName"
+                    android:id="@+id/txtFirstName"
                     android:layout_width="match_parent"
                     android:layout_height="47dp"
                     android:layout_marginLeft="12dp"
@@ -132,7 +125,7 @@
                     tools:ignore="MissingConstraints" />
 
                 <EditText
-                    android:id="@+id/txtEditEmail"
+                    android:id="@+id/txtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="47dp"
                     android:layout_marginLeft="12dp"
@@ -149,7 +142,7 @@
                     android:textSize="24sp" />
 
                 <EditText
-                    android:id="@+id/phoneNumber"
+                    android:id="@+id/txtPhone"
                     android:layout_width="match_parent"
                     android:layout_height="47dp"
                     android:layout_marginLeft="12dp"
@@ -168,7 +161,7 @@
                     tools:ignore="MissingConstraints,RtlCompat" />
 
                 <EditText
-                    android:id="@+id/txtEditPassword"
+                    android:id="@+id/txtPass1"
                     android:layout_width="match_parent"
                     android:layout_height="47dp"
                     android:layout_marginLeft="12dp"
@@ -195,117 +188,6 @@
                     android:layout_marginRight="12dp"
                     android:text="يجب ان يكون الرقم السري 6 ارقام علي الاقل" />
 
-                <TextView
-                    android:id="@+id/textView30"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="0dp"
-                    android:text="اختار محافظتك"
-                    android:textColor="#000000"
-                    android:textSize="18sp" />
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/spState"
-                    android:layout_width="280dp"
-                    android:layout_height="47dp"
-                    android:layout_marginTop="10dp"
-                    android:spinnerMode="dialog"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView28"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="0dp"
-                    android:text="اختار نوع الحساب الخاص بيك"
-                    android:textColor="#000000"
-                    android:textSize="18sp" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/radioGroup"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="0dp">
-
-                    <RadioGroup
-                        android:id="@+id/rdAccountType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="MissingConstraints">
-
-                        <RadioButton
-                            android:id="@+id/rdDlivery"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="20dp"
-                            android:layout_weight="1"
-                            android:buttonTint="@color/ic_profile_background"
-                            android:checked="true"
-                            android:drawableStart="@drawable/ic_motor"
-                            android:gravity="center"
-                            android:shadowColor="#000000"
-                            android:text="مندوب "
-                            android:textAlignment="viewEnd"
-                            android:textColor="#000000"
-                            android:textColorHighlight="#000000"
-                            android:textColorHint="#000000"
-                            android:textColorLink="#000000"
-                            android:textSize="24sp"
-                            tools:ignore="RtlCompat" />
-
-                        <RadioButton
-                            android:id="@+id/rdSupplier"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:buttonTint="@color/ic_profile_background"
-                            android:drawableStart="@drawable/ic_add_shop"
-                            android:gravity="center"
-                            android:shadowColor="#000000"
-                            android:text="تاجر"
-                            android:textAlignment="viewEnd"
-                            android:textColor="#000000"
-                            android:textColorHighlight="#000000"
-                            android:textColorHint="#000000"
-                            android:textColorLink="#000000"
-                            android:textSize="24sp"
-                            tools:ignore="RtlCompat" />
-                    </RadioGroup>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnEditInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@drawable/btn_defult"
-                    android:text="تسجيل الحساب"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorAccent"
-                    tools:ignore="MissingConstraints" />
-
-                <TextView
-                    android:id="@+id/textView65"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="12dp"
-                    android:text="بتسجيل حسابي فانت توافق علي الشروط و الاحكام." />
 
             </LinearLayout>
         </ScrollView>
@@ -359,4 +241,38 @@
     </ViewFlipper>
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnNext"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/btndesign"
+        android:backgroundTint="@color/ic_profile_background"
+        android:cropToPadding="false"
+        android:src="@drawable/ic_appintro_next"
+        app:backgroundTint="#FFFFFF"
+        app:ensureMinTouchTargetSize="false"
+        app:fabCustomSize="50dp"
+        app:fabSize="auto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="#FFFFFF" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnPrev"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="28dp"
+        android:backgroundTint="@color/colorWhite"
+        android:cropToPadding="false"
+        android:src="@drawable/ic_arrow_back"
+        app:ensureMinTouchTargetSize="false"
+        app:fabCustomSize="50dp"
+        app:fabSize="auto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="#FFFFFF" />
 </androidx.constraintlayout.widget.ConstraintLayout>

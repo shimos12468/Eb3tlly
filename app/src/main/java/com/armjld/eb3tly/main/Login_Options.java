@@ -3,6 +3,7 @@ package com.armjld.eb3tly.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ public class Login_Options extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase;
     private String TAG = "Login Options";
+    private ProgressDialog mdialog;
     public static GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -83,7 +85,7 @@ public class Login_Options extends AppCompatActivity {
         btnEmail = findViewById(R.id.btnEmail);
         btnGoogle = findViewById(R.id.btnGoogle);
         btnFacebook = findViewById(R.id.btnFacebook);
-
+        mdialog = new ProgressDialog(this);
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
         mAuth = FirebaseAuth.getInstance();
@@ -146,6 +148,8 @@ public class Login_Options extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
+                mdialog.setMessage("جاري تسجيل الدخول ..");
+                mdialog.show();
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -156,7 +160,6 @@ public class Login_Options extends AppCompatActivity {
                         if(snapshot.exists()) {
                             firebaseAuthWithGoogle(account.getIdToken(),credential);
                         } else {
-                            // Lets Make a new Account
                             finish();
                             startActivity(new Intent(Login_Options.this, Signup.class));
                         }
@@ -195,6 +198,7 @@ public class Login_Options extends AppCompatActivity {
                 letsGo();
                 Toast.makeText(Login_Options.this, "Account Linked Successful", Toast.LENGTH_SHORT).show();
             } else {
+                mdialog.dismiss();
                 Toast.makeText(Login_Options.this, "Login Failed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -258,9 +262,11 @@ public class Login_Options extends AppCompatActivity {
                     finish();
                     startActivity(new Intent(Login_Options.this, Signup.class));
                 }
+                mdialog.dismiss();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                mdialog.dismiss();
             }
         });
     }

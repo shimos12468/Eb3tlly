@@ -4,17 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBack"
     tools:context=".main.Login_Options">
-
-    <ImageView
-        android:id="@+id/imageView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/received_1275415962803777"
-        tools:srcCompat="@drawable/received_1275415962803777" />
 
     <LinearLayout
         android:id="@+id/parentLinear"
@@ -28,14 +19,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView13">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView54"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="80dp"
             android:fontFamily="sans-serif-black"
             android:gravity="center"
             android:text="Quicker"
@@ -54,7 +45,7 @@
             android:id="@+id/textView56"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="80dp"
             android:gravity="center"
             android:text="تسجيل الدخول او انشاء حساب جديد"
             android:textColor="@color/colorAccent"

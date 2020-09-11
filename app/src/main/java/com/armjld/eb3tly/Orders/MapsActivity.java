@@ -155,8 +155,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 buildAlertMessageNoGps();
             } else {
                 fetchLocation();
-                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
             }
         });
         fetchLocation();
@@ -188,6 +186,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         task.addOnSuccessListener(location -> {
             if(location != null) {
                 currentLocation = location;
+                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
             }
         });
     }

@@ -103,6 +103,212 @@ public class Signup extends AppCompatActivity {
         startActivity(new Intent(this, Terms.class));
     }
 
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(activity_signup);
+
+        Log.i(TAG, "Reached Signup");
+        mAuth = FirebaseAuth.getInstance();
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("تسجيل حساب جديد");
+        //linersignUp = findViewById(R.id.linearsignUp);
+        linerVerf = findViewById(R.id.linerVerf);
+        linerVerf.setVisibility(View.GONE);
+        linersignUp.setVisibility(View.VISIBLE);
+        spState = findViewById(R.id.spState);
+
+
+        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
+        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+
+        mdialog = new ProgressDialog(this);
+        user = findViewById(R.id.txtEditName);
+        email = findViewById(R.id.txtEditEmail);
+        pass = findViewById(R.id.txtEditPassword);
+        btnreg = findViewById(R.id.btnEditInfo);
+        imgSetPP = findViewById(R.id.imgEditPhoto);
+        phoneNum = findViewById(R.id.phoneNumber);
+        btnConfirmCode = findViewById(R.id.btnConfirmCode);
+        Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
+
+
+        //Check For Account Type
+        rdAccountType = (RadioGroup) findViewById(R.id.rdAccountType);
+        rdDlivery = (RadioButton) findViewById(R.id.rdDlivery);
+        rdSupplier = (RadioButton) findViewById(R.id.rdSupplier);
+        accountType = "Delivery Worker";
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Signup.this, R.array.txtStates, R.layout.color_spinner_layout);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spState.setPrompt("اختار المحافظة");
+        spState.setAdapter(adapter);
+
+        rdAccountType.setOnCheckedChangeListener((group, checkedId) -> {
+            // find which radio button is selected
+            if (checkedId == R.id.rdSupplier) {
+                accountType = "Supplier";
+            } else {
+                accountType = "Delivery Worker";
+            }
+        });
+
+        //Set PP
+        imgSetPP.setOnClickListener(v -> {
+            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
+            if (ContextCompat.checkSelfPermission(Signup.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if(intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, TAKE_IMAGE_CODE);
+                }
+            }
+        });
+
+        // Register Fun
+        btnreg.setOnClickListener(view -> {
+            String muser = user.getText().toString().trim();
+            String memail = email.getText().toString().trim();
+            String mpass = pass.getText().toString().trim();
+            state = spState.getSelectedItem().toString();
+            phone = phoneNum.getText().toString().trim();
+
+            // Check For empty fields
+            if(TextUtils.isEmpty(muser)){
+                user.setError("يجب ادخال اسم المستخدم");
+                return;
+            }
+
+            if(TextUtils.isEmpty(memail)){
+                email.setError("يجب ادخال البريد ألالكتروني");
+                return;
+            }
+
+            if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
+                phoneNum.setError("ادخل رقم هاتف صحيح");
+                phoneNum.requestFocus();
+                return;
+            }
+
+
+            if(TextUtils.isEmpty(mpass)){
+                pass.setError("يجب ادخال كلمه المرور");
+                return;
+            }
+
+            if(mpass.length() < 6) {
+                pass.setError("رقم سري ضعيف");
+                return;
+            }
+
+            mdialog.setMessage("جاري التاكد من رقم الهاتف");
+            mdialog.show();
+            impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()) {
+                        if (snapshot.getValue() != null) {
+                            mdialog.dismiss();
+                            Toast.makeText(Signup.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
+                        } else {
+                            mdialog.dismiss();
+                            checkState();
+                            signUp(memail, mpass);
+                        }
+                    } else {
+                        mdialog.dismiss();
+                        checkState();
+                        signUp(memail, mpass);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(Signup.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
+                    mdialog.dismiss();
+                }});
+
+        });
+
+    }
+
+    // ------------------- CHEECK FOR PERMISSIONS -------------------------------//
+    public void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(Signup.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(Signup.this, new String[] { permission }, requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == READ_EXTERNAL_STORAGE_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(Signup.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(Signup.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    private void signUp(String memail, String mpass) {
+        mdialog.setMessage("جاري تسجيل الحساب ..");
+        mdialog.show();
+
+    }
+
+
+
+    private void checkState() {
+        if(mAuth.getCurrentUser() != null) {
+            mAuth.signOut();
+        }
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    public static Bitmap resizeBitmap(Bitmap source, int maxLength) {
+        try {
+            if (source.getHeight() >= source.getWidth()) {
+                int targetHeight = maxLength;
+                if (source.getHeight() <= targetHeight) { // if image already smaller than the required height
+                    return source;
+                }
+
+                double aspectRatio = (double) source.getWidth() / (double) source.getHeight();
+                int targetWidth = (int) (targetHeight * aspectRatio);
+
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                Log.i("SignUp", "Returned a Resized Photo");
+                return result;
+            } else {
+                int targetWidth = maxLength;
+                if (source.getWidth() <= targetWidth) { // if image already smaller than the required height
+                    return source;
+                }
+
+                double aspectRatio = ((double) source.getHeight()) / ((double) source.getWidth());
+                int targetHeight = (int) (targetWidth * aspectRatio);
+
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                Log.i("SignUp", "Returned a Resized Photo");
+                return result;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.i("SignUp", "Returned the source Photo");
+            return source;
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -248,268 +454,5 @@ public class Signup extends AppCompatActivity {
             UserInFormation.setUserURL(uri.toString());
             mdialog.dismiss();
         });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(activity_signup);
-
-        Log.i(TAG, "Reached Signup");
-        mAuth = FirebaseAuth.getInstance();
-
-        TextView tbTitle = findViewById(R.id.toolbar_title);
-        linersignUp = findViewById(R.id.linearsignUp);
-        linerVerf = findViewById(R.id.linerVerf);
-        linerVerf.setVisibility(View.GONE);
-        linersignUp.setVisibility(View.VISIBLE);
-        spState = findViewById(R.id.spState);
-        tbTitle.setText("تسجيل حساب جديد");
-
-        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-
-        mdialog = new ProgressDialog(this);
-        user = findViewById(R.id.txtEditName);
-        email = findViewById(R.id.txtEditEmail);
-        pass = findViewById(R.id.txtEditPassword);
-        con_password = findViewById(R.id.txtEditPassword2);
-        btnreg = findViewById(R.id.btnEditInfo);
-        imgSetPP = findViewById(R.id.imgEditPhoto);
-        phoneNum = findViewById(R.id.phoneNumber);
-        btnConfirmCode = findViewById(R.id.btnConfirmCode);
-        Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
-
-
-        //Check For Account Type
-        rdAccountType = (RadioGroup) findViewById(R.id.rdAccountType);
-        rdDlivery = (RadioButton) findViewById(R.id.rdDlivery);
-        rdSupplier = (RadioButton) findViewById(R.id.rdSupplier);
-        accountType = "Delivery Worker";
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Signup.this, R.array.txtStates, R.layout.color_spinner_layout);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spState.setPrompt("اختار المحافظة");
-        spState.setAdapter(adapter);
-
-        rdAccountType.setOnCheckedChangeListener((group, checkedId) -> {
-            // find which radio button is selected
-            if (checkedId == R.id.rdSupplier) {
-                accountType = "Supplier";
-            } else {
-                accountType = "Delivery Worker";
-            }
-        });
-
-        //Set PP
-        imgSetPP.setOnClickListener(v -> {
-            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
-            if (ContextCompat.checkSelfPermission(Signup.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if(intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, TAKE_IMAGE_CODE);
-                }
-            }
-        });
-
-        // Register Fun
-        btnreg.setOnClickListener(view -> {
-            String muser = user.getText().toString().trim();
-            String memail = email.getText().toString().trim();
-            String mpass = pass.getText().toString().trim();
-            String con_pass = con_password.getText().toString().trim();
-            state = spState.getSelectedItem().toString();
-            phone = phoneNum.getText().toString().trim();
-
-            // Check For empty fields
-            if(TextUtils.isEmpty(muser)){
-                user.setError("يجب ادخال اسم المستخدم");
-                return;
-            }
-            if(TextUtils.isEmpty(memail)){
-                email.setError("يجب ادخال البريد ألالكتروني");
-                return;
-            }
-            if(TextUtils.isEmpty(mpass)){
-                pass.setError("يجب ادخال كلمه المرور");
-                return;
-            }
-
-            if(mpass.length() < 8) {
-                con_password.setError("رقم سري ضعيف");
-                return;
-            }
-
-            if(!mpass.equals(con_pass)){
-                con_password.setError("تاكد ان كلمه المرور نفسها");
-                return;
-            }
-
-            if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1'){
-                phoneNum.setError("ادخل رقم هاتف صحيح");
-                phoneNum.requestFocus();
-                return;
-            }
-
-            mdialog.setMessage("جاري التاكد من رقم الهاتف");
-            mdialog.show();
-            impdata = new SOMEUSERDATAPROVIDER(memail ,mpass ,muser ,phone);
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()) {
-                        if (snapshot.getValue() != null) {
-                            mdialog.dismiss();
-                            Toast.makeText(Signup.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
-                        } else {
-                            mdialog.dismiss();
-                            checkState();
-                            signUp(memail, mpass);
-                        }
-                    } else {
-                        mdialog.dismiss();
-                        checkState();
-                        signUp(memail, mpass);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(Signup.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
-                    mdialog.dismiss();
-                }});
-
-        });
-
-    }
-
-    // ------------------- CHEECK FOR PERMISSIONS -------------------------------//
-    public void checkPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(Signup.this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(Signup.this, new String[] { permission }, requestCode);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == READ_EXTERNAL_STORAGE_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(Signup.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(Signup.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    private void signUp(String memail, String mpass) {
-        mdialog.setMessage("جاري تسجيل الحساب ..");
-        mdialog.show();
-        mAuth.createUserWithEmailAndPassword(memail, mpass).addOnCompleteListener(Signup.this, task -> {
-            if (task.isSuccessful()) {
-                String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-                String memail1 = impdata.getMail();
-                String mpass1 = impdata.getPassword();
-                String muser = impdata.getUser();
-                String phone = impdata.getPhone();
-
-                userData data= new userData(muser, phone, memail1, acDate, id, accountType, defultPP, mpass1, "0");
-                uDatabase.child(id).setValue(data);
-                uDatabase.child(id).child("completed").setValue("true");
-                uDatabase.child(id).child("profit").setValue("0");
-                uDatabase.child(id).child("active").setValue("true");
-                uDatabase.child(id).child("userState").setValue(state);
-                uDatabase.child(id).child("isConfirmed").setValue("false");
-
-                // ------------------ Set Device Token ----------------- //
-                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Signup.this, instanceIdResult -> {
-                    String deviceToken = instanceIdResult.getToken();
-                    uDatabase.child(id).child("device_token").setValue(deviceToken);
-                });
-
-                if(bitmap != null) {
-                    handleUpload(bitmap);
-                } else {
-                    uDatabase.child(id).child("ppURL").setValue(defultPP);
-                    mdialog.dismiss();
-                }
-
-                // ------------- Welcome message in Notfications----------------------//
-
-                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false", "nothing");
-                nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-
-                UserInFormation.setAccountType(accountType);
-                UserInFormation.setUserName(muser);
-                UserInFormation.setUserDate(acDate);
-                UserInFormation.setUserURL(defultPP);
-                UserInFormation.setId(id);
-
-                UserInFormation.setEmail(memail1);
-                UserInFormation.setPass(mpass1);
-                UserInFormation.setPhone(phone);
-                UserInFormation.setisConfirm("false");
-
-                if (accountType.equals("Supplier")) {
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), introSup.class));
-                } else if (accountType.equals("Delivery Worker")) {
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), intro2.class));
-                }
-                Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
-                mdialog.dismiss();
-            } else {
-                Toast.makeText(Signup.this, "حدث خطأ في تسجيل الحساب ..", Toast.LENGTH_LONG).show();
-                mdialog.dismiss();
-            }
-        });
-    }
-
-    public static Bitmap resizeBitmap(Bitmap source, int maxLength) {
-        try {
-            if (source.getHeight() >= source.getWidth()) {
-                int targetHeight = maxLength;
-                if (source.getHeight() <= targetHeight) { // if image already smaller than the required height
-                    return source;
-                }
-
-                double aspectRatio = (double) source.getWidth() / (double) source.getHeight();
-                int targetWidth = (int) (targetHeight * aspectRatio);
-
-                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
-                Log.i("SignUp", "Returned a Resized Photo");
-                return result;
-            } else {
-                int targetWidth = maxLength;
-                if (source.getWidth() <= targetWidth) { // if image already smaller than the required height
-                    return source;
-                }
-
-                double aspectRatio = ((double) source.getHeight()) / ((double) source.getWidth());
-                int targetHeight = (int) (targetWidth * aspectRatio);
-
-                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
-                Log.i("SignUp", "Returned a Resized Photo");
-                return result;
-            }
-        }
-        catch (Exception e)
-        {
-            Log.i("SignUp", "Returned the source Photo");
-            return source;
-        }
-    }
-
-    private void checkState() {
-        if(mAuth.getCurrentUser() != null) {
-            mAuth.signOut();
-        }
-    }
-
-    private void signOut() {
-        mAuth.signOut();
-        finish();
-        startActivity(new Intent(this, MainActivity.class));
     }
 }

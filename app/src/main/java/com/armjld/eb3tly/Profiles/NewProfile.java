@@ -13,6 +13,7 @@ import com.armjld.eb3tly.Fragments.SectionsPagerAdapter;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
+import com.armjld.eb3tly.main.Login_Options;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.Passaword.ChangePassword;
@@ -326,7 +327,8 @@ public class NewProfile extends AppCompatActivity {
         uDatabase.child(uId).child("device_token").setValue("");
         finish();
         mAuth.signOut();
-        startActivity(new Intent(this, MainActivity.class));
+        Login_Options.mGoogleSignInClient.signOut();
+        startActivity(new Intent(this, Login_Options.class));
         Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }
 

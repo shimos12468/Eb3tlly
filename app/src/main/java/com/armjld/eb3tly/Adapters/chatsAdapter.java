@@ -65,7 +65,7 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
         }
 
         holder.myview.setOnClickListener(v -> {
-
+            // ------------- direct to this chat
         });
 
         uDatabase.child(talkerID).addListenerForSingleValueEvent(new ValueEventListener() {

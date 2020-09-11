@@ -8,28 +8,25 @@
     android:background="@color/colorBack"
     tools:context="com.armjld.eb3tly.main.MainActivity">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout6"
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/toolbar_home"
+        layout="@layout/toolbar_white"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/ic_profile_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/app_icon" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_home"
+        app:srcCompat="@drawable/ic_back_black" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,20 +38,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout6">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
+
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"
             android:layout_weight="0"
             android:fontFamily="@font/homemade_apple"
-            android:gravity="center"
+            android:foregroundGravity="right"
+            android:gravity="right"
             android:text="تسجيل الدخول بالبريد الالكتروني"
-            android:textAlignment="center"
+            android:textAlignment="viewEnd"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/black"
             android:textSize="24sp"

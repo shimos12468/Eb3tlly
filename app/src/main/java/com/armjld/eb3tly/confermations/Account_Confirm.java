@@ -38,6 +38,7 @@ import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
@@ -269,6 +270,9 @@ public class Account_Confirm extends AppCompatActivity {
         assert user != null;
         user.reauthenticate(credential).addOnCompleteListener(task -> Log.d(TAG, "User re-authenticated."));
     }
+
+
+
 
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {

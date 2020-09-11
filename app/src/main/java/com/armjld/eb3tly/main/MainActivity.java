@@ -19,6 +19,7 @@ import com.armjld.eb3tly.Passaword.ForgetPass;
 import com.armjld.eb3tly.Passaword.Forget_Password;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.SignUp.Signup;
 import com.armjld.eb3tly.Utilites.Terms;
 import com.armjld.eb3tly.Utilites.UserInFormation;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         btnlogin = findViewById(R.id.btnEditInfo);
         txtForgetPass = findViewById(R.id.txtForgetPass);
 
-        final Intent signIntent = new Intent(this, Terms.class);
+        final Intent signIntent = new Intent(this, New_SignUp.class);
         signup.setOnClickListener(v -> {
             finish();
             signIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
