@@ -214,7 +214,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:clickable="false"
-                                android:enabled="false"
+                                android:enabled="true"
                                 android:foregroundGravity="center"
                                 android:gravity="center"
                                 android:text="موتسكل" />
@@ -240,10 +240,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:clickable="false"
-                                android:enabled="false"
                                 android:foregroundGravity="center"
                                 android:gravity="center"
-                                android:text="مواصلات" />
+                                android:text="مواصلات"
+                                android:enabled="true" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -273,7 +273,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:clickable="false"
-                                android:enabled="false"
+                                android:enabled="true"
                                 android:foregroundGravity="center"
                                 android:gravity="center"
                                 android:text="سيارة" />
@@ -299,7 +299,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:clickable="false"
-                                android:enabled="false"
+                                android:enabled="true"
                                 android:foregroundGravity="center"
                                 android:gravity="center"
                                 android:text="شاحنة" />
