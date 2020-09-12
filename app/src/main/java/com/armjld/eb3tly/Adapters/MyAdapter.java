@@ -110,7 +110,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        Vibrator vibe = (Vibrator)(context).getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibe = (Vibrator) (context).getSystemService(Context.VIBRATOR_SERVICE);
         holder.btnBid.setVisibility(View.GONE);
         // Get Post Date
         holder.lin1.setVisibility(View.GONE);
@@ -140,55 +140,75 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         int idiffHours = (int) diffHours;
         int idiffDays = (int) diffDays;
 
-        final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        final String notes = filtersData.get(position).getNotes().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        String statues = filtersData.get(position).getStatue().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        String removed = filtersData.get(position).getRemoved().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)","").trim();
-        String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)","").trim();
+        final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)", "").trim();
+        final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)", "").trim();
+        final String notes = filtersData.get(position).getNotes().replaceAll("(^\\h*)|(\\h*$)", "").trim();
+        String statues = filtersData.get(position).getStatue().replaceAll("(^\\h*)|(\\h*$)", "").trim();
+        String removed = filtersData.get(position).getRemoved().replaceAll("(^\\h*)|(\\h*$)", "").trim();
+        String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)", "").trim();
+        String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String type = filtersData.get(position).getType();
+
 
         uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                //String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                 String isConfirm = "false";
-                if(snapshot.child("isConfirmed").exists()) {
+                if (snapshot.child("isConfirmed").exists()) {
                     isConfirm = snapshot.child("isConfirmed").getValue().toString();
                 }
-                holder.setUsername(uName, isConfirm);
-                Log.i(TAG, uName + " : " + isConfirm);
+                holder.setUsername(isConfirm);
+                //Log.i(TAG, uName + " : " + isConfirm);
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
 
         mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int ordersCount = 0;
-                if(snapshot.exists()) {
-                    for(DataSnapshot ds : snapshot.getChildren()) {
-                        if(!Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("deleted")) { ordersCount++; }
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (!Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("deleted")) {
+                            ordersCount++;
+                        }
                     }
                 }
                 holder.isTop(ordersCount);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
-        holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)","").trim());
-        holder.setFee(filtersData.get(position).getGGet().replaceAll("(^\\h*)|(\\h*$)","").trim());
+        holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)", "").trim());
+        holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)", "").trim());
+        holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)", "").trim());
+        holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)", "").trim());
+        holder.setFee(filtersData.get(position).getGGet().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
 
+        if (!filtersData.get(position).getOwner().equals(" ")) {
+            holder.txtUsername.setText(filtersData.get(position).getOwner());
+        Log.i(TAG, "Owner is There " + filtersData.get(position).getOwner());
+    }else{
+            uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                   holder.txtUsername.setText(uName);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
+        }
         holder.txtUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -824,8 +844,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             btnBid = myview.findViewById(R.id.btnBid);
         }
 
-        public void setUsername(String name, String isConfirm){
-            txtUsername.setText(name);
+        public void setUsername(String isConfirm){
+            //txtUsername.setText(name);
             if(isConfirm.equals("true")) {
                 imgVerf.setVisibility(View.VISIBLE);
                 Log.i("Home", "Visible");

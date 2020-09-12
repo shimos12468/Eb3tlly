@@ -19,6 +19,16 @@ public class Data {
     private String mDRegion;
     // Money Data
     private String GMoney;
+    private String owner = " ";
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     private String GGet;
     // Transportation
     private String isTrans;
@@ -48,8 +58,9 @@ public class Data {
     private String lastedit;
     private String notes;
 
-    public Data(){ }
+    public Data(){
 
+    }
     public String getType() {
         return type;
     }
@@ -60,7 +71,7 @@ public class Data {
 
     public Data(String txtPState, String mPRegion, String mPAddress, String mPShop, String txtDState, String mDRegion, String DAddress, String DDate, String DPhone, String DName,
                 String GMoney, String GGet, String date, String id, String uId, String isTrans, String isMetro, String isMotor, String isCar, String statue, String uAccepted, String srated,
-                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type) {
+                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type ,String owner) {
 
         //PICK
         this.txtPState = txtPState;
@@ -70,7 +81,7 @@ public class Data {
         this.notes = notes;
         this.acceptedTime = acceptedTime;
         this.dilverTime = dilverTime;
-
+        this.owner = owner;
         //DROP
         this.txtDState = txtDState;
         this.mDRegion = mDRegion;

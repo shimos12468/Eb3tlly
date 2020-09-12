@@ -717,14 +717,15 @@ public class AddOrders extends AppCompatActivity {
                         } else {
                             type = "Normal";
                         }
-
+                        String owner = UserInFormation.getUserName();
                         // Send order to Data Base using the DATA MODEL
                         Data data = new Data(pState12, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type);
+                                mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type,owner);
                         mDatabase.child(id).setValue(data);
                         mDatabase.child(id).child("lastedit").setValue(datee);
                         mDatabase.child(id).child("lat").setValue(longitude);
                         mDatabase.child(id).child("long").setValue(latitude);
+
 
                         SharedPreferences sharedPreferences1 = getSharedPreferences("Location", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences1.edit();
@@ -868,10 +869,10 @@ public class AddOrders extends AppCompatActivity {
                             editor.putString("Region", spPRegion.getSelectedItem().toString());
                             editor.putString("Address", mPAddress);
                             editor.apply();
-
+                            String owner = UserInFormation.getUserName();
                             // Send order to Data Base using the DATA MODEL
                             Data data = new Data(pState1, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type);
+                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type ,owner);
                             assert id != null;
                             mDatabase.child(id).setValue(data);
 

@@ -329,6 +329,36 @@ public class Admin extends Activity {
 
         // ------------------------- Delete Non Completed ---------------------------//
         btnDeleteUser.setOnClickListener(v -> {
+            uDatabase.orderByChild("accountType").equalTo("Supplier").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        String uid = ds.child("id").getValue().toString();
+                        String uNaame = ds.child("name").getValue().toString();
+
+                        mDatabase.orderByChild("uId").equalTo(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot osnapshot) {
+                                if(osnapshot.exists()) {
+                                    for(DataSnapshot ods:osnapshot.getChildren()) {
+                                        String ordeerid = ods.child("id").getValue().toString();
+                                        mDatabase.child(ordeerid).child("owner").setValue(uNaame);
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             mDatabase.orderByKey().limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
