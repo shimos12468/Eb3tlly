@@ -43,12 +43,14 @@ public class Messages extends AppCompatActivity {
     boolean f = true;
     String rId = "";
     String roomId ;
+    ImageView btnBack;
 
     EditText editWriteMessage;
     RecyclerView recyclerMsg;
 
     MessageAdapter messageAdapter;
     List<Chat> mChat;
+
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, Chats.class));
@@ -65,6 +67,9 @@ public class Messages extends AppCompatActivity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         editWriteMessage = findViewById(R.id.editWriteMessage);
         recyclerMsg = findViewById(R.id.recyclerMsg);
+        btnBack = findViewById(R.id.btnBack);
+
+
         recyclerMsg.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
@@ -74,6 +79,9 @@ public class Messages extends AppCompatActivity {
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         rId = getIntent().getStringExtra("rid");
 
+        btnBack.setOnClickListener(v-> {
+            startActivity(new Intent(this, Chats.class));
+        });
 
         btnSend.setOnClickListener(v -> {
             String msg = editWriteMessage.getText().toString().trim();

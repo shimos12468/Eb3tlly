@@ -39,7 +39,280 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
+        <LinearLayout
+            android:id="@+id/linType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="اختار نوع حسابك"
+                android:textColor="@color/colorAccent"
+                android:textSize="30sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDelivery"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_defult"
+                android:text="مندوب شحن"
+                android:textSize="30sp"
+                android:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSupplier"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/btn_defult"
+                android:text="تاجر"
+                android:textSize="30sp"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
         <ScrollView
+            android:id="@+id/scrDelvInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView61"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="اختار منطقتك"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="30sp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp">
+
+                    <TextView
+                        android:id="@+id/textView23"
+                        android:layout_width="80dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="المحافظة :"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                        android:id="@+id/spnGov"
+                        android:layout_width="0dp"
+                        android:layout_height="47dp"
+                        android:layout_marginEnd="10dp"
+                        android:spinnerMode="dialog"
+                        android:textAlignment="viewStart"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/textView23"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp">
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="80dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="المنطقة :"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                        android:id="@+id/spnCity"
+                        android:layout_width="0dp"
+                        android:layout_height="47dp"
+                        android:layout_marginEnd="10dp"
+                        android:spinnerMode="dialog"
+                        android:textAlignment="viewStart"
+                        app:layout_constraintEnd_toStartOf="@+id/textView24"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textView60"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="اختار طريقة توصيلك"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="30sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="40dp"
+                    android:gravity="center|left"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="40dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="40dp"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btnMotor"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:background="@drawable/btn_bad"
+                                android:text="موتوسيكل"
+                                android:textSize="18sp"
+                                android:visibility="visible" />
+
+                            <RadioButton
+                                android:id="@+id/rdMotor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:clickable="false"
+                                android:enabled="false"
+                                android:foregroundGravity="center"
+                                android:gravity="center"
+                                android:text="موتسكل" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btnTrans"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:background="@drawable/btn_bad"
+                                android:text="مواصلات"
+                                android:textSize="18sp"
+                                android:visibility="visible" />
+
+                            <RadioButton
+                                android:id="@+id/rdTrans"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:clickable="false"
+                                android:enabled="false"
+                                android:foregroundGravity="center"
+                                android:gravity="center"
+                                android:text="مواصلات" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="40dp"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btnCar"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:background="@drawable/btn_bad"
+                                android:text="سيارة"
+                                android:textSize="18sp"
+                                android:visibility="visible" />
+
+                            <RadioButton
+                                android:id="@+id/rdCar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:clickable="false"
+                                android:enabled="false"
+                                android:foregroundGravity="center"
+                                android:gravity="center"
+                                android:text="سيارة" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btnTruck"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:background="@drawable/btn_bad"
+                                android:text="شاحنة"
+                                android:textSize="18sp"
+                                android:visibility="visible" />
+
+                            <RadioButton
+                                android:id="@+id/rdTruck"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:clickable="false"
+                                android:enabled="false"
+                                android:foregroundGravity="center"
+                                android:gravity="center"
+                                android:text="شاحنة" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/scrSignUp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -86,8 +359,8 @@
                             android:id="@+id/add"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:srcCompat="@drawable/ic_add"
-                            tools:srcCompat="@drawable/ic_add" />
+                            app:srcCompat="@drawable/ic_baseline_camera_enhance_24"
+                            tools:srcCompat="@drawable/ic_baseline_camera_enhance_24" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -146,24 +419,73 @@
                     android:textColorHint="@android:color/secondary_text_dark"
                     android:textSize="24sp" />
 
-                <EditText
-                    android:id="@+id/txtPhone"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="0dp"
-                    android:backgroundTint="@android:color/secondary_text_dark"
-                    android:ems="10"
-                    android:gravity="right"
-                    android:hint="رقم الهاتف"
-                    android:inputType="number"
-                    android:textAlignment="viewEnd"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/secondary_text_dark"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints,RtlCompat" />
+                    android:layout_marginRight="20dp">
+
+                    <com.rilixtech.widget.countrycodepicker.CountryCodePicker
+                        android:id="@+id/ccp"
+                        android:layout_width="47dp"
+                        android:layout_height="47dp"
+                        android:foregroundGravity="center"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        app:ccp_arrowSize="24sp"
+                        app:ccp_dialogTextColor="@color/colorAccent"
+                        app:ccp_textColor="@color/colorAccent"
+                        app:ccp_hideNameCode="true"
+                        app:ccp_selectionDialogShowSearch="false"
+                        app:ccp_showFullName="false"
+                        app:ccp_keyboardAutoPopOnSearch="false"
+                        app:ccp_hidePhoneCode="true"
+                        app:ccp_countryPreference="EG"
+                        app:ccp_customMasterCountries="BH,CY,IQ,IR,EG,JO,KW,LB,OM,QA,SA,SY,TR,AE,YE"
+                        app:ccp_defaultNameCode="EG"
+                        app:flow_horizontalAlign="center"
+                        app:flow_verticalAlign="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </com.rilixtech.widget.countrycodepicker.CountryCodePicker>
+
+                    <TextView
+                        android:id="@+id/txtCCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:foregroundGravity="left|center"
+                        android:gravity="center|left"
+                        android:text="+20"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/txtPhone"
+                        app:layout_constraintStart_toEndOf="@+id/ccp"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/txtPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="47dp"
+                        android:backgroundTint="@android:color/secondary_text_dark"
+                        android:ems="10"
+                        android:layout_marginTop="2dp"
+                        android:gravity="right"
+                        android:hint="101-165-6179"
+                        android:inputType="number"
+                        android:textAlignment="viewStart"
+                        android:textColor="#000000"
+                        android:textColorHint="@android:color/secondary_text_dark"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="MissingConstraints,RtlCompat" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <EditText
                     android:id="@+id/txtPass1"
@@ -217,47 +539,7 @@
         </ScrollView>
 
         <LinearLayout
-            android:id="@+id/layout1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="اختار نوع حسابك"
-                android:textColor="@color/colorAccent"
-                android:textSize="30sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnDelivery"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/btn_defult"
-                android:text="مندوب شحن"
-                android:textSize="30sp"
-                android:visibility="visible" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSupplier"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="50dp"
-                android:background="@drawable/btn_defult"
-                android:text="تاجر"
-                android:textSize="30sp"
-                android:visibility="visible" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout6"
+            android:id="@+id/linVerf"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="right|top"
@@ -309,30 +591,31 @@
         android:id="@+id/btnNext"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="28dp"
         android:background="@drawable/btndesign"
         android:backgroundTint="@color/ic_profile_background"
         android:cropToPadding="false"
-        android:src="@drawable/ic_appintro_next"
+        android:src="@drawable/ic_baseline_navigate_next_24"
         app:backgroundTint="#FFFFFF"
         app:ensureMinTouchTargetSize="false"
         app:fabCustomSize="50dp"
         app:fabSize="auto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.956"
-        app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="#FFFFFF" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnPrev"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="28dp"
+        android:background="@drawable/btndesign"
         android:backgroundTint="@color/colorWhite"
         android:cropToPadding="false"
-        android:src="@drawable/ic_arrow_back"
+        android:src="@drawable/ic_arrow_back_white"
+        app:backgroundTint="#FFFFFF"
         app:ensureMinTouchTargetSize="false"
         app:fabCustomSize="50dp"
         app:fabSize="auto"

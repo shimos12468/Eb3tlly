@@ -71,7 +71,6 @@ public class MessageAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapt
         Chat chat = chatData.get(position);
         holder.txtMsg.setText(chat.getMsg());
         Log.i("MMMM", imgURL);
-        //Picasso.get().load(Uri.parse(imgURL)).into(holder.imgSend);
     }
 
     @Override
@@ -90,12 +89,10 @@ public class MessageAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapt
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txtMsg;
-        ImageView imgSend;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             txtMsg = itemView.findViewById(R.id.txtMsg);
-            imgSend = itemView.findViewById(R.id.imgSend);
         }
     }
 }

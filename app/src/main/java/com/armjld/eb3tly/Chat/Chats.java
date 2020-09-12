@@ -8,12 +8,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.Adapters.chatsAdapter;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +39,12 @@ public class Chats extends AppCompatActivity {
 
     RecyclerView recyclerChat;
     ArrayList<ChatsData> mChat;
+    ImageView btnBack;
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, HomeActivity.class));
+    }
 
     @Override
     protected void onResume() {
@@ -56,7 +65,13 @@ public class Chats extends AppCompatActivity {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerChat.setLayoutManager(layoutManager);
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        btnBack = findViewById(R.id.btnBack);
+        tbTitle.setText("المحادثات");
 
+        btnBack.setOnClickListener(v-> {
+            startActivity(new Intent(this, HomeActivity.class));
+        });
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
         mChat = new ArrayList<ChatsData>();
         final int[] count = {0};

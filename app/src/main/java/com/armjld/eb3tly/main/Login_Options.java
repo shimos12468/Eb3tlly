@@ -5,16 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Profiles.supplierProfile;
+import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.SignUp.Signup;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
@@ -24,28 +23,22 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 
 import com.armjld.eb3tly.R;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,6 +48,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Login_Options extends AppCompatActivity {
 
@@ -67,6 +61,8 @@ public class Login_Options extends AppCompatActivity {
     private String TAG = "Login Options";
     private ProgressDialog mdialog;
     public static GoogleSignInClient mGoogleSignInClient;
+    boolean isLinked = false;
+
 
     @Override
     public void onBackPressed() {
@@ -107,6 +103,7 @@ public class Login_Options extends AppCompatActivity {
 
         // ---------------- implement Google Account ---------------- //
         btnGoogle.setOnClickListener(v -> {
+            mGoogleSignInClient.signOut();
             signInGoogle();
         });
 
@@ -114,17 +111,14 @@ public class Login_Options extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookToken(loginResult.getAccessToken());
-                Toast.makeText(Login_Options.this, "Worked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(Login_Options.this, "Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(Login_Options.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -159,10 +153,22 @@ public class Login_Options extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
-                            firebaseAuthWithGoogle(account.getIdToken(),credential);
+                            //firebaseAuthWithGoogle(account.getIdToken(),credential);
+                            for(DataSnapshot ds : snapshot.getChildren()) {
+                                linkGoogleAccount(credential, ds.child("email").getValue().toString(), ds.child("mpass").getValue().toString());
+                                break;
+                            }
                         } else {
+                            New_SignUp.provider = "Google";
+
+                            New_SignUp.newEmail = account.getEmail();
+                            New_SignUp.newFirstName = account.getGivenName();
+                            New_SignUp.newLastName = account.getFamilyName();
+                            New_SignUp.defultPP = Objects.requireNonNull(account.getPhotoUrl()).toString();
+                            New_SignUp.googleCred = credential;
+
                             finish();
-                            startActivity(new Intent(Login_Options.this, Signup.class));
+                            startActivity(new Intent(Login_Options.this, New_SignUp.class));
                         }
                     }
 
@@ -177,17 +183,32 @@ public class Login_Options extends AppCompatActivity {
         }
     }
 
-    private void linkGoogleAccount(String idToken, AuthCredential credential) {
-        Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "linkWithCredential:success");
-                    FirebaseUser user = task.getResult().getUser();
-                } else {
-                    Log.w(TAG, "linkWithCredential:failure", task.getException());
+    private void linkGoogleAccount(AuthCredential credential, String memail, String mpass) {
+        Log.i(TAG, memail + " : " + mpass);
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(memail, mpass).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                for(UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+                    if(user.getProviderId().equals("google.com")) {
+                        isLinked = true;
+                    }
                 }
-
+                if(!isLinked) {
+                    mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(this, linkGoogle -> {
+                        if(linkGoogle.isSuccessful()) {
+                            letsGo();
+                            mdialog.dismiss();
+                        } else {
+                            mdialog.dismiss();
+                        }
+                    });
+                    mdialog.dismiss();
+                } else {
+                    mdialog.dismiss();
+                    letsGo();
+                }
+            } else {
+                mdialog.dismiss();
             }
         });
     }
@@ -197,10 +218,8 @@ public class Login_Options extends AppCompatActivity {
             if (task.isSuccessful()) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 letsGo();
-                Toast.makeText(Login_Options.this, "Account Linked Successful", Toast.LENGTH_SHORT).show();
             } else {
                 mdialog.dismiss();
-                Toast.makeText(Login_Options.this, "Login Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -256,8 +275,6 @@ public class Login_Options extends AppCompatActivity {
                             Toast.makeText(Login_Options.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
                         }
-                    } else {
-                        Toast.makeText(Login_Options.this, "Please clear the app data and signon again", Toast.LENGTH_SHORT).show();
                     }
                 } else{
                     Toast.makeText(getApplicationContext(), "سجل حسابك مرة اخري", Toast.LENGTH_LONG).show();
@@ -285,7 +302,6 @@ public class Login_Options extends AppCompatActivity {
                     blocedUsers.clear();
                     for(DataSnapshot ds : snapshot.getChildren()){
                         blocedUsers.add(ds.child("id").getValue().toString());
-                        //Toast.makeText(context, ds.child("id").getValue().toString(), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -306,10 +322,8 @@ public class Login_Options extends AppCompatActivity {
             if(task.isSuccessful()) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 Log.d("MAAAIn", "HAHAHAHA" );
-                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
             } else {
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
-                Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
             }
         });
     }

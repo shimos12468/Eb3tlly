@@ -24,10 +24,16 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -61,6 +67,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.rilixtech.widget.countrycodepicker.Country;
+import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -91,6 +99,7 @@ public class New_SignUp extends AppCompatActivity {
     String acDate = DateFormat.getDateInstance().format(new Date());
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
+    RadioButton rdMotor, rdTruck, rdCar, rdTrans;
 
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -100,16 +109,35 @@ public class New_SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase, nDatabase;
     private String TAG = "SignUp";
-    private String defultPP = "https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f";
+    private TextView txtCCode;
+    public static String defultPP = "https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f";
     private ImageView imgSetPP;
     String newType = "Delivery Worker";
-    String newName = "";
+    CountryCodePicker ccp;
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
     int TAKE_IMAGE_CODE = 10001;
+    String cCode = "+20";
+    public static String provider = "Email";
+
+    public static String newFirstName = "";
+    public static String newLastName = "";
+    public static String newEmail = "";
+
+    String isCar = "false";
+    String isTruck = "false";
+    String isMotor = "false";
+    String isTrans = "false";
+    String City = "القاهرة";
+    String Gov = "15 مايو";
+
+    Button btnCar,btnTruck,btnMotor,btnTrans;
+    Spinner spnGov, spnCity;
+
+    public static AuthCredential googleCred;
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, Login_Options.class));
+        showPrev();
     }
 
     @Override
@@ -128,15 +156,31 @@ public class New_SignUp extends AppCompatActivity {
         btnNext = findViewById(R.id.btnNext);
         btnPrev = findViewById(R.id.btnPrev);
         btnBack = findViewById(R.id.btnBack);
+        txtCCode = findViewById(R.id.txtCCode);
 
         btnDelivery = findViewById(R.id.btnDelivery);
         btnSupplier = findViewById(R.id.btnSupplier);
 
+        btnCar = findViewById(R.id.btnCar);
+        btnTruck = findViewById(R.id.btnTruck);
+        btnTrans = findViewById(R.id.btnTrans);
+        btnMotor = findViewById(R.id.btnMotor);
+        spnCity = findViewById(R.id.spnCity);
+        spnGov = findViewById(R.id.spnGov);
+        rdCar  =findViewById(R.id.rdCar);
+        rdMotor = findViewById(R.id.rdMotor);
+        rdTrans = findViewById(R.id.rdTrans);
+        rdTruck = findViewById(R.id.rdTruck);
+
+
         txtFirstName= findViewById(R.id.txtFirstName);
+        txtLastName = findViewById(R.id.txtLastName);
         txtEmail = findViewById(R.id.txtEmail);
         txtPass1 = findViewById(R.id.txtPass1);
+        txtPass2 = findViewById(R.id.txtPass2);
         imgSetPP = findViewById(R.id.imgEditPhoto);
         txtPhone = findViewById(R.id.txtPhone);
+        ccp = (CountryCodePicker) findViewById(R.id.ccp);
 
         txtCode = findViewById(R.id.txtCode);
 
@@ -146,98 +190,102 @@ public class New_SignUp extends AppCompatActivity {
         viewFlipper.setDisplayedChild(0);
 
         Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
+        txtEmail.setText(newEmail);
+        txtLastName.setText(newLastName);
+        txtFirstName.setText(newFirstName);
+
+        if(provider.equals("Google")) {
+            txtEmail.setEnabled(false);
+            txtEmail.setFocusable(false);
+            txtEmail.setKeyListener(null);
+        }
 
         btnBack.setOnClickListener(v-> {
-            startActivity(new Intent(this, MainActivity.class));
+            showPrev();
+        });
+
+        btnCar.setOnClickListener(v-> {
+            isCar = "true";
+            isTruck = "false";
+            isMotor = "false";
+            isTrans = "false";
+
+            btnCar.setBackgroundResource(R.drawable.btn_defult);
+            btnTruck.setBackgroundResource(R.drawable.btn_bad);
+            btnTrans.setBackgroundResource(R.drawable.btn_bad);
+            btnMotor.setBackgroundResource(R.drawable.btn_bad);
+            rdCar.setChecked(true);
+            rdTruck.setChecked(false);
+            rdTrans.setChecked(false);
+            rdMotor.setChecked(false);
+        });
+
+        btnMotor.setOnClickListener(v-> {
+            isCar = "false";
+            isTruck = "false";
+            isMotor = "true";
+            isTrans = "false";
+
+            btnMotor.setBackgroundResource(R.drawable.btn_defult);
+            btnTruck.setBackgroundResource(R.drawable.btn_bad);
+            btnTrans.setBackgroundResource(R.drawable.btn_bad);
+            btnCar.setBackgroundResource(R.drawable.btn_bad);
+
+            rdCar.setChecked(false);
+            rdTruck.setChecked(false);
+            rdTrans.setChecked(false);
+            rdMotor.setChecked(true);
+        });
+
+        btnTrans.setOnClickListener(v-> {
+            isCar = "false";
+            isTruck = "false";
+            isMotor = "false";
+            isTrans = "true";
+
+            btnTrans.setBackgroundResource(R.drawable.btn_defult);
+            btnTruck.setBackgroundResource(R.drawable.btn_bad);
+            btnMotor.setBackgroundResource(R.drawable.btn_bad);
+            btnCar.setBackgroundResource(R.drawable.btn_bad);
+
+            rdCar.setChecked(false);
+            rdTruck.setChecked(false);
+            rdTrans.setChecked(true);
+            rdMotor.setChecked(false);
+        });
+
+        btnTruck.setOnClickListener(v-> {
+            isCar = "false";
+            isTruck = "true";
+            isMotor = "false";
+            isTrans = "false";
+
+            btnTruck.setBackgroundResource(R.drawable.btn_defult);
+            btnTrans.setBackgroundResource(R.drawable.btn_bad);
+            btnMotor.setBackgroundResource(R.drawable.btn_bad);
+            btnCar.setBackgroundResource(R.drawable.btn_bad);
+
+            rdCar.setChecked(false);
+            rdTruck.setChecked(true);
+            rdTrans.setChecked(false);
+            rdMotor.setChecked(false);
+        });
+
+        ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected(Country selectedCountry) {
+                Toast.makeText(New_SignUp.this, "Updated " + ccp.getSelectedCountryCodeWithPlus(), Toast.LENGTH_SHORT).show();
+                cCode = ccp.getSelectedCountryCodeWithPlus();
+                txtCCode.setText(ccp.getSelectedCountryCodeWithPlus());
+            }
         });
 
         btnNext.setOnClickListener(v-> {
-            switch (viewFlipper.getDisplayedChild()) {
-                case 0 : {
-                    viewFlipper.showNext();
-                    break;
-                }
-                case 1 : {
-                    String phone = txtPhone.getText().toString();
-                    if(txtFirstName.getText().toString().isEmpty()) {
-                        Toast.makeText(this, "Name Error", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if(txtEmail.getText().toString().isEmpty()) {
-                        Toast.makeText(this, "Email Error", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if(txtPhone.getText().toString().isEmpty()) {
-                        Toast.makeText(this, "Phone Error", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if(txtPass1.getText().toString().length() < 6) {
-                        Toast.makeText(this, "Pass Error", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if(phone.length() != 11|| phone.charAt(0)!='0'|| phone.charAt(1)!='1') {
-                        Toast.makeText(this, "Phone Error", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    mdialog.setMessage("جاري التاكد من رقم الهاتف");
-                    mdialog.show();
-
-                    FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()) {
-                                if (snapshot.getValue() != null) {
-                                    mdialog.dismiss();
-                                    Toast.makeText(New_SignUp.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    mdialog.dismiss();
-                                    mCallBack();
-                                    sendCode(txtPhone.getText().toString().trim());
-                                    viewFlipper.showNext();
-
-                                }
-                            } else {
-                                mdialog.dismiss();
-                                mCallBack();
-                                sendCode(txtPhone.getText().toString().trim());
-                                viewFlipper.showNext();
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(New_SignUp.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
-                            mdialog.dismiss();
-                        }});
-                    break;
-                }
-                case 2 : {
-                    if(txtCode.getText().toString().length() != 6) {
-                        Toast.makeText(this, "Please Fill This", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    verifyPhoneNumberWithCode(mVerificationId, txtCode.getText().toString().trim());
-                    break;
-                }
-            }
+            showNext();
         });
 
         btnPrev.setOnClickListener(v-> {
-            switch (viewFlipper.getDisplayedChild()) {
-                case 0 : {
-                    Toast.makeText(this, "You are in First Page", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                case 1 : {
-                    viewFlipper.showPrevious();
-                    btnPrev.setVisibility(View.GONE);
-                    btnNext.setVisibility(View.GONE);
-                    break;
-                }
-                default: {
-                    viewFlipper.showPrevious();
-                    break;
-                }
-            }
+            showPrev();
         });
 
         //Set PP
@@ -254,7 +302,7 @@ public class New_SignUp extends AppCompatActivity {
         btnDelivery.setOnClickListener(v-> {
             btnDelivery.setSelected(true);
             newType = "Delivery Worker";
-            viewFlipper.showNext();
+            viewFlipper.setDisplayedChild(1);
             btnNext.setVisibility(View.VISIBLE);
             btnPrev.setVisibility(View.VISIBLE);
         });
@@ -262,15 +310,318 @@ public class New_SignUp extends AppCompatActivity {
         btnSupplier.setOnClickListener(v-> {
             btnSupplier.setSelected(true);
             newType = "Supplier";
-            viewFlipper.showNext();
+            viewFlipper.setDisplayedChild(2);
             btnNext.setVisibility(View.VISIBLE);
             btnPrev.setVisibility(View.VISIBLE);
         });
+
+        // Pick up Government Spinner
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtStates, R.layout.color_spinner_layout);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnGov.setPrompt("اختار المحافظة");
+        spnGov.setAdapter(adapter2);
+        // Get the Government Regions
+        spnGov.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Gov = spnGov.getSelectedItem().toString();
+                int itemSelected = spnGov.getSelectedItemPosition();
+                if (itemSelected == 0) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtCairoRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة القاهرة");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 1) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtGizaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الجيزة");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 2) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtAlexRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الاسكندرية");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 3) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtMetroRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار محطة المترو");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 4) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtQalyobiaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة القليوبية");
+                    spnCity.setAdapter(adapter4);
+                }else if (itemSelected == 5) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtSharqyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الشرقية");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 6) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtDqhlyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الدقهليه");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 7) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtAsyutRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة اسيوط");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 8) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtAswanRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة اسوان");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 9) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtMenofyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة المنوفية");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 10) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtIsmaliaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الاسماعيليه");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 11) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtAqsorRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الاقصر");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 12) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtBeheraRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة البحيرة");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 13) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtBaniSwefRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة بين سويف");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 14) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtPortSaidRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة بور سعيد");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 15) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtRedSeaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة البحر الاحمر");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 16) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtSouthSeniaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة جنوب سيناء");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 17) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtDomyatRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة دمياط");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 18) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtSohagRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة سوهاج");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 19) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtSuezRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة السويس");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 20) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtGarbyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الغربية");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 21) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtFayoumRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الفييوم");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 22) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtQenaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة قنا");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 23) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtKafrRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة كفر الشيخ");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 24) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtNorthSenia, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة شمال سيناْء");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 25) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtMatrohRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة مطروح");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 26) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtMeiaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة المنيا");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 27) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.txtNewWadiRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الوادي الجديد");
+                    spnCity.setAdapter(adapter4);
+                } else {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(New_SignUp.this, R.array.justAll, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("سيتم اضافه مناطق المحافظة في اصدارات جديدة");
+                    spnCity.setAdapter(adapter4);
+                }
+            }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spnCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                City = spnCity.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
     }
 
+    private void showPrev() {
+        switch (viewFlipper.getDisplayedChild()) {
+            case 0 : {
+                startActivity(new Intent(this, Login_Options.class));
+                break;
+            }
+            case 1 : {
+                viewFlipper.showPrevious();
+                btnPrev.setVisibility(View.GONE);
+                btnNext.setVisibility(View.GONE);
+                break;
+            }
+            case 2 : {
+                if(newType.equals("Supplier")) {
+                    btnPrev.setVisibility(View.GONE);
+                    btnNext.setVisibility(View.GONE);
+                    viewFlipper.setDisplayedChild(0);
+                } else {
+                    viewFlipper.setDisplayedChild(1);
+                }
+                break;
+            }
+            default: {
+                viewFlipper.showPrevious();
+                break;
+            }
+        }
+    }
+    private void showNext() {
+        switch (viewFlipper.getDisplayedChild()) {
+            case 0 : {
+                viewFlipper.showNext();
+                break;
+            }
+            case 1 : {
+                if(isCar.equals("false") && isMotor.equals("false") && isTrans.equals("false") && isTruck.equals("false")) {
+                    Toast.makeText(this, "الرجاء اختيار وسيلة نقل واحدة", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                viewFlipper.showNext();
+                break;
+            }
+            case 2 : {
+                String phone = txtPhone.getText().toString();
+                if(txtFirstName.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "الرجاء ادخال الاسم الاول", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(txtLastName.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "الرجاء ادخال الاسم الاخير", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(txtEmail.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "ارجاء ادخال البريد الالكتروني", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(txtPhone.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "الرجاء ادخال رقم الهاتف", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(txtPass1.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "الرجاء ادخال كلمه السر", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(txtPass1.getText().toString().length() < 6) {
+                    Toast.makeText(this, "الرجاء ادخال كلمه سر من 6 ارقام علي الاقل", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!txtPass1.getText().toString().equals(txtPass2.getText().toString())) {
+                    Toast.makeText(this, "تاكد من تطابق كلمة السر", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(phone.length() != 10|| phone.charAt(0)!='1') {
+                    Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                newEmail = txtEmail.getText().toString();
+                newFirstName = txtFirstName.getText().toString();
+                newLastName = txtLastName.getText().toString();
+
+                mdialog.setMessage("جاري التاكد من رقم الهاتف ..");
+                mdialog.show();
+
+                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            if (snapshot.getValue() != null) {
+                                mdialog.dismiss();
+                                Toast.makeText(New_SignUp.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //mdialog.dismiss();
+                                mCallBack();
+                                sendCode(txtPhone.getText().toString().trim());
+                                //viewFlipper.showNext();
+
+                            }
+                        } else {
+                            //mdialog.dismiss();
+                            mCallBack();
+                            sendCode(txtPhone.getText().toString().trim());
+                            //viewFlipper.showNext();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(New_SignUp.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
+                        mdialog.dismiss();
+                    }});
+                break;
+            }
+            case 3 : {
+                if(txtCode.getText().toString().length() != 6) {
+                    Toast.makeText(this, "الكود الذي ادخلته خطأ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                verifyPhoneNumberWithCode(mVerificationId, txtCode.getText().toString().trim());
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
     private void sendCode(String uPhone) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+2" + uPhone,
+                cCode + uPhone,
                 60,
                 TimeUnit.SECONDS,
                 this,
@@ -279,12 +630,102 @@ public class New_SignUp extends AppCompatActivity {
 
     private void verifyPhoneNumberWithCode(String verificationId, String code) {
         mdialog.setMessage("جاري التاكد من الكود ..");
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signUp(credential);
+        if(verificationId != null) {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+            if(!provider.equals("Email")) {
+                link(credential);
+            } else {
+                signUp(credential);
+            }
+        } else {
+            Toast.makeText(this, "حدث خطأ في ارسال الرمز حاول لاحقا", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void link(PhoneAuthCredential credential) {
+        String memail = newEmail;
+        String mpass = txtPass1.getText().toString().trim();
+        String muser = newFirstName + " " + newLastName;
+        String mPhone = txtPhone.getText().toString().trim();
+        mAuth.signInWithCredential(googleCred).addOnCompleteListener(New_SignUp.this, googleSign -> {
+            if(googleSign.isSuccessful() && mAuth.getCurrentUser() != null) {
+                mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(New_SignUp.this, taskPhone -> {
+                    if(taskPhone.isSuccessful()) {
+                        AuthCredential emailCred = EmailAuthProvider.getCredential(memail, mpass);
+                        Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
+                            if(taskEmail.isSuccessful()) {
+                                String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+                                userData data= new userData(muser, mPhone, memail, acDate, id, newType, defultPP, mpass, "0");
+                                uDatabase.child(id).setValue(data);
+                                uDatabase.child(id).child("completed").setValue("true");
+                                uDatabase.child(id).child("profit").setValue("0");
+                                uDatabase.child(id).child("active").setValue("true");
+                                uDatabase.child(id).child("isConfirmed").setValue("false");
+
+                                if(newType.equals("Delivery Worker")) {
+                                    uDatabase.child(id).child("isCar").setValue(isCar);
+                                    uDatabase.child(id).child("isTrans").setValue(isTrans);
+                                    uDatabase.child(id).child("isMotor").setValue(isMotor);
+                                    uDatabase.child(id).child("isTruck").setValue(isTruck);
+                                    uDatabase.child(id).child("gov").setValue(Gov);
+                                    uDatabase.child(id).child("city").setValue(City);
+                                }
+
+                                // ------------------ Set Device Token ----------------- //
+                                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(New_SignUp.this, instanceIdResult -> {
+                                    String deviceToken = instanceIdResult.getToken();
+                                    uDatabase.child(id).child("device_token").setValue(deviceToken);
+                                });
+
+                                if(bitmap != null) {
+                                    handleUpload(bitmap);
+                                } else {
+                                    uDatabase.child(id).child("ppURL").setValue(defultPP);
+                                    mdialog.dismiss();
+                                }
+
+                                // ------------- Welcome message in Notfications----------------------//
+
+                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false", "nothing");
+                                nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
+                                UserInFormation.setAccountType(newType);
+                                UserInFormation.setUserName(muser);
+                                UserInFormation.setUserDate(acDate);
+                                UserInFormation.setUserURL(defultPP);
+                                UserInFormation.setId(id);
+
+                                UserInFormation.setEmail(memail);
+                                UserInFormation.setPass(mpass);
+                                UserInFormation.setPhone(mPhone);
+                                StartUp.dataset = true;
+                                UserInFormation.setisConfirm("false");
+                                if (newType.equals("Supplier")) {
+                                    finish();
+                                    startActivity(new Intent(getApplicationContext(), introSup.class));
+                                } else if (newType.equals("Delivery Worker")) {
+                                    finish();
+                                    startActivity(new Intent(getApplicationContext(), intro2.class));
+                                }
+                                Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
+                                mdialog.dismiss();
+                            } else {
+                                Toast.makeText(this, "حدث خطأ ما حاول لاحقا", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        if (taskPhone.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            Toast.makeText(this, "كود التفعيل غير صحيح", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void signUp(PhoneAuthCredential credential) {
-
         String memail = txtEmail.getText().toString().trim();
         String mpass = txtPass1.getText().toString().trim();
         String muser = txtFirstName.getText().toString().trim();
@@ -292,11 +733,9 @@ public class New_SignUp extends AppCompatActivity {
 
         mAuth.signInWithCredential(credential).addOnCompleteListener(New_SignUp.this, taskPhone -> {
             if(taskPhone.isSuccessful()) {
-                Toast.makeText(this, "Phone Success .. Linking", Toast.LENGTH_SHORT).show();
                 AuthCredential emailCred = EmailAuthProvider.getCredential(memail, mpass);
                 Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
                    if(taskEmail.isSuccessful()) {
-                       Toast.makeText(this, "Email Success ..", Toast.LENGTH_SHORT).show();
                        String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
                        userData data= new userData(muser, mPhone, memail, acDate, id, newType, defultPP, mpass, "0");
@@ -342,10 +781,10 @@ public class New_SignUp extends AppCompatActivity {
                            finish();
                            startActivity(new Intent(getApplicationContext(), intro2.class));
                        }
-                       Toast.makeText(getApplicationContext(),"تم التسجيل الحساب بنجاح" , Toast.LENGTH_LONG).show();
+                       Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
                        mdialog.dismiss();
                    } else {
-                       Toast.makeText(this, "Linking Failed", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(this, "حدث خطأ ما حاول لاحقا", Toast.LENGTH_SHORT).show();
                    }
                 });
             } else {
@@ -362,7 +801,11 @@ public class New_SignUp extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
                 mVerificationInProgress = false;
-                signUp(credential);
+                if(!provider.equals("Email")) {
+                    link(credential);
+                } else {
+                    signUp(credential);
+                }
             }
 
             @Override
@@ -372,7 +815,7 @@ public class New_SignUp extends AppCompatActivity {
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(New_SignUp.this, "رقم هاتف غير صحيح", Toast.LENGTH_SHORT).show();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
-                    Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "الرجاء ابلاغ خدمة العملاء بالمشكله", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -382,6 +825,7 @@ public class New_SignUp extends AppCompatActivity {
                 mdialog.dismiss();
                 mVerificationId = verificationId;
                 mResendToken = token;
+                viewFlipper.setDisplayedChild(2);
             }
         };
     }

@@ -97,9 +97,37 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
                 for(DataSnapshot ds : snapshot.getChildren()) {
                     Log.i(TAG, ds.getKey());
                     holder.txtBody.setText(ds.child("msg").getValue().toString());
-                    holder.txtNotidate.setText(ds.child("timestamp").getValue().toString());
-                }
+                        String startDate = ds.child("timestamp").getValue().toString();
+                        String stopDate = datee;
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+                        Date d1 = null;
+                        Date d2 = null;
+                        try {
+                            d1 = format.parse(startDate);
+                            d2 = format.parse(stopDate);
+                        } catch (java.text.ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                        assert d2 != null;
+                        assert d1 != null;
+                        long diff = d2.getTime() - d1.getTime();
+                        long diffSeconds = diff / 1000;
+                        long diffMinutes = diff / (60 * 1000);
+                        long diffHours = diff / (60 * 60 * 1000);
+                        long diffDays = diff / (24 * 60 * 60 * 1000);
 
+                        String finalDate = "";
+                        if (diffSeconds < 60) {
+                            finalDate = "منذ " + diffSeconds + " ثوان";
+                        } else if (diffSeconds > 60 && diffSeconds < 3600) {
+                            finalDate = "منذ " + diffMinutes + " دقيقة";
+                        } else if (diffSeconds > 3600 && diffSeconds < 86400) {
+                            finalDate = "منذ " + diffHours + " ساعات";
+                        } else if (diffSeconds > 86400) {
+                            finalDate = "منذ " +diffDays + " ايام";
+                        }
+                        holder.txtNotidate.setText(finalDate);
+                }
             }
 
             @Override

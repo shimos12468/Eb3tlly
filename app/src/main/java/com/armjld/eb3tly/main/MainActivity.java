@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.Terms;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.admin.Admin;
+import com.facebook.login.Login;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase,Database;
     private ProgressDialog mdialog;
+    private ImageView btnBack;
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signOut();
         uDatabase = getInstance().getReference().child("Pickly").child("users");
 
+        btnBack = findViewById(R.id.btnBack);
 
         mdialog = new ProgressDialog(this);
         signup = findViewById(R.id.signup_text);
@@ -74,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تسجيل الدخول");
+
+        btnBack.setOnClickListener(v-> {
+            startActivity(new Intent(this, Login_Options.class));
+        });
 
         final Intent signIntent = new Intent(this, New_SignUp.class);
         signup.setOnClickListener(v -> {

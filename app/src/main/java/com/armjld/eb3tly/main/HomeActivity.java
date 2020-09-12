@@ -163,7 +163,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(new Intent(this, MapsActivity.class));
         });
 
-        // ----------- sort buttom
+        // ----------- sort button
         btnSort.setOnClickListener(v -> {
             startActivity(new Intent(this, Chats.class));
             PopupMenu popup = new PopupMenu(this, v);

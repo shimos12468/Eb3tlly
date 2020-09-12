@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context=".Chat.Chats">
 
@@ -17,10 +18,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_home"
+        app:srcCompat="@drawable/ic_back_black" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerChat"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.armjld.eb3tly.main.Login_Options;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.R;
 import com.github.appintro.AppIntro;
@@ -27,12 +28,12 @@ public class IntroFirstRun extends AppIntro {
     @Override
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        startActivity(new Intent(getApplicationContext(), Login_Options.class));
     }
 
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        startActivity(new Intent(getApplicationContext(), Login_Options.class));
     }
 }
