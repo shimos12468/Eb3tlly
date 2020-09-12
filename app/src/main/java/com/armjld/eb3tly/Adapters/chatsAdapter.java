@@ -1,7 +1,9 @@
 package com.armjld.eb3tly.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,44 +32,40 @@ import Model.ChatsData;
 public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapters.chatsAdapter.MyViewHolder> {
 
     Context context;
-    List<ChatsData> chatData;
+    ArrayList<ChatsData> chatData;
     String uId = UserInFormation.getId();
 
     private DatabaseReference nDatabase, messageDatabase, uDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
+    String TAG = "Chat Adapter";
 
-    public chatsAdapter(Context context, List<ChatsData> chatData) {
+    public chatsAdapter(Context context,  ArrayList<ChatsData> chatData) {
         this.context = context;
         this.chatData = chatData;
-
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-
-        String TAG = "Chat Adapter";
     }
 
     @NonNull
     @Override
-    public com.armjld.eb3tly.Adapters.chatsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.card_chat, parent, false);
-            return new chatsAdapter.MyViewHolder(view);
-
+    public chatsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view  = inflater.inflate(R.layout.card_chat,parent,false);
+        return new chatsAdapter.MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull chatsAdapter.MyViewHolder holder, final int position) {
         ChatsData chat = chatData.get(position);
-
-        String talkerID = "";
-        if(chat.getUser1().equals(uId)) {
-            talkerID = chat.getUser2();
-        } else {
-            talkerID = chat.getUser1();
-        }
+        String talkerID = chat.getUserId();
+        Log.i(TAG, talkerID);
 
         holder.myview.setOnClickListener(v -> {
-            // ------------- direct to this chat
+            Intent intent = new Intent(context, Messages.class);
+            intent.putExtra("roomid", chat.getRoomid());
+            intent.putExtra("rid", chat.getUserId());
+            context.startActivity(intent);
         });
 
         uDatabase.child(talkerID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -80,7 +80,7 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
             public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-        messageDatabase.child(chat.getGroupid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+        messageDatabase.child(chat.getRoomid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Chat chat = snapshot.getValue(Chat.class);
@@ -97,7 +97,7 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
 
     @Override
     public int getItemCount() {
-        return chatData.size();
+        return this.chatData.size();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
         return position;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txtName,txtBody,txtNotidate;
         ImageView imgEditPhoto;
         View myview;

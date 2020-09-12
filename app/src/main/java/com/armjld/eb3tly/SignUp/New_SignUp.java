@@ -253,8 +253,6 @@ public class New_SignUp extends AppCompatActivity {
 
         btnDelivery.setOnClickListener(v-> {
             btnDelivery.setSelected(true);
-            btnDelivery.setBackgroundResource(R.drawable.btn_blue);
-            btnSupplier.setBackgroundResource(R.drawable.btn_bad);
             newType = "Delivery Worker";
             viewFlipper.showNext();
             btnNext.setVisibility(View.VISIBLE);
@@ -263,8 +261,6 @@ public class New_SignUp extends AppCompatActivity {
 
         btnSupplier.setOnClickListener(v-> {
             btnSupplier.setSelected(true);
-            btnSupplier.setBackgroundResource(R.drawable.btn_blue);
-            btnDelivery.setBackgroundResource(R.drawable.btn_bad);
             newType = "Supplier";
             viewFlipper.showNext();
             btnNext.setVisibility(View.VISIBLE);

@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.Adapters.chatsAdapter;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.StartUp;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,9 +31,10 @@ public class Chats extends AppCompatActivity {
     DatabaseReference messageDatabase;
     String uId = UserInFormation.getId();
 
-    chatsAdapter chatsAdapter;
+    private chatsAdapter _chatsAdapter;
+
     RecyclerView recyclerChat;
-    List<ChatsData> mChat;
+    ArrayList<ChatsData> mChat;
 
     @Override
     protected void onResume() {
@@ -48,27 +52,25 @@ public class Chats extends AppCompatActivity {
 
         recyclerChat = findViewById(R.id.recyclerChat);
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
+        mChat = new ArrayList<ChatsData>();
 
-        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("roomid").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds:snapshot.getChildren()) {
-                    String roomID = ds.child("roomid").getValue().toString();
-                    messageDatabase.child(roomID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot ss) {
-                            ChatsData cchatData = ss.getValue(ChatsData.class);
-                            mChat.add(cchatData);
-                            chatsAdapter = new chatsAdapter(Chats.this, mChat);
-                            recyclerChat.setAdapter(chatsAdapter);
-                        }
+                    if(ds.child("roomid").exists() && ds.child("orderid").exists()) {
+                        ChatsData cchatData = ds.getValue(ChatsData.class);
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                        String roomID = cchatData.getRoomid();
+                        Log.i("Chats", "Room id : " + roomID);
 
-                        }
-                    });
+                        mChat.add(cchatData);
+                    }
+                    _chatsAdapter = new chatsAdapter(Chats.this, mChat);
+                    recyclerChat.setAdapter(_chatsAdapter);
                 }
+                Log.i("Chats", mChat.size() + "");
+
             }
 
             @Override
