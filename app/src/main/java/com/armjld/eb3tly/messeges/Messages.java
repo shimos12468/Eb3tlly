@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.armjld.eb3tly.Adapters.MessageAdapter;
+import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.main.Login_Options;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +49,10 @@ public class Messages extends AppCompatActivity {
 
     MessageAdapter messageAdapter;
     List<Chat> mChat;
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, Chats.class));
+    }
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
@@ -82,6 +89,11 @@ public class Messages extends AppCompatActivity {
             mHashmap.put("msg", msg);
             mHashmap.put("timestamp", datee);
             messageDatabase.child(roomId).push().setValue(mHashmap);
+            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(roomId);
+            messageDatabase.child("timestamp").setValue(datee);
+            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(rId).child("chats").child(roomId);
+            messageDatabase.child("timestamp").setValue(datee);
+
             editWriteMessage.setText("");
         });
 

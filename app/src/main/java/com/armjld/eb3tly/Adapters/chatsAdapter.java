@@ -28,6 +28,7 @@ import java.util.Locale;
 
 import Model.Chat;
 import Model.ChatsData;
+import Model.Data;
 
 public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapters.chatsAdapter.MyViewHolder> {
 
@@ -39,6 +40,14 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     String TAG = "Chat Adapter";
+    public void addItem(int position , ChatsData data) {
+        int size = chatData.size();
+        if (size > position && size != 0) {
+            chatData.set(position, data);
+            notifyItemChanged(position);
+
+        }
+    }
 
     public chatsAdapter(Context context,  ArrayList<ChatsData> chatData) {
         this.context = context;
@@ -83,10 +92,14 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
         messageDatabase.child(chat.getRoomid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Chat chat = snapshot.getValue(Chat.class);
-                assert chat != null;
-                holder.txtBody.setText(chat.getMsg());
-                holder.txtNotidate.setText(chat.getTimestamp());
+                Chat chatS = snapshot.getValue(Chat.class);
+                assert chatS != null;
+                for(DataSnapshot ds : snapshot.getChildren()) {
+                    Log.i(TAG, ds.getKey());
+                    holder.txtBody.setText(ds.child("msg").getValue().toString());
+                    holder.txtNotidate.setText(ds.child("timestamp").getValue().toString());
+                }
+
             }
 
             @Override
@@ -97,7 +110,7 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
 
     @Override
     public int getItemCount() {
-        return this.chatData.size();
+        return chatData.size();
     }
 
     @Override
