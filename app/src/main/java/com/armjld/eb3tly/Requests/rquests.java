@@ -30,12 +30,9 @@ public class rquests {
         rquests.requests = requests;
     }
 
-    public boolean addrequest(String num , String orderid ,String date){
+    public boolean addrequest(String orderid ,String date){
         String uId = UserInFormation.getId();
 
-        if(num == null){
-            return false;
-        }
         if(uId == null){
             return false;
         }
@@ -44,11 +41,23 @@ public class rquests {
             Bdatabase.child("id").setValue(uId);
             Bdatabase.child("date").setValue(date);
             Bdatabase.child("statue").setValue("N/A");
+
             Bdatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("requests").child(orderid);
             Bdatabase.child("orderId").setValue(orderid);
             Bdatabase.child("date").setValue(date);
             Bdatabase.child("statue").setValue("N/A");
 
+            return true;
+        }
+    }
+
+    public boolean deleteReq(String orderid){
+        String uId = UserInFormation.getId();
+        if(uId == null){
+            return false;
+        } else{
+           FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests").child(uId).removeValue();
+           FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("requests").child(orderid).removeValue();
             return true;
         }
     }

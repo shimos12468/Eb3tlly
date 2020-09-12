@@ -1,13 +1,12 @@
 package Model;
 
 public class requestsData {
-    String id, offer, date;
+    String id, date;
 
     public requestsData(){ }
 
-    public requestsData(String id, String offer, String date) {
+    public requestsData(String id, String date) {
         this.id = id;
-        this.offer = offer;
         this.date = date;
     }
 
@@ -17,14 +16,6 @@ public class requestsData {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getOffer() {
-        return offer;
-    }
-
-    public void setOffer(String offer) {
-        this.offer = offer;
     }
 
     public String getDate() {

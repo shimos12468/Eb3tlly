@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.MyLocation;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
@@ -58,7 +59,7 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class supplierProfile extends AppCompatActivity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP, imgStar,imgVerf;
+    private ImageView imgSetPP, imgStar,imgVerf, btnChats;
     private TextView txtUserDate,uName,txtNotiCount,txtTotalOrders;
     private String TAG = "Supplier Profile";
     String uType = UserInFormation.getAccountType();
@@ -97,6 +98,7 @@ public class supplierProfile extends AppCompatActivity {
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        btnChats = findViewById(R.id.btnChats);
         constSupProfile= findViewById(R.id.constSupProfile);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
@@ -126,6 +128,9 @@ public class supplierProfile extends AppCompatActivity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("اوردراتي");
 
+        btnChats.setOnClickListener(v-> {
+            startActivity(new Intent(this, Chats.class));
+        });
         if(isConfirmed.equals("false")) {
             Snackbar snackbar = Snackbar.make(viewPager, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
                 finish();

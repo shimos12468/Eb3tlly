@@ -166,7 +166,7 @@
                     android:layout_marginStart="5dp"
                     android:foregroundGravity="left"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_bus" />
+                    app:srcCompat="@drawable/ic_bike" />
 
                 <ImageView
                     android:id="@+id/icnMetro"
@@ -180,17 +180,17 @@
 
                 <ImageView
                     android:id="@+id/icnMotor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="left"
                     android:foregroundGravity="left"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_motorcycle" />
+                    app:srcCompat="@drawable/ic_motor" />
 
                 <ImageView
                     android:id="@+id/icnCar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="left"
                     android:foregroundGravity="left"
                     android:visibility="visible"
@@ -255,9 +255,9 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
-                    android:background="@drawable/btn_bad"
-                    android:text="اقترح سعر"
-                    android:textColor="#000000"
+                    android:background="@drawable/btn_defult"
+                    android:text="التقديم علي الشحنه"
+                    android:textColor="@color/colorAccent"
                     android:textSize="20sp" />
 
                 <androidx.appcompat.widget.AppCompatButton

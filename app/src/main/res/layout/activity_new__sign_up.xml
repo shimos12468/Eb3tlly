@@ -39,46 +39,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
-        <LinearLayout
-            android:id="@+id/linType"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="اختار نوع حسابك"
-                android:textColor="@color/colorAccent"
-                android:textSize="30sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnDelivery"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/btn_defult"
-                android:text="مندوب شحن"
-                android:textSize="30sp"
-                android:visibility="visible" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSupplier"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="50dp"
-                android:background="@drawable/btn_defult"
-                android:text="تاجر"
-                android:textSize="30sp"
-                android:visibility="visible" />
-
-        </LinearLayout>
-
         <ScrollView
             android:id="@+id/scrDelvInfo"
             android:layout_width="match_parent"
@@ -172,7 +132,7 @@
                     android:id="@+id/textView60"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:text="اختار طريقة توصيلك"
                     android:textColor="@color/colorAccent"
@@ -204,7 +164,7 @@
                                 android:layout_width="75dp"
                                 android:layout_height="75dp"
                                 android:background="@drawable/btn_bad"
-                                android:text="موتوسيكل"
+                                android:drawableStart="@drawable/ic_motor"
                                 android:textSize="18sp"
                                 android:visibility="visible" />
 
@@ -230,7 +190,7 @@
                                 android:layout_width="75dp"
                                 android:layout_height="75dp"
                                 android:background="@drawable/btn_bad"
-                                android:text="مواصلات"
+                                android:drawableStart="@drawable/ic_delivery_22_icon_1"
                                 android:textSize="18sp"
                                 android:visibility="visible" />
 
@@ -240,10 +200,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:clickable="false"
+                                android:enabled="true"
                                 android:foregroundGravity="center"
                                 android:gravity="center"
-                                android:text="مواصلات"
-                                android:enabled="true" />
+                                android:text="مواصلات" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -263,7 +223,7 @@
                                 android:layout_width="75dp"
                                 android:layout_height="75dp"
                                 android:background="@drawable/btn_bad"
-                                android:text="سيارة"
+                                android:drawableStart="@drawable/ic_car"
                                 android:textSize="18sp"
                                 android:visibility="visible" />
 
@@ -289,7 +249,7 @@
                                 android:layout_width="75dp"
                                 android:layout_height="75dp"
                                 android:background="@drawable/btn_bad"
-                                android:text="شاحنة"
+                                android:drawableStart="@drawable/ic_truck"
                                 android:textSize="18sp"
                                 android:visibility="visible" />
 
@@ -310,6 +270,46 @@
 
             </LinearLayout>
         </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/linType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="اختار نوع حسابك"
+                android:textColor="@color/colorAccent"
+                android:textSize="30sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDelivery"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_defult"
+                android:text="مندوب شحن"
+                android:textSize="30sp"
+                android:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSupplier"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/btn_defult"
+                android:text="تاجر"
+                android:textSize="30sp"
+                android:visibility="visible" />
+
+        </LinearLayout>
 
         <ScrollView
             android:id="@+id/scrSignUp"

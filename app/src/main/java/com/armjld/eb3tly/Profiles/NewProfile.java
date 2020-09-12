@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 
+import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Fragments.SectionsPagerAdapter;
@@ -57,7 +58,7 @@ public class NewProfile extends AppCompatActivity {
 
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP,imgStar, imgVerf;
+    private ImageView imgSetPP,imgStar, imgVerf,btnChats;
     private TextView txtUserDate;
     private TextView uName;
     private TextView txtNotiCount,txtTotalOrders;
@@ -91,6 +92,7 @@ public class NewProfile extends AppCompatActivity {
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        btnChats = findViewById(R.id.btnChats);
         constNewProfile = findViewById(R.id.constNewProfile);
         imgVerf = findViewById(R.id.imgVerf);
         mAuth = FirebaseAuth.getInstance();
@@ -99,6 +101,10 @@ public class NewProfile extends AppCompatActivity {
         uId = UserInFormation.getId();
         ViewPager viewPager = findViewById(R.id.view_pager);
 
+
+        btnChats.setOnClickListener(v-> {
+            startActivity(new Intent(this, Chats.class));
+        });
 
         if(isConfirmed.equals("false")) {
             Snackbar snackbar = Snackbar.make(viewPager, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {

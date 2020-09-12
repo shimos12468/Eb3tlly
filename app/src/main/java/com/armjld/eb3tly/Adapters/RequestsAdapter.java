@@ -34,6 +34,7 @@ import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.main.HomeActivity;
+import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -95,7 +96,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         String id = requestsData.get(position).getId();
-        String offer = requestsData.get(position).getOffer();
         String date = requestsData.get(position).getDate();
 
         String startDate = date;
@@ -125,7 +125,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
 
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setUserInfo(id);
-        holder.setBody(offer);
 
         holder.myview.setOnClickListener(v-> {
             AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
@@ -305,6 +304,72 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
             dialog.show();
         });
 
+        holder.btnSendMessage.setOnClickListener(v-> {
+            final String[] room = new String[1];
+            String uId = UserInFormation.getId();
+            DatabaseReference Bdatabase;
+            final boolean[] found = {false};
+            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+            Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        for (DataSnapshot ds:snapshot.getChildren()) {
+                            if(ds.child("orderid").exists() && ds.child("roomid").exists()){
+                                if(ds.child("orderid").getValue().toString().equals(orderId)) {
+                                    room[0] = ds.child("roomid").getValue().toString();
+                                    Intent intent = new Intent(context, Messages.class);
+                                    intent.putExtra("roomid", room[0]);
+                                    intent.putExtra("rid", id);
+                                    context.startActivity(intent);
+                                    found[0] = true;
+                                    break;
+                                }
+
+                            }
+                        }
+                        if(!found[0]){
+                            DatabaseReference Bdatabase;
+                            Log.d("mnfol"," we are here2" );
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                            String chat = Bdatabase.push().getKey();
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                            Bdatabase.child("userId").setValue(id);
+                            Bdatabase.child("orderid").setValue(orderId);
+                            Bdatabase.child("roomid").setValue(chat);
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
+                            Bdatabase.child("userId").setValue(uId);
+                            Bdatabase.child("orderid").setValue(orderId);
+                            Bdatabase.child("roomid").setValue(chat);
+                            Intent intent = new Intent(context, Messages.class);
+                            intent.putExtra("roomid", chat);
+                            intent.putExtra("rid", id);
+                            context.startActivity(intent);
+                        }
+                    } else{
+                        DatabaseReference Bdatabase;
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                        String chat = Bdatabase.push().getKey();
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                        Bdatabase.child("userId").setValue(id);
+                        Bdatabase.child("orderid").setValue(orderId);
+                        Bdatabase.child("roomid").setValue(chat);
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
+                        Bdatabase.child("userId").setValue(uId);
+                        Bdatabase.child("orderid").setValue(orderId);
+                        Bdatabase.child("roomid").setValue(chat);
+                        Intent intent = new Intent(context, Messages.class);
+                        intent.putExtra("roomid", chat);
+                        intent.putExtra("rid", id);
+                        context.startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        });
+
         holder.btnAccept.setOnClickListener(v -> {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 switch (which) {
@@ -366,23 +431,18 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         View myview;
         ImageView imgEditPhoto;
-        TextView txtName, txtBody,txtDate;
-        Button btnAccept;
+        TextView txtName,txtDate;
+        Button btnAccept,btnSendMessage;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             myview = itemView;
             txtName = myview.findViewById(R.id.txtName);
-            txtBody = myview.findViewById(R.id.txtBody);
             btnAccept = myview.findViewById(R.id.btnAccept);
             txtDate = myview.findViewById(R.id.txtDate);
             imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
+            btnSendMessage = myview.findViewById(R.id.btnSendMessage);
 
-        }
-
-        @SuppressLint("SetTextI18n")
-        public void setBody(String offer) {
-            txtBody.setText(offer + " ج");
         }
 
         public void setUserInfo(String id) {

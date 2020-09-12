@@ -48,13 +48,23 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_menu" />
 
+            <ImageView
+                android:id="@+id/btnChats"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_chats" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constNoti"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
-                app:layout_constraintEnd_toEndOf="@+id/toolbar_home"
+                app:layout_constraintEnd_toStartOf="@+id/btnChats"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView

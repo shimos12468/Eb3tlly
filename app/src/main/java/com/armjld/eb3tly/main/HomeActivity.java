@@ -165,7 +165,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // ----------- sort button
         btnSort.setOnClickListener(v -> {
-            startActivity(new Intent(this, Chats.class));
             PopupMenu popup = new PopupMenu(this, v);
             MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.sort_menu, popup.getMenu());

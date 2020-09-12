@@ -111,7 +111,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         Vibrator vibe = (Vibrator) (context).getSystemService(Context.VIBRATOR_SERVICE);
-        holder.btnBid.setVisibility(View.GONE);
+        //holder.btnBid.setVisibility(View.GONE);
         // Get Post Date
         holder.lin1.setVisibility(View.GONE);
         holder.txtWarning.setVisibility(View.GONE);
@@ -153,13 +153,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                 String isConfirm = "false";
                 if (snapshot.child("isConfirmed").exists()) {
                     isConfirm = snapshot.child("isConfirmed").getValue().toString();
                 }
                 holder.setUsername(isConfirm);
-                //Log.i(TAG, uName + " : " + isConfirm);
             }
 
             @Override
@@ -195,6 +193,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
 
+
         if (!filtersData.get(position).getOwner().equals(" ")) {
             holder.txtUsername.setText(filtersData.get(position).getOwner());
         Log.i(TAG, "Owner is There " + filtersData.get(position).getOwner());
@@ -209,86 +208,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
         }
-        holder.txtUsername.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "second", Toast.LENGTH_SHORT).show();
-                final String[] room = new String[1];
-                String id = filtersData.get(position).getuId();
-                String uId = UserInFormation.getId();
-                DatabaseReference Bdatabase;
-                final boolean[] found = {false};
-                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                            for (DataSnapshot ds:snapshot.getChildren()) {
-                                if(ds.child("orderid").exists() && ds.child("roomid").exists()){
-                                        if(ds.child("orderid").getValue().toString().equals(orderID)) {
-                                        room[0] = ds.child("roomid").getValue().toString();
-                                            Intent intent = new Intent(context, Messages.class);
-                                            intent.putExtra("roomid", room[0]);
-                                            intent.putExtra("rid", id);
-                                            context.startActivity(intent);
-                                            Toast.makeText(context, "second time", Toast.LENGTH_SHORT).show();
-                                            found[0] = true;
-                                            break;
-                                    }
-
-                                }
-                            }
-                            if(!found[0]){
-                                DatabaseReference Bdatabase;
-                                Log.d("mnfol"," we are here2" );
-                                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                                String chat = Bdatabase.push().getKey();
-                                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
-                                Bdatabase.child("userId").setValue(id);
-                                Bdatabase.child("orderid").setValue(orderID);
-                                Bdatabase.child("roomid").setValue(chat);
-                                Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
-                                Bdatabase.child("userId").setValue(uId);
-                                Bdatabase.child("orderid").setValue(orderID);
-                                Bdatabase.child("roomid").setValue(chat);
-                                Intent intent = new Intent(context, Messages.class);
-                                intent.putExtra("roomid", chat);
-                                intent.putExtra("rid", id);
-                                context.startActivity(intent);
-                                Toast.makeText(context, "first time", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-
-                        else{
-                            DatabaseReference Bdatabase;
-                            Log.d("mnfol"," we are here2" );
-                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                            String chat = Bdatabase.push().getKey();
-                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
-                            Bdatabase.child("userId").setValue(id);
-                            Bdatabase.child("orderid").setValue(orderID);
-                            Bdatabase.child("roomid").setValue(chat);
-                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
-                            Bdatabase.child("userId").setValue(uId);
-                            Bdatabase.child("orderid").setValue(orderID);
-                            Bdatabase.child("roomid").setValue(chat);
-                            Intent intent = new Intent(context, Messages.class);
-                            intent.putExtra("roomid", chat);
-                            intent.putExtra("rid", id);
-                            context.startActivity(intent);
-                            Toast.makeText(context, "first time", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
+       
         //Hide this order Button
         holder.btnHide.setOnClickListener(v -> {
             Toast.makeText(context, "Still working on this", Toast.LENGTH_SHORT).show();
@@ -314,38 +234,72 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
 
+        mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    holder.setBid("true");
+                } else {
+                    holder.setBid("false");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
 
 
-
-
-        // ------------------ Bidding Dialog -------------------- //
-        holder.btnBid.setOnClickListener(v-> {
-            assert vibe != null;
-            vibe.vibrate(20);
-            AlertDialog.Builder dialogBid = new AlertDialog.Builder(context);
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View viewBid = inflater.inflate(R.layout.dialog_bid, null);
-            dialogBid.setView(viewBid);
-            final AlertDialog dialog = dialogBid.create();
-            dialog.show();
-
-            EditText txtBid = viewBid.findViewById(R.id.txtBid);
-            Button btnBid = viewBid.findViewById(R.id.btnBid);
-            ImageView btnClose = viewBid.findViewById(R.id.btnClose);
-
-            TextView tbTitle = viewBid.findViewById(R.id.toolbar_title);
-            tbTitle.setText("اقترح سعر توصيل");
-
-            btnClose.setOnClickListener(v1 -> {
-                vibe.vibrate(20);
-                dialog.dismiss();
-            });
-
+        holder.btnBid.setOnClickListener(v1 -> {
             mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists() && snapshot.child("offer").exists()) {
-                        txtBid.setText(snapshot.child("offer").getValue().toString());
+                    if(snapshot.exists()) {
+                        holder.setBid("true");
+                        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    // ------------------- Send Request -------------------- //
+                                    rquests _rquests = new rquests();
+                                    _rquests.deleteReq(orderID);
+
+                                    // ------------------ Notificatiom ------------------ //
+                                    //notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");
+                                    //nDatabase.child(owner).push().setValue(Noti);
+                                    holder.btnBid.setText("التقديم علي الشحنه");
+
+                                    Toast.makeText(context, "تم الغاء التقديم", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+
+                    } else {
+                        // -------------- New Request
+                        holder.setBid("false");
+                        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    // ------------------- Send Request -------------------- //
+                                    rquests _rquests = new rquests();
+                                    _rquests.addrequest(orderID, datee);
+
+                                    // ------------------ Notificatiom ------------------ //
+                                    notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");
+                                    nDatabase.child(owner).push().setValue(Noti);
+                                    holder.btnBid.setText("الغاء التقديم علي الاوردر");
+
+                                    Toast.makeText(context, "تم التقديم علي الشحنه", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+
                     }
                 }
 
@@ -353,35 +307,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 public void onCancelled(@NonNull DatabaseError error) { }
             });
 
-            btnBid.setOnClickListener(v1 -> {
-                if(txtBid.getText().toString().length() == 0) {
-                    txtBid.setError("الرجاء ادخال قيمة");
-                    txtBid.requestFocus();
-                    return;
-                }
-
-                DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            // ------------------- Send Request -------------------- //
-                            String numBid = txtBid.getText().toString().trim();
-                            rquests _rquests = new rquests();
-                            _rquests.addrequest(numBid, orderID, datee);
-
-                            // ------------------ Notificatiom ------------------ //
-                            notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " يأقتراح سعر " + numBid + " ج لتوصيل اوردر " + filtersData.get(position).getDName(),datee,"false","order");
-                            nDatabase.child(owner).push().setValue(Noti);
-
-                            Toast.makeText(context, "تم ارسال اقتراح سعرك للتاجر", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            break;
-                    }
-                };
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("هل انت متأكد من انك تريج اقتراح هذا السعر علي التاجر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-            });
         });
 
 
@@ -640,6 +565,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 holder.txtWarning.setVisibility(View.VISIBLE);
             } else {
                 holder.lin1.setVisibility(View.VISIBLE);
+                holder.btnAccept.setVisibility(View.GONE);
                 holder.txtWarning.setVisibility(View.GONE);
             }
         } else if(uType.equals("Admin")) {
@@ -856,10 +782,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
         public void setBid(String type) {
-            if(type.equals("Normal")) {
-                btnBid.setVisibility(View.GONE);
+            if(type.equals("true")) {
+                btnBid.setText("تم التقديم علي الشحنه");
             } else {
-                btnBid.setVisibility(View.VISIBLE);
+                btnBid.setText("التقديم علي الشحنه");
             }
         }
 
