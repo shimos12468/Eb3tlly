@@ -158,6 +158,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         recyclerView=findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
 
+
         btnMaps.setOnClickListener(v -> {
             finish();
             startActivity(new Intent(this, MapsActivity.class));
@@ -496,6 +497,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(new Intent(getApplicationContext(), NewProfile.class));
         }
     }
+
 
     private void signOut() {
         uDatabase.child(uId).child("device_token").setValue("");

@@ -614,6 +614,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         }
 
+
         public void setType(String car, String motor, String metro, String trans) {
             if (car.equals("سياره")) {
                 icnCar.setVisibility(View.VISIBLE);
