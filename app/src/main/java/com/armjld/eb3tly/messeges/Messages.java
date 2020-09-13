@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.armjld.eb3tly.Adapters.MessageAdapter;
@@ -36,13 +37,14 @@ import Model.userData;
 
 public class Messages extends AppCompatActivity {
 
-    DatabaseReference messageDatabase,uDatabase;
+    private DatabaseReference messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
+    private DatabaseReference uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
     ImageView btnSend;
     String uName = UserInFormation.getUserName();
-    String uId = UserInFormation.getId();
+    private String uId = UserInFormation.getId();
     boolean f = true;
-    String rId = "";
-    String roomId ;
+    private String rId = "";
+    private String roomId ;
     ImageView btnBack;
 
     EditText editWriteMessage;
@@ -63,6 +65,10 @@ public class Messages extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
+
+        roomId = getIntent().getStringExtra("roomid");
+        rId = getIntent().getStringExtra("rid");
+
         btnSend = findViewById(R.id.btnSend);
         TextView tbTitle = findViewById(R.id.toolbar_title);
         editWriteMessage = findViewById(R.id.editWriteMessage);
@@ -74,67 +80,62 @@ public class Messages extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerMsg.setLayoutManager(linearLayoutManager);
-        roomId = getIntent().getStringExtra("roomid");
-        messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
-        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        rId = getIntent().getStringExtra("rid");
+
 
         btnBack.setOnClickListener(v-> {
             startActivity(new Intent(this, Chats.class));
         });
 
-        btnSend.setOnClickListener(v -> {
-            String msg = editWriteMessage.getText().toString().trim();
-            if(msg.length() == 0) {
-                editWriteMessage.requestFocus();
-                return;
-            }
-
-
-            HashMap<String, Object> mHashmap = new HashMap<>();
-            mHashmap.put("senderid", uId);
-            mHashmap.put("reciverid", rId);
-            mHashmap.put("msg", msg);
-            mHashmap.put("timestamp", datee);
-            messageDatabase.child(roomId).push().setValue(mHashmap);
-            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(roomId);
-            messageDatabase.child("timestamp").setValue(datee);
-            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(rId).child("chats").child(roomId);
-            messageDatabase.child("timestamp").setValue(datee);
-
-            editWriteMessage.setText("");
-        });
-
-        uDatabase.child(rId).addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(rId).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //userData uData = snapshot.getValue(.class);
-                //String uName = uData.getname();
-                String namee =  snapshot.child("name").getValue().toString();
-                String ppURL = snapshot.child("ppURL").getValue().toString();
-                Log.d("MMMMM" , ppURL);
-
-                // ---- Set the Data in the Header
-                tbTitle.setText(namee);
-                readMessage(uId, rId, ppURL);
+                tbTitle.setText(snapshot.getValue().toString());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+
+        btnSend.setOnClickListener(v -> {
+            String msg = editWriteMessage.getText().toString().trim();
+
+            if(msg.length() == 0) {
+                editWriteMessage.requestFocus();
+                Toast.makeText(this, "Fuck", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String msgID =  FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).push().getKey();
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("senderid").setValue(uId);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("reciverid").setValue(rId);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("msg").setValue(msg);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("timestamp").setValue(datee);
+
+            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(roomId);
+            messageDatabase.child("timestamp").setValue(datee);
+
+            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(rId).child("chats").child(roomId);
+            messageDatabase.child("timestamp").setValue(datee);
+
+            Log.i("KOSMY", roomId);
+
+            editWriteMessage.setText("");
+        });
+
+        readMessage();
     }
 
-    private void readMessage(String id, String userID, String imgURL) {
+    private void readMessage() {
         mChat = new ArrayList<>();
         messageDatabase.child(roomId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                 mChat.clear();
+                mChat.clear();
                 if(snapshot.exists()) {
                     for(DataSnapshot ds : snapshot.getChildren()) {
                         Chat chat = ds.getValue(Chat.class);
                         mChat.add(chat);
-                        messageAdapter = new MessageAdapter(Messages.this, mChat, imgURL);
+                        messageAdapter = new MessageAdapter(Messages.this, mChat);
                         recyclerMsg.setAdapter(messageAdapter);
                     }
                 }

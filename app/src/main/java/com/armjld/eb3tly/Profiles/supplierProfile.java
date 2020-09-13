@@ -258,11 +258,11 @@ public class supplierProfile extends AppCompatActivity {
 
         btnAdd.setOnClickListener(v -> {
             vibe.vibrate(40);
-            //mdialog.setMessage("جاري التاكد من اتصال الانترنت ..");
-            //mdialog.show();
+            mdialog.setMessage("جاري التاكد من اتصال الانترنت ..");
+            mdialog.show();
             finish();
-            startActivity(new Intent(this, MyLocation.class));
-            /*vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            //startActivity(new Intent(this, MyLocation.class));
+            vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
@@ -276,7 +276,7 @@ public class supplierProfile extends AppCompatActivity {
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });*/
+            });
         });
     }
 

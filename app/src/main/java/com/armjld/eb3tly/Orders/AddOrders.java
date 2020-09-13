@@ -132,7 +132,7 @@ public class AddOrders extends AppCompatActivity {
         }
 
         // ------------------- Check if there is a locations ---------------------- //
-        uDatabase.child(uId).child("locations").addListenerForSingleValueEvent(new ValueEventListener() {
+        /*uDatabase.child(uId).child("locations").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.exists()) {
@@ -144,7 +144,7 @@ public class AddOrders extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
-        });
+        });*/
 
         // Toolbar
         TextView toolbar_title = findViewById(R.id.toolbar_title);

@@ -33,17 +33,15 @@ public class MessageAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapt
 
     Context context;
     List<Chat> chatData;
-    String imgURL;
     String uId = UserInFormation.getId();
 
     private DatabaseReference nDatabase, confirmDatabase, uDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
-    public MessageAdapter(Context context, List<Model.Chat> chatData, String imgURL) {
+    public MessageAdapter(Context context, List<Model.Chat> chatData) {
         this.context = context;
         this.chatData = chatData;
-        this.imgURL = imgURL;
 
         confirmDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("confirms");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -70,7 +68,6 @@ public class MessageAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapt
     public void onBindViewHolder(@NonNull com.armjld.eb3tly.Adapters.MessageAdapter.MyViewHolder holder, final int position) {
         Chat chat = chatData.get(position);
         holder.txtMsg.setText(chat.getMsg());
-        Log.i("MMMM", imgURL);
     }
 
     @Override
