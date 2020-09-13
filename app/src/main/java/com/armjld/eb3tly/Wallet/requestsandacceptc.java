@@ -35,6 +35,7 @@ public class requestsandacceptc {
                             count[0] +=1;
                         }
                     }
+                    Log.i("acceptdlivaryworker", "mDatabase" + count + "");
                 }
             }
 
@@ -65,6 +66,7 @@ public class requestsandacceptc {
                             count[0] +=1;
                         }
                     }
+                    Log.i("requestNewOrder", "MDatabase" + count + "");
                 }
             }
 
@@ -85,6 +87,8 @@ public class requestsandacceptc {
                             c[0] +=1;
                         }
                     }
+                    Log.i("requestNewOrder", "uDatabase" + c + "");
+
                 }
             }
 

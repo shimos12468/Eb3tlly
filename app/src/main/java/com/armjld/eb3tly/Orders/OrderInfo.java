@@ -238,8 +238,6 @@ public class OrderInfo extends AppCompatActivity {
                         requestsandacceptc c  = new requestsandacceptc();
                         if(!c.requestNewOrder())
                             return;
-                        if(!c.acceptdlivaryworker(uId))
-                            return;
                         setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {

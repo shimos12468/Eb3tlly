@@ -269,8 +269,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         requestsandacceptc c  = new requestsandacceptc();
                         if(!c.requestNewOrder())
                             return;
-                        if(!c.acceptdlivaryworker(uId))
-                            return;
                         holder.setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {

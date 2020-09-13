@@ -22,7 +22,6 @@ import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Intros.IntroFirstRun;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Wallet.WalletManeger;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.Login_Options;
@@ -48,7 +47,6 @@ public class StartUp extends AppCompatActivity {
     private String TAG = "StartUp";
     private ConstraintLayout startConst;
     public UserInFormation userInfo = new UserInFormation();
-    public WalletManeger walletManeger;
     int codee = 10001;
     public static boolean dataset = false;
 
@@ -74,7 +72,6 @@ public class StartUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
-        walletManeger = new WalletManeger();
         setContentView(R.layout.activity_startup);
         startConst = findViewById(R.id.startConst);
         linLogo = findViewById(R.id.linLogo);
@@ -177,7 +174,6 @@ public class StartUp extends AppCompatActivity {
                                 startActivity(new Intent(StartUp.this, supplierProfile.class));
                                 break;
                             case "Delivery Worker":
-                                walletManeger.SetWalletData();
                                 finish();
                                 startActivity(new Intent(StartUp.this, HomeActivity.class));
                                 break;
