@@ -889,7 +889,7 @@ public class AddOrders extends AppCompatActivity {
 
                             sendNotiState(pState1, dState, id);
 
-                            clearText();
+                            //clearText();
                             mdialog.dismiss();
                             Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن يمكنك الان اضافه اوردر اخر", Toast.LENGTH_LONG).show();
                             break;

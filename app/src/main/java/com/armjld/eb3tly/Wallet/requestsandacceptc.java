@@ -22,9 +22,12 @@ import java.util.Locale;
 
 public class requestsandacceptc {
     DatabaseReference Wdatabase;
+    int count = 0;
+    int count2 = 0;
+    int count3 = 0;
 
     public boolean acceptdlivaryworker(String id){
-        final int[] count = {0};
+        count = 0;
         Wdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         Wdatabase.orderByChild("uAccepted").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -32,7 +35,7 @@ public class requestsandacceptc {
                 if(snapshot.exists()){
                     for (DataSnapshot ds:snapshot.getChildren()){
                         if(ds.child("statue").getValue().toString().equals("accepted")){
-                            count[0] +=1;
+                            count++;
                         }
                     }
                     Log.i("acceptdlivaryworker", "mDatabase" + count + "");
@@ -45,7 +48,7 @@ public class requestsandacceptc {
             }
         });
 
-        if(count[0]<20){
+        if(count <= 20){
             return true;
         }
         else
@@ -55,7 +58,7 @@ public class requestsandacceptc {
 
     public Boolean requestNewOrder(){
         String id = UserInFormation.getId();
-        final int[] count = {0};
+        count2 = 0;
         Wdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         Wdatabase.orderByChild("uAccepted").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -63,10 +66,10 @@ public class requestsandacceptc {
                 if(snapshot.exists()){
                     for (DataSnapshot ds:snapshot.getChildren()){
                         if(ds.child("statue").getValue().toString().equals("accepted")){
-                            count[0] +=1;
+                            count2++;
                         }
                     }
-                    Log.i("requestNewOrder", "MDatabase" + count + "");
+                    Log.i("requestNewOrder", "MDatabase" + count2 + "");
                 }
             }
 
@@ -76,7 +79,7 @@ public class requestsandacceptc {
             }
         });
 
-        final int []c = {0};
+        count3 = 0;
         Wdatabase =  FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("requests");
         Wdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -84,20 +87,20 @@ public class requestsandacceptc {
                 if(snapshot.exists()){
                     for (DataSnapshot ds:snapshot.getChildren()){
                         if(ds.child("statue").getValue().toString().equals("N/A")){
-                            c[0] +=1;
+                            count3++;
+
                         }
                     }
-                    Log.i("requestNewOrder", "uDatabase" + c + "");
+                    Log.i("requestNewOrder", "uDatabase" + count3 + "");
 
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-        if(count[0]<20&&c[0]<10){
+        if(count2<20&&count3<10){
             return true;
         }
         else
