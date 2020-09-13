@@ -33,6 +33,8 @@ import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+
+import com.armjld.eb3tly.Wallet.requestsandacceptc;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
@@ -372,6 +374,9 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
 
         holder.btnAccept.setOnClickListener(v -> {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                requestsandacceptc c = new requestsandacceptc();
+                if(!c.acceptdlivaryworker(id))
+                    return;
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         mDatabase.child(orderId).child("uAccepted").setValue(id);

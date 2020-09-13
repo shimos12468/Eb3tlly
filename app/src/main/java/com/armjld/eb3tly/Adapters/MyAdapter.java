@@ -30,6 +30,8 @@ import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.Utilites.StartUp;
+
+import com.armjld.eb3tly.Wallet.requestsandacceptc;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.Login_Options;
@@ -264,7 +266,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
                     } else {
-                        // -------------- New Request
+                        requestsandacceptc c  = new requestsandacceptc();
+                        if(!c.requestNewOrder())
+                            return;
                         holder.setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {
