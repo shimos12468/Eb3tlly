@@ -69,6 +69,7 @@ public class OrdersBySameUser extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView btnNavBar;
     String userID;
+    String dName = "";
 
     @Override
     protected void onResume() {
@@ -92,6 +93,7 @@ public class OrdersBySameUser extends AppCompatActivity {
 
         setContentView(R.layout.activity_orders_by_same_user);
         userID = getIntent().getStringExtra("userid");
+        dName = getIntent().getStringExtra("name");
         Log.i(TAG, "User ID : " + userID);
         count =0;
         mm = new ArrayList<>();
@@ -99,7 +101,7 @@ public class OrdersBySameUser extends AppCompatActivity {
         btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         TextView tbTitle = findViewById(R.id.toolbar_title);
-        tbTitle.setText("اوردرات اخري من نفس التاجر");
+        tbTitle.setText("اوردرات " + dName);
         
         
         // ToolBar

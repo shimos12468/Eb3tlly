@@ -39,10 +39,12 @@ public class Data {
     private String uAccepted;
     private String srated;
     private String srateid;
-    private String pDate = "";
 
+    private String pDate = "";
     private String type = "Normal";
     public static String removed = "false";
+    private String packType = "";
+    private String packWeight = "";
 
     public String getRemoved() {
         return removed;
@@ -76,9 +78,25 @@ public class Data {
     public void setpDate(String pDate) { this.pDate = pDate;
     }
 
+    public String getPackType() {
+        return packType;
+    }
+
+    public void setPackType(String packType) {
+        this.packType = packType;
+    }
+
+    public String getPackWeight() {
+        return packWeight;
+    }
+
+    public void setPackWeight(String packWeight) {
+        this.packWeight = packWeight;
+    }
+
     public Data(String txtPState, String mPRegion, String mPAddress, String mPShop, String txtDState, String mDRegion, String DAddress, String DDate, String DPhone, String DName,
                 String GMoney, String GGet, String date, String id, String uId, String isTrans, String isMetro, String isMotor, String isCar, String statue, String uAccepted, String srated,
-                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type , String owner, String pDate) {
+                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type , String owner, String pDate, String packWeight, String packType) {
 
         //PICK
         this.txtPState = txtPState;
@@ -86,6 +104,8 @@ public class Data {
         this.mPAddress = mPAddress;
         this.mPShop = mPShop;
         this.notes = notes;
+        this.packType = packType;
+        this.packWeight = packWeight;
         this.acceptedTime = acceptedTime;
         this.dilverTime = dilverTime;
         this.owner = owner;

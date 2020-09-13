@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     String filterDate;
     String uType = UserInFormation.getAccountType();
     String uId = UserInFormation.getId();
-    public static boolean sortDate = true;
+    public static boolean sortDate = false;
     private Thread t = null;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

@@ -65,6 +65,7 @@
             android:name=".Orders.Maps_User_Location"
             android:label="@string/title_activity_maps__user__location" />
         <activity android:name=".Orders.MapsActivity" />
+        <activity android:name=".Orders.OrderInfo" />
         <activity android:name=".Requests.RequestsForSup" />
         <activity android:name=".Passaword.Forget_Password" />
         <activity

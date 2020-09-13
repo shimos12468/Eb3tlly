@@ -95,7 +95,8 @@ public class New_SignUp extends AppCompatActivity {
     EditText et1,et2,et3,et4,et5,et6;
     EditText txtCode;
     ImageView btnBack,btnDelivery, btnSupplier;
-    String acDate = DateFormat.getDateInstance().format(new Date());
+    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    String acDate = sdf2.format(new Date());
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     RadioButton rdMotor, rdTruck, rdCar, rdTrans;

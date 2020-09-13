@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.Utilites.StartUp;
@@ -68,11 +69,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      ArrayList<Data>filtersData;
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
      private DatabaseReference mDatabase;
-    private static DatabaseReference rDatabase;
-    private DatabaseReference uDatabase;
-    private DatabaseReference vDatabase;
-    private DatabaseReference nDatabase;
-    private DatabaseReference Database;
+     private static DatabaseReference rDatabase;
+     private DatabaseReference uDatabase;
+     private DatabaseReference vDatabase;
+     private DatabaseReference nDatabase;
+     private DatabaseReference Database;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
      private String TAG = "My Adapter";
      String uType = UserInFormation.getAccountType();
@@ -173,8 +174,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-        holder.setRating(owner);
-
         mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -202,14 +201,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
-
-       
-        //Hide this order Button
-        holder.btnHide.setOnClickListener(v -> {
-            Toast.makeText(context, "Still working on this", Toast.LENGTH_SHORT).show();
-            assert vibe != null;
-            vibe.vibrate(20);
-        });
+        holder.setRating(owner);
 
         holder.linerDate.setOnClickListener(v -> {
             Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -307,206 +299,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         //More Info Button
         holder.btnMore.setOnClickListener(v -> {
-            assert vibe != null;
-            vibe.vibrate(20);
-            AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View dialogMore = inflater.inflate(R.layout.dialogsupinfo, null);
-            myDialogMore.setView(dialogMore);
-            final AlertDialog dialog = myDialogMore.create();
-            dialog.show();
-
-            TextView tbTitle = dialogMore.findViewById(R.id.toolbar_title);
-            tbTitle.setText("بيانات الاوردر");
-
-            ImageView btnClose = dialogMore.findViewById(R.id.btnClose);
-            ImageView btnBlock = dialogMore.findViewById(R.id.btnBlock);
-
-            btnClose.setOnClickListener(v1 -> {
-                vibe.vibrate(20);
-                dialog.dismiss();
-            });
-
-            final TextView dsUsername = dialogMore.findViewById(R.id.ddUsername);
-            TextView dsPAddress = dialogMore.findViewById(R.id.ddPhone);
-            TextView dsDAddress = dialogMore.findViewById(R.id.dsDAddress);
-            TextView dsOrderNotes = dialogMore.findViewById(R.id.dsOrderNotes);
-            TextView txtTitle = dialogMore.findViewById(R.id.txtTitle);
-            final ImageView supPP = dialogMore.findViewById(R.id.supPP);
-            final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
-            final ImageView imgVerf = dialogMore.findViewById(R.id.imgVerf);
-            final RatingBar rbUser = dialogMore.findViewById(R.id.ddRate);
-            final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
-            final TextView txtNoddComments = dialogMore.findViewById(R.id.txtNoddComments);
-
-            btnBlock.setOnClickListener(v1 -> {
-                DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            boolean flag=block.addUser(filtersData.get(position).getuId());
-                            if(flag) {
-                                Toast.makeText(context, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
-                                context.startActivity(new Intent(context, HomeActivity.class));
-                            } else {
-                                Toast.makeText(context, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
-
-                            }
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            break;
-                    }
-                };
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-            });
-
-            imgVerf.setOnClickListener(v1 -> {
-                Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
-            });
-            
-            // Get posted orders count
-            mDatabase.orderByChild("uId").equalTo(filtersData.get(position).getuId()).addListenerForSingleValueEvent (new ValueEventListener() {
-                @SuppressLint({"SetTextI18n", "ResourceAsColor"})
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    int oCount = 0;
-                    if(dataSnapshot.exists()) {
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            if(!ds.child("statue").getValue().toString().equals("deleted")) {
-                                oCount ++;
-                            }
-                        }
-                    }
-
-                    if(oCount == 0) {
-                        ddCount.setText("لم يقم بأضافه اي اوردرات");
-
-                    } else {
-                        ddCount.setText( "اضاف "+ oCount + " اوردر");
-                    }
-
-                    if(oCount >= 10) {
-                        dsUsername.setTextColor(R.color.ic_profile_background);
-                        ppStar.setVisibility(View.VISIBLE);
-                    } else {
-                        dsUsername.setTextColor(R.color.colorAccent);
-                        ppStar.setVisibility(View.GONE);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-
-            //Get the user name & Pic
-            uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String dsUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                    String dsPP = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
-
-                    Log.i(TAG, "Photo URL : " + dsPP);
-                    Picasso.get().load(Uri.parse(dsPP)).into(supPP);
-                    dsUsername.setText(dsUser);
-
-                    // Check if account is Verfied
-                    if(snapshot.child("isConfirmed").exists()) {
-                        String isConfirmed = snapshot.child("isConfirmed").getValue().toString();
-                        if(isConfirmed.equals("true")) {
-                            imgVerf.setVisibility(View.VISIBLE);
-                        } else {
-                            imgVerf.setVisibility(View.GONE);
-                        }
-                    } else {
-                        imgVerf.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-
-            if (PAddress.trim().equals("")) {
-                dsPAddress.setVisibility(View.GONE);
-            } else {
-                dsPAddress.setVisibility(View.VISIBLE);
-                dsPAddress.setText("عنوان الاستلام : " + PAddress);
-            }
-            if (DAddress.trim().equals("")) {
-                dsDAddress.setVisibility(View.GONE);
-            } else {
-                dsDAddress.setText("عنوان التسليم : " + DAddress);
-                dsDAddress.setVisibility(View.VISIBLE);
-            }
-            if(notes.trim().equals("")) {
-                dsOrderNotes.setVisibility(View.GONE);
-            } else {
-                dsOrderNotes.setText(notes);
-                dsOrderNotes.setVisibility(View.VISIBLE);
-            }
-
-            //Get the Rate Stars
-            rDatabase.child(owner).orderByChild("sId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()) {
-                        long total = 0;
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
-                            total = total + rating;
-                        }
-                        double average = (double) total / dataSnapshot.getChildrenCount();
-                        if(String.valueOf(average).equals("NaN")) {
-                            average = 5;
-                        }
-                        rbUser.setRating((int) average);
-                    } else {
-                        rbUser.setRating(5);
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-            // Get that user Comments
-            ListView listComment = dialogMore.findViewById(R.id.dsComment);
-            final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
-            listComment.setAdapter(arrayAdapterLessons);
-            mArraylistSectionLessons.clear(); // To not dublicate comments
-            rDatabase.child(owner).orderByChild("sId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    int comments = 0;
-                    if(dataSnapshot.exists()) {
-                        for (DataSnapshot cData : dataSnapshot.getChildren()) {
-                            if(cData.exists()) {
-                                String tempComment = Objects.requireNonNull(cData.child("comment").getValue()).toString();
-                                if(!tempComment.equals("")) {
-                                    mArraylistSectionLessons.add(tempComment);
-                                    comments++;
-                                }
-                                arrayAdapterLessons.notifyDataSetChanged();
-                            }
-                        }
-                    }
-
-                    if(comments > 0) {
-                        txtNoddComments.setVisibility(View.GONE);
-                        listComment.setVisibility(View.VISIBLE);
-                        txtTitle.setVisibility(View.VISIBLE);
-                    } else {
-                        txtNoddComments.setVisibility(View.VISIBLE);
-                        listComment.setVisibility(View.GONE);
-                        txtTitle.setVisibility(View.GONE);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
+            Intent intent = new Intent(context, OrderInfo.class);
+            intent.putExtra("orderID", orderID);
+            intent.putExtra("owner", owner);
+            context.startActivity(intent);
         });
 
         holder.icnCar.setOnClickListener(v -> {
@@ -731,7 +527,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public View myview;
-        public Button btnAccept, btnHide, btnMore, btnEdit,btnDelete,btnOpen, btnBid;
+        public Button btnAccept, btnMore, btnEdit,btnDelete,btnOpen, btnBid;
         public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtOrderFrom,txtOrderTo,txtPostDate, txtDate2;
         public LinearLayout lin1,linerDate,linAdmin;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgStar,imgVerf;
@@ -741,7 +537,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             super(itemView);
             myview=itemView;
             btnAccept = myview.findViewById(R.id.btnAccept);
-            btnHide = myview.findViewById(R.id.btnHide);
             btnMore = myview.findViewById(R.id.btnMore);
             btnOpen = myview.findViewById(R.id.btnOpen);
             lin1 = myview.findViewById(R.id.lin1);
@@ -875,6 +670,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     } else {
                         ddRate.setRating(5);
                     }
+                    ddRate.setVisibility(View.VISIBLE);
 
                 }
 
