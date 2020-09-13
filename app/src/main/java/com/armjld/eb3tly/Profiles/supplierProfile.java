@@ -131,6 +131,7 @@ public class supplierProfile extends AppCompatActivity {
         btnChats.setOnClickListener(v-> {
             startActivity(new Intent(this, Chats.class));
         });
+
         if(isConfirmed.equals("false")) {
             Snackbar snackbar = Snackbar.make(viewPager, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
                 finish();

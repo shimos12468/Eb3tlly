@@ -8,11 +8,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.armjld.eb3tly.Utilites.UserSetting;
 import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
@@ -35,6 +37,7 @@ public class ChangePassword extends Activity {
     Button confirm;
     String pass , con_pass,oldd;
     private FirebaseAuth mAuth;
+    ImageView btnBack;
     String oldPass = "";
     private ProgressDialog mdialog;
     String TAG = "Change Password";
@@ -58,10 +61,15 @@ public class ChangePassword extends Activity {
         con_password = findViewById(R.id.txtEditPassword2);
         old_pass = findViewById(R.id.txtOldPassword);
         confirm = findViewById(R.id.btnEditInfo);
+        btnBack = findViewById(R.id.btnBack);
         mdialog = new ProgressDialog(this);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تغيير الرقم السري");
+
+        btnBack.setOnClickListener(v-> {
+            startActivity(new Intent(this, UserSetting.class));
+        });
 
         uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

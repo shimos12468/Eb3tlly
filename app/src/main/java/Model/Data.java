@@ -39,6 +39,7 @@ public class Data {
     private String uAccepted;
     private String srated;
     private String srateid;
+    private String pDate = "";
 
     private String type = "Normal";
     public static String removed = "false";
@@ -69,9 +70,15 @@ public class Data {
         this.type = type;
     }
 
+    public String getpDate() { return pDate;
+    }
+
+    public void setpDate(String pDate) { this.pDate = pDate;
+    }
+
     public Data(String txtPState, String mPRegion, String mPAddress, String mPShop, String txtDState, String mDRegion, String DAddress, String DDate, String DPhone, String DName,
                 String GMoney, String GGet, String date, String id, String uId, String isTrans, String isMetro, String isMotor, String isCar, String statue, String uAccepted, String srated,
-                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type ,String owner) {
+                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type , String owner, String pDate) {
 
         //PICK
         this.txtPState = txtPState;
@@ -92,6 +99,7 @@ public class Data {
         this.GMoney = GMoney;
         this.GGet = GGet;
         this.date = date;
+        this.pDate = pDate;
 
         // ids
         this.id = id;

@@ -61,7 +61,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     long count;
     String orderId;
     ArrayList<requestsData>requestsData;
-    private DatabaseReference uDatabase,mDatabase,rDatabase,reportDatabase,nDatabase;
+    private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     private BlockManeger block = new BlockManeger();
@@ -79,7 +79,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
         nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
-        reportDatabase = getInstance().getReference().child("Pickly").child("reports");
+
         String TAG = "Requests Adapter";
 
         Log.i(TAG, " Reached Reply Adapter");
@@ -382,9 +382,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                         notiData Noti = new notiData(UserInFormation.getId(), id,orderId,"قام " + UserInFormation.getUserName() + " بقبول طلبك لاستلام الاوردر ",datee,"false","order");
                         nDatabase.child(id).push().setValue(Noti);
 
-                        // ----------------- Set the new Shipping Price --------//
-                        //mDatabase.child(orderId).child("gget").setValue(offer);
-
                         //------------------ se request as accepted in user db ----------- //
                         uDatabase.child(id).child("requests").child(orderId).child("statue").setValue("accepted");
                         for(int i = 0;i<requestsData.size();i++){
@@ -393,8 +390,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                                 mDatabase.child("statue").setValue("declined");
                                 uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(requestsData.get(i).getId()).child("requests").child(orderId);
                                 uDatabase.child("statue").setValue("declined");
-                            }
-                            else{
+                            } else{
                                 mDatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderId).child("requests").child(requestsData.get(i).getId());
                                 mDatabase.child("statue").setValue("accepted");
                                 uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(requestsData.get(i).getId()).child("requests").child(orderId);
@@ -428,11 +424,12 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         return position;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         View myview;
         ImageView imgEditPhoto;
-        TextView txtName,txtDate;
+        TextView txtName,txtDate, txtJoinDate, txtOrdersCount;
         Button btnAccept,btnSendMessage;
+        RatingBar rbUser;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -442,6 +439,9 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
             txtDate = myview.findViewById(R.id.txtDate);
             imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
             btnSendMessage = myview.findViewById(R.id.btnSendMessage);
+            rbUser = myview.findViewById(R.id.rbUser);
+            txtJoinDate = myview.findViewById(R.id.txtJoinDate);
+            txtOrdersCount = myview.findViewById(R.id.txtOrdersCount);
 
         }
 
@@ -454,12 +454,74 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                     assert uData != null;
                     txtName.setText(uData.getname());
                     Picasso.get().load(Uri.parse(uData.getPpURL())).into(imgEditPhoto);
+                    txtJoinDate.setText(uData.getDate());
+
+                    getRatings(id);
+                    getOrderCountDel(id);
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
             });
         }
+
+        public void getRatings(String hisID) {
+            rDatabase.child(hisID).orderByChild("dId").equalTo(hisID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()) {
+                        long total = 0;
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
+                            total = total + rating;
+                        }
+                        double average = (double) total / dataSnapshot.getChildrenCount();
+                        if(String.valueOf(average).equals("NaN")) {
+                            average = 5;
+                        }
+                        rbUser.setRating((int) average);
+                    } else {
+                        rbUser.setRating(5);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
+        }
+
+        public void getOrderCountDel(String hisID) {
+            mDatabase.orderByChild("uAccepted").equalTo(hisID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int cOrders = 0;
+                    if (snapshot.exists()) {
+                        int count = (int) snapshot.getChildrenCount();
+                        cOrders = count;
+                        String strCount = String.valueOf(count);
+                        txtOrdersCount.setText( "وصل " + strCount + " اوردر");
+                    } else {
+                        cOrders = 0;
+                        txtOrdersCount.setText("لم يقم بتوصيل اي اوردر");
+                    }
+
+                    /*if(cOrders >= 10) {
+                        uName.setTextColor(Color.parseColor("#ffc922"));
+                        imgStar.setVisibility(View.VISIBLE);
+                    } else {
+                        uName.setTextColor(Color.WHITE);
+                        imgStar.setVisibility(View.GONE);
+                    }*/
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
 
         public void setPostDate(int dS, int dM, int dH, int dD) {
             String finalDate = "";

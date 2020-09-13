@@ -39,6 +39,82 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
+        <LinearLayout
+            android:id="@+id/linType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="اختار نوع حسابك"
+                android:textColor="@color/colorAccent"
+                android:textSize="30sp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView3"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                app:cardCornerRadius="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/btnDelivery"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/delv" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="مندوب شحن"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView4"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/btnSupplier"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/sup" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/textView57"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="عميل / تاجر"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
         <ScrollView
             android:id="@+id/scrDelvInfo"
             android:layout_width="match_parent"
@@ -271,46 +347,6 @@
             </LinearLayout>
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/linType"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="اختار نوع حسابك"
-                android:textColor="@color/colorAccent"
-                android:textSize="30sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnDelivery"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/btn_defult"
-                android:text="مندوب شحن"
-                android:textSize="30sp"
-                android:visibility="visible" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSupplier"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="50dp"
-                android:background="@drawable/btn_defult"
-                android:text="تاجر"
-                android:textSize="30sp"
-                android:visibility="visible" />
-
-        </LinearLayout>
-
         <ScrollView
             android:id="@+id/scrSignUp"
             android:layout_width="match_parent"
@@ -378,7 +414,7 @@
                     android:ems="10"
                     android:hint="الاسم الاول"
                     android:inputType="textPersonName"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textColor="#000000"
                     android:textColorHint="@android:color/secondary_text_dark"
                     android:textSize="24sp"
@@ -396,7 +432,7 @@
                     android:ems="10"
                     android:hint="الاسم الاخير"
                     android:inputType="textPersonName"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textColor="#000000"
                     android:textColorHint="@android:color/secondary_text_dark"
                     android:textSize="24sp"
@@ -414,7 +450,7 @@
                     android:ems="10"
                     android:hint="البريد ألالكتروني"
                     android:inputType="textEmailAddress"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textColor="#000000"
                     android:textColorHint="@android:color/secondary_text_dark"
                     android:textSize="24sp" />
@@ -500,7 +536,7 @@
                     android:gravity="right"
                     android:hint="كلمة المرور"
                     android:inputType="textPassword"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textColor="#000000"
                     android:textColorHint="@android:color/secondary_text_dark"
                     android:textSize="24sp"
@@ -519,7 +555,7 @@
                     android:gravity="right"
                     android:hint="اعد ادخال كلمة المرور"
                     android:inputType="textPassword"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textColor="#000000"
                     android:textColorHint="@android:color/secondary_text_dark"
                     android:textSize="24sp"
@@ -560,7 +596,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:text="تم ارسال الكود الي رقمك"
+                android:text="ادخل الكود الذي ارسل اليك"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp" />
 
@@ -572,7 +608,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="0dp"
-                android:drawableRight="@drawable/ic_add_email"
+                android:drawableRight="@drawable/ic_add_key"
                 android:ems="10"
                 android:hint="******"
                 android:inputType="number"

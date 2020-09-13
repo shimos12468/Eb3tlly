@@ -10,7 +10,7 @@
 
     <include
         android:id="@+id/toolbar_home"
-        layout="@layout/toolbar"
+        layout="@layout/toolbar_white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +26,7 @@
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar_home"
-        app:srcCompat="@drawable/ic_back_black" />
+        app:srcCompat="@drawable/ic_arrow_back_white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerChat"

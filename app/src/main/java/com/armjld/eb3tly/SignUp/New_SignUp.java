@@ -90,12 +90,11 @@ public class New_SignUp extends AppCompatActivity {
 
     private ProgressDialog mdialog;
     private ViewFlipper viewFlipper;
-    Button btnDelivery, btnSupplier;
     FloatingActionButton btnNext,btnPrev;
     EditText txtFirstName, txtLastName, txtEmail, txtPass1, txtPass2, txtPhone;
     EditText et1,et2,et3,et4,et5,et6;
     EditText txtCode;
-    ImageView btnBack;
+    ImageView btnBack,btnDelivery, btnSupplier;
     String acDate = DateFormat.getDateInstance().format(new Date());
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
@@ -300,7 +299,7 @@ public class New_SignUp extends AppCompatActivity {
         });
 
         btnDelivery.setOnClickListener(v-> {
-            btnDelivery.setSelected(true);
+            //btnDelivery.setSelected(true);
             newType = "Delivery Worker";
             viewFlipper.setDisplayedChild(1);
             btnNext.setVisibility(View.VISIBLE);
@@ -308,7 +307,7 @@ public class New_SignUp extends AppCompatActivity {
         });
 
         btnSupplier.setOnClickListener(v-> {
-            btnSupplier.setSelected(true);
+            //btnSupplier.setSelected(true);
             newType = "Supplier";
             viewFlipper.setDisplayedChild(2);
             btnNext.setVisibility(View.VISIBLE);
@@ -609,6 +608,8 @@ public class New_SignUp extends AppCompatActivity {
                     Toast.makeText(this, "الكود الذي ادخلته خطأ", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                mdialog.setMessage("جاري التأكد من الرمز ..");
+                mdialog.show();
                 verifyPhoneNumberWithCode(mVerificationId, txtCode.getText().toString().trim());
                 break;
             }
@@ -799,8 +800,11 @@ public class New_SignUp extends AppCompatActivity {
     private void mCallBack() {
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
                 mVerificationInProgress = false;
+                txtCode.setText(credential.getSmsCode());
+                mdialog.setMessage("جاري التأكد من الرمز ..");
+                mdialog.show();
                 if(!provider.equals("Email")) {
                     link(credential);
                 } else {
@@ -825,7 +829,7 @@ public class New_SignUp extends AppCompatActivity {
                 mdialog.dismiss();
                 mVerificationId = verificationId;
                 mResendToken = token;
-                viewFlipper.setDisplayedChild(2);
+                viewFlipper.setDisplayedChild(3);
             }
         };
     }

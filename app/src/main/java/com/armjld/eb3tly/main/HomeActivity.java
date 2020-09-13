@@ -66,7 +66,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
     private ImageView btnNavBar, btnSort,btnMaps;
-    private LinearLayout filtrs_btn;
+    private ImageView filtrs_btn;
     private LinearLayout footer;
     private static ArrayList<Data> mm;
     private long count;

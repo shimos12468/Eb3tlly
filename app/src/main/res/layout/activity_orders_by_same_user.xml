@@ -6,7 +6,7 @@
     android:layoutDirection="ltr"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.OrdersBySameUser">
+    tools:context="com.armjld.eb3tly.Orders.OrdersBySameUser">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -26,7 +26,7 @@
 
             <include
                 android:id="@+id/toolbar_home"
-                layout="@layout/toolbar"
+                layout="@layout/toolbar_white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"

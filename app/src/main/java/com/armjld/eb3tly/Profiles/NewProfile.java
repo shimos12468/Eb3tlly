@@ -291,7 +291,7 @@ public class NewProfile extends AppCompatActivity {
 
     private void getOrderCountDel() {
         mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
+            @SuppressLint({"SetTextI18n", "ResourceAsColor"})
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int cOrders = 0;
@@ -306,10 +306,10 @@ public class NewProfile extends AppCompatActivity {
                 }
 
                 if(cOrders >= 10) {
-                    uName.setTextColor(Color.parseColor("#ffc922"));
+                    uName.setTextColor(Color.parseColor(String.valueOf(R.color.ic_profile_background)));
                     imgStar.setVisibility(View.VISIBLE);
                 } else {
-                    uName.setTextColor(Color.WHITE);
+                    uName.setTextColor(R.color.colorAccent);
                     imgStar.setVisibility(View.GONE);
                 }
             }

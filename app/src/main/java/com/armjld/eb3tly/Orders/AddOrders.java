@@ -720,7 +720,7 @@ public class AddOrders extends AppCompatActivity {
                         String owner = UserInFormation.getUserName();
                         // Send order to Data Base using the DATA MODEL
                         Data data = new Data(pState12, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type,owner);
+                                mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type,owner, "");
                         mDatabase.child(id).setValue(data);
                         mDatabase.child(id).child("lastedit").setValue(datee);
                         mDatabase.child(id).child("lat").setValue(longitude);
@@ -872,7 +872,7 @@ public class AddOrders extends AppCompatActivity {
                             String owner = UserInFormation.getUserName();
                             // Send order to Data Base using the DATA MODEL
                             Data data = new Data(pState1, spPRegion.getSelectedItem().toString(), mPAddress, mPShop, dState, spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type ,owner);
+                                    mDPhone, mDName, mGMoney, mGGet, datee, id, uId, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, "", "", mNote,type ,owner, "");
                             assert id != null;
                             mDatabase.child(id).setValue(data);
 

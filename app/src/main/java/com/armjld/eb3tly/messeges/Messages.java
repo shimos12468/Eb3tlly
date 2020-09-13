@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +47,8 @@ public class Messages extends AppCompatActivity {
     boolean f = true;
     private String rId = "";
     private String roomId ;
-    ImageView btnBack;
+    ImageView btnBack,imgPPP;
+    TextView txtName, txtType;
 
     EditText editWriteMessage;
     RecyclerView recyclerMsg;
@@ -71,9 +74,13 @@ public class Messages extends AppCompatActivity {
 
         btnSend = findViewById(R.id.btnSend);
         TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("");
         editWriteMessage = findViewById(R.id.editWriteMessage);
         recyclerMsg = findViewById(R.id.recyclerMsg);
         btnBack = findViewById(R.id.btnBack);
+        txtName = findViewById(R.id.txtName);
+        txtType = findViewById(R.id.txtType);
+        imgPPP = findViewById(R.id.imgPPP);
 
 
         recyclerMsg.setHasFixedSize(true);
@@ -86,10 +93,18 @@ public class Messages extends AppCompatActivity {
             startActivity(new Intent(this, Chats.class));
         });
 
-        uDatabase.child(rId).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(rId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tbTitle.setText(snapshot.getValue().toString());
+                txtName.setText(snapshot.child("name").getValue().toString());
+                if(snapshot.child("accountType").getValue().toString().equals("Supplier")) {
+                    txtType.setText("تاجر");
+                } else if(snapshot.child("accountType").getValue().toString().equals("Delivery Worker")){
+                    txtType.setText("مندوب شحن");
+                } else {
+                    txtType.setText("خدمة العملاء");
+                }
+                Picasso.get().load(Uri.parse(snapshot.child("ppURL").getValue().toString())).into(imgPPP);
             }
 
             @Override

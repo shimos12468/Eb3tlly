@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.Adapters.chatsAdapter;
+import com.armjld.eb3tly.Profiles.NewProfile;
+import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
@@ -43,7 +45,7 @@ public class Chats extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, HomeActivity.class));
+        whichProfile();
     }
 
     @Override
@@ -70,7 +72,7 @@ public class Chats extends AppCompatActivity {
         tbTitle.setText("المحادثات");
 
         btnBack.setOnClickListener(v-> {
-            startActivity(new Intent(this, HomeActivity.class));
+            whichProfile();
         });
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
         mChat = new ArrayList<ChatsData>();
@@ -100,5 +102,13 @@ public class Chats extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+    }
+
+    private void whichProfile () {
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
     }
 }

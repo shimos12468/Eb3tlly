@@ -22,10 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Requests.rquests;
+import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
@@ -60,11 +62,17 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-     Context context , context1;
+     static Context context;
+    Context context1;
      long count;
      ArrayList<Data>filtersData;
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-     private DatabaseReference mDatabase,rDatabase,uDatabase,vDatabase,nDatabase ,Database;
+     private DatabaseReference mDatabase;
+    private static DatabaseReference rDatabase;
+    private DatabaseReference uDatabase;
+    private DatabaseReference vDatabase;
+    private DatabaseReference nDatabase;
+    private DatabaseReference Database;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
      private String TAG = "My Adapter";
      String uType = UserInFormation.getAccountType();
@@ -165,6 +173,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+        holder.setRating(owner);
+
         mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -184,7 +194,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-        holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)", "").trim());
+        holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)", "").trim(), filtersData.get(position).getpDate().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)", "").trim());
@@ -193,21 +203,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
 
-
-        if (!filtersData.get(position).getOwner().equals(" ")) {
-            holder.txtUsername.setText(filtersData.get(position).getOwner());
-        Log.i(TAG, "Owner is There " + filtersData.get(position).getOwner());
-    }else{
-            uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                   holder.txtUsername.setText(uName);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-        }
        
         //Hide this order Button
         holder.btnHide.setOnClickListener(v -> {
@@ -371,7 +366,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             
             // Get posted orders count
             mDatabase.orderByChild("uId").equalTo(filtersData.get(position).getuId()).addListenerForSingleValueEvent (new ValueEventListener() {
-                @SuppressLint("SetTextI18n")
+                @SuppressLint({"SetTextI18n", "ResourceAsColor"})
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     int oCount = 0;
@@ -391,10 +386,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     }
 
                     if(oCount >= 10) {
-                        dsUsername.setTextColor(Color.parseColor("#ffc922"));
+                        dsUsername.setTextColor(R.color.ic_profile_background);
                         ppStar.setVisibility(View.VISIBLE);
                     } else {
-                        dsUsername.setTextColor(Color.WHITE);
+                        dsUsername.setTextColor(R.color.colorAccent);
                         ppStar.setVisibility(View.GONE);
                     }
                 }
@@ -737,9 +732,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public View myview;
         public Button btnAccept, btnHide, btnMore, btnEdit,btnDelete,btnOpen, btnBid;
-        public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom,txtOrderTo,txtPostDate;
+        public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtOrderFrom,txtOrderTo,txtPostDate, txtDate2;
         public LinearLayout lin1,linerDate,linAdmin;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgStar,imgVerf;
+        public RatingBar ddRate;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -757,9 +753,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             txtgGet = myview.findViewById(R.id.fees);
             txtgMoney = myview.findViewById(R.id.ordercash);
             txtDate = myview.findViewById(R.id.date);
+            txtDate2 = myview.findViewById(R.id.date3);
             btnDelete = myview.findViewById(R.id.btnDelete);
             btnEdit = myview.findViewById(R.id.btnEdit);
-            txtUsername = myview.findViewById(R.id.txtUsername);
             txtOrderFrom = myview.findViewById(R.id.OrderFrom);
             txtOrderTo = myview.findViewById(R.id.orderto);
             icnCar = myview.findViewById(R.id.icnCar);
@@ -768,10 +764,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             icnTrans = myview.findViewById(R.id.icnTrans);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
             btnBid = myview.findViewById(R.id.btnBid);
+            ddRate = myview.findViewById(R.id.ddRate);
         }
 
         public void setUsername(String isConfirm){
-            //txtUsername.setText(name);
             if(isConfirm.equals("true")) {
                 imgVerf.setVisibility(View.VISIBLE);
                 Log.i("Home", "Visible");
@@ -783,9 +779,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setBid(String type) {
             if(type.equals("true")) {
-                btnBid.setText("تم التقديم علي الشحنه");
+                btnBid.setText("الغاء قبول الاوردر");
+                btnBid.setBackground(ContextCompat.getDrawable(context, R.drawable.btn_bad));
             } else {
-                btnBid.setText("التقديم علي الشحنه");
+                btnBid.setBackground(ContextCompat.getDrawable(context, R.drawable.btn_defult));
+                btnBid.setText("قبول الاوردر");
             }
         }
 
@@ -797,27 +795,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             txtOrderTo.setText(orderto);
         }
 
-        public void setDate (String date){
-            txtDate.setText(date);
+        public void setDate (String dDate, String pDate){
+            txtDate.setText(dDate);
+            txtDate2.setText(pDate);
         }
 
         @SuppressLint("SetTextI18n")
         public void setOrdercash(String ordercash){
-            txtgMoney.setText(ordercash + " ج");
+            txtgMoney.setText("ثمن الرسالة : " + ordercash + " ج");
         }
 
         @SuppressLint("SetTextI18n")
         public void setFee(String fees) {
-            txtgGet.setText(fees + " ج");
+            txtgGet.setText("مصاريف الشحن : " + fees + " ج");
         }
 
+        @SuppressLint("ResourceAsColor")
         public void isTop(int ordersCount) {
             if(ordersCount >= 10) {
                 imgStar.setVisibility(View.VISIBLE);
-                txtUsername.setTextColor(Color.parseColor("#ffc922"));
             } else {
                 imgStar.setVisibility(View.GONE);
-                txtUsername.setTextColor(Color.parseColor("#0099CC"));
             }
         }
 
@@ -859,6 +857,33 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             txtPostDate.setText(finalDate);
         }
 
+        public void setRating(String owner) {
+            rDatabase.child(owner).orderByChild("sId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()) {
+                        long total = 0;
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
+                            total = total + rating;
+                        }
+                        double average = (double) total / dataSnapshot.getChildrenCount();
+                        if(String.valueOf(average).equals("NaN")) {
+                            average = 5;
+                        }
+                        ddRate.setRating((int) average);
+                    } else {
+                        ddRate.setRating(5);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
 }

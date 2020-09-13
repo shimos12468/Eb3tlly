@@ -115,8 +115,10 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
 
 
                         assert orderID != null;
-                        mDatabase.child(orderID).child("uAccepted").setValue("");
+
                         mDatabase.child(orderID).child("statue").setValue("placed");
+                        mDatabase.child(orderID).child("uAccepted").setValue("");
+                        mDatabase.child(orderID).child("acceptTime").setValue("");
 
                         String id = dDatabase.child(orderID).push().getKey();
                         DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);

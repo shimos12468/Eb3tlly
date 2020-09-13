@@ -31,7 +31,7 @@
 
             <include
                 android:id="@+id/toolbar_home"
-                layout="@layout/toolbar"
+                layout="@layout/toolbar_white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +97,7 @@
                 android:id="@+id/constProfInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/ic_profile_background"
+                android:background="@color/colorWhite"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
@@ -107,7 +107,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorAccent"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -132,7 +132,7 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:visibility="gone"
-                        app:srcCompat="@drawable/ic_correct" />
+                        app:srcCompat="@drawable/ic_correct_blue" />
 
                     <ImageView
                         android:id="@+id/imgStar"
@@ -149,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:textAlignment="center"
-                        android:textColor="@color/colorBack"
+                        android:textColor="@color/colorAccent"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -160,12 +160,13 @@
                     android:layout_width="229dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center|right"
                     android:text="Orders Count"
                     android:textAlignment="viewEnd"
-                    android:textColor="@color/colorBack"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@+id/textView8"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <RatingBar
@@ -191,7 +192,7 @@
                     android:layout_width="0dp"
                     android:layout_height="23dp"
                     android:textAlignment="center"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -204,7 +205,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
                     android:text="مجموع عدد الاوردرات :"
-                    android:textColor="@color/colorBack"
+                    android:textColor="@color/colorAccent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
