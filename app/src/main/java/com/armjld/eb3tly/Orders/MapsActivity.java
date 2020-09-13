@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.google.android.gms.common.ConnectionResult;
@@ -119,6 +120,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_orders);
+        final LocationManager manager2 = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        if (!manager2.isProviderEnabled(LocationManager.GPS_PROVIDER) ) { // Check if GPS is Enabled
+            buildAlertMessageNoGps();
+        } else {
+            fetchLocation();
+        }
         filterDate = format.format(Calendar.getInstance().getTime());
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //Database
@@ -161,21 +168,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("الرجاء فتح اعدادات اللوكيشن ؟")
-                .setCancelable(false)
-                .setPositiveButton("حسنا", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("لا", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
+        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        };
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(MapsActivity.this);
+        builder.setMessage("الرجاء فتح اعدادات اللوكيشن ؟").setPositiveButton("حسنا", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
     }
 
     private void fetchLocation() {

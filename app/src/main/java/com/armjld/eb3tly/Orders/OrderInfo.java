@@ -24,6 +24,7 @@ import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.Wallet.requestsandacceptc;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -148,7 +149,7 @@ public class OrderInfo extends AppCompatActivity {
                 setPostDate((int)diffSeconds, (int)diffMinutes, (int)diffHours, (int) diffDays);
 
                 String PAddress = "عنوان الاستلام : "+orderData.getmPAddress();
-                String DAddress = "عنوان التسليم : " + orderData.getmPAddress();
+                String DAddress = "عنوان التسليم : " + orderData.getDAddress();
                 String notes = "الملاحظات : " + orderData.getNotes();
                 String fees = "مصاريف الشحن : " + orderData.getGGet();
                 String money = "سعر الرساله : " +orderData.getGMoney();
@@ -234,6 +235,11 @@ public class OrderInfo extends AppCompatActivity {
 
                     } else {
                         // -------------- New Request
+                        requestsandacceptc c  = new requestsandacceptc();
+                        if(!c.requestNewOrder())
+                            return;
+                        if(!c.acceptdlivaryworker(uId))
+                            return;
                         setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {

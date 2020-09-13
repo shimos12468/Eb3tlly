@@ -9,6 +9,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -50,6 +53,7 @@ public class StartUp extends AppCompatActivity {
     public static boolean dataset = false;
 
     static DatabaseReference uDatabase;
+    LinearLayout linLogo;
     DatabaseReference Database;
     boolean doubleBackToExitPressedOnce = false;
 
@@ -73,7 +77,13 @@ public class StartUp extends AppCompatActivity {
         walletManeger = new WalletManeger();
         setContentView(R.layout.activity_startup);
         startConst = findViewById(R.id.startConst);
+        linLogo = findViewById(R.id.linLogo);
+
+        Animation animSlide = AnimationUtils.loadAnimation(this, R.anim.slide);
+        linLogo.startAnimation(animSlide);
+
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
+
         // ---------------- Check for Updates ----------------------//
        /* AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(StartUp.this);
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
