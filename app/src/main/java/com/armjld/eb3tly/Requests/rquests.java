@@ -1,11 +1,18 @@
 package com.armjld.eb3tly.Requests;
 
+import androidx.annotation.NonNull;
+
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import Model.requestsData;
 
 public class rquests {
 
@@ -13,7 +20,7 @@ public class rquests {
     private static ArrayList<String>requests= new ArrayList<String>();
     private String uId = UserInFormation.getId();
     private DatabaseReference Bdatabase;
-
+    int count;
     //public static int getNum_of_requests() {
       //  return num_of_requests;
     //}
@@ -60,5 +67,35 @@ public class rquests {
            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("requests").child(orderid).removeValue();
             return true;
         }
+    }
+    public void  deletedOrder(String orderid){
+        count =0;
+        ArrayList<requestsData>mm = new ArrayList<requestsData>();
+        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests");
+        Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                            requestsData rData = ds.getValue(requestsData.class);
+                            mm.add((int) count, rData);
+                            count++;
+                            String dlivaryId = rData.getId();
+                        Bdatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests").child(dlivaryId);
+                        Bdatabase.child("statue").setValue("declined");
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(dlivaryId).child("requests").child(orderid);
+                        Bdatabase.child("statue").setValue("declined");
+                    }
+            }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 }

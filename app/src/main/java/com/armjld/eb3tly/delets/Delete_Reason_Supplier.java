@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Profiles.supplierProfile;
@@ -86,7 +87,8 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
         });
 
         btnSend.setOnClickListener(v -> {
-
+                rquests requests = new rquests();
+                requests.deletedOrder(orderID);
             if(rd1.isChecked()) {
                 Msg = "العميل الغي الاوردر";
             } else if (rd2.isChecked()) {
