@@ -76,6 +76,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private DatabaseReference mDatabase, uDatabase ,Database;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView txtNoOrders;
+    public static boolean requests = false;
+    public static boolean orders = false;
     private String TAG = "Home Activity";
     private MyAdapter orderAdapter;
     String filterDate;
@@ -163,6 +165,57 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             finish();
             startActivity(new Intent(this, MapsActivity.class));
         });
+
+        // ----------- check for Requests ----------- //
+        if(uType.equals("Delivery Worker")) {
+            DatabaseReference Wdatabase =  FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("requests");
+            Wdatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int count = 0;
+                    if(snapshot.exists()){
+                        for (DataSnapshot ds:snapshot.getChildren()){
+                            if(ds.child("statue").exists()) {
+                                if(ds.child("statue").getValue().toString().equals("N/A")){
+                                    count++;
+                                }
+                            }
+
+                        }
+                        if(count >= 10) {
+                            requests = true;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+
+            mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int count2 = 0;
+                    if(snapshot.exists()){
+                        for (DataSnapshot ds:snapshot.getChildren()){
+                            if(ds.child("statue").getValue().toString().equals("accepted")){
+                                count2++;
+                            }
+                        }
+                        if(count2 >= 20) {
+                            orders = true;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
 
         // ----------- sort button
         btnSort.setOnClickListener(v -> {

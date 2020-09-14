@@ -235,9 +235,15 @@ public class OrderInfo extends AppCompatActivity {
 
                     } else {
                         // -------------- New Request
-                        requestsandacceptc c  = new requestsandacceptc();
-                        if(!c.requestNewOrder())
+                        if(HomeActivity.requests) {
+                            Toast.makeText(OrderInfo.this, "لديك 10 طلبات معلقه, لا يمكنك ارسال المزيدا", Toast.LENGTH_LONG).show();
                             return;
+                        }
+
+                        if(HomeActivity.orders) {
+                            Toast.makeText(OrderInfo.this, "لديك 20 اوردر معلق حتي الان, قم بتوصيلهم اولا", Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {

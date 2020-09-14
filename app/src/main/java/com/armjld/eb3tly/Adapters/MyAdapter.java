@@ -266,9 +266,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
                     } else {
-                        requestsandacceptc c  = new requestsandacceptc();
-                        if(!c.requestNewOrder())
+                        if(HomeActivity.requests) {
+                            Toast.makeText(context1, "لديك 10 طلبات معلقه, لا يمكنك ارسال المزيدا", Toast.LENGTH_LONG).show();
                             return;
+                        }
+
+                        if(HomeActivity.orders) {
+                            Toast.makeText(context1, "لديك 20 اوردر معلق حتي الان, قم بتوصيلهم اولا", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         holder.setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {
