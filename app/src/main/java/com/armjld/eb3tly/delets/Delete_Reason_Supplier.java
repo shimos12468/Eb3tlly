@@ -119,6 +119,8 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
                             notiData Noti = new notiData(uId, acceptID, orderID,"deleted",datee,"false", "profile");
                             nDatabase.child(acceptID).push().setValue(Noti);
                         }
+
+
                         break;
                     case DialogInterface.BUTTON_NEGATIVE: break;
                 }

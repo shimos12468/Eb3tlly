@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
@@ -59,6 +60,7 @@ import Model.Data;
 import Model.notiData;
 import Model.rateData;
 import Model.reportData;
+import Model.requestsData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
@@ -384,10 +386,29 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             if(filtersData.get(position).getStatue().equals("accepted") || filtersData.get(position).getStatue().equals("recived")) {
                 getInfo(filtersData.get(position).getuId(), orderID,filtersData.get(position).getuAccepted());
             } else if (filtersData.get(position).getStatue().equals("placed") && requestNumber > 0){
-                getRequestss(filtersData.get(position).getId());
+                //getRequestss(filtersData.get(position).getId());
+                if(holder.requestRecycler.isShown()) {
+                    holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_down_black));
+                    holder.requestRecycler.setVisibility(View.GONE);
+                } else {
+                    holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_up_black));
+                    holder.requestRecycler.setVisibility(View.VISIBLE);
+                }
             }
         });
+
+        holder.icnArrowDown.setOnClickListener(v-> {
+            if(holder.requestRecycler.isShown()) {
+                holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_down_black));
+                holder.requestRecycler.setVisibility(View.GONE);
+            } else {
+                holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_up_black));
+                holder.requestRecycler.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
+
 
     public void getRequestss(String orderID) {
         Intent editInt = new Intent(context, RequestsForSup.class);
@@ -546,6 +567,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
 
 
+
         // ------------------------------ Get that user Comments --------------------------- //
         ListView listComment = dialogMore.findViewById(R.id.dsComment);
         final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
@@ -617,8 +639,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate,linerAll;
         public RatingBar drStar;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans,icnArrowDown;
         public ImageButton mImageButton;
+        RecyclerView requestRecycler;
         
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -647,6 +670,10 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             icnTrans = myview.findViewById(R.id.icnTrans);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
             mImageButton = myview.findViewById(R.id.imageButton);
+            requestRecycler = myview.findViewById(R.id.requestRecycler);
+
+
+            icnArrowDown = myview.findViewById(R.id.icnArrowDown);
         }
 
         void setUsername(String DName){
@@ -668,10 +695,12 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         txtGetStat.setText("فات معاد تسلم اوردرك و لم يقبله اي مندوب, الرجاء تعديل معاد تسليم الاوردر او الغاءة");
                         txtGetStat.setBackgroundColor(Color.RED);
                     } else {
+                        // --------------- Get the Requests
                         txtGetStat.setEnabled(false);
                         txtGetStat.setVisibility(View.VISIBLE);
-                        txtGetStat.setText("لم يتم قبول اوردرك بعد");
+                        txtGetStat.setText("لا يوجد لديك اي تقديمات");
                         txtGetStat.setBackgroundColor(Color.RED);
+                        icnArrowDown.setVisibility(View.GONE);
 
                         mDatabase.child(orderID).child("requests").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -682,7 +711,38 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     txtGetStat.setEnabled(true);
                                     txtGetStat.setVisibility(View.VISIBLE);
                                     txtGetStat.setText(statText);
-                                    txtGetStat.setBackgroundColor(Color.YELLOW);
+                                    txtGetStat.setBackgroundColor(R.color.ic_profile_background);
+                                    icnArrowDown.setVisibility(View.VISIBLE);
+
+                                    requestRecycler.setHasFixedSize(true);
+                                    LinearLayoutManager layoutManager= new LinearLayoutManager(context);
+                                    layoutManager.setReverseLayout(true);
+                                    layoutManager.setStackFromEnd(true);
+                                    requestRecycler.setLayoutManager(layoutManager);
+
+
+                                    ArrayList<requestsData> mm = new ArrayList<requestsData>();
+                                    mDatabase.child(orderID).child("requests").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            int count =0;
+                                            if(snapshot.exists()) {
+                                                for(DataSnapshot ds : snapshot.getChildren()) {
+                                                    requestsData rData = ds.getValue(requestsData.class);
+                                                    mm.add((int) count, rData);
+                                                    count++;
+                                                    RequestsAdapter req = new RequestsAdapter(context, mm, count, orderID);
+                                                    requestRecycler.setAdapter(req);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
                                 }
                             }
 

@@ -306,7 +306,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
             dialog.show();
         });
 
-        holder.btnSendMessage.setOnClickListener(v-> {
+        /*holder.btnSendMessage.setOnClickListener(v-> {
             final String[] room = new String[1];
             String uId = UserInFormation.getId();
             DatabaseReference Bdatabase;
@@ -370,7 +370,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }
             });
-        });
+        });*/
 
         holder.btnAccept.setOnClickListener(v -> {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
@@ -462,7 +462,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                     txtJoinDate.setText(uData.getDate());
 
                     getRatings(id);
-                    getOrderCountDel(id);
+                    //getOrderCountDel(id);
                 }
 
                 @Override

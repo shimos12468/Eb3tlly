@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="7dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="100dp"
-    android:layoutDirection="ltr"
-    android:elevation="100dp"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent">
+    android:layout_margin="7dp"
+    android:background="@color/colorAccent"
+    android:elevation="100dp"
+    android:layoutDirection="ltr"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="100dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,91 +17,22 @@
         android:elevation="5dp"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/fees"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:background="#4CAF50"
-                android:gravity="left"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/ordercash"
-                app:layout_constraintStart_toEndOf="@+id/fees"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/imgVerf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/ic_correct_blue" />
-
-                <ImageView
-                    android:id="@+id/imgStar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/ic_baseline_stars_24" />
-
-                <TextView
-                    android:id="@+id/txtUsername"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:textColor="@color/ic_profile_background"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/ordercash"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:background="#FF0000"
-                android:backgroundTint="#FF0000"
-                android:gravity="right"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/txtPostDate"
+            android:id="@+id/txtUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_gravity="center|right"
+            android:layout_marginRight="10dp"
+            android:gravity="center|right"
             android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="10sp" />
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:gravity="center"
@@ -140,11 +71,184 @@
                 android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:gravity="center|right"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgVerf"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:foregroundGravity="right"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_correct_blue" />
+
+                <ImageView
+                    android:id="@+id/imgStar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="5dp"
+                    android:foregroundGravity="right"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_baseline_stars_24" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtPostDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/ordercash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:layout_marginRight="10dp"
+            android:drawableRight="@drawable/ic_add_money"
+            android:gravity="center|right"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/linerDate2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/date3"
+                android:layout_width="88dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:gravity="center|right"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/date4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="تاريخ الاستلام :"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView144"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:foregroundGravity="right"
+                app:srcCompat="@drawable/ic_date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linerDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="88dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:gravity="center|right"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/date2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="تاريخ التسليم : "
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:foregroundGravity="right"
+                app:srcCompat="@drawable/ic_date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="22dp"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/item_detail"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:background="@null"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:src="@drawable/ic_baseline_outlined_flag_24"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/fees"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/ic_add_money"
+                android:gravity="center|right"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -153,23 +257,10 @@
                 android:foregroundGravity="left"
                 android:gravity="center|left"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="22dp"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/item_detail"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@null"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:src="@drawable/ic_baseline_outlined_flag_24" />
 
                 <ImageView
                     android:id="@+id/icnTrans"
@@ -179,14 +270,13 @@
                     android:layout_marginStart="5dp"
                     android:foregroundGravity="left"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_bus" />
+                    app:srcCompat="@drawable/ic_bike" />
 
                 <ImageView
                     android:id="@+id/icnMetro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:layout_marginStart="5dp"
                     android:layout_marginEnd="1dp"
                     android:foregroundGravity="left"
                     android:visibility="visible"
@@ -194,58 +284,24 @@
 
                 <ImageView
                     android:id="@+id/icnMotor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="left"
-                    android:layout_marginStart="5dp"
                     android:foregroundGravity="left"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_motorcycle" />
+                    app:srcCompat="@drawable/ic_motor" />
 
                 <ImageView
                     android:id="@+id/icnCar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="left"
-                    android:layout_marginStart="5dp"
                     android:foregroundGravity="left"
                     android:visibility="visible"
                     app:srcCompat="@drawable/ic_car" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linerDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:gravity="right"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="88dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|right"
-                    android:textAlignment="viewEnd"
-                    android:textColor="@color/ic_profile_background"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/imageView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|right"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:foregroundGravity="right"
-                    app:srcCompat="@drawable/ic_date" />
-            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <LinearLayout
             android:id="@+id/linerAll"
@@ -374,18 +430,47 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/txtStatue"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtStatue"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#000000"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/icnArrowDown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="5dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_down_black" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/requestRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="0dp"
-                android:background="#00000000"
-                android:gravity="center"
-                android:text="TextView"
-                android:textColor="#000000"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dsToolbar" />
 
         </LinearLayout>
 
