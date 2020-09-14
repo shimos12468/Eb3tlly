@@ -167,6 +167,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // ----------- check for Requests ----------- //
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+        String datee = sdf.format(new Date());
+
         if(uType.equals("Delivery Worker")) {
             DatabaseReference Wdatabase =  FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("requests");
             Wdatabase.addValueEventListener(new ValueEventListener() {
@@ -174,9 +178,11 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int count = 0;
                     if(snapshot.exists()){
+                        Log.d("123",datee.substring(0,9)+" ");
                         for (DataSnapshot ds:snapshot.getChildren()){
                             if(ds.child("statue").exists()) {
-                                if(ds.child("statue").getValue().toString().equals("N/A")){
+
+                                if(ds.child("statue").getValue().toString().equals("N/A")&&ds.child("date").getValue().toString().substring(0 , 10).equals(datee.substring(0 ,10))){
                                     count++;
                                 }
                             }
