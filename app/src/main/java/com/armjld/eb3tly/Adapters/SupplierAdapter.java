@@ -711,7 +711,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     txtGetStat.setEnabled(true);
                                     txtGetStat.setVisibility(View.VISIBLE);
                                     txtGetStat.setText(statText);
-                                    txtGetStat.setBackgroundColor(R.color.ic_profile_background);
+                                    txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                                     icnArrowDown.setVisibility(View.VISIBLE);
 
                                     requestRecycler.setHasFixedSize(true);
