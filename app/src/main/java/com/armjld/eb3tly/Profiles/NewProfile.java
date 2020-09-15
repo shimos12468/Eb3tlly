@@ -13,6 +13,7 @@ import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Fragments.SectionsPagerAdapter;
 import com.armjld.eb3tly.Utilites.StartUp;
+import com.armjld.eb3tly.Wallet.MyWallet;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.Login_Options;
@@ -59,7 +60,7 @@ public class NewProfile extends AppCompatActivity {
 
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP,imgStar, imgVerf,btnChats,btnNavbarProfile,btnOpenNoti;
+    private ImageView imgSetPP,imgStar, imgVerf,btnChats,btnNavbarProfile,btnOpenNoti,btnWallet;
     private TextView txtUserDate,usType;
     private TextView uName;
     private TextView txtNotiCount;
@@ -100,6 +101,7 @@ public class NewProfile extends AppCompatActivity {
         btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
         btnOpenNoti = findViewById(R.id.btnOpenNoti);
         uName = findViewById(R.id.txtUsername);
+        btnWallet = findViewById(R.id.btnWallet);
         txtUserDate = findViewById(R.id.txtUserDate);
         imgStar = findViewById(R.id.imgStar);
         imgSetPP = findViewById(R.id.imgPPP);
@@ -132,6 +134,10 @@ public class NewProfile extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
+        btnWallet.setOnClickListener(v-> {
+            startActivity(new Intent(this, MyWallet.class));
+
+        });
         btnChats.setOnClickListener(v-> {
             startActivity(new Intent(this, Chats.class));
         });

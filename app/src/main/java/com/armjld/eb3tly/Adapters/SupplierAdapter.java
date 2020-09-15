@@ -327,7 +327,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         intent.putExtra("roomid",chat);
                         intent.putExtra("rid", data.getuId());
                         context.startActivity(intent);
-
                     }
                 }
 

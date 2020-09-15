@@ -498,7 +498,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        Toast.makeText(this, "This Local Data", Toast.LENGTH_SHORT).show();
 
         orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
         recyclerView.setAdapter(orderAdapter);

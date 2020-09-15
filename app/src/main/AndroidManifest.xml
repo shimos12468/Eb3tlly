@@ -24,7 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".SignUp.New_SignUp"></activity>
+        <activity android:name=".Wallet.MyWallet"></activity>
+        <activity android:name=".SignUp.New_SignUp" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

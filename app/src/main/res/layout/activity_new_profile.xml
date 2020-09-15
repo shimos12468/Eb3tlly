@@ -58,6 +58,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_chats" />
 
+            <ImageView
+                android:id="@+id/btnWallet"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/constNoti"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_add_money" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constNoti"
                 android:layout_width="wrap_content"

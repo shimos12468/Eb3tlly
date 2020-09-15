@@ -159,10 +159,10 @@ public class Messages extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("msg").setValue(msg);
             FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("timestamp").setValue(datee);
 
-            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(roomId);
+            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(rId);
             messageDatabase.child("timestamp").setValue(datee);
 
-            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(rId).child("chats").child(roomId);
+            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(rId).child("chats").child(uId);
             messageDatabase.child("timestamp").setValue(datee);
 
             Log.i("KOSMY", roomId);
