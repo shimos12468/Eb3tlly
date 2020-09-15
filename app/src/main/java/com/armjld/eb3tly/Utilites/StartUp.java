@@ -247,7 +247,9 @@ public class StartUp extends AppCompatActivity {
                 UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
                 UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
                 UserInFormation.setisConfirm("false");
-
+                if(snapshot.child("accountType").getValue().toString().equals("Delivery Worker") && snapshot.child("currentDate").exists()) {
+                    UserInFormation.setCurrentdate(snapshot.child("currentDate").getValue().toString());
+                }
                 if(snapshot.child("isConfirmed").exists()) {
                     UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                 }

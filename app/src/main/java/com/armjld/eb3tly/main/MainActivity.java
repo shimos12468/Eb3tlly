@@ -183,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
                                     if(snapshot.child("isConfirmed").exists()) {
                                         UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                                     }
+                                    if(snapshot.child("accountType").getValue().toString().equals("Delivery Worker") && snapshot.child("currentDate").exists()) {
+                                        UserInFormation.setCurrentdate(snapshot.child("currentDate").getValue().toString());
+                                    }
                                     StartUp.dataset = true;
 
                                     if (isActive.equals("true")) { // Check if the account is Disabled

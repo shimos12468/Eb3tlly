@@ -55,7 +55,8 @@ public class wallet {
 
     }
 
-    public void SupsetDilivared(String id , String orderid){
+    public void SupsetDilivared(String orderid){
+        String id = UserInFormation.getId();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.ENGLISH);
         String datee = sdf.format(new Date());
         String currentdate = UserInFormation.getCurrentdate();

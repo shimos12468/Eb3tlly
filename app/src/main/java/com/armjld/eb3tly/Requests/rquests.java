@@ -79,7 +79,6 @@ public class rquests {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         requestsData rData = ds.getValue(requestsData.class);
                         String dlivaryId = rData.getId();
-
                         FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests").child(dlivaryId).child("statue").setValue("declined");
                         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(dlivaryId).child("requests").child(orderid).child("statue").setValue("declined");
                     }

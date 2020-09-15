@@ -37,6 +37,7 @@ import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.Wallet.wallet;
 import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
 import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
@@ -189,7 +190,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             // Changing the values in the orders db
             mDatabase.child(orderID).child("statue").setValue("delivered");
             mDatabase.child(orderID).child("dilverTime").setValue(datee);
-
+            wallet w = new wallet();
+            w.SupsetDilivared(orderID);
             // Add the Profit of the Dilvery Worker
             uDatabase.child(DID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
