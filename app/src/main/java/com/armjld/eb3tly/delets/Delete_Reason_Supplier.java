@@ -87,8 +87,6 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
         });
 
         btnSend.setOnClickListener(v -> {
-                rquests requests = new rquests();
-                requests.deletedOrder(orderID);
             if(rd1.isChecked()) {
                 Msg = "العميل الغي الاوردر";
             } else if (rd2.isChecked()) {
@@ -110,6 +108,9 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
                         DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         assert id != null;
                         dDatabase.child(orderID).child(id).setValue(deleteData);
+
+                        rquests requests = new rquests();
+                        requests.deletedOrder(orderID);
 
                         mDatabase.child(orderID).child("statue").setValue("deleted");
                         Toast.makeText(this, "شكرا لك, تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();

@@ -61,7 +61,7 @@ public class NewProfile extends AppCompatActivity {
     private ImageView imgSetPP,imgStar, imgVerf,btnChats;
     private TextView txtUserDate;
     private TextView uName;
-    private TextView txtNotiCount,txtTotalOrders;
+    private TextView txtNotiCount;
     private ConstraintLayout constNewProfile;
     private String TAG = "Delivery Profile";
     String uType = UserInFormation.getAccountType();
@@ -86,7 +86,7 @@ public class NewProfile extends AppCompatActivity {
 
         Vibrator vibe = (Vibrator) Objects.requireNonNull((NewProfile)this).getSystemService(Context.VIBRATOR_SERVICE);
 
-        txtTotalOrders = findViewById(R.id.txtTotalOrders);
+        //txtTotalOrders = findViewById(R.id.txtTotalOrders);
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
@@ -256,7 +256,7 @@ public class NewProfile extends AppCompatActivity {
         Menu nav_menu = navigationView.getMenu();
         nav_menu.findItem(R.id.nav_how).setVisible(false);
         getRatings();
-        getOrderCountDel();
+        //getOrderCountDel();
 
     }
 
@@ -299,10 +299,10 @@ public class NewProfile extends AppCompatActivity {
                     int count = (int) snapshot.getChildrenCount();
                     cOrders = count;
                     String strCount = String.valueOf(count);
-                    txtTotalOrders.setText( "وصل " + strCount + " اوردر");
+                    //txtTotalOrders.setText( "وصل " + strCount + " اوردر");
                 } else {
                     cOrders = 0;
-                    txtTotalOrders.setText("لم يقم بتوصيل اي اوردر");
+                    //txtTotalOrders.setText("لم يقم بتوصيل اي اوردر");
                 }
 
                 if(cOrders >= 10) {

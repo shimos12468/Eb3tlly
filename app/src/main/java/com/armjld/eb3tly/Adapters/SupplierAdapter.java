@@ -43,6 +43,7 @@ import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.delets.Delete_Delivery_From_Sup;
 import com.armjld.eb3tly.delets.Delete_Reason_Supplier;
 import com.armjld.eb3tly.Profiles.supplierProfile;
+import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -292,6 +293,71 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             context.startActivity(deleteAct);
         });
 
+        holder.btnChat.setOnClickListener(v-> {
+            final String[] room = new String[1];
+            String uId = UserInFormation.getId();
+            DatabaseReference Bdatabase;
+            final boolean[] found = {false};
+            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+            Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        for (DataSnapshot ds:snapshot.getChildren()) {
+                            if(ds.child("orderid").exists() && ds.child("roomid").exists()){
+                                if(ds.child("orderid").getValue().toString().equals(orderID)) {
+                                    room[0] = ds.child("roomid").getValue().toString();
+                                    Intent intent = new Intent(context, Messages.class);
+                                    intent.putExtra("roomid", room[0]);
+                                    intent.putExtra("rid", data.getuAccepted());
+                                    context.startActivity(intent);
+                                    found[0] = true;
+                                    break;
+                                }
+
+                            }
+                        }
+                        if(!found[0]){
+                            DatabaseReference Bdatabase;
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                            String chat = Bdatabase.push().getKey();
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                            Bdatabase.child("userId").setValue(data.getuAccepted());
+                            Bdatabase.child("orderid").setValue(orderID);
+                            Bdatabase.child("roomid").setValue(chat);
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuAccepted()).child("chats").child(chat);
+                            Bdatabase.child("userId").setValue(uId);
+                            Bdatabase.child("orderid").setValue(orderID);
+                            Bdatabase.child("roomid").setValue(chat);
+                            Intent intent = new Intent(context, Messages.class);
+                            intent.putExtra("roomid", chat);
+                            intent.putExtra("rid", data.getuAccepted());
+                            context.startActivity(intent);
+                        }
+                    } else{
+                        DatabaseReference Bdatabase;
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                        String chat = Bdatabase.push().getKey();
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                        Bdatabase.child("userId").setValue(data.getuAccepted());
+                        Bdatabase.child("orderid").setValue(orderID);
+                        Bdatabase.child("roomid").setValue(chat);
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuAccepted()).child("chats").child(chat);
+                        Bdatabase.child("userId").setValue(uId);
+                        Bdatabase.child("orderid").setValue(orderID);
+                        Bdatabase.child("roomid").setValue(chat);
+                        Intent intent = new Intent(context, Messages.class);
+                        intent.putExtra("roomid", chat);
+                        intent.putExtra("rid", data.getuAccepted());
+                        context.startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        });
+
         // ---------------- Set order to Recived
         holder.btnRecived.setOnClickListener(v -> {
             assert vibe != null;
@@ -390,9 +456,12 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 if(holder.requestRecycler.isShown()) {
                     holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_down_black));
                     holder.requestRecycler.setVisibility(View.GONE);
+                    holder.txtGetStat.setVisibility(View.VISIBLE);
+
                 } else {
                     holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_up_black));
                     holder.requestRecycler.setVisibility(View.VISIBLE);
+                    holder.txtGetStat.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -401,9 +470,11 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             if(holder.requestRecycler.isShown()) {
                 holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_down_black));
                 holder.requestRecycler.setVisibility(View.GONE);
+                holder.txtGetStat.setVisibility(View.VISIBLE);
             } else {
                 holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_up_black));
                 holder.requestRecycler.setVisibility(View.VISIBLE);
+                holder.txtGetStat.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -635,7 +706,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
-        public Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
+        public Button btnEdit,btnDelete,btnChat,btnRate,btnRecived;
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate,linerAll;
         public RatingBar drStar;
@@ -646,8 +717,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             myview = itemView;
-            btnDelivered = myview.findViewById(R.id.btnDelivered);
-            btnInfo = myview.findViewById(R.id.btnInfo);
+            btnChat = myview.findViewById(R.id.btnChat);
             btnEdit = myview.findViewById(R.id.btnEdit);
             txtUserName = myview.findViewById(R.id.txtUsername);
             btnRecived = myview.findViewById(R.id.btnRecived);
@@ -702,12 +772,12 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         txtGetStat.setBackgroundColor(Color.RED);
                         icnArrowDown.setVisibility(View.GONE);
 
-                        mDatabase.child(orderID).child("requests").addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabase.child(orderID).child("requests").orderByChild("statue").equalTo("N/A").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 int countt = (int) snapshot.getChildrenCount();
                                 if(countt > 0) {
-                                    String statText = "لديك " + countt + " اقتراحات للاوردر اضغط هنا للمزيد";
+                                    String statText = "لديك " + countt + " طلب للاوردر اضغط هنا للمزيد";
                                     txtGetStat.setEnabled(true);
                                     txtGetStat.setVisibility(View.VISIBLE);
                                     txtGetStat.setText(statText);
@@ -729,10 +799,14 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                             if(snapshot.exists()) {
                                                 for(DataSnapshot ds : snapshot.getChildren()) {
                                                     requestsData rData = ds.getValue(requestsData.class);
-                                                    mm.add((int) count, rData);
-                                                    count++;
-                                                    RequestsAdapter req = new RequestsAdapter(context, mm, count, orderID);
-                                                    requestRecycler.setAdapter(req);
+                                                    if(ds.child("statue").exists()) {
+                                                        if(rData.getStatue().equals("N/A")) { // Get only the not decliend requests
+                                                            mm.add((int) count, rData);
+                                                            count++;
+                                                            RequestsAdapter req = new RequestsAdapter(context, mm, count, orderID);
+                                                            requestRecycler.setAdapter(req);
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -752,9 +826,11 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                     }
                     break;
                 }
-                case "recived" :
+                case "recived" : {
+                    txtGetStat.setVisibility(View.GONE);
+                }
                 case "accepted": {
-                    txtGetStat.setVisibility(View.VISIBLE);
+                    txtGetStat.setVisibility(View.GONE);
                     txtGetStat.setEnabled(true);
                     uDatabase.child(uAccepted).addValueEventListener(new ValueEventListener() {
                         @SuppressLint("SetTextI18n")
@@ -804,24 +880,30 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         }
 
         public void setDilveredButton(final String state) {
-                btnDelivered.setVisibility(View.GONE);
-                btnInfo.setVisibility(View.GONE);
                 btnRate.setText("تقييم المندوب");
                 switch (state) {
                     case "placed" : {
                         btnEdit.setVisibility(View.VISIBLE);
                         btnDelete.setVisibility(View.VISIBLE);
                         btnRecived.setVisibility(View.GONE);
+                        btnChat.setVisibility(View.GONE);
                         break;
                     }
                     case "accepted": {
                         btnRecived.setVisibility(View.VISIBLE);
-                        btnEdit.setVisibility(View.VISIBLE);
+                        btnEdit.setVisibility(View.GONE);
                         btnDelete.setVisibility(View.VISIBLE);
+                        btnChat.setVisibility(View.VISIBLE);
                         break;
                     }
-                    case "recived":
+                    case "recived": {
+                        btnChat.setVisibility(View.VISIBLE);
+                        btnRecived.setVisibility(View.GONE);
+                        btnEdit.setVisibility(View.GONE);
+                        btnDelete.setVisibility(View.GONE);
+                    }
                     case "delivered" : {
+                        btnChat.setVisibility(View.GONE);
                         btnRecived.setVisibility(View.GONE);
                         btnEdit.setVisibility(View.GONE);
                         btnDelete.setVisibility(View.GONE);
@@ -849,8 +931,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         }
 
         public void setAccepted() {
-            btnDelivered.setVisibility(View.GONE);
-            btnInfo.setVisibility(View.GONE);
+            btnChat.setVisibility(View.GONE);
         }
 
         public void setType(String car, String motor, String metro, String trans) {

@@ -160,13 +160,11 @@ public class Login_Options extends AppCompatActivity {
                             }
                         } else {
                             New_SignUp.provider = "Google";
-
                             New_SignUp.newEmail = account.getEmail();
                             New_SignUp.newFirstName = account.getGivenName();
                             New_SignUp.newLastName = account.getFamilyName();
                             New_SignUp.defultPP = Objects.requireNonNull(account.getPhotoUrl()).toString();
                             New_SignUp.googleCred = credential;
-
                             finish();
                             startActivity(new Intent(Login_Options.this, New_SignUp.class));
                         }
@@ -178,6 +176,7 @@ public class Login_Options extends AppCompatActivity {
 
 
             } catch (ApiException e) {
+                mdialog.dismiss();
                 Log.w(TAG, "Google sign in failed", e);
             }
         }

@@ -1,11 +1,13 @@
 package com.armjld.eb3tly.delets;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,12 +16,18 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.Adapters.RequestsAdapter;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Requests.RequestsForSup;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +36,7 @@ import java.util.Objects;
 
 import Model.DeleteData;
 import Model.notiData;
+import Model.requestsData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
@@ -41,6 +50,7 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
     FirebaseAuth mAuth;
     private String uId = UserInFormation.getId();
     Button btnSend;
+    private String TAG = "Delete Captin";
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
@@ -124,6 +134,28 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
                         DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         assert id != null;
                         dDatabase.child(orderID).child(id).setValue(deleteData);
+
+                        mDatabase.child(orderID).child("requests").orderByChild("id").equalTo(acceptedID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()) {
+                                    for(DataSnapshot ds : snapshot.getChildren()) {
+                                        requestsData rData = ds.getValue(requestsData.class);
+                                        String dId = rData.getId();
+                                        if(acceptedID.equals(dId)) {
+                                            FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderID).child("requests").child(dId).child("statue").setValue("declined");
+                                            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(dId).child("requests").child(orderID).child("statue").setValue("declined");
+                                        }
+                                    }
+                                }
+                                Log.i(TAG, "Deleted the Request");
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
 
                         startActivity(new Intent(Delete_Delivery_From_Sup.this, supplierProfile.class));
                         Toast.makeText(this, "تم الغاء المندوب و جاري عرض اوردرك علي باقي المندوبين", Toast.LENGTH_LONG).show();

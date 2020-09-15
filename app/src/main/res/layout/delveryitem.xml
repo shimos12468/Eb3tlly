@@ -310,49 +310,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/lin2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnChat"
-                    android:layout_width="0dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="دردشة"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnRecived"
-                    android:layout_width="0dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="تم تسليم الاوردر للمندوب"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/Lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -397,7 +354,6 @@
                 android:id="@+id/lin3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
@@ -415,6 +371,49 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="0dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="بيانات الاوردر"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnRecived"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="تم تسليم الاوردر للمندوب"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

@@ -178,19 +178,18 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int count = 0;
                     if(snapshot.exists()){
-                        Log.d("123",datee.substring(0,9)+" ");
                         for (DataSnapshot ds:snapshot.getChildren()){
                             if(ds.child("statue").exists()) {
-
                                 if(ds.child("statue").getValue().toString().equals("N/A")&&ds.child("date").getValue().toString().substring(0 , 10).equals(datee.substring(0 ,10))){
                                     count++;
                                 }
                             }
-
                         }
+
                         if(count >= 10) {
                             requests = true;
                         }
+
                     }
                 }
 
@@ -208,6 +207,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                                 count2++;
                             }
                         }
+
                         if(count2 >= 20) {
                             orders = true;
                         }

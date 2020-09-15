@@ -26,6 +26,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -49,6 +50,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -291,6 +293,16 @@ public class UserSetting extends AppCompatActivity {
         constUserSettings = findViewById(R.id.constUserSettings);
         btnConfirmAccount = findViewById(R.id.btnConfirmAccount);
         btnConfirmAccount.setVisibility(View.GONE);
+
+        for(UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if(user.getProviderId().equals("google.com")) {
+                Email.setEnabled(false);
+                Email.setKeyListener(null);
+            } else {
+                Email.setEnabled(true);
+                //Email.setKeyListener(KeyListener);
+            }
+        }
 
         if(isConfirmed.equals("false")) {
             Snackbar snackbar = Snackbar.make(constUserSettings, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {

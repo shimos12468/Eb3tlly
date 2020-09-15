@@ -94,7 +94,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view  = inflater.inflate(R.layout.supplieritems,parent,false);
+        View view  = inflater.inflate(R.layout.delveryitem,parent,false);
         return new MyViewHolder(view);
     }
 

@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout11"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -46,6 +47,15 @@
             android:textAlignment="viewEnd" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/btnCall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_home"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_home"
+        app:srcCompat="@drawable/ic_add_phone" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="40dp"
@@ -53,7 +63,7 @@
         android:layout_marginEnd="5dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar_home"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCall"
         app:layout_constraintTop_toTopOf="@+id/toolbar_home">
 
         <ImageView
@@ -81,8 +91,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_above="@id/line"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:background="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@+id/line"
         app:layout_constraintEnd_toEndOf="parent"
@@ -105,7 +113,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:background="#00000000"
         android:foregroundGravity="center"
         android:padding="10dp"
@@ -122,7 +130,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_toStartOf="@id/btnSend"
         android:drawablePadding="20dp"
         android:hint="Aa"

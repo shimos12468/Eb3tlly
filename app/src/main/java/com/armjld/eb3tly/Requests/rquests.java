@@ -77,23 +77,18 @@ public class rquests {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                            requestsData rData = ds.getValue(requestsData.class);
-                            mm.add((int) count, rData);
-                            count++;
-                            String dlivaryId = rData.getId();
-                        Bdatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests").child(dlivaryId);
-                        Bdatabase.child("statue").setValue("declined");
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(dlivaryId).child("requests").child(orderid);
-                        Bdatabase.child("statue").setValue("declined");
+                        requestsData rData = ds.getValue(requestsData.class);
+                        String dlivaryId = rData.getId();
+
+                        FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests").child(dlivaryId).child("statue").setValue("declined");
+                        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(dlivaryId).child("requests").child(orderid).child("statue").setValue("declined");
                     }
             }
 
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
 
 

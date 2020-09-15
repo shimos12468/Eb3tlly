@@ -60,7 +60,7 @@ public class supplierProfile extends AppCompatActivity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
     private ImageView imgSetPP, imgStar,imgVerf, btnChats;
-    private TextView txtUserDate,uName,txtNotiCount,txtTotalOrders;
+    private TextView txtUserDate,uName,txtNotiCount;
     private String TAG = "Supplier Profile";
     String uType = UserInFormation.getAccountType();
     private ConstraintLayout constSupProfile;
@@ -68,7 +68,7 @@ public class supplierProfile extends AppCompatActivity {
     private ViewPager view_pager;
     String user_type;
     private ProgressDialog mdialog;
-    private String isConfirmed = UserInFormation.getisConfirm();
+    private String isConfirmed;
 
     @Override
     public void onBackPressed() {
@@ -104,6 +104,7 @@ public class supplierProfile extends AppCompatActivity {
         FirebaseUser mUser = mAuth.getCurrentUser();
         mdialog = new ProgressDialog(this);
         assert mUser != null;
+        isConfirmed = UserInFormation.getisConfirm();
 
 
         FloatingActionButton btnAdd = findViewById(R.id.btnAdd);
@@ -120,7 +121,6 @@ public class supplierProfile extends AppCompatActivity {
         txtUserDate = findViewById(R.id.txtUserDate);
         imgSetPP = findViewById(R.id.imgPPP);
         txtNotiCount = findViewById(R.id.txtNotiCount);
-        txtTotalOrders = findViewById(R.id.txtTotalOrders);
         imgStar = findViewById(R.id.imgStar);
         imgVerf= findViewById(R.id.imgVerf);
 
@@ -324,17 +324,11 @@ public class supplierProfile extends AppCompatActivity {
                     }
                 }
 
-                if(cOrders == 0) {
-                    txtTotalOrders.setText("لم يقم باضافة اي اوردر");
-                } else {
-                    txtTotalOrders.setText( "اضاف " + cOrders + " اوردر");
-                }
-
                 if(cOrders >= 10) {
                     uName.setTextColor(Color.parseColor("#ffc922"));
                     imgStar.setVisibility(View.VISIBLE);
                 } else {
-                    uName.setTextColor(Color.WHITE);
+                    uName.setTextColor(Color.BLACK);
                     imgStar.setVisibility(View.GONE);
                 }
             }

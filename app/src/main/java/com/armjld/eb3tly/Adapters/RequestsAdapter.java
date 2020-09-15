@@ -128,7 +128,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setUserInfo(id);
 
-        holder.myview.setOnClickListener(v-> {
+        holder.imgEditPhoto.setOnClickListener(v-> {
             AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             View dialogMore = inflater.inflate(R.layout.dialogdevinfo, null);
@@ -307,76 +307,37 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         });
 
         /*holder.btnSendMessage.setOnClickListener(v-> {
-            final String[] room = new String[1];
-            String uId = UserInFormation.getId();
-            DatabaseReference Bdatabase;
-            final boolean[] found = {false};
-            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-            Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        for (DataSnapshot ds:snapshot.getChildren()) {
-                            if(ds.child("orderid").exists() && ds.child("roomid").exists()){
-                                if(ds.child("orderid").getValue().toString().equals(orderId)) {
-                                    room[0] = ds.child("roomid").getValue().toString();
-                                    Intent intent = new Intent(context, Messages.class);
-                                    intent.putExtra("roomid", room[0]);
-                                    intent.putExtra("rid", id);
-                                    context.startActivity(intent);
-                                    found[0] = true;
-                                    break;
-                                }
 
-                            }
-                        }
-                        if(!found[0]){
-                            DatabaseReference Bdatabase;
-                            Log.d("mnfol"," we are here2" );
-                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                            String chat = Bdatabase.push().getKey();
-                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
-                            Bdatabase.child("userId").setValue(id);
-                            Bdatabase.child("orderid").setValue(orderId);
-                            Bdatabase.child("roomid").setValue(chat);
-                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
-                            Bdatabase.child("userId").setValue(uId);
-                            Bdatabase.child("orderid").setValue(orderId);
-                            Bdatabase.child("roomid").setValue(chat);
-                            Intent intent = new Intent(context, Messages.class);
-                            intent.putExtra("roomid", chat);
-                            intent.putExtra("rid", id);
-                            context.startActivity(intent);
-                        }
-                    } else{
-                        DatabaseReference Bdatabase;
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                        String chat = Bdatabase.push().getKey();
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
-                        Bdatabase.child("userId").setValue(id);
-                        Bdatabase.child("orderid").setValue(orderId);
-                        Bdatabase.child("roomid").setValue(chat);
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(chat);
-                        Bdatabase.child("userId").setValue(uId);
-                        Bdatabase.child("orderid").setValue(orderId);
-                        Bdatabase.child("roomid").setValue(chat);
-                        Intent intent = new Intent(context, Messages.class);
-                        intent.putExtra("roomid", chat);
-                        intent.putExtra("rid", id);
-                        context.startActivity(intent);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
         });*/
+
+        holder.btnDecline.setOnClickListener(v-> {
+            DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderId).child("requests").child(id).child("statue").setValue("declined");
+                        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("requests").child(orderId).child("statue").setValue("declined");
+                        Toast.makeText(context, "تم الغاء المندوب", Toast.LENGTH_SHORT).show();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("هل انت متاكد من انك تريد تريد الغاء طلب المندوب ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+
+        });
+
 
         holder.btnAccept.setOnClickListener(v -> {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 requestsandacceptc c = new requestsandacceptc();
-                if(!c.acceptdlivaryworker(id))
+                if(!c.acceptdlivaryworker(id)) {
+                    Toast.makeText(context, "نعتذر لا يمكن لهذا المندوب قبول اوردرات اخري حاليا", Toast.LENGTH_SHORT).show();
                     return;
+                }
+
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         mDatabase.child(orderId).child("uAccepted").setValue(id);
@@ -403,8 +364,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                             }
                         }
 
-
-
                         Toast.makeText(context, "تم قبول المندوب", Toast.LENGTH_SHORT).show();
                         context.startActivity(new Intent(context, supplierProfile.class));
                         break;
@@ -413,7 +372,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                 }
             };
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("هل انت متاكد من انك تريد قبول هذا العرض ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+            builder.setMessage("هل انت متاكد من انك تريد قبول امندوب ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
 
         });
@@ -432,9 +391,10 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder {
         View myview;
         ImageView imgEditPhoto;
-        TextView txtName,txtDate, txtJoinDate, txtOrdersCount;
-        Button btnAccept,btnSendMessage;
+        TextView txtName,txtDate;
+        Button btnAccept2,btnSendMessage;
         RatingBar rbUser;
+        ImageView btnAccept, btnDecline;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -445,9 +405,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
             imgEditPhoto = myview.findViewById(R.id.imgEditPhoto);
             btnSendMessage = myview.findViewById(R.id.btnSendMessage);
             rbUser = myview.findViewById(R.id.rbUser);
-            txtJoinDate = myview.findViewById(R.id.txtJoinDate);
-            txtOrdersCount = myview.findViewById(R.id.txtOrdersCount);
-
+            btnDecline = myview.findViewById(R.id.btnDecline);
         }
 
         public void setUserInfo(String id) {
@@ -459,7 +417,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                     assert uData != null;
                     txtName.setText(uData.getname());
                     Picasso.get().load(Uri.parse(uData.getPpURL())).into(imgEditPhoto);
-                    txtJoinDate.setText(uData.getDate());
+                    //txtJoinDate.setText(uData.getDate());
 
                     getRatings(id);
                     //getOrderCountDel(id);
@@ -492,38 +450,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-        }
-
-        public void getOrderCountDel(String hisID) {
-            mDatabase.orderByChild("uAccepted").equalTo(hisID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int cOrders = 0;
-                    if (snapshot.exists()) {
-                        int count = (int) snapshot.getChildrenCount();
-                        cOrders = count;
-                        String strCount = String.valueOf(count);
-                        txtOrdersCount.setText( "وصل " + strCount + " اوردر");
-                    } else {
-                        cOrders = 0;
-                        txtOrdersCount.setText("لم يقم بتوصيل اي اوردر");
-                    }
-
-                    /*if(cOrders >= 10) {
-                        uName.setTextColor(Color.parseColor("#ffc922"));
-                        imgStar.setVisibility(View.VISIBLE);
-                    } else {
-                        uName.setTextColor(Color.WHITE);
-                        imgStar.setVisibility(View.GONE);
-                    }*/
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
             });
         }
 

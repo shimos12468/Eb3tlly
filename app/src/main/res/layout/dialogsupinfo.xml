@@ -71,8 +71,7 @@
                     android:background="@drawable/btn_bad"
                     android:text="المزيد من الاوردرات"
                     android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/ddCount"

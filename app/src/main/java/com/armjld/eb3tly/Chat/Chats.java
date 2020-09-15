@@ -85,6 +85,8 @@ public class Chats extends AppCompatActivity {
                         ChatsData cchatData = ds.getValue(ChatsData.class);
 
                         String roomID = cchatData.getRoomid();
+                        String oID = cchatData.getOrderid();
+
                         Log.i("Chats", "Room id : " + roomID);
 
                         mChat.add(cchatData);

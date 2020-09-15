@@ -2,10 +2,15 @@ package com.armjld.eb3tly.messeges;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +22,7 @@ import android.widget.Toolbar;
 
 import com.armjld.eb3tly.Adapters.MessageAdapter;
 import com.armjld.eb3tly.Chat.Chats;
+import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.main.Login_Options;
@@ -47,8 +53,10 @@ public class Messages extends AppCompatActivity {
     boolean f = true;
     private String rId = "";
     private String roomId ;
-    ImageView btnBack,imgPPP;
+    ImageView btnBack,imgPPP, btnCall;
     TextView txtName, txtType;
+    private static final int PHONE_CALL_CODE = 100;
+
 
     EditText editWriteMessage;
     RecyclerView recyclerMsg;
@@ -63,6 +71,7 @@ public class Messages extends AppCompatActivity {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
+    String phoneNumb = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +90,7 @@ public class Messages extends AppCompatActivity {
         txtName = findViewById(R.id.txtName);
         txtType = findViewById(R.id.txtType);
         imgPPP = findViewById(R.id.imgPPP);
-
+        btnCall = findViewById(R.id.btnCall);
 
         recyclerMsg.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -93,10 +102,34 @@ public class Messages extends AppCompatActivity {
             startActivity(new Intent(this, Chats.class));
         });
 
+        btnCall.setOnClickListener(v-> {
+            if(!phoneNumb.equals("")) {
+                checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + phoneNumb));
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                startActivity(callIntent);
+            } else {
+                Toast.makeText(this, "التاجر لم ضع رقم هاتف", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         uDatabase.child(rId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 txtName.setText(snapshot.child("name").getValue().toString());
+                String dataPhone = snapshot.child("phone").getValue().toString();
+
+                if(dataPhone.length() == 11) {
+                    phoneNumb = dataPhone;
+                } else if (dataPhone.length() == 10) {
+                    phoneNumb = "0" + dataPhone;
+                } else {
+                    phoneNumb = "";
+                }
+
                 if(snapshot.child("accountType").getValue().toString().equals("Supplier")) {
                     txtType.setText("تاجر");
                 } else if(snapshot.child("accountType").getValue().toString().equals("Delivery Worker")){
@@ -157,10 +190,26 @@ public class Messages extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
+    }
+
+    public void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions((Activity) this, new String[] { permission }, requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+       onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PHONE_CALL_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Phone Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }
