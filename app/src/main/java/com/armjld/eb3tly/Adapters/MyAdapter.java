@@ -264,12 +264,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
                     } else {
-                        wallet w = new wallet();
-                         Boolean f= w.workerbid();
-                         if(f)
-                             Toast.makeText(context1, "يقدر يقدم", Toast.LENGTH_SHORT).show();
-                         if(!f){
+                         wallet w = new wallet();
+                         if(!w.workerbid()){
                              Toast.makeText(context1, "لا يقدر يقدم", Toast.LENGTH_SHORT).show();
+                             return;
                          }
 
                         if(HomeActivity.requests) {
