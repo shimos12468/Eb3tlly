@@ -2,10 +2,12 @@ package com.armjld.eb3tly.Wallet;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,7 +28,7 @@ public class wallet {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     String TAG = "Wallet";
-
+    public static long diffHours = 0;
 
     public boolean workerbid(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.ENGLISH);
@@ -45,7 +47,8 @@ public class wallet {
             e.printStackTrace();
         }
         long diff = end.getTime() - start.getTime();
-        long diffHours = diff / (60 * 60 * 1000);
+        diffHours = diff / (60 * 60 * 1000);
+
         Log.d(TAG , "You Have " + (48 - diffHours) + " Hours left!");
         if(diffHours<48){
             return true;

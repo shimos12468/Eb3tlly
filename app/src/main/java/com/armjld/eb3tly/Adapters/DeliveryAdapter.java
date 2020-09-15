@@ -156,21 +156,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         holder.setType(data.getIsCar(), data.getIsMotor(), data.getIsMetro(), data.getIsTrans());
         holder.checkDeleted(data.getRemoved());
 
-        mDatabase.orderByChild("uId").equalTo(data.getuId()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int ordersCount = 0;
-                if(snapshot.exists()) {
-                    for(DataSnapshot ds : snapshot.getChildren()) {
-                        if(!Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("deleted")) { ordersCount++; }
-                    }
-                }
-                holder.isTop(ordersCount);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
 
         // ------------------------------------   Order info
         holder.btnInfo.setOnClickListener(v -> {
@@ -286,9 +271,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             vibe.vibrate(20);
         });
 
-        holder.imgVerf.setOnClickListener(v -> {
-            Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
-        });
 
         holder.icnMetro.setOnClickListener(v -> {
             assert vibe != null;
@@ -525,7 +507,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         public Button btnDelete,btnInfo,btnDelivered,btnRate,btnChat;
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate, linerAll;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans, imgStar,imgVerf;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans;
         public ImageButton mImageButton;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -538,7 +520,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtRate = myview.findViewById(R.id.drComment);
             txtGetStat = myview.findViewById(R.id.txtStatue);
             linerAll = myview.findViewById(R.id.linerAll);
-            imgVerf = myview.findViewById(R.id.imgVerf);
             btnChat = myview.findViewById(R.id.btnChat);
 
             linerDate = myview.findViewById(R.id.linerDate);
@@ -546,7 +527,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtgMoney = myview.findViewById(R.id.ordercash);
             txtDate = myview.findViewById(R.id.date);
             mImageButton = myview.findViewById(R.id.imageButton);
-            imgStar = myview.findViewById(R.id.imgStar);
             txtUsername = myview.findViewById(R.id.txtUsername);
             icnCar = myview.findViewById(R.id.icnCar);
             icnMotor = myview.findViewById(R.id.icnMotor);
@@ -557,17 +537,13 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtPostDate = myview.findViewById(R.id.txtPostDate);
         }
 
+
         void setUsername(final String orderOwner){
            uDatabase.child(orderOwner).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
                         txtUsername.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
-                        String isConfirm = "false";
-                        if(dataSnapshot.child("isConfirmed").exists()) {
-                            isConfirm = dataSnapshot.child("isConfirmed").getValue().toString();
-                        }
-                        setVerf(isConfirm);
                     }
                 }
                 @Override
@@ -653,15 +629,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtgGet.setText(fees + " ج");
         }
 
-        public void isTop(int ordersCount) {
-            if(ordersCount >= 10) {
-                imgStar.setVisibility(View.VISIBLE);
-                txtUsername.setTextColor(Color.parseColor("#ffc922"));
-            } else {
-                imgStar.setVisibility(View.GONE);
-                txtUsername.setTextColor(Color.parseColor("#FF0099CC"));
-            }
-        }
 
         public void setType(String car, String motor, String metro, String trans) {
             if (car.equals("سياره")) {
@@ -686,14 +653,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 icnTrans.setVisibility(View.VISIBLE);
             } else {
                 icnTrans.setVisibility(View.GONE);
-            }
-        }
-
-        public void setVerf(String isConfirm) {
-            if(isConfirm.equals("true")) {
-                imgVerf.setVisibility(View.VISIBLE);
-            } else {
-                imgVerf.setVisibility(View.GONE);
             }
         }
 
