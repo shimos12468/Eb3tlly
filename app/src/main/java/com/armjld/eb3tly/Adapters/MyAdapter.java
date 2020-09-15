@@ -182,17 +182,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.linAdmin.setVisibility(View.VISIBLE);
         } else if(uType.equals("Delivery Worker")) {
             holder.lin1.setVisibility(View.VISIBLE);
-            holder.txtWarning.setVisibility(View.VISIBLE);
+            holder.txtWarning.setVisibility(View.GONE);
             holder.linAdmin.setVisibility(View.GONE);
         }
 
-        mDatabase.child(orderID).child("statue").addChildEventListener(new ChildEventListener() {
+        mDatabase.child(orderID).child("statue").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(!dataSnapshot.getValue().toString().equals("placed")){
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.i(TAG, "Listener : " + snapshot.getValue().toString());
+                if(!snapshot.getValue().toString().equals("placed")){
                     holder.lin1.setVisibility(View.GONE);
                     holder.txtWarning.setVisibility(View.VISIBLE);
 
@@ -200,20 +198,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     holder.lin1.setVisibility(View.VISIBLE);
                     holder.txtWarning.setVisibility(View.GONE);
                 }
-
             }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
+
         holder.linerDate.setOnClickListener(v -> {
             Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
             assert vibe != null;
@@ -248,7 +238,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
         holder.btnBid.setOnClickListener(v1 -> {
-
             mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -259,7 +248,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     // ------------------- Send Request -------------------- //
                                     rquests _rquests = new rquests();
-                                    _rquests.deleteReq(orderID);
+                                    _rquests.deleteReq(uId, orderID);
 
                                     // ------------------ Notificatiom ------------------ //
                                     //notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");

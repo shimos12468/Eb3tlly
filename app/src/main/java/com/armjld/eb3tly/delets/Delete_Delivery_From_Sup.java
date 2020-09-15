@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.armjld.eb3tly.Adapters.RequestsAdapter;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Requests.RequestsForSup;
+import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Profiles.supplierProfile;
@@ -135,27 +136,8 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
                         assert id != null;
                         dDatabase.child(orderID).child(id).setValue(deleteData);
 
-                        mDatabase.child(orderID).child("requests").orderByChild("id").equalTo(acceptedID).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()) {
-                                    for(DataSnapshot ds : snapshot.getChildren()) {
-                                        requestsData rData = ds.getValue(requestsData.class);
-                                        String dId = rData.getId();
-                                        if(acceptedID.equals(dId)) {
-                                            FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderID).child("requests").child(dId).child("statue").setValue("declined");
-                                            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(dId).child("requests").child(orderID).child("statue").setValue("declined");
-                                        }
-                                    }
-                                }
-                                Log.i(TAG, "Deleted the Request");
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                        rquests _req = new rquests();
+                        _req.deleteReq(acceptedID, orderID);
 
                         startActivity(new Intent(Delete_Delivery_From_Sup.this, supplierProfile.class));
                         Toast.makeText(this, "تم الغاء المندوب و جاري عرض اوردرك علي باقي المندوبين", Toast.LENGTH_LONG).show();

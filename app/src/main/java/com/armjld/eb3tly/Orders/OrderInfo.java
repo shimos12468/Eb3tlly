@@ -247,7 +247,7 @@ public class OrderInfo extends AppCompatActivity {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     // ------------------- Send Request -------------------- //
                                     rquests _rquests = new rquests();
-                                    _rquests.deleteReq(orderID);
+                                    _rquests.deleteReq(uId, orderID);
 
                                     // ------------------ Notificatiom ------------------ //
                                     //notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");

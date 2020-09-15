@@ -245,50 +245,40 @@
             android:id="@+id/lin1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="0.5"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/Lin"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnMore"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="38dp"
+                android:layout_alignParentTop="false"
                 android:layout_gravity="center"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/btn_bad"
+                android:text="المزيد"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:visibility="visible" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnMore"
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_bad"
-                    android:text="المزيد"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnBid"
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="موافق علي التوصيل"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnBid"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/btn_defult"
+                android:text="موافق علي التوصيل"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:visibility="visible" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnAccept"
@@ -300,7 +290,8 @@
                 android:background="@drawable/btn_defult"
                 android:text="قبول الاوردر"
                 android:textColor="@color/colorAccent"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

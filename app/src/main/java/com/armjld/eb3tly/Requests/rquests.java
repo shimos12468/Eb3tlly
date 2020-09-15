@@ -58,16 +58,11 @@ public class rquests {
         }
     }
 
-    public boolean deleteReq(String orderid){
-        String uId = UserInFormation.getId();
-        if(uId == null){
-            return false;
-        } else{
-           FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests").child(uId).removeValue();
-           FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("requests").child(orderid).removeValue();
-            return true;
-        }
+    public void deleteReq(String accID, String orderid){
+           FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderid).child("requests").child(accID).removeValue();
+           FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(accID).child("requests").child(orderid).removeValue();
     }
+
     public void  deletedOrder(String orderid){
         count =0;
         ArrayList<requestsData>mm = new ArrayList<requestsData>();
