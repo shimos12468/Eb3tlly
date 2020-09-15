@@ -21,6 +21,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,7 @@ import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -170,6 +172,48 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
 
+        if(uType.equals("Supplier")) {
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setVisibility(View.GONE);
+            holder.linAdmin.setVisibility(View.GONE);
+        } else if(uType.equals("Admin")) {
+            holder.lin1.setVisibility(View.GONE);
+            holder.txtWarning.setVisibility(View.GONE);
+            holder.linAdmin.setVisibility(View.VISIBLE);
+        } else if(uType.equals("Delivery Worker")) {
+            holder.lin1.setVisibility(View.VISIBLE);
+            holder.txtWarning.setVisibility(View.VISIBLE);
+            holder.linAdmin.setVisibility(View.GONE);
+        }
+
+        mDatabase.child(orderID).child("statue").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(!dataSnapshot.getValue().toString().equals("placed")){
+                    holder.lin1.setVisibility(View.GONE);
+                    holder.txtWarning.setVisibility(View.VISIBLE);
+
+                } else {
+                    holder.lin1.setVisibility(View.VISIBLE);
+                    holder.txtWarning.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
         holder.linerDate.setOnClickListener(v -> {
             Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
             assert vibe != null;
@@ -331,24 +375,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
 
-
-        if(uType.equals("Supplier")) {
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setVisibility(View.GONE);
-        } else if(uType.equals("Delivery Worker")) {
-            if(removed.equals("true") || !statues.equals("placed")){
-                holder.lin1.setVisibility(View.GONE);
-                holder.txtWarning.setVisibility(View.VISIBLE);
-            } else {
-                holder.lin1.setVisibility(View.VISIBLE);
-                holder.btnAccept.setVisibility(View.GONE);
-                holder.txtWarning.setVisibility(View.GONE);
-            }
-        } else if(uType.equals("Admin")) {
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setVisibility(View.GONE);
-            holder.linAdmin.setVisibility(View.VISIBLE);
-        }
 
 
         holder.btnEdit.setOnClickListener(v -> {
