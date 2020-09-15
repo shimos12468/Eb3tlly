@@ -328,8 +328,8 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="بيانات الاوردر"
+                    android:background="@drawable/btn_bad"
+                    android:text="المزيد من البيانات"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:visibility="gone" />
@@ -343,7 +343,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
-                    android:text="دردشة"
+                    android:text="تواصل"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:visibility="gone" />

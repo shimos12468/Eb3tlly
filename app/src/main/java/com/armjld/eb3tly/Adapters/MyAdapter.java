@@ -161,41 +161,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String type = filtersData.get(position).getType();
 
-
-        uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String isConfirm = "false";
-                if (snapshot.child("isConfirmed").exists()) {
-                    isConfirm = snapshot.child("isConfirmed").getValue().toString();
-                }
-                holder.setUsername(isConfirm);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int ordersCount = 0;
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        if (!Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("deleted")) {
-                            ordersCount++;
-                        }
-                    }
-                }
-                holder.isTop(ordersCount);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
         holder.setDate(filtersData.get(position).getDDate().replaceAll("(^\\h*)|(\\h*$)", "").trim(), filtersData.get(position).getpDate().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setOrdercash(filtersData.get(position).getGMoney().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)", "").trim());
@@ -204,7 +169,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
-        holder.setRating(owner);
 
         holder.linerDate.setOnClickListener(v -> {
             Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -551,8 +515,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public Button btnAccept, btnMore, btnEdit,btnDelete,btnOpen, btnBid;
         public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtOrderFrom,txtOrderTo,txtPostDate, txtDate2;
         public LinearLayout lin1,linerDate,linAdmin;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans,imgStar,imgVerf;
-        public RatingBar ddRate;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -562,8 +525,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             btnOpen = myview.findViewById(R.id.btnOpen);
             lin1 = myview.findViewById(R.id.lin1);
             linAdmin = myview.findViewById(R.id.linAdmin);
-            imgStar = myview.findViewById(R.id.imgStar);
-            imgVerf = myview.findViewById(R.id.imgVerf);
             txtWarning = myview.findViewById(R.id.txtWarning);
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
@@ -580,17 +541,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             icnTrans = myview.findViewById(R.id.icnTrans);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
             btnBid = myview.findViewById(R.id.btnBid);
-            ddRate = myview.findViewById(R.id.ddRate);
-        }
-
-        public void setUsername(String isConfirm){
-            if(isConfirm.equals("true")) {
-                imgVerf.setVisibility(View.VISIBLE);
-                Log.i("Home", "Visible");
-            } else {
-                imgVerf.setVisibility(View.GONE);
-                Log.i("Home", "Gone");
-            }
         }
 
         public void setBid(String type) {
@@ -624,15 +574,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         @SuppressLint("SetTextI18n")
         public void setFee(String fees) {
             txtgGet.setText("مصاريف الشحن : " + fees + " ج");
-        }
-
-        @SuppressLint("ResourceAsColor")
-        public void isTop(int ordersCount) {
-            if(ordersCount >= 10) {
-                imgStar.setVisibility(View.VISIBLE);
-            } else {
-                imgStar.setVisibility(View.GONE);
-            }
         }
 
 
@@ -672,35 +613,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 finalDate = "منذ " +dD + " ايام";
             }
             txtPostDate.setText(finalDate);
-        }
-
-        public void setRating(String owner) {
-            rDatabase.child(owner).orderByChild("sId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()) {
-                        long total = 0;
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
-                            total = total + rating;
-                        }
-                        double average = (double) total / dataSnapshot.getChildrenCount();
-                        if(String.valueOf(average).equals("NaN")) {
-                            average = 5;
-                        }
-                        ddRate.setRating((int) average);
-                    } else {
-                        ddRate.setRating(5);
-                    }
-                    ddRate.setVisibility(View.VISIBLE);
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
         }
     }
 

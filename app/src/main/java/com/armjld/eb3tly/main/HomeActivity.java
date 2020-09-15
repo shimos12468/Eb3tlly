@@ -68,8 +68,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private ImageView btnNavBar, btnSort,btnMaps;
     private ImageView filtrs_btn;
     private LinearLayout footer;
-    private static ArrayList<Data> mm;
-    private long count;
+    public static ArrayList<Data> mm = new ArrayList<Data>();
+    public static long count = 0;
     BlockManeger block = new BlockManeger();
     // import firebase
     private FirebaseAuth mAuth;
@@ -130,8 +130,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         filterDate = format.format(Calendar.getInstance().getTime());
         //Find View
-        count =0;
-        mm = new ArrayList<>();
         toolbar = findViewById(R.id.toolbar_home);
         filtrs_btn = findViewById(R.id.filters_btn);
         btnSort = findViewById(R.id.btnSort);
@@ -380,12 +378,18 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         // ---------------------- GET ALL THE ORDERS -------------------//
-        mSwipeRefreshLayout.setRefreshing(true);
-        if(sortDate) {
-            getOrdersByDate();
+        Log.i(TAG, "MM Size : " + mm.size());
+        if(mm.size() > 0) {
+            getLocalOrders();
         } else {
-            getOrdersByLatest();
+            mSwipeRefreshLayout.setRefreshing(true);
+            if(sortDate) {
+                getOrdersByDate();
+            } else {
+                getOrdersByLatest();
+            }
         }
+
 
         // Filter Button
         filtrs_btn.setOnClickListener(v -> {
@@ -486,6 +490,21 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onCancelled(@NonNull DatabaseError error) { }
         });
 
+
+    }
+
+    private void getLocalOrders () {
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+        Toast.makeText(this, "This Local Data", Toast.LENGTH_SHORT).show();
+
+        orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+        recyclerView.setAdapter(orderAdapter);
+        updateNone(mm.size());
+        checkForAdvice();
+        mSwipeRefreshLayout.setRefreshing(false);
 
     }
 

@@ -25,6 +25,7 @@ public class wallet {
     private DatabaseReference walletDS;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
+    String TAG = "Wallet";
 
 
     public boolean workerbid(){
@@ -45,7 +46,7 @@ public class wallet {
         }
         long diff = end.getTime() - start.getTime();
         long diffHours = diff / (60 * 60 * 1000);
-        Log.d("sss" , diffHours+" ");
+        Log.d(TAG , "You Have " + (48 - diffHours) + " Hours left!");
         if(diffHours<48){
             return true;
         }
@@ -61,18 +62,20 @@ public class wallet {
         String datee = sdf.format(new Date());
         String currentdate = UserInFormation.getCurrentdate();
         walletDS = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id);
-                if(!currentdate.equals("none")){
-                    walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(currentdate).child(orderid);
-                    walletDS.child("payed").setValue("false");
+        if(!currentdate.equals("none")){
+            walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(currentdate).child(orderid);
+            walletDS.child("payed").setValue("false");
+            Log.i(TAG, "Order add to your current wallted : " + currentdate);
 
-                }
-                else{
-                    walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id);
-                    walletDS.child("currentDate").setValue(datee);
-                    UserInFormation.setCurrentdate(datee);
-                    walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(datee).child(orderid);
-                    walletDS.child("payed").setValue("false");
-                }
+        } else{
+            walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id);
+            walletDS.child("currentDate").setValue(datee);
+            UserInFormation.setCurrentdate(datee);
+            walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(datee).child(orderid);
+            walletDS.child("payed").setValue("false");
+            Log.i(TAG, "Created a new wallet for you : " + UserInFormation.getCurrentdate());
+
+        }
     }
 
     public void presspay(){

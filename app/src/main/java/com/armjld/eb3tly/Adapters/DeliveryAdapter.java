@@ -192,6 +192,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             mDatabase.child(orderID).child("dilverTime").setValue(datee);
             wallet w = new wallet();
             w.SupsetDilivared(orderID);
+
             // Add the Profit of the Dilvery Worker
             uDatabase.child(DID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -599,7 +600,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             btnRate.setText("تقييم التاجر");
             switch (state) {
                 case "accepted" : {
-                    btnDelete.setVisibility(View.VISIBLE);
+                    btnDelete.setVisibility(View.GONE);
                     btnDelivered.setVisibility(View.GONE);
                     btnChat.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
@@ -626,7 +627,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                     btnChat.setVisibility(View.GONE);
                     btnInfo.setVisibility(View.GONE);
 
-                    txtGetStat.setVisibility(View.VISIBLE);
+                    txtGetStat.setVisibility(View.GONE);
                     txtGetStat.setText("تم توصيل الاوردر بنجاح");
                     txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
                     break;
