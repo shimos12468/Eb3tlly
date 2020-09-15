@@ -310,87 +310,22 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/Lin"
+                android:id="@+id/lin2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnDelete"
-                    android:layout_width="0dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_bad"
-                    android:text="الغاء الاوردر"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnEdit"
-                    android:layout_width="0dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_bad"
-                    android:text="تعديل الاوردر"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lin3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnRate"
-                    android:layout_width="0dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="تقييم الاوردر"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lin2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginRight="0dp"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnInfo"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
@@ -400,67 +335,86 @@
                     android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnRecived"
-                    android:layout_width="0dp"
+                    android:id="@+id/btnChat"
+                    android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
-                    android:text="تم تسليم الاوردر للمندوب"
+                    android:text="دردشة"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:visibility="gone" />
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/requestRecycler"
+            <LinearLayout
+                android:id="@+id/lin4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="10dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dsToolbar" />
+                android:layout_weight="0.5"
+                android:orientation="horizontal"
+                android:visibility="visible">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/ic_profile_background">
-
-                <TextView
-                    android:id="@+id/txtStatue"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnDelete"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
                     android:layout_gravity="center"
-                    android:background="#00000000"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#000000"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_bad"
+                    android:text="الغاء الاوردر"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/icnArrowDown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_down_black" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnDelivered"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="تم تسليم الاوردر للعميل"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnRate"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_alignParentTop="false"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/btn_defult"
+                android:text="تقييم الاوردر"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtStatue"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="#00000000"
+                android:gravity="center"
+                android:text="TextView"
+                android:textColor="#000000"
+                android:visibility="gone" />
 
         </LinearLayout>
 

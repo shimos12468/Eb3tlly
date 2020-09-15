@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +35,7 @@ import java.util.Objects;
 import Model.DeleteData;
 import Model.notiData;
 
+import static com.armjld.eb3tly.main.HomeActivity.requests;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class Delete_Reaon_Delv extends AppCompatActivity {
@@ -154,6 +156,9 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                                 mDatabase.child(orderID).child("statue").setValue("placed");
                                 mDatabase.child(orderID).child("uAccepted").setValue("");
                                 mDatabase.child(orderID).child("acceptTime").setValue("");
+
+                                rquests _req = new rquests();
+                                _req.deleteReq(orderID);
 
                                 // --------------------------- Send Notifications ---------------------//
                                 notiData Noti = new notiData(uId, owner, orderID,"deleted",datee,"false", "profile");

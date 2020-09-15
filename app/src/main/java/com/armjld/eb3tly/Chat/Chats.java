@@ -83,17 +83,28 @@ public class Chats extends AppCompatActivity {
                 for(DataSnapshot ds:snapshot.getChildren()) {
                     if(ds.child("roomid").exists() && ds.child("orderid").exists()) {
                         ChatsData cchatData = ds.getValue(ChatsData.class);
-
                         String roomID = cchatData.getRoomid();
                         String oID = cchatData.getOrderid();
 
-                        Log.i("Chats", "Room id : " + roomID);
+                        messageDatabase.child(roomID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.getChildrenCount() >= 1) {
+                                    Log.i("Chats", "Room id : " + roomID);
 
-                        mChat.add(cchatData);
-                        count[0] +=1;
-                        _chatsAdapter = new chatsAdapter(Chats.this, mChat);
-                        _chatsAdapter.addItem(count[0],cchatData);
-                        recyclerChat.setAdapter(_chatsAdapter);
+                                    mChat.add(cchatData);
+                                    count[0] +=1;
+                                    _chatsAdapter = new chatsAdapter(Chats.this, mChat);
+                                    _chatsAdapter.addItem(count[0],cchatData);
+                                    recyclerChat.setAdapter(_chatsAdapter);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
 
                 }

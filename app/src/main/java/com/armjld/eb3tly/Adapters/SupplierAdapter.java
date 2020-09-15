@@ -851,7 +851,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 }
                 case "delivered": {
                     txtGetStat.setEnabled(false);
-                    txtGetStat.setVisibility(View.VISIBLE);
+                    txtGetStat.setVisibility(View.GONE);
                     txtGetStat.setText("تم توصيل اوردرك");
                     txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
                     break;

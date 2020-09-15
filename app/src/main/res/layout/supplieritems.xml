@@ -321,21 +321,6 @@
                 android:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnChat"
-                    android:layout_width="0dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="دردشة"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnRecived"
                     android:layout_width="0dp"
                     android:layout_height="38dp"
@@ -346,6 +331,21 @@
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
                     android:text="تم تسليم الاوردر للمندوب"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnChat"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="دردشة"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:visibility="gone" />

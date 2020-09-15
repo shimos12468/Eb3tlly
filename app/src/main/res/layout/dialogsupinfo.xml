@@ -479,6 +479,19 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="20sp" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDelete"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/btn_bad"
+                android:text="الغاء الاوردر"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp" />
+
         </LinearLayout>
     </ScrollView>
 

@@ -33,10 +33,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
+import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -103,6 +105,11 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder,final int position) {
         Vibrator vibe = (Vibrator) Objects.requireNonNull(context).getSystemService(Context.VIBRATOR_SERVICE);
         Data data = filtersData.get(position);
+
+        String orderID = data.getId();
+        String owner = data.getuId();
+        String uAccepted = data.getuAccepted();
+
         // Get Post Date
         String startDate = Objects.requireNonNull(data.getDate());
         String stopDate = datee;
@@ -166,81 +173,13 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
         // ------------------------------------   Order info
         holder.btnInfo.setOnClickListener(v -> {
-            assert vibe != null;
-            vibe.vibrate(20);
-            AlertDialog.Builder myInfo = new AlertDialog.Builder(context);
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View infoView = inflater.inflate(R.layout.orderinfo, null);
-            myInfo.setView(infoView);
-            final AlertDialog dialog = myInfo.create();
-            dialog.show();
-
-            TextView tbTitle = infoView.findViewById(R.id.toolbar_title);
-            tbTitle.setText("بيانات الاوردر");
-
-            // Intializa Objects
-            TextView PShop = infoView.findViewById(R.id.itxtPShop);
-            TextView txtPAddress = infoView.findViewById(R.id.itxtPAddress);
-            TextView txtDAddress = infoView.findViewById(R.id.itxtDAddress);
-            final TextView txtPPhone = infoView.findViewById(R.id.itxtPPhone);
-            TextView txtDPhone = infoView.findViewById(R.id.itxtDPhone);
-            TextView txtDName = infoView.findViewById(R.id.itxtDName);
-            ImageView btniClose = infoView.findViewById(R.id.btniClose);
-            TextView itxtNote = infoView.findViewById(R.id.itxtNote);
-
-            // Set Data
-            PShop.setText(iPShop);
-            txtPAddress.setText("عنوان الاستلام : " + iPAddress);
-            txtDAddress.setText("عنوان التسليم : " + iDAddress);
-            txtDPhone.setText(iDPhone);
-            itxtNote.setText(iDNote);
-            txtDPhone.setPaintFlags(txtDPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
-            txtPPhone.setPaintFlags(txtPPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
-
-            // --------------------- call the Customer
-            txtDPhone.setOnClickListener(v14 -> {
-                vibe.vibrate(20);
-                checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + iDPhone));
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                context.startActivity(callIntent);
-            });
-
-            // -----------------------  call the supplier
-            txtPPhone.setOnClickListener(v13 -> {
-                vibe.vibrate(20);
-                checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                String ppPhone = (String) txtPPhone.getText();
-                callIntent.setData(Uri.parse("tel:" +ppPhone));
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                context.startActivity(callIntent);
-            });
-
-            btniClose.setOnClickListener(v12 -> dialog.dismiss());
-
-            txtDName.setText("اسم العميل : " + iDName);
-            uDatabase.child(sId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()) {
-                        String uPhone = Objects.requireNonNull(snapshot.child("phone").getValue()).toString();
-                        txtPPhone.setText(uPhone);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
+            Intent intent = new Intent(context, OrderInfo.class);
+            intent.putExtra("orderID", orderID);
+            intent.putExtra("owner", owner);
+            context.startActivity(intent);
         });
 
         // -----------------------   Set ORDER as Delivered
-        final String orderID = data.getId();
         holder.btnDelivered.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
@@ -352,6 +291,71 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             assert vibe != null;
             Toast.makeText(context, "يمكن توصيل الاوردر بالمترو", Toast.LENGTH_SHORT).show();
             vibe.vibrate(20);
+        });
+
+        holder.btnChat.setOnClickListener(v-> {
+            final String[] room = new String[1];
+            String uId = UserInFormation.getId();
+            DatabaseReference Bdatabase;
+            final boolean[] found = {false};
+            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+            Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        for (DataSnapshot ds:snapshot.getChildren()) {
+                            if(ds.child("orderid").exists() && ds.child("roomid").exists()){
+                                if(ds.child("orderid").getValue().toString().equals(orderID)) {
+                                    room[0] = ds.child("roomid").getValue().toString();
+                                    Intent intent = new Intent(context, Messages.class);
+                                    intent.putExtra("roomid", room[0]);
+                                    intent.putExtra("rid", data.getuId());
+                                    context.startActivity(intent);
+                                    found[0] = true;
+                                    break;
+                                }
+
+                            }
+                        }
+                        if(!found[0]){
+                            DatabaseReference Bdatabase;
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                            String chat = Bdatabase.push().getKey();
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                            Bdatabase.child("userId").setValue(data.getuId());
+                            Bdatabase.child("orderid").setValue(orderID);
+                            Bdatabase.child("roomid").setValue(chat);
+                            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuId()).child("chats").child(chat);
+                            Bdatabase.child("userId").setValue(uId);
+                            Bdatabase.child("orderid").setValue(orderID);
+                            Bdatabase.child("roomid").setValue(chat);
+                            Intent intent = new Intent(context, Messages.class);
+                            intent.putExtra("roomid", chat);
+                            intent.putExtra("rid", data.getuId());
+                            context.startActivity(intent);
+                        }
+                    } else{
+                        DatabaseReference Bdatabase;
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
+                        String chat = Bdatabase.push().getKey();
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(chat);
+                        Bdatabase.child("userId").setValue(data.getuId());
+                        Bdatabase.child("orderid").setValue(orderID);
+                        Bdatabase.child("roomid").setValue(chat);
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuId()).child("chats").child(chat);
+                        Bdatabase.child("userId").setValue(uId);
+                        Bdatabase.child("orderid").setValue(orderID);
+                        Bdatabase.child("roomid").setValue(chat);
+                        Intent intent = new Intent(context, Messages.class);
+                        intent.putExtra("roomid", chat);
+                        intent.putExtra("rid", data.getuId());
+                        context.startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
         });
 
         holder.icnMotor.setOnClickListener(v -> {
@@ -515,7 +519,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
-        public Button btnEdit,btnDelete,btnInfo,btnDelivered,btnRate,btnRecived;
+        public Button btnDelete,btnInfo,btnDelivered,btnRate,btnChat;
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate, linerAll;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans, imgStar,imgVerf;
@@ -526,14 +530,13 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             myview=itemView;
             btnDelivered = myview.findViewById(R.id.btnDelivered);
             btnInfo = myview.findViewById(R.id.btnInfo);
-            btnEdit = myview.findViewById(R.id.btnEdit);
-            btnRecived = myview.findViewById(R.id.btnRecived);
             btnDelete = myview.findViewById(R.id.btnDelete);
             btnRate = myview.findViewById(R.id.btnRate);
             txtRate = myview.findViewById(R.id.drComment);
             txtGetStat = myview.findViewById(R.id.txtStatue);
             linerAll = myview.findViewById(R.id.linerAll);
             imgVerf = myview.findViewById(R.id.imgVerf);
+            btnChat = myview.findViewById(R.id.btnChat);
 
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
@@ -591,24 +594,25 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         }
 
         public void setDilveredButton(String state) {
-            btnEdit.setVisibility(View.GONE);
-            btnRecived.setVisibility(View.GONE);
             btnRate.setText("تقييم التاجر");
             switch (state) {
                 case "accepted" : {
                     btnDelete.setVisibility(View.VISIBLE);
                     btnDelivered.setVisibility(View.GONE);
+                    btnChat.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
+
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setText("تواصل مع التاجر لاستلام الاوردر");
                     txtGetStat.setBackgroundColor(Color.RED);
                     break;
                 }
                 case "recived" : {
-                    txtGetStat.setVisibility(View.VISIBLE);
                     btnDelete.setVisibility(View.GONE);
+                    btnChat.setVisibility(View.VISIBLE);
                     btnDelivered.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
+
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setText("تم استلام الاوردر من التاجر");
                     txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
@@ -617,7 +621,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 case "delivered" : {
                     btnDelivered.setVisibility(View.GONE);
                     btnDelete.setVisibility(View.GONE);
+                    btnChat.setVisibility(View.GONE);
                     btnInfo.setVisibility(View.GONE);
+
                     txtGetStat.setVisibility(View.VISIBLE);
                     txtGetStat.setText("تم توصيل الاوردر بنجاح");
                     txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));

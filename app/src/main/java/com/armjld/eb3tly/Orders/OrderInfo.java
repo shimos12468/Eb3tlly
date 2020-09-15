@@ -26,6 +26,7 @@ import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Wallet.requestsandacceptc;
 import com.armjld.eb3tly.Wallet.wallet;
+import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,13 +61,16 @@ public class OrderInfo extends AppCompatActivity {
     RatingBar rbUser;
     ImageView btnBlock, btnClose;
     private BlockManeger block = new BlockManeger();
-    Button btnBid, btnMore;
+    Button btnBid, btnMore,btnDelete;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     SimpleDateFormat orderformat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     String datee = sdf.format(new Date());
     String DName = "";
+    String orderState = "placed";
+    String acceptedTime = "";
+    String lastEdit = "";
 
     @Override
     public void onBackPressed() {
@@ -112,6 +116,8 @@ public class OrderInfo extends AppCompatActivity {
         ordercash2 = findViewById(R.id.ordercash2);
         fees2 = findViewById(R.id.fees2);
 
+        btnDelete = findViewById(R.id.btnDelete);
+
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("بيانات الاوردر");
         String uId = UserInFormation.getId();
@@ -120,12 +126,24 @@ public class OrderInfo extends AppCompatActivity {
             startActivity(new Intent(this, HomeActivity.class));
         });
 
+        btnDelete.setOnClickListener(v-> {
+            Intent deleteAct = new Intent(this, Delete_Reaon_Delv.class);
+            deleteAct.putExtra("orderid", orderID);
+            deleteAct.putExtra("owner", owner);
+            deleteAct.putExtra("aTime", acceptedTime);
+            deleteAct.putExtra("eTime", lastEdit);
+            startActivity(deleteAct);
+        });
+
         mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Data orderData = snapshot.getValue(Data.class);
                 assert orderData != null;
                 DName = orderData.getDName();
+                orderState = orderData.getStatue();
+                acceptedTime = orderData.getAcceptedTime();
+                lastEdit = orderData.getLastedit();
 
                 String startDate = orderData.getDate();
                 String stopDate = datee;
@@ -187,6 +205,17 @@ public class OrderInfo extends AppCompatActivity {
                 txtWeight.setText(weight);
                 orderto.setText(to);
                 OrderFrom.setText(from);
+
+                if(orderState.equals("placed")) {
+                    btnBid.setVisibility(View.VISIBLE);
+                    btnMore.setVisibility(View.VISIBLE);
+                    btnDelete.setVisibility(View.GONE);
+                } else {
+                    btnBid.setVisibility(View.GONE);
+                    btnMore.setVisibility(View.GONE);
+                    btnDelete.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
@@ -380,9 +409,9 @@ public class OrderInfo extends AppCompatActivity {
                     ppStar.setVisibility(View.GONE);
                 }
 
-                if(currentOrders == 1) {
+                if(currentOrders <= 1) {
                     btnMore.setVisibility(View.GONE);
-                } else {
+                } else if(currentOrders > 1) {
                     int finalc = currentOrders - 1;
                     btnMore.setVisibility(View.VISIBLE);
                     btnMore.setText("متاح اوردر " + finalc + " لنفس العميل");
@@ -465,6 +494,21 @@ public class OrderInfo extends AppCompatActivity {
             Toast.makeText(this, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
         });
         
+    }
+
+    private void setBid() {
+
+    }
+
+    private void removeBid() {
+
+    }
+
+    private void deleteAccept() {
+        mDatabase.child(orderID).child("uAccepted").setValue("");
+        mDatabase.child(orderID).child("statue").setValue("placed");
+        mDatabase.child(orderID).child("acceptedTime").setValue("");
+
     }
 
     public void setPostDate(int dS, int dM, int dH, int dD) {
