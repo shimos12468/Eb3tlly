@@ -25,6 +25,7 @@ import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Wallet.requestsandacceptc;
+import com.armjld.eb3tly.Wallet.wallet;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -234,6 +235,14 @@ public class OrderInfo extends AppCompatActivity {
                         builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
                     } else {
+                        wallet w = new wallet();
+                        Boolean f= w.workerbid();
+                        if(f)
+                            Toast.makeText(OrderInfo.this, "يقدر يقدم", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(OrderInfo.this, "", Toast.LENGTH_SHORT).show();
+                        if(!f){
+                            Toast.makeText(OrderInfo.this, "لا يقدر يقدم", Toast.LENGTH_SHORT).show();
+                        }
                         // -------------- New Request
                         if(HomeActivity.requests) {
                             Toast.makeText(OrderInfo.this, "لديك 10 طلبات معلقه, لا يمكنك ارسال المزيدا", Toast.LENGTH_LONG).show();

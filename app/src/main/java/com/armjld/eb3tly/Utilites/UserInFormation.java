@@ -12,6 +12,16 @@ public class UserInFormation {
     private static String email;
     private static String pass;
 
+    public static String getCurrentdate() {
+        return currentdate;
+    }
+
+    public static void setCurrentdate(String currentdate) {
+        UserInFormation.currentdate = currentdate;
+    }
+
+    private static String currentdate = "none";
+
     public UserInFormation() { }
 
     public static String getUserName() {

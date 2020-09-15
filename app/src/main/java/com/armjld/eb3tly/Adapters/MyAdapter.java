@@ -32,6 +32,7 @@ import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.Utilites.StartUp;
 
 import com.armjld.eb3tly.Wallet.requestsandacceptc;
+import com.armjld.eb3tly.Wallet.wallet;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.Login_Options;
@@ -239,6 +240,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
         holder.btnBid.setOnClickListener(v1 -> {
+
             mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -266,6 +268,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
                     } else {
+                        wallet w = new wallet();
+                         Boolean f= w.workerbid();
+                         if(f)
+                             Toast.makeText(context1, "يقدر يقدم", Toast.LENGTH_SHORT).show();
+                         if(!f){
+                             Toast.makeText(context1, "لا يقدر يقدم", Toast.LENGTH_SHORT).show();
+                         }
+
                         if(HomeActivity.requests) {
                             Toast.makeText(context1, "لديك 10 طلبات معلقه, لا يمكنك ارسال المزيدا", Toast.LENGTH_LONG).show();
                             return;
