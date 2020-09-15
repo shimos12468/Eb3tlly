@@ -111,6 +111,7 @@ public class Notifications extends AppCompatActivity {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setVisibility(View.GONE);
 
         // NAV BAR
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -177,6 +178,7 @@ public class Notifications extends AppCompatActivity {
         // ------------ Refresh View ---------- //
         refresh.setOnRefreshListener(() -> {
             getNoti();
+            recyclerView.setVisibility(View.GONE);
             refresh.setRefreshing(false);
         });
 
@@ -216,13 +218,14 @@ public class Notifications extends AppCompatActivity {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     String notiID = ds.getKey();
                     assert notiID != null;
-                        notiData notiDB = ds.getValue(notiData.class);
-                        mm.add((int) count, notiDB);
-                        NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
-                        recyclerView.setAdapter(orderAdapter);
-                        nDatabase.child(uId).child(notiID).child("isRead").setValue("true");
-                        count++;
+                    notiData notiDB = ds.getValue(notiData.class);
+                    mm.add((int) count, notiDB);
+                    NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
+                    recyclerView.setAdapter(orderAdapter);
+                    nDatabase.child(uId).child(notiID).child("isRead").setValue("true");
+                    count++;
                 }
+                recyclerView.setVisibility(View.VISIBLE);
                 refresh.setRefreshing(false);
             }
             @Override

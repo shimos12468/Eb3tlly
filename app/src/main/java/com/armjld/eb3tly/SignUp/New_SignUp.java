@@ -38,6 +38,7 @@ import androidx.core.content.ContextCompat;
 import com.armjld.eb3tly.Intros.intro2;
 import com.armjld.eb3tly.Intros.introSup;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.main.Login_Options;
@@ -693,6 +694,10 @@ public class New_SignUp extends AppCompatActivity {
                                 UserInFormation.setEmail(memail);
                                 UserInFormation.setPass(mpass);
                                 UserInFormation.setPhone(mPhone);
+
+                                Ratings _ratings = new Ratings();
+                                _ratings.setMyRating();
+
                                 if(newType.equals("Delivery Worker")) {
                                     UserInFormation.setCurrentdate("none");
                                 }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Profiles.supplierProfile;
+import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.SignUp.Signup;
 import com.armjld.eb3tly.Utilites.StartUp;
@@ -248,6 +249,10 @@ public class Login_Options extends AppCompatActivity {
                         UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
                         UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
                         UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
+
+                        Ratings _ratings = new Ratings();
+                        _ratings.setMyRating();
+
                         if(snapshot.child("accountType").getValue().toString().equals("Delivery Worker") && snapshot.child("currentDate").exists()) {
                             UserInFormation.setCurrentdate(snapshot.child("currentDate").getValue().toString());
                         }

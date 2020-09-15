@@ -22,6 +22,7 @@ import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Intros.IntroFirstRun;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.admin.Admin;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.Login_Options;
@@ -147,6 +148,9 @@ public class StartUp extends AppCompatActivity {
                     UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
                     UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
                     UserInFormation.setisConfirm("false");
+
+                    Ratings _ratings = new Ratings();
+                    _ratings.setMyRating();
 
                     if(snapshot.child("isConfirmed").exists()) {
                         UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());

@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 
 import com.armjld.eb3tly.Chat.Chats;
+import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Fragments.SectionsPagerAdapter;
@@ -58,15 +59,15 @@ public class NewProfile extends AppCompatActivity {
 
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP,imgStar, imgVerf,btnChats;
-    private TextView txtUserDate;
+    private ImageView imgSetPP,imgStar, imgVerf,btnChats,btnNavbarProfile,btnOpenNoti;
+    private TextView txtUserDate,usType;
     private TextView uName;
     private TextView txtNotiCount;
     private ConstraintLayout constNewProfile;
     private String TAG = "Delivery Profile";
+    RatingBar rbProfile;
     String uType = UserInFormation.getAccountType();
     String uId;
-    String user_type;
     String isConfirmed = UserInFormation.getisConfirm();
 
 
@@ -92,15 +93,44 @@ public class NewProfile extends AppCompatActivity {
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+
+        mAuth = FirebaseAuth.getInstance();
+
+        ConstraintLayout constNoti = findViewById(R.id.constNoti);
+        btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
+        btnOpenNoti = findViewById(R.id.btnOpenNoti);
+        uName = findViewById(R.id.txtUsername);
+        txtUserDate = findViewById(R.id.txtUserDate);
+        imgStar = findViewById(R.id.imgStar);
+        imgSetPP = findViewById(R.id.imgPPP);
+        txtNotiCount = findViewById(R.id.txtNotiCount);
+        rbProfile = findViewById(R.id.rbProfile);
         btnChats = findViewById(R.id.btnChats);
         constNewProfile = findViewById(R.id.constNewProfile);
         imgVerf = findViewById(R.id.imgVerf);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser mUser = mAuth.getCurrentUser();
-        assert mUser != null;
-        uId = UserInFormation.getId();
         ViewPager viewPager = findViewById(R.id.view_pager);
+        txtNotiCount.setVisibility(View.GONE);
+        usType = findViewById(R.id.txtUserType);
 
+
+        uId = UserInFormation.getId();
+        //Title Bar
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        txtUserDate.setText("اشترك : " + UserInFormation.getUserDate());
+        tbTitle.setText("اوردراتي");
+        usType.setText("كابتن");
+        rbProfile.setRating(UserInFormation.getRating());
+        uName.setText(UserInFormation.getUserName());
+        if (!isFinishing() && UserInFormation.getUserURL()!= null) {
+            Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
+        }
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
 
         btnChats.setOnClickListener(v-> {
             startActivity(new Intent(this, Chats.class));
@@ -114,35 +144,24 @@ public class NewProfile extends AppCompatActivity {
             Toast.makeText(this, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
         });
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-
-        ImageView btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
-        ConstraintLayout constNoti = findViewById(R.id.constNoti);
-        ImageView btnOpenNoti = findViewById(R.id.btnOpenNoti);
-        uName = findViewById(R.id.txtUsername);
-        txtUserDate = findViewById(R.id.txtUserDate);
-        imgStar = findViewById(R.id.imgStar);
-        imgSetPP = findViewById(R.id.imgPPP);
-        txtNotiCount = findViewById(R.id.txtNotiCount);
-
-        //Title Bar
-        TextView tbTitle = findViewById(R.id.toolbar_title);
-        tbTitle.setText("اوردراتي");
-        txtNotiCount.setVisibility(View.GONE);
-
-        // NAV BAR
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        final NavigationView navigationView = findViewById(R.id.nav_view);
-        AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_timeline, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
-
         constNoti.setOnClickListener(v -> {
             vibe.vibrate(40);
             finish();
             startActivity(new Intent(NewProfile.this, Notifications.class));
         });
+
+
+
+        btnOpenNoti.setOnClickListener(v -> {
+            vibe.vibrate(40);
+            finish();
+            startActivity(new Intent(NewProfile.this, Notifications.class));
+        });
+
+
+        // NAV BAR
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_timeline, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
 
         btnNavbarProfile.setOnClickListener(v -> {
             if (drawer.isDrawerOpen(Gravity.LEFT)) {
@@ -152,11 +171,8 @@ public class NewProfile extends AppCompatActivity {
             }
         });
 
-        btnOpenNoti.setOnClickListener(v -> {
-            vibe.vibrate(40);
-            finish();
-            startActivity(new Intent(NewProfile.this, Notifications.class));
-        });
+        Menu nav_menu = navigationView.getMenu();
+        nav_menu.findItem(R.id.nav_how).setVisible(false);
 
         // Navigation Bar Buttons Function
         final Intent newIntentNB = new Intent(this, HomeActivity.class);
@@ -234,48 +250,47 @@ public class NewProfile extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        txtUserDate.setText("اشترك : " + UserInFormation.getUserDate());
-        uName.setText(UserInFormation.getUserName());
-        if (!isFinishing() && UserInFormation.getUserURL()!= null) {
-            Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
-        }
-        TextView usType = findViewById(R.id.txtUserType);
-        user_type = "dId";
-        usType.setText("مندوب شحن");
-        Menu nav_menu = navigationView.getMenu();
-        nav_menu.findItem(R.id.nav_how).setVisible(false);
-        getRatings();
-        //getOrderCountDel();
+
+
 
     }
 
     public void getRatings() {
-        RatingBar rbProfile = findViewById(R.id.rbProfile);
-        rDatabase.child(uId).orderByChild(user_type).equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+        uDatabase.child(uId).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    long total = 0;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
-                        total = total + rating;
-                    }
-                    double average = (double) total / dataSnapshot.getChildrenCount();
-                    Log.i(TAG, "Average Before : " +average);
-                    if(String.valueOf(average).equals("NaN")) {
-                        average = 5;
-                        Log.i(TAG, "Average Midel : " + average);
-                    }
-                    Log.i(TAG, "Average Final : " + average);
-                    rbProfile.setRating((int) average);
-                } else {
-                    rbProfile.setRating((int) 5);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String one = "0";
+                String two = "0";
+                String three = "0";
+                String four = "0";
+                String five = "0";
+                if(snapshot.child("one").exists()) {
+                    one = snapshot.child("one").getValue().toString();
                 }
+                if(snapshot.child("two").exists()) {
+                    two = snapshot.child("two").getValue().toString();
+                }
+                if(snapshot.child("three").exists()) {
+                    three = snapshot.child("three").getValue().toString();
+                }
+                if(snapshot.child("four").exists()) {
+                    four = snapshot.child("four").getValue().toString();
+                }
+                if(snapshot.child("five").exists()) {
+                    five = snapshot.child("five").getValue().toString();
+                }
+
+                Ratings _ratings = new Ratings();
+
+                rbProfile.setRating(_ratings.calculateRating(one,two,three,four,five));
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
+
     }
 
     private void getOrderCountDel() {

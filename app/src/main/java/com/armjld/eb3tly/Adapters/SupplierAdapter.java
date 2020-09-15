@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Requests.RequestsForSup;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.delets.Delete_Delivery_From_Sup;
@@ -305,6 +306,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                     if(snapshot.exists()){
                         for (DataSnapshot ds:snapshot.getChildren()) {
                             if(ds.child("roomid").exists()){
+                                if(ds.child("userId").getValue().toString().equals(data.getuAccepted())) {
                                     room[0] = ds.child("roomid").getValue().toString();
                                     Intent intent = new Intent(context, Messages.class);
                                     intent.putExtra("roomid", room[0]);
@@ -312,6 +314,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     context.startActivity(intent);
                                     found[0] = true;
                                     break;
+                                }
                             }
                         }
                         if(!found[0]){
@@ -422,14 +425,12 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 rateData data1 = new rateData(rId, orderID, sID, dilvID, intRating, rRate, datee);
                 rDatabase.child(dilvID).child(rId).setValue(data1);
 
+                Ratings _rate = new Ratings();
+                _rate.setRating(dilvID, intRating);
+
                 mDatabase.child(orderID).child("drated").setValue("true");
                 mDatabase.child(orderID).child("drateid").setValue(rId);
 
-                if(intRating == 1) {
-                    rDatabase.child(dilvID).child(rId).child("isReported").setValue("true");
-                } else {
-                    rDatabase.child(dilvID).child(rId).child("isReported").setValue("false");
-                }
                 Toast.makeText(context, "شكرا لتقيمك", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });

@@ -36,6 +36,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Wallet.wallet;
 import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
@@ -254,11 +255,10 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
                 mDatabase.child(orderID).child("srated").setValue("true");
                 mDatabase.child(orderID).child("srateid").setValue(rId);
-                if(intRating == 1) {
-                    rDatabase.child(sId).child(rId).child("isReported").setValue("true");
-                } else {
-                    rDatabase.child(sId).child(rId).child("isReported").setValue("false");
-                }
+
+                Ratings _rate = new Ratings();
+                _rate.setRating(sId, intRating);
+
                 Toast.makeText(context, "تم التقييم بالنجاح", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });

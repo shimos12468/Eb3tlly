@@ -1,24 +1,23 @@
 package com.armjld.eb3tly.Utilites;
 
 public class UserInFormation {
+
     private static String userName;
     private static String AccountType;
     private static String userDate;
     private static String userURL;
     private static String id;
-
     private static String uPhone;
     private static String isConfirm;
     private static String email;
     private static String pass;
+    private static int rating = 5;
 
     public static String getCurrentdate() {
         return currentdate;
     }
 
-    public static void setCurrentdate(String currentdate) {
-        UserInFormation.currentdate = currentdate;
-    }
+    public static void setCurrentdate(String currentdate) { UserInFormation.currentdate = currentdate; }
 
     private static String currentdate = "none";
 
@@ -78,4 +77,9 @@ public class UserInFormation {
 
     public static void setPass(String pass) { UserInFormation.pass = pass; }
 
+    public static void setRating(int rating) { UserInFormation.rating = rating; }
+
+    public static int getRating() {
+        return rating;
+    }
 }

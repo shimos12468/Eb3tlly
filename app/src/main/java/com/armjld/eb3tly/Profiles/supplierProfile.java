@@ -91,6 +91,8 @@ public class supplierProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier_profile);
 
+        RatingBar rbProfile = findViewById(R.id.rbProfile);
+
         Vibrator vibe = (Vibrator) Objects.requireNonNull((supplierProfile)this).getSystemService(Context.VIBRATOR_SERVICE);
 
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
@@ -115,6 +117,7 @@ public class supplierProfile extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
+        rbProfile.setRating(UserInFormation.getRating());
         ImageView btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
         ConstraintLayout constNoti = findViewById(R.id.constNoti);
         uName = findViewById(R.id.txtUsername);
@@ -241,10 +244,8 @@ public class supplierProfile extends AppCompatActivity {
             Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
         }
         TextView usType = findViewById(R.id.txtUserType);
-        user_type = "sId";
         usType.setText("تاجر");
         getOrderCountSup();
-        getRating();
 
         btnAdd.setOnClickListener(v -> {
             vibe.vibrate(40);
@@ -267,35 +268,6 @@ public class supplierProfile extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) { }
             });
-        });
-    }
-
-    private void getRating () {
-        RatingBar rbProfile = findViewById(R.id.rbProfile);
-        rDatabase.child(uId).orderByChild(user_type).equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    long total = 0;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
-                        total = total + rating;
-                    }
-                    double average = (double) total / dataSnapshot.getChildrenCount();
-                    Log.i(TAG, "Average Before : " +average);
-                    if(String.valueOf(average).equals("NaN")) {
-                        average = 5;
-                        Log.i(TAG, "Average Midel : " + average);
-                    }
-                    Log.i(TAG, "Average Final : " + average);
-                    rbProfile.setRating((int) average);
-                } else {
-                    rbProfile.setRating((int) 5);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 

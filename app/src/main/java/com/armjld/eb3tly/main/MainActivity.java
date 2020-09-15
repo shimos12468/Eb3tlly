@@ -20,6 +20,7 @@ import com.armjld.eb3tly.Passaword.ForgetPass;
 import com.armjld.eb3tly.Passaword.Forget_Password;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.SignUp.New_SignUp;
 import com.armjld.eb3tly.SignUp.Signup;
 import com.armjld.eb3tly.Utilites.StartUp;
@@ -180,6 +181,10 @@ public class MainActivity extends AppCompatActivity {
                                     UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
                                     UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
                                     UserInFormation.setisConfirm("false");
+
+                                    Ratings _ratings = new Ratings();
+                                    _ratings.setMyRating();
+
                                     if(snapshot.child("isConfirmed").exists()) {
                                         UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                                     }

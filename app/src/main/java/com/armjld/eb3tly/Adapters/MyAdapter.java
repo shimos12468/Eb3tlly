@@ -158,7 +158,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         final String notes = filtersData.get(position).getNotes().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String statues = filtersData.get(position).getStatue().replaceAll("(^\\h*)|(\\h*$)", "").trim();
-        String removed = filtersData.get(position).getRemoved().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String type = filtersData.get(position).getType();
@@ -401,116 +400,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         });
 
-        //Accept Order Button
-        holder.btnAccept.setOnClickListener(v -> {
-            assert vibe != null;
-            vibe.vibrate(20);
-            String gettingID = filtersData.get(position).getId();
-            vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (Objects.requireNonNull(dataSnapshot.child("accepting").getValue()).toString().equals("false")) {
-                        Toast.makeText(context, "لا يمكن قبول اي اوردرات الان حاول بعد قليل", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            int cancelledCount =  Integer.parseInt(Objects.requireNonNull(dataSnapshot.child("canceled").getValue()).toString());
-                            if(cancelledCount >= 3) {
-                                Toast.makeText(context, "لقد الغيت 3 اوردرات هذا الاسبوع , لا يمكنك قبول اي اوردرات اخري حتي الاسبوع القادم", Toast.LENGTH_LONG).show();
-                            } else {
-                                mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        int zcount  = 0;
-                                        for(DataSnapshot ds : snapshot.getChildren()) {
-                                            if(ds.child("statue").getValue().toString().equals("accepted")) {
-                                                zcount++;
-                                            }
-                                        }
-
-                                        if(zcount <= 7) {
-                                            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                                                switch (which){
-                                                    case DialogInterface.BUTTON_POSITIVE:
-                                                        mDatabase.child(gettingID).child("uAccepted").setValue(uId);
-                                                        mDatabase.child(gettingID).child("statue").setValue("accepted");
-                                                        mDatabase.child(gettingID).child("acceptedTime").setValue(datee);
-
-                                                        // -------------------------- Send Notifications ---------------------//
-                                                        notiData Noti = new notiData(uId, owner, orderID,"accepted",datee,"false", "profile");
-                                                        nDatabase.child(owner).push().setValue(Noti);
-
-                                                        Toast.makeText(context, "تم قبول الاوردر تواصل مع التاجر من بيانات الاوردر", Toast.LENGTH_LONG).show();
-
-                                                        howMany = 0;
-                                                        mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                if(snapshot.exists()) {
-                                                                    for (DataSnapshot ds : snapshot.getChildren()) {
-                                                                        if(ds.exists() && ds.child("ddate").exists()) {
-                                                                            Data orderData = ds.getValue(Data.class);
-                                                                            assert orderData != null;
-                                                                            Date orderDate = null;
-                                                                            Date myDate = null;
-                                                                            try {
-                                                                                orderDate = format2.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString());
-                                                                                myDate =  format2.parse(sdf2.format(Calendar.getInstance().getTime()));
-                                                                            } catch (ParseException e) {
-                                                                                e.printStackTrace();
-                                                                            }
-                                                                            assert orderDate != null;
-                                                                            assert myDate != null;
-                                                                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")) {
-                                                                                howMany++;
-                                                                            }
-                                                                        }
-                                                                    }
-
-                                                                    if(howMany == 0) {
-                                                                        context.startActivity(new Intent(context, NewProfile.class));
-                                                                    } else {
-                                                                        Intent otherOrders = new Intent(context, OrdersBySameUser.class);
-                                                                        otherOrders.putExtra("userid", owner);
-                                                                        context.startActivity(otherOrders);
-                                                                    }
-                                                                }
-                                                            }
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                            }
-                                                        });
-
-                                                        break;
-                                                    case DialogInterface.BUTTON_NEGATIVE:
-                                                        break;
-                                                }
-                                            };
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                            builder.setMessage("هل انت متاكد من انك تريد استلام الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-                                        } else {
-                                            Toast.makeText(context, "لا يمكنك قبول اكثر من سبع اوردرات في نفس الوقت", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) { }
-                                });
-
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {}
-            });
-        });
-
     }
 
     @Override
@@ -527,7 +416,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public View myview;
-        public Button btnAccept, btnMore, btnEdit,btnDelete,btnOpen, btnBid;
+        public Button btnMore, btnEdit,btnDelete,btnOpen, btnBid;
         public TextView txtWarning,txtgGet, txtgMoney,txtDate, txtOrderFrom,txtOrderTo,txtPostDate, txtDate2;
         public LinearLayout lin1,linerDate,linAdmin;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans;
@@ -535,7 +424,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             myview=itemView;
-            btnAccept = myview.findViewById(R.id.btnAccept);
             btnMore = myview.findViewById(R.id.btnMore);
             btnOpen = myview.findViewById(R.id.btnOpen);
             lin1 = myview.findViewById(R.id.lin1);
