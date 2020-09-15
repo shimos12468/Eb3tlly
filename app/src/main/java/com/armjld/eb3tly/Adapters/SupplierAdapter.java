@@ -299,7 +299,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             String uId = UserInFormation.getId();
             DatabaseReference Bdatabase;
             final boolean[] found = {false};
-            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuId());
+            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuAccepted());
             Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -313,8 +313,14 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         DatabaseReference Bdatabase;
                         Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
                         String chat = Bdatabase.push().getKey();
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuId());
-                        Bdatabase.child("userId").setValue(data.getuId());
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuAccepted());
+                        Bdatabase.child("userId").setValue(data.getAcceptedTime());
+                        Bdatabase.child("roomid").setValue(chat);
+
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getAcceptedTime()).child("chats");
+                        //String chat = Bdatabase.push().getKey();
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getAcceptedTime()).child("chats").child(uId);
+                        Bdatabase.child("userId").setValue(uId);
                         Bdatabase.child("roomid").setValue(chat);
 
                         Intent intent = new Intent(context, Messages.class);

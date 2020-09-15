@@ -283,12 +283,12 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             String uId = UserInFormation.getId();
             DatabaseReference Bdatabase;
             final boolean[] found = {false};
-            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(uAccepted);
+            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(owner);
             Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
-
+                        Log.i("nn" , "we are here");
                         Intent intent = new Intent(context, Messages.class);
                         intent.putExtra("roomid", snapshot.child("roomid").getValue().toString());
                         intent.putExtra("rid", data.getuId());
@@ -297,15 +297,21 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         DatabaseReference Bdatabase;
                         Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
                         String chat = Bdatabase.push().getKey();
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(uAccepted);
-                        Bdatabase.child("userId").setValue(data.getuId());
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(owner);
+                        Bdatabase.child("userId").setValue(owner);
+                        Bdatabase.child("roomid").setValue(chat);
+
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(owner).child("chats");
+                        //String chat = Bdatabase.push().getKey();
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(owner).child("chats").child(uId);
+                        Bdatabase.child("userId").setValue(uId);
                         Bdatabase.child("roomid").setValue(chat);
 
                         Intent intent = new Intent(context, Messages.class);
                         intent.putExtra("roomid",chat);
                         intent.putExtra("rid", data.getuId());
                         context.startActivity(intent);
-
+                        Log.i("nn" , "we are here");
                     }
                 }
 
