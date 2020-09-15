@@ -304,8 +304,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
                         for (DataSnapshot ds:snapshot.getChildren()) {
-                            if(ds.child("orderid").exists() && ds.child("roomid").exists()){
-                                if(ds.child("orderid").getValue().toString().equals(orderID)) {
+                            if(ds.child("roomid").exists()){
                                     room[0] = ds.child("roomid").getValue().toString();
                                     Intent intent = new Intent(context, Messages.class);
                                     intent.putExtra("roomid", room[0]);
@@ -313,8 +312,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     context.startActivity(intent);
                                     found[0] = true;
                                     break;
-                                }
-
                             }
                         }
                         if(!found[0]){

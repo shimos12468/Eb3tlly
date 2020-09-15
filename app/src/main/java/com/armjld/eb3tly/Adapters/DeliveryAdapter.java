@@ -289,17 +289,14 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
                         for (DataSnapshot ds:snapshot.getChildren()) {
-                            if(ds.child("orderid").exists() && ds.child("roomid").exists()){
-                                if(ds.child("orderid").getValue().toString().equals(orderID)) {
-                                    room[0] = ds.child("roomid").getValue().toString();
-                                    Intent intent = new Intent(context, Messages.class);
-                                    intent.putExtra("roomid", room[0]);
-                                    intent.putExtra("rid", data.getuId());
-                                    context.startActivity(intent);
-                                    found[0] = true;
-                                    break;
-                                }
-
+                            if(ds.child("orderid").exists()){
+                                room[0] = ds.child("roomid").getValue().toString();
+                                Intent intent = new Intent(context, Messages.class);
+                                intent.putExtra("roomid", room[0]);
+                                intent.putExtra("rid", data.getuId());
+                                context.startActivity(intent);
+                                found[0] = true;
+                                break;
                             }
                         }
                         if(!found[0]){

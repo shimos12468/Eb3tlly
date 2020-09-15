@@ -184,25 +184,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.lin1.setVisibility(View.VISIBLE);
             holder.txtWarning.setVisibility(View.GONE);
             holder.linAdmin.setVisibility(View.GONE);
-        }
 
-        mDatabase.child(orderID).child("statue").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.i(TAG, "Listener : " + snapshot.getValue().toString());
-                if(!snapshot.getValue().toString().equals("placed")){
-                    holder.lin1.setVisibility(View.GONE);
-                    holder.txtWarning.setVisibility(View.VISIBLE);
+            mDatabase.child(orderID).child("statue").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.i(TAG, "Listener : " + snapshot.getValue().toString());
+                    if(!snapshot.getValue().toString().equals("placed")){
+                        holder.lin1.setVisibility(View.GONE);
+                        holder.txtWarning.setVisibility(View.VISIBLE);
 
-                } else {
-                    holder.lin1.setVisibility(View.VISIBLE);
-                    holder.txtWarning.setVisibility(View.GONE);
+                    } else {
+                        holder.lin1.setVisibility(View.VISIBLE);
+                        holder.txtWarning.setVisibility(View.GONE);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        }
 
         holder.linerDate.setOnClickListener(v -> {
             Toast.makeText(context,"معاد تسليم الاوردر يوم : " + holder.txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
