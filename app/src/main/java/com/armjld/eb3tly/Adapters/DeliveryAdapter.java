@@ -311,7 +311,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         intent.putExtra("roomid",chat);
                         intent.putExtra("rid", data.getuId());
                         context.startActivity(intent);
-                        Log.i("nn" , "we are here");
+                        Log.i("nn" , "we are herecdc");
                     }
                 }
 

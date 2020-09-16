@@ -593,10 +593,13 @@ public class New_SignUp extends AppCompatActivity {
                 uDatabase.orderByChild("phone").equalTo("0"+phoneNumb).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.i("ss" ,"before exist");
                         if(snapshot.exists()) {
+                            Log.i("ss" ,"in exist");
                             mdialog.dismiss();
                             Toast.makeText(New_SignUp.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
                         } else {
+                            Log.i("ss" ,"in else");
                             mCallBack();
                             sendCode(phoneNumb);
                         }
@@ -607,6 +610,7 @@ public class New_SignUp extends AppCompatActivity {
                         Toast.makeText(New_SignUp.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
                         mdialog.dismiss();
                     }});
+                Log.i("ss" ,"out");
                 break;
             }
 
@@ -747,6 +751,9 @@ public class New_SignUp extends AppCompatActivity {
             }
         });
     }
+//https://www.youtube.com/watch?v=hnDkA0V1bU8
+
+
 
     private void signUp(PhoneAuthCredential credential) {
         String memail = txtEmail.getText().toString().trim();
@@ -758,6 +765,11 @@ public class New_SignUp extends AppCompatActivity {
             if(taskPhone.isSuccessful()) {
                 Log.i(TAG, "Linking with Mail : " + memail + " : " + mpass+ " uID : " +mAuth.getCurrentUser().getUid());
                 AuthCredential emailCred = EmailAuthProvider.getCredential(memail, mpass);
+                if(emailCred==null){
+                    Log.i("ll" ,emailCred+" ");
+                    emailCred = EmailAuthProvider.getCredential( txtEmail.getText().toString().trim(),txtPass1.getText().toString().trim());
+                }
+
                 Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
                    if(taskEmail.isSuccessful()) {
                        String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
