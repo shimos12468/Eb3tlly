@@ -129,9 +129,8 @@ public class StartUp extends AppCompatActivity {
         uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists() && snapshot.child("id").exists()) {
+                if(snapshot.exists()) {
                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-                    String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
 
                     // ------------------ Set Device Token ----------------- //
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(StartUp.this, instanceIdResult -> {
@@ -157,7 +156,7 @@ public class StartUp extends AppCompatActivity {
                     }
                     dataset = true;
 
-                    setUserData(mAuth.getCurrentUser().getUid());
+                    //setUserData(mAuth.getCurrentUser().getUid());
 
                     if(isActive.equals("true")) {
                         if(!snapshot.child("userState").exists()) {
@@ -222,7 +221,6 @@ public class StartUp extends AppCompatActivity {
         Database.child("Blocked").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 if(snapshot.exists()){
                     BlockManeger blocedUsers = new BlockManeger();
                     blocedUsers.clear();

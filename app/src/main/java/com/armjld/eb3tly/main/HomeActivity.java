@@ -53,6 +53,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -151,8 +153,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         mAuth= FirebaseAuth.getInstance();
         uDatabase  = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
-        mDatabase.keepSynced(true);
-        uDatabase.keepSynced(true);
 
         //Recycler
         recyclerView=findViewById(R.id.recycler);
@@ -430,6 +430,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         layoutManager.setReverseLayout(false);
         layoutManager.setStackFromEnd(false);
         recyclerView.setLayoutManager(layoutManager);
+
         mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -459,6 +460,12 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             checkForAdvice();
                             updateNone(mm.size());
                             mSwipeRefreshLayout.setRefreshing(false);
+
+                            Collections.sort(mm, (o1, o2) -> {
+                                String one = o1.getDDate();
+                                String two = o2.getDate();
+                                return one.compareTo(two);
+                            });
                         }
                     }
                 }
@@ -512,37 +519,41 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        mDatabase.orderByChild("datee").addListenerForSingleValueEvent(new ValueEventListener() {
+
+        mDatabase.orderByChild("statue").equalTo("placed").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
-                   // ImportBlockedUsers();
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        if(ds.exists() && ds.child("ddate").exists()) {
-                            Data orderData = ds.getValue(Data.class);
-                            assert orderData != null;
-                            Date orderDate = null;
-                            Date myDate = null;
-                            try {
-                                orderDate = format.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString());
-                                myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            assert orderDate != null;
-                            assert myDate != null;
-
-                            Log.i(TAG, "Order Data : " + orderDate + " /My Data : " + myDate);
-                            if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")&&!block.check(orderData.getuId())) {
-                                mm.add((int) count, orderData);
-                                count++;
-                            }
-                            orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
-                            recyclerView.setAdapter(orderAdapter);
-                            updateNone(mm.size());
-                            checkForAdvice();
-                            mSwipeRefreshLayout.setRefreshing(false);
+                        Data orderData = ds.getValue(Data.class);
+                        assert orderData != null;
+                        Date orderDate = null;
+                        Date myDate = null;
+                        try {
+                            orderDate = format.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString());
+                            myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
+                        assert orderDate != null;
+                        assert myDate != null;
+
+                        if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed")&&!block.check(orderData.getuId())) {
+                            mm.add((int) count, orderData);
+                            count++;
+                        }
+
+                        Collections.sort(mm, (o1, o2) -> {
+                            String one = o1.getDate();
+                            String two = o2.getDate();
+                            return one.compareTo(two);
+                        });
+
+                        orderAdapter = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
+                        recyclerView.setAdapter(orderAdapter);
+                        updateNone(mm.size());
+                        checkForAdvice();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }
             }
@@ -586,4 +597,5 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         startActivity(new Intent(this, Login_Options.class));
         Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }
+
 }

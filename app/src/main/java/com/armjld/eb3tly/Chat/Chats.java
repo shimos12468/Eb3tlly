@@ -81,10 +81,8 @@ public class Chats extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds:snapshot.getChildren()) {
-                    if(ds.child("roomid").exists() && ds.child("orderid").exists()) {
+                    if(ds.child("roomid").exists()) {
                         ChatsData cchatData = ds.getValue(ChatsData.class);
-                        String roomID = cchatData.getRoomid();
-                        String oID = cchatData.getOrderid();
                         if(ds.child("timestamp").exists()) {
                             mChat.add(cchatData);
                             count[0] +=1;
