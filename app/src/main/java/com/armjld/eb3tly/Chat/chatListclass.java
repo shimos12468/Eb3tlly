@@ -31,7 +31,6 @@ public class chatListclass {
                     Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(id);
                     Bdatabase.child("talk").setValue("false");
 
-
                     Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("chats").child(uId);
                     Bdatabase.child("talk").setValue("false");
                 }
