@@ -2,6 +2,7 @@ package com.armjld.eb3tly.SignUp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.hardware.input.InputManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -94,7 +97,7 @@ public class New_SignUp extends AppCompatActivity {
     RadioButton rdMotor, rdTruck, rdCar, rdTrans;
     String phoneNumb;
 
-    private String mVerificationId;
+    public String mVerificationId = "";
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private boolean mVerificationInProgress = false;
@@ -298,6 +301,7 @@ public class New_SignUp extends AppCompatActivity {
             viewFlipper.setDisplayedChild(1);
             btnNext.setVisibility(View.VISIBLE);
             btnPrev.setVisibility(View.VISIBLE);
+            clearTexts();
         });
 
         btnSupplier.setOnClickListener(v-> {
@@ -306,6 +310,7 @@ public class New_SignUp extends AppCompatActivity {
             viewFlipper.setDisplayedChild(2);
             btnNext.setVisibility(View.VISIBLE);
             btnPrev.setVisibility(View.VISIBLE);
+            clearTexts();
         });
 
         // Pick up Government Spinner
@@ -485,6 +490,7 @@ public class New_SignUp extends AppCompatActivity {
     }
 
     private void showPrev() {
+        hideKeyboard(this);
         switch (viewFlipper.getDisplayedChild()) {
             case 0 : {
                 startActivity(new Intent(this, Login_Options.class));
@@ -513,6 +519,7 @@ public class New_SignUp extends AppCompatActivity {
         }
     }
     private void showNext() {
+        hideKeyboard(this);
         switch (viewFlipper.getDisplayedChild()) {
             case 0 : {
                 viewFlipper.showNext();
@@ -583,7 +590,7 @@ public class New_SignUp extends AppCompatActivity {
                     phoneNumb = phone.substring(1,11);
                 }
 
-                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo("0"+phoneNumb).addListenerForSingleValueEvent(new ValueEventListener() {
+                uDatabase.orderByChild("phone").equalTo("0"+phoneNumb).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
@@ -608,9 +615,11 @@ public class New_SignUp extends AppCompatActivity {
                     Toast.makeText(this, "الكود الذي ادخلته خطأ", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 mdialog.setMessage("جاري التأكد من الرمز ..");
                 mdialog.show();
                 verifyPhoneNumberWithCode(mVerificationId, txtCode.getText().toString().trim());
+                Log.i(TAG, "Gonne Send Verfiy : " + mVerificationId);
                 break;
             }
 
@@ -633,22 +642,24 @@ public class New_SignUp extends AppCompatActivity {
     }
 
     private void verifyPhoneNumberWithCode(String verificationId, String code) {
+        Log.i(TAG, "verifyPhoneNumberWithCode : " + verificationId);
         mdialog.setMessage("جاري التاكد من الكود ..");
-        if(verificationId != null) {
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-            if(!provider.equals("Email")) {
-                link(credential);
-            } else {
-                signUp(credential);
-            }
-        } else {
-            Toast.makeText(this, "حدث خطأ في ارسال الرمز حاول لاحقا", Toast.LENGTH_SHORT).show();
+        if(verificationId.equals("")) {
+            Toast.makeText(this, "We Are Sorry", Toast.LENGTH_SHORT).show();
+            mdialog.dismiss();
+            return;
         }
 
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        if(!provider.equals("Email")) {
+            link(credential);
+        } else {
+            signUp(credential);
+        }
     }
 
     private void link(PhoneAuthCredential credential) {
-        String memail = newEmail;
+        String memail = txtEmail.getText().toString().trim().toLowerCase();
         String mpass = txtPass1.getText().toString().trim();
         String muser = newFirstName + " " + newLastName;
         String mPhone = txtPhone.getText().toString().trim();
@@ -723,6 +734,7 @@ public class New_SignUp extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
                                 mdialog.dismiss();
                             } else {
+                                mdialog.dismiss();
                                 Toast.makeText(this, "حدث خطأ ما حاول لاحقا", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -744,6 +756,7 @@ public class New_SignUp extends AppCompatActivity {
 
         mAuth.signInWithCredential(credential).addOnCompleteListener(New_SignUp.this, taskPhone -> {
             if(taskPhone.isSuccessful()) {
+                Log.i(TAG, "Linking with Mail : " + memail + " : " + mpass+ " uID : " +mAuth.getCurrentUser().getUid());
                 AuthCredential emailCred = EmailAuthProvider.getCredential(memail, mpass);
                 Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
                    if(taskEmail.isSuccessful()) {
@@ -814,6 +827,7 @@ public class New_SignUp extends AppCompatActivity {
                 mVerificationInProgress = false;
                 txtCode.setText(credential.getSmsCode());
                 mdialog.setMessage("جاري التأكد من الرمز ..");
+
                 mdialog.show();
                 if(!provider.equals("Email")) {
                     link(credential);
@@ -829,7 +843,7 @@ public class New_SignUp extends AppCompatActivity {
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(New_SignUp.this, "رقم هاتف غير صحيح", Toast.LENGTH_SHORT).show();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
-                    Snackbar.make(findViewById(android.R.id.content), "الرجاء ابلاغ خدمة العملاء بالمشكله", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "لقد حاولت كثيراو حاول بعد قليلي", Snackbar.LENGTH_LONG).show();
                 }
             }
 
@@ -837,7 +851,9 @@ public class New_SignUp extends AppCompatActivity {
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
                 Toast.makeText(New_SignUp.this, "تم ارسال الرمز", Toast.LENGTH_SHORT).show();
                 mdialog.dismiss();
+                Log.i(TAG, "Verf ID From Server: " + verificationId);
                 mVerificationId = verificationId;
+                Log.i(TAG, "Local Verf ID" + mVerificationId);
                 mResendToken = token;
                 viewFlipper.setDisplayedChild(3);
             }
@@ -1043,5 +1059,23 @@ public class New_SignUp extends AppCompatActivity {
                 Toast.makeText(New_SignUp.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm= (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if(view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void clearTexts() {
+        txtPhone.setText("");
+        txtFirstName.setText("");
+        txtEmail.setText("");
+        txtLastName.setText("");
+        txtPass1.setText("");
+        txtPass2.setText("");
     }
 }
