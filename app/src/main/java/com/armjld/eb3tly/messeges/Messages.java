@@ -73,7 +73,7 @@ public class Messages extends AppCompatActivity {
                 break;
             }
             case "Profile" : {
-                whichProfile();
+                finish();
                 break;
             }
         }

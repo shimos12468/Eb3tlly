@@ -53,6 +53,11 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
     String datee = sdf.format(new Date());
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if(!StartUp.dataset) {

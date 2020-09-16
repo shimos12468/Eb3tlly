@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Ratings;
@@ -308,27 +309,25 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuAccepted());
                         Bdatabase.child("talk").setValue("true");
 
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getAcceptedTime()).child("chats").child(uId);
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuAccepted()).child("chats").child(uId);
                         Bdatabase.child("talk").setValue("true");
 
 
                         Intent intent = new Intent(context, Messages.class);
                         intent.putExtra("roomid", snapshot.child("roomid").getValue().toString());
                         intent.putExtra("rid", data.getuId());
-                        context.startActivity(intent);
-                        Messages.cameFrom = "Profile";
+
+                        ((Activity)context).startActivityForResult(intent, 1);
                     } else{
 
                         Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
                         String chat = Bdatabase.push().getKey();
                         Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuAccepted());
-                        Bdatabase.child("userId").setValue(data.getAcceptedTime());
+                        Bdatabase.child("userId").setValue(data.getuAccepted());
                         Bdatabase.child("roomid").setValue(chat);
                         Bdatabase.child("talk").setValue("true");
 
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getAcceptedTime()).child("chats");
-                        //String chat = Bdatabase.push().getKey();
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getAcceptedTime()).child("chats").child(uId);
+                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuAccepted()).child("chats").child(uId);
                         Bdatabase.child("userId").setValue(uId);
                         Bdatabase.child("roomid").setValue(chat);
                         Bdatabase.child("talk").setValue("true");
@@ -336,7 +335,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         Intent intent = new Intent(context, Messages.class);
                         intent.putExtra("roomid",chat);
                         intent.putExtra("rid", data.getuId());
-                        context.startActivity(intent);
+                        ((Activity)context).startActivityForResult(intent, 1);
                     }
                     Messages.cameFrom = "Profile";
                 }

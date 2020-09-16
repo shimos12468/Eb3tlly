@@ -299,7 +299,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         Intent intent = new Intent(context, Messages.class);
                         intent.putExtra("roomid", snapshot.child("roomid").getValue().toString());
                         intent.putExtra("rid", data.getuId());
-                        context.startActivity(intent);
+                        ((Activity)context).startActivityForResult(intent, 1);
 
                     } else{
 
@@ -321,7 +321,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         Intent intent = new Intent(context, Messages.class);
                         intent.putExtra("roomid",chat);
                         intent.putExtra("rid", data.getuId());
-                        context.startActivity(intent);
+                        ((Activity)context).startActivityForResult(intent, 1);
+
                     }
                     Messages.cameFrom = "Profile";
                 }
@@ -458,7 +459,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             deleteAct.putExtra("owner", data.getuId());
             deleteAct.putExtra("aTime", data.getAcceptedTime());
             deleteAct.putExtra("eTime", data.getLastedit());
-            context.startActivity(deleteAct);
+            ((Activity)context).startActivityForResult(deleteAct, 1);
         });
     }
 

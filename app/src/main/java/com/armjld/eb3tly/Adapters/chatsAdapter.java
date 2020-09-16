@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.messeges.Messages;
@@ -76,6 +78,7 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
             intent.putExtra("rid", chat.getUserId());
             context.startActivity(intent);
             Messages.cameFrom = "Chats";
+            Chats.cameFrom = "Chat";
         });
 
         uDatabase.child(talkerID).addListenerForSingleValueEvent(new ValueEventListener() {

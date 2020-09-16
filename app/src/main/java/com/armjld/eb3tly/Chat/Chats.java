@@ -38,6 +38,7 @@ public class Chats extends AppCompatActivity {
     String uId = UserInFormation.getId();
 
     private chatsAdapter _chatsAdapter;
+    public static String cameFrom = "Profile";
 
     RecyclerView recyclerChat;
     ArrayList<ChatsData> mChat;
@@ -45,7 +46,15 @@ public class Chats extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        setBack();
+    }
+
+    private void setBack() {
+        if(cameFrom.equals("Profile")) {
+            finish();
+        } else if (cameFrom.equals("Chat")) {
+            whichProfile();
+        }
     }
 
     @Override
@@ -72,7 +81,7 @@ public class Chats extends AppCompatActivity {
         tbTitle.setText("المحادثات");
 
         btnBack.setOnClickListener(v-> {
-            finish();
+            setBack();
         });
 
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
