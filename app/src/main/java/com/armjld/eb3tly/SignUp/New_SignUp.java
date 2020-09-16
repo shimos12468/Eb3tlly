@@ -558,19 +558,16 @@ public class New_SignUp extends AppCompatActivity {
                     return;
                 }
 
-                Toast.makeText(this, "Length " + phone.length() + " First Char : " + phone.charAt(0), Toast.LENGTH_SHORT).show();
-                if(phone.charAt(0) == '1') {
-                    if(phone.length() != 10) {
-                        Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if(phone.charAt(0) == '1' && phone.length() != 10) {
+                    Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Returned First");
+                    return;
                 }
 
-                if(phone.charAt(0) == '0') {
-                    if(phone.length() != 11) {
-                        Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if(phone.charAt(0) == '0' && phone.length() != 11) {
+                    Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Returned Second");
+                    return;
                 }
 
                 newEmail = txtEmail.getText().toString();
@@ -583,7 +580,7 @@ public class New_SignUp extends AppCompatActivity {
                 if(phone.length() == 10) {
                     phoneNumb = phone;
                 } else {
-                    phoneNumb = phone.substring(1,10);
+                    phoneNumb = phone.substring(1,11);
                 }
 
                 FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo("0"+phoneNumb).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -626,6 +623,7 @@ public class New_SignUp extends AppCompatActivity {
     }
 
     private void sendCode(String uPhone) {
+        Log.i(TAG, "Sending Code to Phone Numb " + cCode + uPhone);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 cCode + uPhone,
                 60,
