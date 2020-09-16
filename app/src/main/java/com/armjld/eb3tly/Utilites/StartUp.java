@@ -126,6 +126,7 @@ public class StartUp extends AppCompatActivity {
 
     public void reRoute () {
         mAuth = FirebaseAuth.getInstance();
+        uDatabase.child(mAuth.getCurrentUser().getUid()).keepSynced(true);
         uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

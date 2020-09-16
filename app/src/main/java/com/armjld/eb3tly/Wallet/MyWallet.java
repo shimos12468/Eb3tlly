@@ -59,12 +59,15 @@ public class MyWallet extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds:snapshot.getChildren()) {
                     String orderid = ds.getKey();
+                    Log.i("My Wallet", "Order ID : " + orderid);
+                    assert orderid != null;
                     mDatabase.child(orderid).child("gget").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot2) {
                             int orderMoney = Integer.parseInt(snapshot2.getValue().toString());
                             float precnt = (float) 0.2;
                             TotalMoney = TotalMoney + orderMoney;
+                            Log.i("My Wallet", "New Money : " + orderMoney + " Total : " + TotalMoney);
                             int Final = (int) (TotalMoney * precnt);
                             txtTotal.setText("فاتورتك : " + Final + " ج");
                         }

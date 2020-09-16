@@ -455,12 +455,13 @@
                     android:textColorHint="@android:color/secondary_text_dark"
                     android:textSize="24sp" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginRight="20dp">
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal">
 
                     <com.rilixtech.widget.countrycodepicker.CountryCodePicker
                         android:id="@+id/ccp"
@@ -470,46 +471,39 @@
                         android:gravity="center"
                         android:textAlignment="center"
                         app:ccp_arrowSize="24sp"
-                        app:ccp_dialogTextColor="@color/colorAccent"
-                        app:ccp_textColor="@color/colorAccent"
-                        app:ccp_hideNameCode="true"
-                        app:ccp_selectionDialogShowSearch="false"
-                        app:ccp_showFullName="false"
-                        app:ccp_keyboardAutoPopOnSearch="false"
-                        app:ccp_hidePhoneCode="true"
                         app:ccp_countryPreference="EG"
                         app:ccp_customMasterCountries="BH,CY,IQ,IR,EG,JO,KW,LB,OM,QA,SA,SY,TR,AE,YE"
                         app:ccp_defaultNameCode="EG"
+                        app:ccp_dialogTextColor="@color/colorAccent"
+                        app:ccp_hideNameCode="true"
+                        app:ccp_hidePhoneCode="true"
+                        app:ccp_keyboardAutoPopOnSearch="false"
+                        app:ccp_selectionDialogShowSearch="false"
+                        app:ccp_showFullName="false"
+                        app:ccp_textColor="@color/colorAccent"
                         app:flow_horizontalAlign="center"
-                        app:flow_verticalAlign="center"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:flow_verticalAlign="center">
 
                     </com.rilixtech.widget.countrycodepicker.CountryCodePicker>
 
                     <TextView
                         android:id="@+id/txtCCode"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:foregroundGravity="left|center"
                         android:gravity="center|left"
                         android:text="+20"
                         android:textAlignment="viewStart"
                         android:textColor="@color/colorAccent"
-                        android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/txtPhone"
-                        app:layout_constraintStart_toEndOf="@+id/ccp"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:textSize="24sp" />
 
                     <EditText
                         android:id="@+id/txtPhone"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="47dp"
+                        android:layout_marginTop="2dp"
                         android:backgroundTint="@android:color/secondary_text_dark"
                         android:ems="10"
-                        android:layout_marginTop="2dp"
                         android:gravity="right"
                         android:hint="101-165-6179"
                         android:inputType="number"
@@ -517,11 +511,9 @@
                         android:textColor="#000000"
                         android:textColorHint="@android:color/secondary_text_dark"
                         android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="MissingConstraints,RtlCompat" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/txtPass1"

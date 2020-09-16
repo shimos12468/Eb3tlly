@@ -92,6 +92,7 @@ public class New_SignUp extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     RadioButton rdMotor, rdTruck, rdCar, rdTrans;
+    String phoneNumb;
 
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -556,9 +557,20 @@ public class New_SignUp extends AppCompatActivity {
                     Toast.makeText(this, "تاكد من تطابق كلمة السر", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(phone.length() != 10|| phone.charAt(0)!='1') {
-                    Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
-                    return;
+
+                Toast.makeText(this, "Length " + phone.length() + " First Char : " + phone.charAt(0), Toast.LENGTH_SHORT).show();
+                if(phone.charAt(0) == '1') {
+                    if(phone.length() != 10) {
+                        Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+                if(phone.charAt(0) == '0') {
+                    if(phone.length() != 11) {
+                        Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
 
                 newEmail = txtEmail.getText().toString();
@@ -568,27 +580,24 @@ public class New_SignUp extends AppCompatActivity {
                 mdialog.setMessage("جاري التاكد من رقم الهاتف ..");
                 mdialog.show();
 
-                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+                if(phone.length() == 10) {
+                    phoneNumb = phone;
+                } else {
+                    phoneNumb = phone.substring(1,10);
+                }
+
+                FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").orderByChild("phone").equalTo("0"+phoneNumb).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
-                            if (snapshot.getValue() != null) {
-                                mdialog.dismiss();
-                                Toast.makeText(New_SignUp.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
-                            } else {
-                                //mdialog.dismiss();
-                                mCallBack();
-                                sendCode(txtPhone.getText().toString().trim());
-                                //viewFlipper.showNext();
-
-                            }
+                            mdialog.dismiss();
+                            Toast.makeText(New_SignUp.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
                         } else {
-                            //mdialog.dismiss();
                             mCallBack();
-                            sendCode(txtPhone.getText().toString().trim());
-                            //viewFlipper.showNext();
+                            sendCode(phoneNumb);
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Toast.makeText(New_SignUp.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
@@ -596,6 +605,7 @@ public class New_SignUp extends AppCompatActivity {
                     }});
                 break;
             }
+
             case 3 : {
                 if(txtCode.getText().toString().length() != 6) {
                     Toast.makeText(this, "الكود الذي ادخلته خطأ", Toast.LENGTH_SHORT).show();
@@ -606,6 +616,7 @@ public class New_SignUp extends AppCompatActivity {
                 verifyPhoneNumberWithCode(mVerificationId, txtCode.getText().toString().trim());
                 break;
             }
+
         }
     }
 
@@ -613,6 +624,7 @@ public class New_SignUp extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
     }
+
     private void sendCode(String uPhone) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 cCode + uPhone,
@@ -651,7 +663,7 @@ public class New_SignUp extends AppCompatActivity {
                             if(taskEmail.isSuccessful()) {
                                 String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
-                                userData data= new userData(muser, mPhone, memail, acDate, id, newType, defultPP, mpass, "0");
+                                userData data= new userData(muser, "0"+mPhone, memail, acDate, id, newType, defultPP, mpass, "0");
                                 uDatabase.child(id).setValue(data);
                                 uDatabase.child(id).child("completed").setValue("true");
                                 uDatabase.child(id).child("profit").setValue("0");

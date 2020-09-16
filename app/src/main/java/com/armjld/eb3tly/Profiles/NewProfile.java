@@ -90,6 +90,7 @@ public class NewProfile extends AppCompatActivity {
 
         //txtTotalOrders = findViewById(R.id.txtTotalOrders);
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
+        mDatabase.orderByChild("uAccepted").equalTo(UserInFormation.getId()).keepSynced(true);
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         rDatabase = getInstance().getReference().child("Pickly").child("comments");
         vDatabase = getInstance().getReference().child("Pickly").child("values");
