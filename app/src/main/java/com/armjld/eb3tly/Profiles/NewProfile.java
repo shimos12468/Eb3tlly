@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 
 import com.armjld.eb3tly.Chat.Chats;
+import com.armjld.eb3tly.Orders.MapsActivity;
 import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
@@ -136,11 +137,12 @@ public class NewProfile extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         btnWallet.setOnClickListener(v-> {
-            startActivity(new Intent(this, MyWallet.class));
+            startActivityForResult(new Intent(this, MyWallet.class), 1);
 
         });
+
         btnChats.setOnClickListener(v-> {
-            startActivity(new Intent(this, Chats.class));
+            startActivityForResult(new Intent(this, Chats.class), 1);
         });
 
         if(isConfirmed.equals("true")) {
@@ -153,8 +155,7 @@ public class NewProfile extends AppCompatActivity {
 
         constNoti.setOnClickListener(v -> {
             vibe.vibrate(40);
-            finish();
-            startActivity(new Intent(NewProfile.this, Notifications.class));
+            startActivityForResult(new Intent(this, Notifications.class), 1);
         });
 
 

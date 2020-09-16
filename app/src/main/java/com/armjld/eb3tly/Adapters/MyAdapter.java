@@ -1,6 +1,7 @@
 package com.armjld.eb3tly.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -317,7 +318,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             Intent intent = new Intent(context, OrderInfo.class);
             intent.putExtra("orderID", orderID);
             intent.putExtra("owner", owner);
-            context.startActivity(intent);
+            ((Activity) context).startActivityForResult(intent, 1);
+            OrderInfo.cameFrom = "Home Activity";
         });
 
         holder.icnCar.setOnClickListener(v -> {

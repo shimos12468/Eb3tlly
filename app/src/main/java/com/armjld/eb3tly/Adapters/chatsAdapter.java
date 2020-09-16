@@ -75,6 +75,7 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
             intent.putExtra("roomid", chat.getRoomid());
             intent.putExtra("rid", chat.getUserId());
             context.startActivity(intent);
+            Messages.cameFrom = "Chats";
         });
 
         uDatabase.child(talkerID).addListenerForSingleValueEvent(new ValueEventListener() {

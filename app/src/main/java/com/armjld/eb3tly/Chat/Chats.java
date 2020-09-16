@@ -45,7 +45,7 @@ public class Chats extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        whichProfile();
+        finish();
     }
 
     @Override
@@ -72,8 +72,9 @@ public class Chats extends AppCompatActivity {
         tbTitle.setText("المحادثات");
 
         btnBack.setOnClickListener(v-> {
-            whichProfile();
+            finish();
         });
+
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
         mChat = new ArrayList<ChatsData>();
         final int[] count = {0};

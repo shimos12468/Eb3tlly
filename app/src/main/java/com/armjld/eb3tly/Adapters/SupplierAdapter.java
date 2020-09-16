@@ -309,6 +309,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         intent.putExtra("roomid", snapshot.child("roomid").getValue().toString());
                         intent.putExtra("rid", data.getuId());
                         context.startActivity(intent);
+                        Messages.cameFrom = "Profile";
                     } else{
                         DatabaseReference Bdatabase;
                         Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
@@ -328,6 +329,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         intent.putExtra("rid", data.getuId());
                         context.startActivity(intent);
                     }
+                    Messages.cameFrom = "Profile";
                 }
 
                 @Override

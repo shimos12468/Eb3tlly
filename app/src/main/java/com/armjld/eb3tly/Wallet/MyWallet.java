@@ -29,6 +29,11 @@ public class MyWallet extends AppCompatActivity {
     TextView txtTotal,btnPay;
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
@@ -45,7 +50,7 @@ public class MyWallet extends AppCompatActivity {
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
         btnBack.setOnClickListener(v-> {
-            startActivity(new Intent(this, NewProfile.class));
+            finish();
         });
 
         btnPay.setOnClickListener(v-> {

@@ -113,7 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(this, HomeActivity.class));
+        //startActivity(new Intent(this, HomeActivity.class));
     }
 
     @Override
@@ -152,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         btnHome.setOnClickListener(v -> {
             finish();
-            startActivity(new Intent(this, HomeActivity.class));
+            //startActivity(new Intent(this, HomeActivity.class));
         });
 
         btnGCL.setVisibility(View.GONE);

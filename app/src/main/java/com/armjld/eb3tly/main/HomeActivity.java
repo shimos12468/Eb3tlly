@@ -160,8 +160,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         btnMaps.setOnClickListener(v -> {
-            finish();
-            startActivity(new Intent(this, MapsActivity.class));
+            startActivityForResult(new Intent(this, MapsActivity.class), 1);
         });
 
         // ----------- check for Requests ----------- //
@@ -393,8 +392,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Filter Button
         filtrs_btn.setOnClickListener(v -> {
-            finish();
-            startActivity(new Intent(HomeActivity.this, Filters.class));
+            Intent i = new Intent(HomeActivity.this, Filters.class);
+            startActivityForResult(i, 1);
         });
 
     }

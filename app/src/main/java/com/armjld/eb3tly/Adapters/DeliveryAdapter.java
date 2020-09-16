@@ -163,7 +163,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             Intent intent = new Intent(context, OrderInfo.class);
             intent.putExtra("orderID", orderID);
             intent.putExtra("owner", owner);
-            context.startActivity(intent);
+            ((Activity) context).startActivityForResult(intent, 1);
+            OrderInfo.cameFrom = "Profile";
         });
 
         // -----------------------   Set ORDER as Delivered
@@ -288,11 +289,11 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
-                        Log.i("nn" , "we are here");
                         Intent intent = new Intent(context, Messages.class);
                         intent.putExtra("roomid", snapshot.child("roomid").getValue().toString());
                         intent.putExtra("rid", data.getuId());
                         context.startActivity(intent);
+
                     } else{
                         DatabaseReference Bdatabase;
                         Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
@@ -311,8 +312,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                         intent.putExtra("roomid",chat);
                         intent.putExtra("rid", data.getuId());
                         context.startActivity(intent);
-                        Log.i("nn" , "we are herecdc");
                     }
+                    Messages.cameFrom = "Profile";
                 }
 
                 @Override

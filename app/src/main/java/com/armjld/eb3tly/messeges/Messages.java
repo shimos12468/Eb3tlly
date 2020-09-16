@@ -22,6 +22,7 @@ import android.widget.Toolbar;
 
 import com.armjld.eb3tly.Adapters.MessageAdapter;
 import com.armjld.eb3tly.Chat.Chats;
+import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
@@ -56,6 +57,7 @@ public class Messages extends AppCompatActivity {
     ImageView btnBack,imgPPP, btnCall;
     TextView txtName, txtType;
     private static final int PHONE_CALL_CODE = 100;
+    public static String cameFrom = "Chats";
 
 
     EditText editWriteMessage;
@@ -64,9 +66,30 @@ public class Messages extends AppCompatActivity {
     MessageAdapter messageAdapter;
     List<Chat> mChat;
 
+    private void getBack() {
+        switch (cameFrom) {
+            case "Chats" : {
+                startActivity(new Intent(this, Chats.class));
+                break;
+            }
+            case "Profile" : {
+                whichProfile();
+                break;
+            }
+        }
+    }
+
+    private void whichProfile () {
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, Chats.class));
+        getBack();
     }
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -99,7 +122,7 @@ public class Messages extends AppCompatActivity {
 
 
         btnBack.setOnClickListener(v-> {
-            startActivity(new Intent(this, Chats.class));
+            getBack();
         });
 
         btnCall.setOnClickListener(v-> {

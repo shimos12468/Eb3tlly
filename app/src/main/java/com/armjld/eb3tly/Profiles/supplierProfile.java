@@ -13,6 +13,7 @@ import com.armjld.eb3tly.MyLocation;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Utilites.StartUp;
+import com.armjld.eb3tly.Wallet.MyWallet;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.Login_Options;
@@ -133,7 +134,7 @@ public class supplierProfile extends AppCompatActivity {
         tbTitle.setText("اوردراتي");
 
         btnChats.setOnClickListener(v-> {
-            startActivity(new Intent(this, Chats.class));
+            startActivityForResult(new Intent(this, Chats.class), 1);
         });
 
         if(isConfirmed.equals("true")) {
@@ -151,8 +152,7 @@ public class supplierProfile extends AppCompatActivity {
 
         constNoti.setOnClickListener(v -> {
             vibe.vibrate(40);
-            finish();
-            startActivity(new Intent(supplierProfile.this, Notifications.class));
+            startActivityForResult(new Intent(this, Notifications.class), 1);
         });
 
         btnNavbarProfile.setOnClickListener(v -> {

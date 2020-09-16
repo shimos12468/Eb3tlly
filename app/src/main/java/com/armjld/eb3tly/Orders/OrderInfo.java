@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Profiles.NewProfile;
+import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.UserInFormation;
@@ -53,6 +55,8 @@ public class OrderInfo extends AppCompatActivity {
     DatabaseReference mDatabase, uDatabase,rDatabase,nDatabase;
     String owner;
 
+    public static String cameFrom = "Home Activity";
+
     TextView date3, date, orderto, OrderFrom,txtPack,txtWeight,ordercash2,fees2,txtPostDate2;
     TextView dsUsername,txtTitle,ddCount,txtNoddComments;
     TextView dsPAddress,dsDAddress,dsOrderNotes;
@@ -72,9 +76,26 @@ public class OrderInfo extends AppCompatActivity {
     String acceptedTime = "";
     String lastEdit = "";
 
+    private void getBack() {
+        if(cameFrom.equals("Home Activity")) {
+            startActivity(new Intent(this, HomeActivity.class));
+        } else if (cameFrom.equals("Profile")) {
+            whichProfile();
+        }
+    }
+
+    private void whichProfile () {
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
+        } else {
+            startActivity(new Intent(getApplicationContext(), NewProfile.class));
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, HomeActivity.class));
+        finish();
+        //getBack();
     }
 
     @Override
@@ -123,7 +144,8 @@ public class OrderInfo extends AppCompatActivity {
         String uId = UserInFormation.getId();
 
         btnClose.setOnClickListener(v-> {
-            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+            //getBack();
         });
 
         btnDelete.setOnClickListener(v-> {

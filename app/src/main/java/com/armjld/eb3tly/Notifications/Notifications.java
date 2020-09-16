@@ -62,7 +62,7 @@ public class Notifications extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        whichProfile();
+        finish();
     }
 
     @Override

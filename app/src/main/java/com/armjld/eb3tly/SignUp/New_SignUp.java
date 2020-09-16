@@ -751,8 +751,6 @@ public class New_SignUp extends AppCompatActivity {
             }
         });
     }
-//https://www.youtube.com/watch?v=hnDkA0V1bU8
-
 
 
     private void signUp(PhoneAuthCredential credential) {
@@ -765,10 +763,6 @@ public class New_SignUp extends AppCompatActivity {
             if(taskPhone.isSuccessful()) {
                 Log.i(TAG, "Linking with Mail : " + memail + " : " + mpass+ " uID : " +mAuth.getCurrentUser().getUid());
                 AuthCredential emailCred = EmailAuthProvider.getCredential(memail, mpass);
-                if(emailCred==null){
-                    Log.i("ll" ,emailCred+" ");
-                    emailCred = EmailAuthProvider.getCredential( txtEmail.getText().toString().trim(),txtPass1.getText().toString().trim());
-                }
 
                 Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
                    if(taskEmail.isSuccessful()) {
