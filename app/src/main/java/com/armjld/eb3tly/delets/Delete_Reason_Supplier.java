@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.StartUp;
@@ -119,6 +120,8 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
                         if(acceptID != "") {
                             notiData Noti = new notiData(uId, acceptID, orderID,"deleted",datee,"false", "profile");
                             nDatabase.child(acceptID).push().setValue(Noti);
+                            chatListclass chatList = new chatListclass();
+                            chatList.supplierchat(acceptID);
                         }
 
 

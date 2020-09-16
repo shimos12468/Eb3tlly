@@ -12,13 +12,6 @@ public class ChatsData {
         this.userId = userId;
     }
 
-    public String getOrderid() {
-        return orderid;
-    }
-
-    public void setOrderid(String orderid) {
-        this.orderid = orderid;
-    }
 
     public String getRoomid() {
         return roomid;
@@ -29,12 +22,21 @@ public class ChatsData {
     }
 
     String userId;
-    String orderid;
-    String roomid;
 
-    public ChatsData(String userId, String orderid, String roomid) {
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    String roomid;
+    String timestamp;
+
+    public ChatsData(String userId, String timestamp, String roomid) {
         this.userId = userId;
-        this.orderid = orderid;
+        this.timestamp = timestamp;
         this.roomid = roomid;
     }
 

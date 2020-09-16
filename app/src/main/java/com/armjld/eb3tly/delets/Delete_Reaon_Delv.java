@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Requests.rquests;
@@ -159,6 +160,9 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
 
                                 rquests _req = new rquests();
                                 _req.deleteReq(uId,orderID);
+
+                                chatListclass chatList = new chatListclass();
+                                chatList.dlevarychat(owner);
 
                                 // --------------------------- Send Notifications ---------------------//
                                 notiData Noti = new notiData(uId, owner, orderID,"deleted",datee,"false", "profile");

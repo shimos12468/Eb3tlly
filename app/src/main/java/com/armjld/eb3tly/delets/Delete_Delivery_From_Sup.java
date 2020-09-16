@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Adapters.RequestsAdapter;
+import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Requests.RequestsForSup;
 import com.armjld.eb3tly.Requests.rquests;
@@ -138,6 +139,9 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
 
                         rquests _req = new rquests();
                         _req.deleteReq(acceptedID, orderID);
+
+                        chatListclass chatList = new chatListclass();
+                        chatList.supplierchat(acceptedID);
 
                         startActivity(new Intent(Delete_Delivery_From_Sup.this, supplierProfile.class));
                         Toast.makeText(this, "تم الغاء المندوب و جاري عرض اوردرك علي باقي المندوبين", Toast.LENGTH_LONG).show();

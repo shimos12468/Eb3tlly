@@ -84,7 +84,7 @@ public class Chats extends AppCompatActivity {
                 for(DataSnapshot ds:snapshot.getChildren()) {
                     if(ds.child("roomid").exists()) {
                         ChatsData cchatData = ds.getValue(ChatsData.class);
-                        if(ds.child("timestamp").exists()) {
+                        if(ds.child("timestamp").exists() && ds.child("talk").getValue().toString().equals("true")) {
                             mChat.add(cchatData);
                             count[0] +=1;
                             _chatsAdapter = new chatsAdapter(Chats.this, mChat);
