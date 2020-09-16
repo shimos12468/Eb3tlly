@@ -162,8 +162,7 @@ public class NewProfile extends AppCompatActivity {
 
         btnOpenNoti.setOnClickListener(v -> {
             vibe.vibrate(40);
-            finish();
-            startActivity(new Intent(NewProfile.this, Notifications.class));
+            startActivityForResult(new Intent(this, Notifications.class), 1);
         });
 
 
