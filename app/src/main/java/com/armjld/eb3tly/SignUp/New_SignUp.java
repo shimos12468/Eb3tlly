@@ -70,7 +70,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import Model.notiData;
 import Model.userData;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
@@ -681,10 +680,6 @@ public class New_SignUp extends AppCompatActivity {
         }
 
         // ------------- Welcome message in Notfications----------------------//
-
-        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false", "nothing");
-        nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-
         UserInFormation.setAccountType(newType);
         UserInFormation.setUserName(muser);
         UserInFormation.setUserDate(acDate);
@@ -1014,5 +1009,4 @@ public class New_SignUp extends AppCompatActivity {
         txtPass1.setText("");
         txtPass2.setText("");
     }
-
 }

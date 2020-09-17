@@ -117,8 +117,10 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
                         Toast.makeText(this, "شكرا لك, تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Delete_Reason_Supplier.this, supplierProfile.class));
 
-                        if(acceptID != "") {
-                            notiData Noti = new notiData(uId, acceptID, orderID,"deleted",datee,"false", "profile");
+                        assert acceptID != null;
+                        if(!acceptID.equals("")) {
+                            String message = "قام " + UserInFormation.getUserName() + " بالغاء الاوردر";
+                            notiData Noti = new notiData(uId, acceptID, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
                             nDatabase.child(acceptID).push().setValue(Noti);
                             chatListclass chatList = new chatListclass();
                             chatList.supplierchat(acceptID);

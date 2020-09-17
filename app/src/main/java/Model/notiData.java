@@ -2,7 +2,32 @@ package Model;
 
 public class notiData {
 
-    String from, to, orderid, statue,datee,isRead,action;
+    String from;
+    String to;
+    String orderid;
+    String statue;
+    String datee;
+    String isRead;
+    public static String action = "";
+    public static String uName = "";
+
+    public String getuName() {
+        return uName;
+    }
+
+    public void setuName(String uName) {
+        this.uName = uName;
+    }
+
+    public String getPpURL() {
+        return ppURL;
+    }
+
+    public void setPpURL(String ppURL) {
+        this.ppURL = ppURL;
+    }
+
+    String ppURL;
     public notiData () {};
 
     public String getFrom() {
@@ -57,7 +82,7 @@ public class notiData {
 
     public void setAction(String action) { this.action = action; }
 
-    public notiData(String from, String to, String orderid, String statue, String datee, String isRead, String action) {
+    public notiData(String from, String to, String orderid, String statue, String datee, String isRead, String action, String uName, String ppURL) {
         this.from = from;
         this.orderid = orderid;
         this.statue = statue;
@@ -65,5 +90,7 @@ public class notiData {
         this.datee = datee;
         this.isRead = isRead;
         this.action = action;
+        this.uName = uName;
+        this.ppURL = ppURL;
     }
 }

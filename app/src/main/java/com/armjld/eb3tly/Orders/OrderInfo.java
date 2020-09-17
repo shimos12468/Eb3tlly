@@ -28,6 +28,7 @@ import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Wallet.requestsandacceptc;
 import com.armjld.eb3tly.Wallet.wallet;
+import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -75,6 +76,7 @@ public class OrderInfo extends AppCompatActivity {
     String orderState = "placed";
     String acceptedTime = "";
     String lastEdit = "";
+    String dName = "";
 
     private void getBack() {
         if(cameFrom.equals("Home Activity")) {
@@ -105,7 +107,7 @@ public class OrderInfo extends AppCompatActivity {
 
         orderID = getIntent().getStringExtra("orderID");
         owner = getIntent().getStringExtra("owner");
-        
+
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         uDatabase = getInstance().getReference().child("Pickly").child("users");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
@@ -128,8 +130,8 @@ public class OrderInfo extends AppCompatActivity {
         btnBid = findViewById(R.id.btnBid);
         btnMore = findViewById(R.id.btnMore);
 
-        date3  = findViewById(R.id.date3);
-        date  = findViewById(R.id.date);
+        date3 = findViewById(R.id.date3);
+        date = findViewById(R.id.date);
         orderto = findViewById(R.id.orderto);
         OrderFrom = findViewById(R.id.OrderFrom);
         txtPack = findViewById(R.id.txtPack);
@@ -143,17 +145,18 @@ public class OrderInfo extends AppCompatActivity {
         tbTitle.setText("بيانات الاوردر");
         String uId = UserInFormation.getId();
 
-        btnClose.setOnClickListener(v-> {
+        btnClose.setOnClickListener(v -> {
             finish();
             //getBack();
         });
 
-        btnDelete.setOnClickListener(v-> {
+        btnDelete.setOnClickListener(v -> {
             Intent deleteAct = new Intent(this, Delete_Reaon_Delv.class);
             deleteAct.putExtra("orderid", orderID);
             deleteAct.putExtra("owner", owner);
             deleteAct.putExtra("aTime", acceptedTime);
             deleteAct.putExtra("eTime", lastEdit);
+            deleteAct.putExtra("dName", dName);
             startActivity(deleteAct);
         });
 
@@ -166,38 +169,19 @@ public class OrderInfo extends AppCompatActivity {
                 orderState = orderData.getStatue();
                 acceptedTime = orderData.getAcceptedTime();
                 lastEdit = orderData.getLastedit();
+                dName = orderData.getDName();
 
-                String startDate = orderData.getDate();
-                String stopDate = datee;
-                SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-                SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                Date d1 = null;
-                Date d2 = null;
-                try {
-                    d1 = format.parse(startDate);
-                    d2 = format.parse(stopDate);
-                } catch (java.text.ParseException ex) {
-                    ex.printStackTrace();
-                }
-                assert d2 != null;
-                assert d1 != null;
-                long diff = d2.getTime() - d1.getTime();
-                long diffSeconds = diff / 1000;
-                long diffMinutes = diff / (60 * 1000);
-                long diffHours = diff / (60 * 60 * 1000);
-                long diffDays = diff / (24 * 60 * 60 * 1000);
+                setPostDate(orderData.getDate());
 
-                setPostDate((int)diffSeconds, (int)diffMinutes, (int)diffHours, (int) diffDays);
-
-                String PAddress = "عنوان الاستلام : "+orderData.getmPAddress();
+                String PAddress = "عنوان الاستلام : " + orderData.getmPAddress();
                 String DAddress = "عنوان التسليم : " + orderData.getDAddress();
                 String notes = "الملاحظات : " + orderData.getNotes();
                 String fees = "مصاريف الشحن : " + orderData.getGGet();
-                String money = "سعر الرساله : " +orderData.getGMoney();
+                String money = "سعر الرساله : " + orderData.getGMoney();
                 String pDate = orderData.getpDate();
-                String dDate =  orderData.getDDate();
-                String pack = "الرساله : " +orderData.getPackType();
-                String weight = "وزن الرسالة : " +orderData.getPackWeight();
+                String dDate = orderData.getDDate();
+                String pack = "الرساله : " + orderData.getPackType();
+                String weight = "وزن الرسالة : " + orderData.getPackWeight();
                 String from = orderData.reStateP();
                 String to = orderData.reStateD();
 
@@ -213,7 +197,7 @@ public class OrderInfo extends AppCompatActivity {
                     dsDAddress.setText(DAddress);
                     dsDAddress.setVisibility(View.VISIBLE);
                 }
-                if(notes.trim().equals("")) {
+                if (notes.trim().equals("")) {
                     dsOrderNotes.setVisibility(View.GONE);
                 } else {
                     dsOrderNotes.setText(notes);
@@ -228,7 +212,7 @@ public class OrderInfo extends AppCompatActivity {
                 orderto.setText(to);
                 OrderFrom.setText(from);
 
-                if(orderState.equals("placed")) {
+                if (orderState.equals("placed")) {
                     btnBid.setVisibility(View.VISIBLE);
                     btnMore.setVisibility(View.VISIBLE);
                     btnDelete.setVisibility(View.GONE);
@@ -241,13 +225,14 @@ public class OrderInfo extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
         mDatabase.child(orderID).child("requests").child(UserInFormation.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
+                if (snapshot.exists()) {
                     setBid("true");
                 } else {
                     setBid("false");
@@ -255,15 +240,15 @@ public class OrderInfo extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
-        btnBid.setOnClickListener(v-> {
+        btnBid.setOnClickListener(v -> {
             mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()) {
-                        setBid("true");
+                    if (snapshot.exists()) {
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
@@ -272,10 +257,7 @@ public class OrderInfo extends AppCompatActivity {
                                     _rquests.deleteReq(uId, orderID);
 
                                     // ------------------ Notificatiom ------------------ //
-                                    //notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");
-                                    //nDatabase.child(owner).push().setValue(Noti);
-                                    btnBid.setText("التقديم علي الشحنه");
-
+                                    setBid("false");
                                     Toast.makeText(OrderInfo.this, "تم الغاء التقديم", Toast.LENGTH_SHORT).show();
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
@@ -287,24 +269,19 @@ public class OrderInfo extends AppCompatActivity {
 
                     } else {
                         wallet w = new wallet();
-                        Boolean f= w.workerbid();
-                        if(f)
-                            Toast.makeText(OrderInfo.this, "يقدر يقدم", Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(OrderInfo.this, "", Toast.LENGTH_SHORT).show();
-                        if(!f){
-                            Toast.makeText(OrderInfo.this, "لا يقدر يقدم", Toast.LENGTH_SHORT).show();
+                        if (!w.workerbid()) {
+                            Toast.makeText(OrderInfo.this, "لا يمكنك قبول اي اورديد حتي تدفع المبلغ المستحق", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                        // -------------- New Request
-                        if(HomeActivity.requests) {
+                        if (HomeActivity.requests) {
                             Toast.makeText(OrderInfo.this, "لديك 10 طلبات معلقه, لا يمكنك ارسال المزيدا", Toast.LENGTH_LONG).show();
                             return;
                         }
 
-                        if(HomeActivity.orders) {
+                        if (HomeActivity.orders) {
                             Toast.makeText(OrderInfo.this, "لديك 20 اوردر معلق حتي الان, قم بتوصيلهم اولا", Toast.LENGTH_LONG).show();
                             return;
                         }
-                        setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
@@ -313,9 +290,10 @@ public class OrderInfo extends AppCompatActivity {
                                     _rquests.addrequest(orderID, datee);
 
                                     // ------------------ Notificatiom ------------------ //
-                                    notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + DName ,datee,"false","order");
+                                    String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + DName;
+                                    notiData Noti = new notiData(uId, owner, orderID, message, datee, "false", "order",UserInFormation.getUserName(), UserInFormation.getUserURL());
                                     nDatabase.child(owner).push().setValue(Noti);
-                                    btnBid.setText("الغاء التقديم علي الاوردر");
+                                    setBid("true");
 
                                     Toast.makeText(OrderInfo.this, "تم التقديم علي الشحنه", Toast.LENGTH_SHORT).show();
                                     break;
@@ -330,10 +308,11 @@ public class OrderInfo extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
             });
         });
-        
+
         uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -343,9 +322,9 @@ public class OrderInfo extends AppCompatActivity {
                 dsUsername.setText(dsUser);
 
                 // Check if account is Verfied
-                if(snapshot.child("isConfirmed").exists()) {
+                if (snapshot.child("isConfirmed").exists()) {
                     String isConfirmed = snapshot.child("isConfirmed").getValue().toString();
-                    if(isConfirmed.equals("true")) {
+                    if (isConfirmed.equals("true")) {
                         imgVerf.setVisibility(View.VISIBLE);
                     } else {
                         imgVerf.setVisibility(View.GONE);
@@ -356,21 +335,22 @@ public class OrderInfo extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
         //Get the Rate Stars
         rDatabase.child(owner).orderByChild("sId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     long total = 0;
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
                         total = total + rating;
                     }
                     double average = (double) total / dataSnapshot.getChildrenCount();
-                    if(String.valueOf(average).equals("NaN")) {
+                    if (String.valueOf(average).equals("NaN")) {
                         average = 5;
                     }
                     rbUser.setRating((int) average);
@@ -388,15 +368,15 @@ public class OrderInfo extends AppCompatActivity {
 
 
         // Get posted orders count
-        mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent (new ValueEventListener() {
+        mDatabase.orderByChild("uId").equalTo(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint({"SetTextI18n", "ResourceAsColor"})
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 int oCount = 0;
                 int currentOrders = 0;
-                if(dataSnapshot.exists()) {
-                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                         Data orderData = ds.getValue(Data.class);
                         assert orderData != null;
@@ -404,26 +384,28 @@ public class OrderInfo extends AppCompatActivity {
                         Date myDate = null;
                         try {
                             orderDate = orderformat.parse(orderData.getDDate());
-                            myDate =  orderformat.parse(orderformat.format(Calendar.getInstance().getTime()));
+                            myDate = orderformat.parse(orderformat.format(Calendar.getInstance().getTime()));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                         assert orderDate != null;
                         assert myDate != null;
 
-                        if(!ds.child("statue").getValue().toString().equals("deleted")) {
-                            oCount ++;
+                        if (!ds.child("statue").getValue().toString().equals("deleted")) {
+                            oCount++;
                             if (orderDate.compareTo(myDate) >= 0 && ds.child("statue").getValue().toString().equals("placed")) {
-                                currentOrders ++;
+                                currentOrders++;
                             }
                         }
                     }
                 }
-                if(oCount == 0) { ddCount.setText("لم يقم بأضافه اي اوردرات");
-                } else { ddCount.setText( "اضاف "+ oCount + " اوردر");
+                if (oCount == 0) {
+                    ddCount.setText("لم يقم بأضافه اي اوردرات");
+                } else {
+                    ddCount.setText("اضاف " + oCount + " اوردر");
                 }
 
-                if(oCount >= 10) {
+                if (oCount >= 10) {
                     dsUsername.setTextColor(R.color.ic_profile_background);
                     ppStar.setVisibility(View.VISIBLE);
                 } else {
@@ -431,19 +413,21 @@ public class OrderInfo extends AppCompatActivity {
                     ppStar.setVisibility(View.GONE);
                 }
 
-                if(currentOrders <= 1) {
+                if (currentOrders <= 1) {
                     btnMore.setVisibility(View.GONE);
-                } else if(currentOrders > 1) {
+                } else if (currentOrders > 1) {
                     int finalc = currentOrders - 1;
                     btnMore.setVisibility(View.VISIBLE);
                     btnMore.setText("متاح اوردر " + finalc + " لنفس العميل");
                 }
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
 
-        btnMore.setOnClickListener(v-> {
+        btnMore.setOnClickListener(v -> {
             Intent otherOrders = new Intent(this, OrdersBySameUser.class);
             otherOrders.putExtra("userid", owner);
             otherOrders.putExtra("name", DName);
@@ -495,8 +479,8 @@ public class OrderInfo extends AppCompatActivity {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        boolean flag=block.addUser(owner);
-                        if(flag) {
+                        boolean flag = block.addUser(owner);
+                        if (flag) {
                             Toast.makeText(this, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(this, HomeActivity.class));
                         } else {
@@ -515,36 +499,13 @@ public class OrderInfo extends AppCompatActivity {
         imgVerf.setOnClickListener(v1 -> {
             Toast.makeText(this, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
         });
-        
-    }
-
-    private void setBid() {
 
     }
 
-    private void removeBid() {
 
-    }
-
-    private void deleteAccept() {
-        mDatabase.child(orderID).child("uAccepted").setValue("");
-        mDatabase.child(orderID).child("statue").setValue("placed");
-        mDatabase.child(orderID).child("acceptedTime").setValue("");
-
-    }
-
-    public void setPostDate(int dS, int dM, int dH, int dD) {
-        String finalDate = "";
-        if (dS < 60) {
-            finalDate = "منذ " + dS + " ثوان";
-        } else if (dS > 60 && dS < 3600) {
-            finalDate = "منذ " + dM + " دقيقة";
-        } else if (dS > 3600 && dS < 86400) {
-            finalDate = "منذ " + dH + " ساعات";
-        } else if (dS > 86400) {
-            finalDate = "منذ " +dD + " ايام";
-        }
-        txtPostDate2.setText(finalDate);
+    public void setPostDate(String startDate) {
+        caculateTime _cacu = new caculateTime();
+        txtPostDate2.setText(_cacu.setPostDate(startDate));
     }
 
     public void setBid(String type) {

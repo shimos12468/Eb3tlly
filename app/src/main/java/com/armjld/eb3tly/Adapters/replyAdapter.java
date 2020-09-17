@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.SimpleDateFormat;
@@ -77,7 +78,7 @@ public class replyAdapter extends RecyclerView.Adapter<replyAdapter.MyViewHolder
         holder.btnReply.setOnClickListener(v -> {
             String myReply = holder.txtReply.getText().toString().trim();
 
-            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",uID, "-MAPQWoKEfmHIQG9xv-v", myReply, datee, "false", "contact");
+            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",uID, "-MAPQWoKEfmHIQG9xv-v", myReply, datee, "false", "contact", UserInFormation.getUserName(), UserInFormation.getUserURL());
             nDatabase.child(uID).push().setValue(Noti);
 
             cDatabase.child(uID).child(mID).child("statue").setValue("closed");

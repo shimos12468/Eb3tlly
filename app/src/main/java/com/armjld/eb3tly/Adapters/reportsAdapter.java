@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -201,7 +202,7 @@ public class reportsAdapter extends RecyclerView.Adapter<reportsAdapter.MyViewHo
         });
 
         holder.btnReply.setOnClickListener(v -> {
-            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",whoID, "-MAPQWoKEfmHIQG9xv-v", holder.txtReply.getText().toString(), datee, "false", "contact");
+            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",whoID, "-MAPQWoKEfmHIQG9xv-v", holder.txtReply.getText().toString(), datee, "false", "contact", UserInFormation.getUserName(), UserInFormation.getUserURL());
             nDatabase.child(whoID).push().setValue(Noti);
             Toast.makeText(context, "Reply Send Successful", Toast.LENGTH_SHORT).show();
         });

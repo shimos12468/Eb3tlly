@@ -1,13 +1,10 @@
 package com.armjld.eb3tly.delets;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,30 +12,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.armjld.eb3tly.Adapters.RequestsAdapter;
 import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Requests.RequestsForSup;
 import com.armjld.eb3tly.Requests.rquests;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
-
 import Model.DeleteData;
 import Model.notiData;
-import Model.requestsData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
@@ -121,7 +107,8 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
 
                         // --------------------------- Send Notifications ---------------------//
-                        notiData Noti = new notiData(owner, acceptedID, orderID,"deleted",datee,"false", "profile");
+                        String message = "قام " + UserInFormation.getUserName() + " بألغاء الاوردر الذي قكت بقوبلة";
+                        notiData Noti = new notiData(owner, acceptedID, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
                         assert acceptedID != null;
                         nDatabase.child(acceptedID).push().setValue(Noti);
 

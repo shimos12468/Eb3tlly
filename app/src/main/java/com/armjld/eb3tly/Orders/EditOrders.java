@@ -679,11 +679,6 @@ public class EditOrders extends AppCompatActivity {
                                 mDatabase.child(orderID).setValue(data);
                                 mDatabase.child(orderID).child("lastedit").setValue(datee);
 
-                                if(!uAccepted.equals("")) {
-                                    // --------------------------- Send Notifications ---------------------//
-                                    notiData Noti = new notiData(uID, uAccepted,orderID,"edited",datee,"false", "order");
-                                    nDatabase.child(uAccepted).push().setValue(Noti);
-                                }
                                 mdialog.dismiss();
                                 if(UserInFormation.getAccountType().equals("Admin")) {
                                     startActivity(new Intent(EditOrders.this, HomeActivity.class));

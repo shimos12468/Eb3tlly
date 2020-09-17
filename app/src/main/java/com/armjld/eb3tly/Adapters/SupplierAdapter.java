@@ -222,6 +222,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     String id = reportDatabase.child(dilvID).push().getKey();
                                     reportData repo2 = new reportData(uId, dilvID,orderID,datee,"المندوب سلم الاوردر و لم يضغط علي زر تم التسليم", id);
                                     assert id != null;
+
                                     reportDatabase.child(dilvID).child(id).setValue(repo2);
 
                                     // Changing the values in the orders db
@@ -229,7 +230,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     mDatabase.child(orderID).child("dilverTime").setValue(datee);
 
                                     // ------------ Send Notification
-                                    notiData Noti = new notiData(uId,data.getuAccepted(), orderID,"لا تنسي ان تضغط علي زر تم التسليم عند تسليم الاوردر",datee,"false", "nothing");
+                                    notiData Noti = new notiData(uId,data.getuAccepted(), orderID,"لا تنسي ان تضغط علي زر تم التسليم عند تسليم الاوردر",datee,"false", "nothing", UserInFormation.getUserName(), UserInFormation.getUserURL());
                                     nDatabase.child(data.getuAccepted()).push().setValue(Noti);
 
                                     // Add the Profit of the Dilvery Worker
@@ -246,7 +247,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) { }
                                     });
-
                                     Toast.makeText(context, "شكرا لبلاغك", Toast.LENGTH_SHORT).show();
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
@@ -288,7 +288,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                     case DialogInterface.BUTTON_POSITIVE:
                         mDatabase.child(orderID).child("statue").setValue("recived");
 
-                        notiData Noti = new notiData(uId,data.getuAccepted() , orderID,"recived",datee,"false", "profile");
+                        String message = "قام " + UserInFormation.getUserName() + " بتسليمك الاوردر";
+                        notiData Noti = new notiData(uId,data.getuAccepted() , orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
                         nDatabase.child(data.getuAccepted()).push().setValue(Noti);
 
                         Toast.makeText(context, "تم تسليم الاوردر للمندوب", Toast.LENGTH_SHORT).show();
@@ -431,7 +432,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                     case DialogInterface.BUTTON_POSITIVE:
 
                         // --------------------------- Send Notifications ---------------------//
-                        notiData Noti = new notiData(uId, getuAccepted, orderID,"deleted",datee,"false", "profile");
+                        String message =  "قام " + UserInFormation.getUserName() + " بألغاء الاوردر";
+                        notiData Noti = new notiData(uId, getuAccepted, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
                         nDatabase.child(getuAccepted).push().setValue(Noti);
 
 

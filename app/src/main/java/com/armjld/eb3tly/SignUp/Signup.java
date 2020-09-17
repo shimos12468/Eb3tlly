@@ -256,7 +256,6 @@ public class Signup extends AppCompatActivity {
     private void signUp(String memail, String mpass) {
         mdialog.setMessage("جاري تسجيل الحساب ..");
         mdialog.show();
-
     }
 
 

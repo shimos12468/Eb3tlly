@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -110,7 +111,7 @@ public class confirm_adapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adap
             uDatabase.child(id).child("isConfirmed").setValue("false");
             confirmDatabase.child(id).child("isConfirmed").setValue("false");
 
-            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",id, "-MAPQWoKEfmHIQG9xv-v", "لم يتم تأكيد حسابك بسبب عدم القدرة علي التأكد من بيانات بطاقتك يمكنك التواصل معنا اذا كنت ترغب في حل المشكلة, شكرا لتفهمكم", datee, "false", "contact");
+            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",id, "-MAPQWoKEfmHIQG9xv-v", "لم يتم تأكيد حسابك بسبب عدم القدرة علي التأكد من بيانات بطاقتك يمكنك التواصل معنا اذا كنت ترغب في حل المشكلة, شكرا لتفهمكم", datee, "false", "contact", UserInFormation.getUserName(), UserInFormation.getUserURL());
             nDatabase.child(id).push().setValue(Noti);
 
             ConfirmationData.remove(position);
@@ -123,7 +124,7 @@ public class confirm_adapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adap
             confirmDatabase.child(id).child("isConfirmed").setValue("true");
 
 
-            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",id, "-MAPQWoKEfmHIQG9xv-v", "شكرا لك, تم تأكيد حسابك بصورة البطاقة و رقم الهاتف", datee, "false", "profile");
+            notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1",id, "-MAPQWoKEfmHIQG9xv-v", "شكرا لك, تم تأكيد حسابك بصورة البطاقة و رقم الهاتف", datee, "false", "profile",UserInFormation.getUserName(), UserInFormation.getUserURL());
             nDatabase.child(id).push().setValue(Noti);
 
             Toast.makeText(context, "Activated Successfully", Toast.LENGTH_SHORT).show();

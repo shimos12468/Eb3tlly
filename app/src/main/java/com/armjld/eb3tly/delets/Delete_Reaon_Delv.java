@@ -89,6 +89,8 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
         String owner = getIntent().getStringExtra("owner");
         String acceptTime =  getIntent().getStringExtra("aTime");
         String editTime =  getIntent().getStringExtra("eTime");
+        String clientName = getIntent().getStringExtra("dName");
+
         mAuth = FirebaseAuth.getInstance();
         String uId = UserInFormation.getId();
         btnSend = findViewById(R.id.btnSend);
@@ -132,52 +134,24 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                         DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
                         dDatabase.child(orderID).child(id).setValue(deleteData);
 
-                        // --------------- Add the cencelled order to the counter ----------------------- //
-                        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Date lastedit = null;
-                                Date acceptedDate = null;
-                                try {
-                                    lastedit = sdf.parse(editTime);
-                                    acceptedDate = sdf.parse(acceptTime);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
+                        // --------------- Setting the order as placed again ---------------- //
+                        mDatabase.child(orderID).child("statue").setValue("placed");
+                        mDatabase.child(orderID).child("uAccepted").setValue("");
+                        mDatabase.child(orderID).child("acceptTime").setValue("");
 
-                                // ------------------------------- Adding the order to the worker cancelled orders counter --------------- //
-                                int cancelledCount =  Integer.parseInt(Objects.requireNonNull(dataSnapshot.child("canceled").getValue()).toString());
-                                int finalCount = (cancelledCount + 1);
-                                int reminCount = 3 - cancelledCount - 1;
+                        rquests _req = new rquests();
+                        _req.deleteReq(uId,orderID);
 
-                                assert acceptedDate != null;
-                                if(acceptedDate.compareTo(lastedit) > 0 && !rd6.isChecked() && !rd5.isChecked()) { // if the worker accepted the order before it has been edited
-                                    uDatabase.child(uId).child("canceled").setValue(String.valueOf(finalCount));
-                                    Toast.makeText(Delete_Reaon_Delv.this, "تم حذف الاوردر بنجاح و تبقي لديك " + reminCount + " فرصه لالغاء الاوردرات هذا الاسبوع", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(Delete_Reaon_Delv.this, "تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
-                                }
+                        chatListclass chatList = new chatListclass();
+                        chatList.dlevarychat(owner);
 
-                                // --------------- Setting the order as placed again ---------------- //
-                                mDatabase.child(orderID).child("statue").setValue("placed");
-                                mDatabase.child(orderID).child("uAccepted").setValue("");
-                                mDatabase.child(orderID).child("acceptTime").setValue("");
+                        // --------------------------- Send Notifications ---------------------//
+                        String message = "قام " + UserInFormation.getUserName() + " بالغاء اوردر " + clientName;
+                        notiData Noti = new notiData(uId, owner, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                        assert owner != null;
+                        nDatabase.child(owner).push().setValue(Noti);
+                        startActivity(new Intent(Delete_Reaon_Delv.this, NewProfile.class));
 
-                                rquests _req = new rquests();
-                                _req.deleteReq(uId,orderID);
-
-                                chatListclass chatList = new chatListclass();
-                                chatList.dlevarychat(owner);
-
-                                // --------------------------- Send Notifications ---------------------//
-                                notiData Noti = new notiData(uId, owner, orderID,"deleted",datee,"false", "profile");
-                                nDatabase.child(owner).push().setValue(Noti);
-                                startActivity(new Intent(Delete_Reaon_Delv.this, NewProfile.class));
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) { }
-                        });
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;

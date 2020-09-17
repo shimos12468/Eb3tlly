@@ -263,7 +263,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                     _rquests.addrequest(orderID, datee);
 
                                     // ------------------ Notificatiom ------------------ //
-                                    notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");
+                                    String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName();
+                                    notiData Noti = new notiData(uId, owner,orderID,message,datee,"false","order", UserInFormation.getUserName(), UserInFormation.getUserURL());
                                     nDatabase.child(owner).push().setValue(Noti);
 
                                     holder.setBid("true");

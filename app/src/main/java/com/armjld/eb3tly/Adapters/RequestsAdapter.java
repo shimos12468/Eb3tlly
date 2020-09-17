@@ -306,7 +306,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                         mDatabase.child(orderId).child("acceptedTime").setValue(datee);
 
                         // ------------------ Notificatiom ------------------ //
-                        notiData Noti = new notiData(UserInFormation.getId(), id,orderId,"قام " + UserInFormation.getUserName() + " بقبول طلبك لاستلام الاوردر ",datee,"false","order");
+                        notiData Noti = new notiData(UserInFormation.getId(), id,orderId,"قام " + UserInFormation.getUserName() + " بقبول طلبك لاستلام الاوردر ",datee,"false","order",UserInFormation.getUserName(), UserInFormation.getUserURL());
                         nDatabase.child(id).push().setValue(Noti);
 
                         //------------------ se request as accepted in user db ----------- //

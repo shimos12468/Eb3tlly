@@ -72,127 +72,19 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         String Datee = notiData.get(position).getDatee();
         String Statue = notiData.get(position).getStatue();
         String OrderID =notiData.get(position).getOrderid();
+        String uName = notiData.get(position).getuName();
+        String action = notiData.get(position).getAction();
+        String ppURL = notiData.get(position).getPpURL();
 
-        holder.setBody(From, Statue, OrderID, To);
-        if(isValidFormat("yyyy.MM.dd HH:mm:ss", Datee)) {
-            holder.setPostDate(Datee);
-        } else {
-            holder.setDate(Datee);
-        }
-        holder.myview.setOnClickListener(v -> {
-            if(UserInFormation.getAccountType().equals("Supplier")) {
-                switch (Statue) {
-                    case "deleted": {
-                        context.startActivity(new Intent(context, supplierProfile.class));
-                        break;
-                    }
-                    case "delivered": {
-                        context.startActivity(new Intent(context, supplierProfile.class));
-                        break;
-                    }
-                    case "accepted": {
-                        context.startActivity(new Intent(context, supplierProfile.class));
-                        break;
-                    }
-                    case "welcome": {
-                        context.startActivity(new Intent(context, AddOrders.class));
-                        break;
-                    }
-                    case "متنساش تعمل لايك لصفحتنا علي الفيس بوك": {
-                        String fbLink = "https://www.facebook.com/Eb3tlyy/";
-                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse(fbLink));
-                        context.startActivity(browse);
-                        break;
-                    }
-                    case "يوجد تحديث جديد للبرنامج": {
-                        String psLink = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
-                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse(psLink));
-                        context.startActivity(browse);
-                        break;
-                    }
-                    default: {
-                        // ---- do nothing
-                        break;
-                    }
+        holder.setNoti(uName, Statue, Datee,ppURL);
+        holder.myview.setOnClickListener(v-> {
+            switch (action) {
+                case "": {
+
+                    break;
                 }
-            } else {
-                switch (Statue) {
-                    case "edited": {
-                        context.startActivity(new Intent(context, NewProfile.class));
-                        break;
-                    }
-                    case "deleted": {
-                        context.startActivity(new Intent(context, NewProfile.class));
-                        break;
-                    }
-                    case "recived": {
-                        context.startActivity(new Intent(context, NewProfile.class));
-                        break;
-                    }
-                    case "welcome": {
-                        context.startActivity(new Intent(context, HomeActivity.class));
-                        break;
-                    }
 
-                    case "يوجد اوردر جديد في منطقتك" : {
-                        mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if((int) snapshot.getChildrenCount() > 1) {
-                                    Data orderData = snapshot.getValue(Data.class);
-                                    assert orderData != null;
-                                    Log.i(TAG, orderData.getId() + " : " +orderData.getDDate());
-                                    if(!orderData.getStatue().equals("placed")) {
-                                        Toast.makeText(context, "نعتذر, لقد تم قبول الاوردر بالفعل من مندوب اخر", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Date orderDate = null;
-                                        Date myDate = null;
-                                        try {
-                                            orderDate = format.parse(orderData.getDDate());
-                                            myDate =  format.parse(format.format(Calendar.getInstance().getTime()));
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
 
-                                        assert orderDate != null;
-                                        assert myDate != null;
-                                        if(orderDate.compareTo(myDate) >= 0) {
-                                            Log.i(TAG, orderData.getId());
-                                            Intent OneOrder = new Intent(context, com.armjld.eb3tly.Orders.OneOrder.class);
-                                            OneOrder.putExtra("oID", orderData.getId());
-                                            context.startActivity(OneOrder);
-                                        } else {
-                                            Toast.makeText(context, "معاد تسليم الاوردر قد فات", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                } else {
-                                    Toast.makeText(context, "تم حذف هذا الاوردر", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) { }
-                        });
-                        break;
-                    }
-
-                    case "متنساش تعمل لايك لصفحتنا علي الفيس بوك" : {
-                        String fbLink = "https://www.facebook.com/Eb3tlyy/";
-                        Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(fbLink));
-                        context.startActivity(browse);
-                        break;
-                    }
-                    case "يوجد تحديث جديد للبرنامج": {
-                        String psLink = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
-                        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse(psLink));
-                        context.startActivity(browse);
-                        break;
-                    }
-                    default: {
-                        // ------------- do nothing
-                        break;
-                    }
-                }
             }
         });
     }
@@ -209,7 +101,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
     }
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
         public TextView txtBody, txtNotidate,txtName;
         public ImageView imgEditPhoto;
@@ -224,71 +116,11 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             txtName = myview.findViewById(R.id.txtName);
         }
 
-        public void setBody(String sendby, String message, String OrderID, String To) {
-            uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String nameFrom = Objects.requireNonNull(dataSnapshot.child(sendby).child("name").getValue()).toString();
-                    txtName.setText(nameFrom);
-                    String URL = Objects.requireNonNull(dataSnapshot.child(sendby).child("ppURL").getValue()).toString();
-                    String ToType = Objects.requireNonNull(dataSnapshot.child(To).child("accountType").getValue()).toString();
-                    Picasso.get().load(Uri.parse(URL)).into(imgEditPhoto);
-                    mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()) {
-                                String orderTo = Objects.requireNonNull(dataSnapshot.child("dname").getValue()).toString();
-                                String body;
-                                switch (message) {
-                                    case "edited": {
-                                        body = " قام " + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته ";
-                                        break;
-                                    }
-                                    case "deleted": {
-                                        if (ToType.equals("Supplier")) {
-                                            body = " قام " + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة ";
-                                        } else {
-                                            body = " قام " + nameFrom + " بالغاء الاوردر ";
-                                        }
-                                        break;
-                                    }
-                                    case "delivered": {
-                                        body = " قام " + nameFrom + " بتوصيل اوردر " + orderTo;
-                                        break;
-                                    }
-                                    case "accepted": {
-                                        body = " قام " + nameFrom + " بقبول اوردر " + orderTo;
-                                        break;
-                                    }
-                                    case "recived": {
-                                        body = "قام " + nameFrom + " بتسليمك الاوردر";
-                                        break;
-                                    }
-                                    case "welcome": {
-                                        body = "اهلا بيك في برنامج ابعتلي, اول منصة مهمتها توصيل التاجر بمندوب الشحن";
-                                        break;
-                                    }
-                                    default: {
-                                        body = message;
-                                        break;
-                                    }
-                                }
-                                txtBody.setText(body);
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }});
-                }
-                @Override public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-        }
-
-        public void setDate(String date) {
-            txtNotidate.setText(date);
-        }
-
-        public void setPostDate(String startDate) {
-            txtNotidate.setText(_cacu.setPostDate(startDate));
+        public void setNoti(String uName, String statue, String datee, String ppURL) {
+            txtName.setText(uName);
+            txtBody.setText(statue);
+            txtNotidate.setText(_cacu.setPostDate(datee));
+            Picasso.get().load(Uri.parse(ppURL)).into(imgEditPhoto);
         }
 
     }

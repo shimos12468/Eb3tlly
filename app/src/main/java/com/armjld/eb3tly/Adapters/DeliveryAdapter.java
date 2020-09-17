@@ -140,24 +140,24 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         holder.btnDelivered.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
-            final String DID = data.getuAccepted();
-            String SID = data.getuId();
 
             // Changing the values in the orders db
             mDatabase.child(orderID).child("statue").setValue("delivered");
             mDatabase.child(orderID).child("dilverTime").setValue(datee);
+
+            // ----- Add money to the Wallet
             wallet w = new wallet();
             w.SupsetDilivared(orderID);
 
             // Add the Profit of the Dilvery Worker
-            uDatabase.child(DID).addListenerForSingleValueEvent(new ValueEventListener() {
+            uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists() && dataSnapshot.child("profit").exists()) {
                         String dbprofits = Objects.requireNonNull(dataSnapshot.child("profit").getValue()).toString();
                         int longProfit = Integer.parseInt(dbprofits);
                         int finalProfits = (longProfit + Integer.parseInt(data.getGGet()));
-                        uDatabase.child(DID).child("profit").setValue(String.valueOf(finalProfits));
+                        uDatabase.child(uId).child("profit").setValue(String.valueOf(finalProfits));
                     }
                 }
                 @Override
@@ -166,13 +166,17 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             });
 
             // --------------------------- Send Notifications ---------------------//
-            notiData Noti = new notiData(uId, SID,orderID,"delivered",datee,"false","profile");
-            nDatabase.child(SID).push().setValue(Noti);
+            String message =  "قام " + UserInFormation.getUserName() + " بتوصل الاردر";
+
+            notiData Noti = new notiData(uId, owner,orderID,message,datee,"false","profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+            nDatabase.child(owner).push().setValue(Noti);
+
             Toast.makeText(context, "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
             vibe.vibrate(20);
-            context.startActivity(new Intent(context, NewProfile.class));
+            //context.startActivity(new Intent(context, NewProfile.class));
+
             ViewPager viewPager = ((NewProfile) context).findViewById(R.id.view_pager);
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(1, true);
         });
 
 
