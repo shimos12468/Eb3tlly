@@ -29,16 +29,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Wallet.wallet;
+import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
 import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
@@ -46,7 +47,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +56,6 @@ import Model.Data;
 import Model.notiData;
 import Model.rateData;
 import Model.reportData;
-
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyViewHolder> implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -65,11 +64,12 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     long count;
     ArrayList<Data>filtersData;
     private DatabaseReference mDatabase,rDatabase,uDatabase,nDatabase,reportDatabase;
-    private String TAG = "Supplier Adapter";
+    public static String TAG = "Supplier Adapter";
     String uId = UserInFormation.getId();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;
+    public static caculateTime _cacu = new caculateTime();
 
     public void addItem(int position , Data data){
         int size = filtersData.size();
@@ -110,40 +110,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
         String orderID = data.getId();
         String owner = data.getuId();
-        String uAccepted = data.getuAccepted();
 
         // Get Post Date
         String startDate = Objects.requireNonNull(data.getDate());
-        String stopDate = datee;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = format.parse(startDate);
-            d2 = format.parse(stopDate);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-        assert d2 != null;
-        assert d1 != null;
-        long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000;
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        int idiffSeconds = (int) diffSeconds;
-        int idiffMinutes = (int) diffMinutes;
-        int idiffHours = (int) diffHours;
-        int idiffDays = (int) diffDays;
-
-        final String sId = data.getuId();
-        final String iPShop = data.getmPShop();
-        final String iPAddress = data.getmPAddress();
-        final String iDAddress = data.getDAddress();
-        final String iDPhone = data.getDPhone();
-        final String iDName = data.getDName();
-        final String iDNote = data.getNotes();
 
         holder.setDate(data.getDDate());
         holder.setUsername(data.getuId());
@@ -151,7 +120,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         holder.setOrderFrom(data.reStateP());
         holder.setOrderto(data.reStateD());
         holder.setFee(data.getGGet());
-        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
+        holder.setPostDate(startDate);
         holder.setDilveredButton(data.getStatue());
         holder.setRateButton(data.getSrated(), data.getStatue());
         holder.setType(data.getIsCar(), data.getIsMotor(), data.getIsMetro(), data.getIsTrans());
@@ -251,14 +220,14 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 final int intRating = (int) drStar.getRating();
                 assert rId != null;
 
-                rateData data1 = new rateData(rId, orderID, sId ,uId, intRating,rRate , datee);
-                rDatabase.child(sId).child(rId).setValue(data1);
+                rateData data1 = new rateData(rId, orderID, owner ,uId, intRating,rRate , datee);
+                rDatabase.child(owner).child(rId).setValue(data1);
 
                 mDatabase.child(orderID).child("srated").setValue("true");
                 mDatabase.child(orderID).child("srateid").setValue(rId);
 
                 Ratings _rate = new Ratings();
-                _rate.setRating(sId, intRating);
+                _rate.setRating(owner, intRating);
 
                 Toast.makeText(context, "تم التقييم بالنجاح", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -280,56 +249,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         });
 
         holder.btnChat.setOnClickListener(v-> {
-            final String[] room = new String[1];
-            String uId = UserInFormation.getId();
-            DatabaseReference Bdatabase;
-            final boolean[] found = {false};
-            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(owner);
-            Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                DatabaseReference Bdatabase;
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(owner);
-                        Bdatabase.child("talk").setValue("true");
-
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(owner).child("chats").child(uId);
-                        Bdatabase.child("talk").setValue("true");
-
-                        Intent intent = new Intent(context, Messages.class);
-                        intent.putExtra("roomid", snapshot.child("roomid").getValue().toString());
-                        intent.putExtra("rid", data.getuId());
-                        ((Activity)context).startActivityForResult(intent, 1);
-
-                    } else{
-
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                        String chat = Bdatabase.push().getKey();
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(owner);
-                        Bdatabase.child("userId").setValue(owner);
-                        Bdatabase.child("roomid").setValue(chat);
-                        Bdatabase.child("talk").setValue("true");
-
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(owner).child("chats");
-                        //String chat = Bdatabase.push().getKey();
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(owner).child("chats").child(uId);
-                        Bdatabase.child("userId").setValue(uId);
-                        Bdatabase.child("roomid").setValue(chat);
-                        Bdatabase.child("talk").setValue("true");
-
-
-                        Intent intent = new Intent(context, Messages.class);
-                        intent.putExtra("roomid",chat);
-                        intent.putExtra("rid", data.getuId());
-                        ((Activity)context).startActivityForResult(intent, 1);
-
-                    }
-                    Messages.cameFrom = "Profile";
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
+            chatListclass _chatList = new chatListclass();
+            _chatList.startChating(uId,owner,context);
+            Messages.cameFrom = "Profile";
         });
 
         holder.icnMotor.setOnClickListener(v -> {
@@ -471,12 +393,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     @Override
     public int getItemViewType(int position) {
         return position;
-    }
-
-    public void checkPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions((Activity) context, new String[] { permission }, requestCode);
-        }
     }
 
     @Override
@@ -645,18 +561,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             }
         }
 
-        public void setPostDate(int dS, int dM, int dH, int dD) {
-            String finalDate = "";
-            if (dS < 60) {
-                finalDate = "منذ " + dS + " ثوان";
-            } else if (dS > 60 && dS < 3600) {
-                finalDate = "منذ " + dM + " دقيقة";
-            } else if (dS > 3600 && dS < 86400) {
-                finalDate = "منذ " + dH + " ساعات";
-            } else if (dS > 86400) {
-                finalDate = "منذ " + dD + " ايام";
-            }
-            txtPostDate.setText(finalDate);
+        public void setPostDate(String startDate) {
+            txtPostDate.setText(_cacu.setPostDate(startDate));
         }
 
         public void checkDeleted(String removed) {

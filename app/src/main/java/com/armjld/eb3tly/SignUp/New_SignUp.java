@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.hardware.input.InputManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,13 +30,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.armjld.eb3tly.Intros.intro2;
 import com.armjld.eb3tly.Intros.introSup;
 import com.armjld.eb3tly.R;
@@ -63,10 +60,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.rilixtech.widget.countrycodepicker.Country;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -75,10 +70,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
 import Model.notiData;
 import Model.userData;
-
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class New_SignUp extends AppCompatActivity {
@@ -87,7 +80,6 @@ public class New_SignUp extends AppCompatActivity {
     private ViewFlipper viewFlipper;
     FloatingActionButton btnNext,btnPrev;
     EditText txtFirstName, txtLastName, txtEmail, txtPass1, txtPass2, txtPhone;
-    EditText et1,et2,et3,et4,et5,et6;
     EditText txtCode;
     ImageView btnBack,btnDelivery, btnSupplier;
     SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -98,9 +90,7 @@ public class New_SignUp extends AppCompatActivity {
     String phoneNumb;
 
     public String mVerificationId = "";
-    private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    private boolean mVerificationInProgress = false;
     private Bitmap bitmap;
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase, nDatabase;
@@ -118,13 +108,14 @@ public class New_SignUp extends AppCompatActivity {
     public static String newFirstName = "";
     public static String newLastName = "";
     public static String newEmail = "";
+    public static String newPass ="";
 
     String isCar = "false";
     String isTruck = "false";
     String isMotor = "false";
     String isTrans = "false";
-    String City = "القاهرة";
-    String Gov = "15 مايو";
+    String City = "15 مايو";
+    String Gov = "القاهرة";
 
     Button btnCar,btnTruck,btnMotor,btnTrans;
     Spinner spnGov, spnCity;
@@ -196,9 +187,7 @@ public class New_SignUp extends AppCompatActivity {
             txtEmail.setKeyListener(null);
         }
 
-        btnBack.setOnClickListener(v-> {
-            showPrev();
-        });
+        btnBack.setOnClickListener(v-> showPrev());
 
         btnCar.setOnClickListener(v-> {
             isCar = "true";
@@ -267,22 +256,14 @@ public class New_SignUp extends AppCompatActivity {
             rdMotor.setChecked(false);
         });
 
-        ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
-            @Override
-            public void onCountrySelected(Country selectedCountry) {
-                Toast.makeText(New_SignUp.this, "Updated " + ccp.getSelectedCountryCodeWithPlus(), Toast.LENGTH_SHORT).show();
-                cCode = ccp.getSelectedCountryCodeWithPlus();
-                txtCCode.setText(ccp.getSelectedCountryCodeWithPlus());
-            }
+        ccp.setOnCountryChangeListener(selectedCountry -> {
+            cCode = ccp.getSelectedCountryCodeWithPlus();
+            txtCCode.setText(ccp.getSelectedCountryCodeWithPlus());
         });
 
-        btnNext.setOnClickListener(v-> {
-            showNext();
-        });
+        btnNext.setOnClickListener(v-> showNext());
 
-        btnPrev.setOnClickListener(v-> {
-            showPrev();
-        });
+        btnPrev.setOnClickListener(v-> showPrev());
 
         //Set PP
         imgSetPP.setOnClickListener(v -> {
@@ -507,7 +488,7 @@ public class New_SignUp extends AppCompatActivity {
                     btnPrev.setVisibility(View.GONE);
                     btnNext.setVisibility(View.GONE);
                     viewFlipper.setDisplayedChild(0);
-                } else {
+                } else if(newType.equals("Delivery Worker")) {
                     viewFlipper.setDisplayedChild(1);
                 }
                 break;
@@ -578,6 +559,7 @@ public class New_SignUp extends AppCompatActivity {
                 }
 
                 newEmail = txtEmail.getText().toString();
+                newPass = txtPass1.getText().toString();
                 newFirstName = txtFirstName.getText().toString();
                 newLastName = txtLastName.getText().toString();
 
@@ -593,13 +575,13 @@ public class New_SignUp extends AppCompatActivity {
                 uDatabase.orderByChild("phone").equalTo("0"+phoneNumb).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.i("ss" ,"before exist");
                         if(snapshot.exists()) {
-                            Log.i("ss" ,"in exist");
+                            Log.i(TAG ,"Phone Number is Already Exist");
                             mdialog.dismiss();
                             Toast.makeText(New_SignUp.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.i("ss" ,"in else");
+                            Log.i(TAG ,"Phone Number isn't Exist, Let's Continue");
+                            mdialog.setMessage("جاري ارسال الكود ..");
                             mCallBack();
                             sendCode(phoneNumb);
                         }
@@ -662,81 +644,85 @@ public class New_SignUp extends AppCompatActivity {
         }
     }
 
-    private void link(PhoneAuthCredential credential) {
+    private void setUserData() {
+        String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         String memail = txtEmail.getText().toString().trim().toLowerCase();
         String mpass = txtPass1.getText().toString().trim();
         String muser = newFirstName + " " + newLastName;
-        String mPhone = txtPhone.getText().toString().trim();
+        String mPhone = "0"+phoneNumb;
+
+        userData data= new userData(muser, mPhone, memail, acDate, id, newType, defultPP, mpass, "0");
+        uDatabase.child(id).setValue(data);
+        uDatabase.child(id).child("completed").setValue("true");
+        uDatabase.child(id).child("profit").setValue("0");
+        uDatabase.child(id).child("active").setValue("true");
+        uDatabase.child(id).child("isConfirmed").setValue("false");
+
+        if(newType.equals("Delivery Worker")) {
+            uDatabase.child(id).child("isCar").setValue(isCar);
+            uDatabase.child(id).child("isTrans").setValue(isTrans);
+            uDatabase.child(id).child("isMotor").setValue(isMotor);
+            uDatabase.child(id).child("isTruck").setValue(isTruck);
+            uDatabase.child(id).child("userState").setValue(Gov);
+            uDatabase.child(id).child("userCity").setValue(City);
+        }
+
+        // ------------------ Set Device Token ----------------- //
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(New_SignUp.this, instanceIdResult -> {
+            String deviceToken = instanceIdResult.getToken();
+            uDatabase.child(id).child("device_token").setValue(deviceToken);
+        });
+
+        if(bitmap != null) {
+            handleUpload(bitmap);
+        } else {
+            uDatabase.child(id).child("ppURL").setValue(defultPP);
+            mdialog.dismiss();
+        }
+
+        // ------------- Welcome message in Notfications----------------------//
+
+        notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false", "nothing");
+        nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
+
+        UserInFormation.setAccountType(newType);
+        UserInFormation.setUserName(muser);
+        UserInFormation.setUserDate(acDate);
+        UserInFormation.setUserURL(defultPP);
+        UserInFormation.setId(id);
+
+        UserInFormation.setEmail(memail);
+        UserInFormation.setPass(mpass);
+        UserInFormation.setPhone(mPhone);
+
+        Ratings _ratings = new Ratings();
+        _ratings.setMyRating();
+
+        if(newType.equals("Delivery Worker")) {
+            UserInFormation.setCurrentdate("none");
+        }
+        StartUp.dataset = true;
+        UserInFormation.setisConfirm("false");
+        if (newType.equals("Supplier")) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), introSup.class));
+        } else if (newType.equals("Delivery Worker")) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), intro2.class));
+        }
+        Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
+        mdialog.dismiss();
+    }
+
+    private void link(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(googleCred).addOnCompleteListener(New_SignUp.this, googleSign -> {
             if(googleSign.isSuccessful() && mAuth.getCurrentUser() != null) {
                 mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(New_SignUp.this, taskPhone -> {
                     if(taskPhone.isSuccessful()) {
-                        AuthCredential emailCred = EmailAuthProvider.getCredential(memail, mpass);
+                        AuthCredential emailCred = EmailAuthProvider.getCredential(newEmail, newPass);
                         Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
                             if(taskEmail.isSuccessful()) {
-                                String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-
-                                userData data= new userData(muser, "0"+mPhone, memail, acDate, id, newType, defultPP, mpass, "0");
-                                uDatabase.child(id).setValue(data);
-                                uDatabase.child(id).child("completed").setValue("true");
-                                uDatabase.child(id).child("profit").setValue("0");
-                                uDatabase.child(id).child("active").setValue("true");
-                                uDatabase.child(id).child("isConfirmed").setValue("false");
-
-                                if(newType.equals("Delivery Worker")) {
-                                    uDatabase.child(id).child("isCar").setValue(isCar);
-                                    uDatabase.child(id).child("isTrans").setValue(isTrans);
-                                    uDatabase.child(id).child("isMotor").setValue(isMotor);
-                                    uDatabase.child(id).child("isTruck").setValue(isTruck);
-                                    uDatabase.child(id).child("userState").setValue(Gov);
-                                    uDatabase.child(id).child("userCity").setValue(City);
-                                }
-
-                                // ------------------ Set Device Token ----------------- //
-                                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(New_SignUp.this, instanceIdResult -> {
-                                    String deviceToken = instanceIdResult.getToken();
-                                    uDatabase.child(id).child("device_token").setValue(deviceToken);
-                                });
-
-                                if(bitmap != null) {
-                                    handleUpload(bitmap);
-                                } else {
-                                    uDatabase.child(id).child("ppURL").setValue(defultPP);
-                                    mdialog.dismiss();
-                                }
-
-                                // ------------- Welcome message in Notfications----------------------//
-
-                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false", "nothing");
-                                nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-
-                                UserInFormation.setAccountType(newType);
-                                UserInFormation.setUserName(muser);
-                                UserInFormation.setUserDate(acDate);
-                                UserInFormation.setUserURL(defultPP);
-                                UserInFormation.setId(id);
-
-                                UserInFormation.setEmail(memail);
-                                UserInFormation.setPass(mpass);
-                                UserInFormation.setPhone(mPhone);
-
-                                Ratings _ratings = new Ratings();
-                                _ratings.setMyRating();
-
-                                if(newType.equals("Delivery Worker")) {
-                                    UserInFormation.setCurrentdate("none");
-                                }
-                                StartUp.dataset = true;
-                                UserInFormation.setisConfirm("false");
-                                if (newType.equals("Supplier")) {
-                                    finish();
-                                    startActivity(new Intent(getApplicationContext(), introSup.class));
-                                } else if (newType.equals("Delivery Worker")) {
-                                    finish();
-                                    startActivity(new Intent(getApplicationContext(), intro2.class));
-                                }
-                                Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
-                                mdialog.dismiss();
+                                setUserData();
                             } else {
                                 mdialog.dismiss();
                                 Toast.makeText(this, "حدث خطأ ما حاول لاحقا", Toast.LENGTH_SHORT).show();
@@ -754,65 +740,12 @@ public class New_SignUp extends AppCompatActivity {
 
 
     private void signUp(PhoneAuthCredential credential) {
-        String memail = txtEmail.getText().toString().trim();
-        String mpass = txtPass1.getText().toString().trim();
-        String muser = txtFirstName.getText().toString().trim();
-        String mPhone = txtPhone.getText().toString().trim();
-
         mAuth.signInWithCredential(credential).addOnCompleteListener(New_SignUp.this, taskPhone -> {
             if(taskPhone.isSuccessful()) {
-                Log.i(TAG, "Linking with Mail : " + memail + " : " + mpass+ " uID : " +mAuth.getCurrentUser().getUid());
-                AuthCredential emailCred = EmailAuthProvider.getCredential(memail, mpass);
-
+                AuthCredential emailCred = EmailAuthProvider.getCredential(newEmail, newPass);
                 Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
                    if(taskEmail.isSuccessful()) {
-                       String id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-
-                       userData data= new userData(muser, mPhone, memail, acDate, id, newType, defultPP, mpass, "0");
-                       uDatabase.child(id).setValue(data);
-                       uDatabase.child(id).child("completed").setValue("true");
-                       uDatabase.child(id).child("profit").setValue("0");
-                       uDatabase.child(id).child("active").setValue("true");
-                       uDatabase.child(id).child("isConfirmed").setValue("false");
-
-                       // ------------------ Set Device Token ----------------- //
-                       FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(New_SignUp.this, instanceIdResult -> {
-                           String deviceToken = instanceIdResult.getToken();
-                           uDatabase.child(id).child("device_token").setValue(deviceToken);
-                       });
-
-                       if(bitmap != null) {
-                           handleUpload(bitmap);
-                       } else {
-                           uDatabase.child(id).child("ppURL").setValue(defultPP);
-                           mdialog.dismiss();
-                       }
-
-                       // ------------- Welcome message in Notfications----------------------//
-
-                       notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", mAuth.getCurrentUser().getUid().toString(), "-MAPQWoKEfmHIQG9xv-v", "welcome", datee, "false", "nothing");
-                       nDatabase.child(mAuth.getCurrentUser().getUid()).push().setValue(Noti);
-
-                       UserInFormation.setAccountType(newType);
-                       UserInFormation.setUserName(muser);
-                       UserInFormation.setUserDate(acDate);
-                       UserInFormation.setUserURL(defultPP);
-                       UserInFormation.setId(id);
-
-                       UserInFormation.setEmail(memail);
-                       UserInFormation.setPass(mpass);
-                       UserInFormation.setPhone(mPhone);
-                       StartUp.dataset = true;
-                       UserInFormation.setisConfirm("false");
-                       if (newType.equals("Supplier")) {
-                           finish();
-                           startActivity(new Intent(getApplicationContext(), introSup.class));
-                       } else if (newType.equals("Delivery Worker")) {
-                           finish();
-                           startActivity(new Intent(getApplicationContext(), intro2.class));
-                       }
-                       Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
-                       mdialog.dismiss();
+                       setUserData();
                    } else {
                        Toast.makeText(this, "حدث خطأ ما حاول لاحقا", Toast.LENGTH_SHORT).show();
                    }
@@ -830,10 +763,8 @@ public class New_SignUp extends AppCompatActivity {
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                mVerificationInProgress = false;
                 txtCode.setText(credential.getSmsCode());
                 mdialog.setMessage("جاري التأكد من الرمز ..");
-
                 mdialog.show();
                 if(!provider.equals("Email")) {
                     link(credential);
@@ -844,8 +775,7 @@ public class New_SignUp extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                mVerificationInProgress = false;
-                btnNext.setBackground(ContextCompat.getDrawable(New_SignUp.this, R.drawable.btn_defult));
+                mdialog.dismiss();
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(New_SignUp.this, "رقم هاتف غير صحيح", Toast.LENGTH_SHORT).show();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
@@ -857,10 +787,8 @@ public class New_SignUp extends AppCompatActivity {
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
                 Toast.makeText(New_SignUp.this, "تم ارسال الرمز", Toast.LENGTH_SHORT).show();
                 mdialog.dismiss();
-                Log.i(TAG, "Verf ID From Server: " + verificationId);
                 mVerificationId = verificationId;
-                Log.i(TAG, "Local Verf ID" + mVerificationId);
-                mResendToken = token;
+                Log.i(TAG, "Code has been sent to : " + phoneNumb + " and Verf id has been set : " + mVerificationId);
                 viewFlipper.setDisplayedChild(3);
             }
         };
@@ -1077,11 +1005,14 @@ public class New_SignUp extends AppCompatActivity {
     }
 
     public void clearTexts() {
+        if(provider.equals("Email")) {
+            txtFirstName.setText("");
+            txtEmail.setText("");
+            txtLastName.setText("");
+        }
         txtPhone.setText("");
-        txtFirstName.setText("");
-        txtEmail.setText("");
-        txtLastName.setText("");
         txtPass1.setText("");
         txtPass2.setText("");
     }
+
 }

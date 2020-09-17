@@ -11,24 +11,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Profiles.supplierProfile;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,25 +33,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
 import Model.Data;
 import Model.notiData;
 
-
-import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder> {
 
     Context context, context1;
     long count;
-    String uType = UserInFormation.getAccountType();
     ArrayList<notiData>notiData;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private DatabaseReference mDatabase, uDatabase, nDatabase;
+    private DatabaseReference mDatabase, uDatabase;
     private String TAG = "Notification Adapter";
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-    String datee = sdf.format(new Date());
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    public static caculateTime _cacu = new caculateTime();
 
 
     public NotiAdaptere(Context context, ArrayList<notiData> notiData, Context context1, long count) {
@@ -64,7 +55,6 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         this.context1 = context1;
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
     }
 
     @NonNull
@@ -85,31 +75,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
 
         holder.setBody(From, Statue, OrderID, To);
         if(isValidFormat("yyyy.MM.dd HH:mm:ss", Datee)) {
-            String startDate = notiData.get(position).getDatee();
-            String stopDate = datee;
-            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-
-            Date d1 = null;
-            Date d2 = null;
-            try {
-                d1 = format.parse(startDate);
-                d2 = format.parse(stopDate);
-            } catch (java.text.ParseException ex) {
-                ex.printStackTrace();
-            }
-            assert d2 != null;
-            assert d1 != null;
-            long diff = d2.getTime() - d1.getTime();
-            long diffSeconds = diff / 1000;
-            long diffMinutes = diff / (60 * 1000);
-            long diffHours = diff / (60 * 60 * 1000);
-            long diffDays = diff / (24 * 60 * 60 * 1000);
-
-            int idiffSeconds = (int) diffSeconds;
-            int idiffMinutes = (int) diffMinutes;
-            int idiffHours = (int) diffHours;
-            int idiffDays = (int) diffDays;
-            holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
+            holder.setPostDate(Datee);
         } else {
             holder.setDate(Datee);
         }
@@ -193,7 +159,7 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
                                         if(orderDate.compareTo(myDate) >= 0) {
                                             Log.i(TAG, orderData.getId());
                                             Intent OneOrder = new Intent(context, com.armjld.eb3tly.Orders.OneOrder.class);
-                                            OneOrder.putExtra("oID", orderData.getId().toString());
+                                            OneOrder.putExtra("oID", orderData.getId());
                                             context.startActivity(OneOrder);
                                         } else {
                                             Toast.makeText(context, "معاد تسليم الاوردر قد فات", Toast.LENGTH_SHORT).show();
@@ -321,27 +287,10 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             txtNotidate.setText(date);
         }
 
-        public void setPostDate(int dS, int dM, int dH, int dD) {
-            String finalDate = "";
-            if (dS < 60) {
-                finalDate = "منذ " + dS + " ثوان";
-            } else if (dS > 60 && dS < 3600) {
-                finalDate = "منذ " + dM + " دقيقة";
-            } else if (dS > 3600 && dS < 86400) {
-                finalDate = "منذ " + dH + " ساعات";
-            } else if (dS > 86400) {
-                finalDate = "منذ " +dD + " ايام";
-            }
-            txtNotidate.setText(finalDate);
+        public void setPostDate(String startDate) {
+            txtNotidate.setText(_cacu.setPostDate(startDate));
         }
 
-    }
-    private void whichProfile () {
-        if(uType.equals("Supplier")) {
-            context.startActivity(new Intent(context, supplierProfile.class));
-        } else {
-            context.startActivity(new Intent(context, NewProfile.class));
-        }
     }
 
     public boolean isValidFormat(String format, String value) {

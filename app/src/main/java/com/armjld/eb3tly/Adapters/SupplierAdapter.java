@@ -34,14 +34,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.armjld.eb3tly.Block.BlockManeger;
-import com.armjld.eb3tly.Chat.Chats;
+import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Ratings;
-import com.armjld.eb3tly.Requests.RequestsForSup;
 import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.delets.Delete_Delivery_From_Sup;
 import com.armjld.eb3tly.delets.Delete_Reason_Supplier;
 import com.armjld.eb3tly.Profiles.supplierProfile;
@@ -58,7 +57,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
 import Model.Data;
 import Model.notiData;
 import Model.rateData;
@@ -85,6 +83,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     String datee = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;
     private BlockManeger block = new BlockManeger();
+    public static caculateTime _cacu = new caculateTime();
 
 
     public void addItem(int position , Data data){
@@ -117,36 +116,14 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder,final int position) {
         Vibrator vibe = (Vibrator) Objects.requireNonNull(context).getSystemService(Context.VIBRATOR_SERVICE);
         Log.i(TAG, "Inside the Supplier Adapter");
         Data data = filtersData.get(position);
         String startDate = data.getDate();
-        String stopDate = datee;
         requestNumber = 0;
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = format.parse(startDate);
-            d2 = format.parse(stopDate);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-        assert d2 != null;
-        assert d1 != null;
-        long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000;
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        int idiffSeconds = (int) diffSeconds;
-        int idiffMinutes = (int) diffMinutes;
-        int idiffHours = (int) diffHours;
-        int idiffDays = (int) diffDays;
 
         holder.setDate(filtersData.get(position).getDDate());
         holder.setUsername(data.getDName());
@@ -154,7 +131,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         holder.setOrderFrom(data.reStateP());
         holder.setOrderto(data.reStateD());
         holder.setFee(data.getGGet());
-        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
+        holder.setPostDate(startDate);
         holder.setAccepted();
         holder.setStatue(data.getStatue(), data.getuAccepted(), data.getDDate(), data.getId());
         holder.setDilveredButton(data.getStatue());
@@ -296,53 +273,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         });
 
         holder.btnChat.setOnClickListener(v-> {
-            final String[] room = new String[1];
-            String uId = UserInFormation.getId();
-            DatabaseReference Bdatabase;
-            final boolean[] found = {false};
-            Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuAccepted());
-            Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                DatabaseReference Bdatabase;
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuAccepted());
-                        Bdatabase.child("talk").setValue("true");
-
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuAccepted()).child("chats").child(uId);
-                        Bdatabase.child("talk").setValue("true");
-
-
-                        Intent intent = new Intent(context, Messages.class);
-                        intent.putExtra("roomid", snapshot.child("roomid").getValue().toString());
-                        intent.putExtra("rid", data.getuId());
-
-                        ((Activity)context).startActivityForResult(intent, 1);
-                    } else{
-
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats");
-                        String chat = Bdatabase.push().getKey();
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(data.getuAccepted());
-                        Bdatabase.child("userId").setValue(data.getuAccepted());
-                        Bdatabase.child("roomid").setValue(chat);
-                        Bdatabase.child("talk").setValue("true");
-
-                        Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(data.getuAccepted()).child("chats").child(uId);
-                        Bdatabase.child("userId").setValue(uId);
-                        Bdatabase.child("roomid").setValue(chat);
-                        Bdatabase.child("talk").setValue("true");
-
-                        Intent intent = new Intent(context, Messages.class);
-                        intent.putExtra("roomid",chat);
-                        intent.putExtra("rid", data.getuId());
-                        ((Activity)context).startActivityForResult(intent, 1);
-                    }
-                    Messages.cameFrom = "Profile";
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
+            chatListclass _chatList = new chatListclass();
+            _chatList.startChating(uId, data.getuAccepted(), context);
+            Messages.cameFrom = "Profile";
         });
 
         // ---------------- Set order to Recived
@@ -437,7 +370,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             if(filtersData.get(position).getStatue().equals("accepted") || filtersData.get(position).getStatue().equals("recived")) {
                 getInfo(filtersData.get(position).getuId(), orderID,filtersData.get(position).getuAccepted());
             } else if (filtersData.get(position).getStatue().equals("placed") && requestNumber > 0){
-                //getRequestss(filtersData.get(position).getId());
                 if(holder.requestRecycler.isShown()) {
                     holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_down_black));
                     holder.requestRecycler.setVisibility(View.GONE);
@@ -466,11 +398,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     }
 
 
-    public void getRequestss(String orderID) {
-        Intent editInt = new Intent(context, RequestsForSup.class);
-        editInt.putExtra("orderid", orderID);
-        context.startActivity(editInt);
-    }
 
     public void getInfo(String getuId, String orderID, String getuAccepted) {
         AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
@@ -528,9 +455,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
         });
 
-        imgVerfe.setOnClickListener(v1 -> {
-            Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
-        });
+        imgVerfe.setOnClickListener(v1 -> Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show());
 
         ddPhone.setOnClickListener(v1 -> {
             checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
@@ -556,7 +481,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 // Check if account is Verfied
                 String isConfirm = "false";
                 if(snapshot.child("isConfirmed").exists()) {
-                    isConfirm = snapshot.child("isConfirmed").getValue().toString();
+                    isConfirm = Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString();
                 }
                 if(isConfirm.equals("true")) {
                     imgVerfe.setVisibility(View.VISIBLE);
@@ -776,7 +701,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     requestRecycler.setLayoutManager(layoutManager);
 
 
-                                    ArrayList<requestsData> mm = new ArrayList<requestsData>();
+                                    ArrayList<requestsData> mm = new ArrayList<>();
                                     mDatabase.child(orderID).child("requests").addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -785,6 +710,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                                 for(DataSnapshot ds : snapshot.getChildren()) {
                                                     requestsData rData = ds.getValue(requestsData.class);
                                                     if(ds.child("statue").exists()) {
+                                                        assert rData != null;
                                                         if(rData.getStatue().equals("N/A")) { // Get only the not decliend requests
                                                             mm.add((int) count, rData);
                                                             count++;
@@ -944,18 +870,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 icnTrans.setVisibility(View.GONE);
             }
         }
-        public void setPostDate(int dS, int dM, int dH, int dD) {
-            String finalDate = "";
-            if (dS < 60) {
-                finalDate = "منذ " + dS + " ثوان";
-            } else if (dS > 60 && dS < 3600) {
-                finalDate = "منذ " + dM + " دقيقة";
-            } else if (dS > 3600 && dS < 86400) {
-                finalDate = "منذ " + dH + " ساعات";
-            } else if (dS > 86400) {
-                finalDate = "منذ " + dD + " ايام";
-            }
-            txtPostDate.setText(finalDate);
+
+        public void setPostDate(String startDate) {
+            txtPostDate.setText(_cacu.setPostDate(startDate));
         }
 
         public void checkDeleted(String removed) {

@@ -36,6 +36,7 @@ import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Wallet.requestsandacceptc;
 import com.armjld.eb3tly.Wallet.wallet;
 import com.armjld.eb3tly.admin.Admin;
+import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.main.Login_Options;
 import com.armjld.eb3tly.main.MainActivity;
@@ -75,9 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      ArrayList<Data>filtersData;
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
      private DatabaseReference mDatabase;
-     private static DatabaseReference rDatabase;
      private DatabaseReference uDatabase;
-     private DatabaseReference vDatabase;
      private DatabaseReference nDatabase;
      private DatabaseReference Database;
      private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
@@ -85,6 +84,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
      String uType = UserInFormation.getAccountType();
      String uId = UserInFormation.getId();
      private BlockManeger block = new BlockManeger();
+
+     public static caculateTime _cacu = new caculateTime();
 
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -109,8 +110,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         this.context1 = context1;
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
-        vDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
     }
 
@@ -130,35 +129,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // Get Post Date
         holder.lin1.setVisibility(View.GONE);
         holder.txtWarning.setVisibility(View.GONE);
-        String startDate = filtersData.get(position).getDate();
-        String stopDate = datee;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = format.parse(startDate);
-            d2 = format.parse(stopDate);
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        assert d2 != null;
-        assert d1 != null;
-        long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000;
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-        long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        int idiffSeconds = (int) diffSeconds;
-        int idiffMinutes = (int) diffMinutes;
-        int idiffHours = (int) diffHours;
-        int idiffDays = (int) diffDays;
-
-        final String PAddress = filtersData.get(position).getmPAddress().replaceAll("(^\\h*)|(\\h*$)", "").trim();
-        final String DAddress = filtersData.get(position).getDAddress().replaceAll("(^\\h*)|(\\h*$)", "").trim();
-        final String notes = filtersData.get(position).getNotes().replaceAll("(^\\h*)|(\\h*$)", "").trim();
-        String statues = filtersData.get(position).getStatue().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String orderID = filtersData.get(position).getId().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String owner = filtersData.get(position).getuId().replaceAll("(^\\h*)|(\\h*$)", "").trim();
         String type = filtersData.get(position).getType();
@@ -168,40 +139,45 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.setOrderFrom(filtersData.get(position).reStateP().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setOrderto(filtersData.get(position).reStateD().replaceAll("(^\\h*)|(\\h*$)", "").trim());
         holder.setFee(filtersData.get(position).getGGet().replaceAll("(^\\h*)|(\\h*$)", "").trim());
-        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
+        holder.setPostDate(filtersData.get(position).getDate());
         holder.setType(filtersData.get(position).getIsCar(), filtersData.get(position).getIsMotor(), filtersData.get(position).getIsMetro(), filtersData.get(position).getIsTrans());
         holder.setBid(type);
 
-        if(uType.equals("Supplier")) {
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setVisibility(View.GONE);
-            holder.linAdmin.setVisibility(View.GONE);
-        } else if(uType.equals("Admin")) {
-            holder.lin1.setVisibility(View.GONE);
-            holder.txtWarning.setVisibility(View.GONE);
-            holder.linAdmin.setVisibility(View.VISIBLE);
-        } else if(uType.equals("Delivery Worker")) {
-            holder.lin1.setVisibility(View.VISIBLE);
-            holder.txtWarning.setVisibility(View.GONE);
-            holder.linAdmin.setVisibility(View.GONE);
+        switch (uType) {
+            case "Supplier":
+                holder.lin1.setVisibility(View.GONE);
+                holder.txtWarning.setVisibility(View.GONE);
+                holder.linAdmin.setVisibility(View.GONE);
+                break;
+            case "Admin":
+                holder.lin1.setVisibility(View.GONE);
+                holder.txtWarning.setVisibility(View.GONE);
+                holder.linAdmin.setVisibility(View.VISIBLE);
+                break;
+            case "Delivery Worker":
 
-            mDatabase.child(orderID).child("statue").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.i(TAG, "Listener : " + snapshot.getValue().toString());
-                    if(!snapshot.getValue().toString().equals("placed")){
-                        holder.lin1.setVisibility(View.GONE);
-                        holder.txtWarning.setVisibility(View.VISIBLE);
+                holder.lin1.setVisibility(View.VISIBLE);
+                holder.txtWarning.setVisibility(View.GONE);
+                holder.linAdmin.setVisibility(View.GONE);
 
-                    } else {
-                        holder.lin1.setVisibility(View.VISIBLE);
-                        holder.txtWarning.setVisibility(View.GONE);
+                // ----------- Listener to Hie Buttons when order deleted or became accepted ------------ //
+                mDatabase.child(orderID).child("statue").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (!Objects.requireNonNull(snapshot.getValue()).toString().equals("placed")) {
+                            holder.lin1.setVisibility(View.GONE);
+                            holder.txtWarning.setVisibility(View.VISIBLE);
+
+                        } else {
+                            holder.lin1.setVisibility(View.VISIBLE);
+                            holder.txtWarning.setVisibility(View.GONE);
+                        }
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+                break;
         }
 
         holder.linerDate.setOnClickListener(v -> {
@@ -242,18 +218,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()) {
-                        holder.setBid("true");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
+
                                     // ------------------- Send Request -------------------- //
                                     rquests _rquests = new rquests();
                                     _rquests.deleteReq(uId, orderID);
 
-                                    // ------------------ Notificatiom ------------------ //
-                                    //notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");
-                                    //nDatabase.child(owner).push().setValue(Noti);
-                                    holder.btnBid.setText("التقديم علي الشحنه");
+                                    holder.setBid("false");
 
                                     Toast.makeText(context, "تم الغاء التقديم", Toast.LENGTH_SHORT).show();
                                     break;
@@ -267,12 +240,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     } else {
                          wallet w = new wallet();
                          if(!w.workerbid()){
-                             Toast.makeText(context1, "لا يقدر يقدم", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(context1, "يجب دفع المبلغ السمتحق اولا", Toast.LENGTH_LONG).show();
                              return;
                          }
 
                         if(HomeActivity.requests) {
-                            Toast.makeText(context1, "لديك 10 طلبات معلقه, لا يمكنك ارسال المزيدا", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context1, "لا يمكنك ارسال اكثر من 10 طلبات في اليوم", Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -281,10 +254,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                             return;
                         }
 
-                        holder.setBid("false");
                         DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
+
                                     // ------------------- Send Request -------------------- //
                                     rquests _rquests = new rquests();
                                     _rquests.addrequest(orderID, datee);
@@ -292,9 +265,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                     // ------------------ Notificatiom ------------------ //
                                     notiData Noti = new notiData(uId, owner,orderID,"قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName(),datee,"false","order");
                                     nDatabase.child(owner).push().setValue(Noti);
-                                    holder.btnBid.setText("الغاء التقديم علي الاوردر");
 
+                                    holder.setBid("true");
                                     Toast.makeText(context, "تم التقديم علي الشحنه", Toast.LENGTH_SHORT).show();
+
                                     break;
                                 case DialogInterface.BUTTON_NEGATIVE:
                                     break;
@@ -302,7 +276,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         };
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-
                     }
                 }
 
@@ -504,18 +477,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         }
 
-        public void setPostDate(int dS, int dM, int dH, int dD) {
-            String finalDate = "";
-            if (dS < 60) {
-                finalDate = "منذ " + dS + " ثوان";
-            } else if (dS > 60 && dS < 3600) {
-                finalDate = "منذ " + dM + " دقيقة";
-            } else if (dS > 3600 && dS < 86400) {
-                finalDate = "منذ " + dH + " ساعات";
-            } else if (dS > 86400) {
-                finalDate = "منذ " +dD + " ايام";
-            }
-            txtPostDate.setText(finalDate);
+        public void setPostDate(String startDate) {
+            txtPostDate.setText(_cacu.setPostDate(startDate));
         }
     }
 

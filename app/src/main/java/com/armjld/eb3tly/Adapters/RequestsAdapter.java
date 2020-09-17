@@ -10,14 +10,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -28,34 +25,27 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
-
 import com.armjld.eb3tly.Wallet.requestsandacceptc;
-import com.armjld.eb3tly.main.HomeActivity;
-import com.armjld.eb3tly.messeges.Messages;
+import com.armjld.eb3tly.caculateTime;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
 import Model.notiData;
-import Model.requestsData;
 import Model.requestsData;
 import Model.userData;
 
-import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyViewHolder> implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -69,6 +59,8 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     private BlockManeger block = new BlockManeger();
     private static final int PHONE_CALL_CODE = 100;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
+    public static String TAG = "Requests Adapter";
+
 
 
 
@@ -81,10 +73,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
         nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
-
-        String TAG = "Requests Adapter";
-
-        Log.i(TAG, " Reached Reply Adapter");
     }
 
     @NonNull
@@ -100,32 +88,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         String id = requestsData.get(position).getId();
         String date = requestsData.get(position).getDate();
 
-        String startDate = date;
-        String stopDate = datee;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = format.parse(startDate);
-            d2 = format.parse(stopDate);
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        assert d2 != null;
-        assert d1 != null;
-        long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000;
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        int idiffSeconds = (int) diffSeconds;
-        int idiffMinutes = (int) diffMinutes;
-        int idiffHours = (int) diffHours;
-        int idiffDays = (int) diffDays;
-
-        holder.setPostDate(idiffSeconds, idiffMinutes, idiffHours, idiffDays);
+        holder.setPostDate(date);
         holder.setUserInfo(id);
 
         holder.imgEditPhoto.setOnClickListener(v-> {
@@ -173,9 +136,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                 builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
             });
 
-            imgVerfe.setOnClickListener(v1 -> {
-                Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
-            });
+            imgVerfe.setOnClickListener(v1 -> Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show());
 
             ddPhone.setOnClickListener(v1 -> {
                 checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
@@ -201,7 +162,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                     // Check if account is Verfied
                     String isConfirm = "false";
                     if(snapshot.child("isConfirmed").exists()) {
-                        isConfirm = snapshot.child("isConfirmed").getValue().toString();
+                        isConfirm = Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString();
                     }
                     if(isConfirm.equals("true")) {
                         imgVerfe.setVisibility(View.VISIBLE);
@@ -392,7 +353,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         View myview;
         ImageView imgEditPhoto;
         TextView txtName,txtDate;
-        Button btnAccept2,btnSendMessage;
+        Button btnSendMessage;
         RatingBar rbUser;
         ImageView btnAccept, btnDecline;
 
@@ -454,18 +415,9 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         }
 
 
-        public void setPostDate(int dS, int dM, int dH, int dD) {
-            String finalDate = "";
-            if (dS < 60) {
-                finalDate = "منذ " + dS + " ثوان";
-            } else if (dS > 60 && dS < 3600) {
-                finalDate = "منذ " + dM + " دقيقة";
-            } else if (dS > 3600 && dS < 86400) {
-                finalDate = "منذ " + dH + " ساعات";
-            } else if (dS > 86400) {
-                finalDate = "منذ " +dD + " ايام";
-            }
-            txtDate.setText(finalDate);
+        public void setPostDate(String startDate) {
+            caculateTime _cacu = new caculateTime();
+            txtDate.setText(_cacu.setPostDate(startDate));
         }
     }
 

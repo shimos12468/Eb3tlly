@@ -7,7 +7,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Adapters.NotiAdaptere;
 import com.armjld.eb3tly.Utilites.Conatact;
@@ -38,12 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
-import java.util.Objects;
-
 import Model.notiData;
-import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class Notifications extends AppCompatActivity {
 
@@ -55,7 +49,7 @@ public class Notifications extends AppCompatActivity {
     private SwipeRefreshLayout refresh;
     private TextView txtNoOrders;
     private RecyclerView recyclerView;
-    String TAG = "Notifications";
+    public static String TAG = "Notifications";
     String uType = UserInFormation.getAccountType();
     String uId = UserInFormation.getId();
 
@@ -92,12 +86,11 @@ public class Notifications extends AppCompatActivity {
         nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
-        //nDatabase.keepSynced(true);
         ImageView btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         refresh = findViewById(R.id.refresh);
         count =0;
-        mm = new ArrayList<notiData>();
+        mm = new ArrayList<>();
         txtNoOrders.setVisibility(View.GONE);
 
         //Title Bar

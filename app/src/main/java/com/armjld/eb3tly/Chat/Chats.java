@@ -10,24 +10,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.armjld.eb3tly.Adapters.MyAdapter;
 import com.armjld.eb3tly.Adapters.chatsAdapter;
 import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.StartUp;
 import com.armjld.eb3tly.Utilites.UserInFormation;
-import com.armjld.eb3tly.main.HomeActivity;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import Model.ChatsData;
@@ -80,12 +74,10 @@ public class Chats extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         tbTitle.setText("المحادثات");
 
-        btnBack.setOnClickListener(v-> {
-            setBack();
-        });
+        btnBack.setOnClickListener(v-> setBack());
 
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
-        mChat = new ArrayList<ChatsData>();
+        mChat = new ArrayList<>();
         final int[] count = {0};
         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").orderByChild("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -95,7 +87,7 @@ public class Chats extends AppCompatActivity {
                         ChatsData cchatData = ds.getValue(ChatsData.class);
                         String talk = "true";
                         if(ds.child("talk").exists()) {
-                            talk = ds.child("talk").getValue().toString();
+                            talk = Objects.requireNonNull(ds.child("talk").getValue()).toString();
                         }
 
                         if(ds.child("timestamp").exists() && talk.equals("true")) {

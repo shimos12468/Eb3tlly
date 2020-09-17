@@ -11,10 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.messeges.Messages;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,26 +21,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
+import java.util.Objects;
 import Model.Chat;
 import Model.ChatsData;
-import Model.Data;
 
 public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapters.chatsAdapter.MyViewHolder> {
 
     Context context;
     ArrayList<ChatsData> chatData;
-    String uId = UserInFormation.getId();
 
-    private DatabaseReference nDatabase, messageDatabase, uDatabase;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-    String datee = sdf.format(new Date());
+    private DatabaseReference messageDatabase, uDatabase;
     String TAG = "Chat Adapter";
+    public static caculateTime _cacu = new caculateTime();
+
     public void addItem(int position , ChatsData data) {
         int size = chatData.size();
         if (size > position && size != 0) {
@@ -84,8 +77,8 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
         uDatabase.child(talkerID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String imgURL = snapshot.child("ppURL").getValue().toString();
-                holder.txtName.setText(snapshot.child("name").getValue().toString());
+                String imgURL = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
+                holder.txtName.setText(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
                 Picasso.get().load(Uri.parse(imgURL)).into(holder.imgEditPhoto);
             }
 
@@ -99,38 +92,10 @@ public class chatsAdapter extends RecyclerView.Adapter<com.armjld.eb3tly.Adapter
                 Chat chatS = snapshot.getValue(Chat.class);
                 assert chatS != null;
                 for(DataSnapshot ds : snapshot.getChildren()) {
-                    Log.i(TAG, ds.getKey());
-                    holder.txtBody.setText(ds.child("msg").getValue().toString());
-                        String startDate = ds.child("timestamp").getValue().toString();
-                        String stopDate = datee;
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-                        Date d1 = null;
-                        Date d2 = null;
-                        try {
-                            d1 = format.parse(startDate);
-                            d2 = format.parse(stopDate);
-                        } catch (java.text.ParseException ex) {
-                            ex.printStackTrace();
-                        }
-                        assert d2 != null;
-                        assert d1 != null;
-                        long diff = d2.getTime() - d1.getTime();
-                        long diffSeconds = diff / 1000;
-                        long diffMinutes = diff / (60 * 1000);
-                        long diffHours = diff / (60 * 60 * 1000);
-                        long diffDays = diff / (24 * 60 * 60 * 1000);
 
-                        String finalDate = "";
-                        if (diffSeconds < 60) {
-                            finalDate = "منذ " + diffSeconds + " ثوان";
-                        } else if (diffSeconds > 60 && diffSeconds < 3600) {
-                            finalDate = "منذ " + diffMinutes + " دقيقة";
-                        } else if (diffSeconds > 3600 && diffSeconds < 86400) {
-                            finalDate = "منذ " + diffHours + " ساعات";
-                        } else if (diffSeconds > 86400) {
-                            finalDate = "منذ " +diffDays + " ايام";
-                        }
-                        holder.txtNotidate.setText(finalDate);
+                    holder.txtBody.setText(Objects.requireNonNull(ds.child("msg").getValue()).toString());
+                        String startDate = Objects.requireNonNull(ds.child("timestamp").getValue()).toString();
+                        holder.txtNotidate.setText(_cacu.setPostDate(startDate));
                 }
             }
 

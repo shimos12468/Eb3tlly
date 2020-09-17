@@ -84,12 +84,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, Login_Options.class));
         });
 
-        final Intent signIntent = new Intent(this, New_SignUp.class);
         signup.setOnClickListener(v -> {
             finish();
-            signIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(signIntent);
-
+            startActivity(new Intent(this, New_SignUp.class));
+            New_SignUp.provider = "Email";
         });
 
         final Intent forgetIntent = new Intent(this, Forget_Password.class);
