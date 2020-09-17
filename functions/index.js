@@ -16,10 +16,7 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
   let action = noti.action;
   let uName = noti.uName;
 
-    const fromUser = admin.database().ref(`Pickly/notificationRequests/${user_id}/${notification_id}`).once('value');
-	const sendName = admin.database().ref(`Pickly/users/${from}/name`).once('value');
     const deviceToken = admin.database().ref(`Pickly/users/${to}/device_token`).once('value');
-    const orderTo = admin.database().ref(`Pickly/orders/${orderid}/DName`).once('value');
 
     return deviceToken.then(result => {
     if (!result.exists() || result.val() === "") return false;

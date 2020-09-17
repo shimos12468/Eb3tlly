@@ -72,11 +72,11 @@ public class OrderInfo extends AppCompatActivity {
     SimpleDateFormat orderformat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     String datee = sdf.format(new Date());
-    String DName = "";
     String orderState = "placed";
     String acceptedTime = "";
     String lastEdit = "";
     String dName = "";
+    String ownerName = "";
 
     private void getBack() {
         if(cameFrom.equals("Home Activity")) {
@@ -165,7 +165,6 @@ public class OrderInfo extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Data orderData = snapshot.getValue(Data.class);
                 assert orderData != null;
-                DName = orderData.getDName();
                 orderState = orderData.getStatue();
                 acceptedTime = orderData.getAcceptedTime();
                 lastEdit = orderData.getLastedit();
@@ -203,6 +202,7 @@ public class OrderInfo extends AppCompatActivity {
                     dsOrderNotes.setText(notes);
                     dsOrderNotes.setVisibility(View.VISIBLE);
                 }
+
                 fees2.setText(fees + " ج");
                 ordercash2.setText(money + " ج");
                 date3.setText(pDate);
@@ -214,12 +214,12 @@ public class OrderInfo extends AppCompatActivity {
 
                 if (orderState.equals("placed")) {
                     btnBid.setVisibility(View.VISIBLE);
-                    btnMore.setVisibility(View.VISIBLE);
                     btnDelete.setVisibility(View.GONE);
                 } else {
                     btnBid.setVisibility(View.GONE);
-                    btnMore.setVisibility(View.GONE);
-                    btnDelete.setVisibility(View.VISIBLE);
+                    if(orderState.equals("accepted") && orderData.getuAccepted().equals(UserInFormation.getId())) {
+                        btnDelete.setVisibility(View.VISIBLE);
+                    }
                 }
 
             }
@@ -290,7 +290,7 @@ public class OrderInfo extends AppCompatActivity {
                                     _rquests.addrequest(orderID, datee);
 
                                     // ------------------ Notificatiom ------------------ //
-                                    String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + DName;
+                                    String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + dName;
                                     notiData Noti = new notiData(uId, owner, orderID, message, datee, "false", "order",UserInFormation.getUserName(), UserInFormation.getUserURL());
                                     nDatabase.child(owner).push().setValue(Noti);
                                     setBid("true");
@@ -316,10 +316,10 @@ public class OrderInfo extends AppCompatActivity {
         uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String dsUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                ownerName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                 String dsPP = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
                 Picasso.get().load(Uri.parse(dsPP)).into(supPP);
-                dsUsername.setText(dsUser);
+                dsUsername.setText(ownerName);
 
                 // Check if account is Verfied
                 if (snapshot.child("isConfirmed").exists()) {
@@ -423,14 +423,13 @@ public class OrderInfo extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
         btnMore.setOnClickListener(v -> {
             Intent otherOrders = new Intent(this, OrdersBySameUser.class);
             otherOrders.putExtra("userid", owner);
-            otherOrders.putExtra("name", DName);
+            otherOrders.putExtra("name", ownerName);
             startActivity(otherOrders);
         });
 

@@ -81,10 +81,8 @@ public class New_SignUp extends AppCompatActivity {
     EditText txtFirstName, txtLastName, txtEmail, txtPass1, txtPass2, txtPhone;
     EditText txtCode;
     ImageView btnBack,btnDelivery, btnSupplier;
-    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
     String acDate = sdf2.format(new Date());
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
-    String datee = sdf.format(new Date());
     RadioButton rdMotor, rdTruck, rdCar, rdTrans;
     String phoneNumb;
 

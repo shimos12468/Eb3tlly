@@ -221,7 +221,10 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
             txtName.setText(uName);
             txtBody.setText(statue);
             txtNotidate.setText(_cacu.setPostDate(datee));
-            Picasso.get().load(Uri.parse(ppURL)).into(imgEditPhoto);
+            if(!ppURL.equals("")) {
+                Picasso.get().load(Uri.parse(ppURL)).into(imgEditPhoto);
+
+            }
         }
 
     }

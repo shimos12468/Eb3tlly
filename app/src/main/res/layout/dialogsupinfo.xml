@@ -71,7 +71,8 @@
                     android:background="@drawable/btn_bad"
                     android:text="المزيد من الاوردرات"
                     android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/ddCount"
@@ -475,9 +476,10 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/btn_defult"
-                android:text="موافق علي التوصيل"
+                android:text="قبول الاوردر"
                 android:textColor="@color/colorAccent"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="gone" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDelete"
@@ -490,7 +492,8 @@
                 android:background="@drawable/btn_bad"
                 android:text="الغاء الاوردر"
                 android:textColor="@color/colorAccent"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

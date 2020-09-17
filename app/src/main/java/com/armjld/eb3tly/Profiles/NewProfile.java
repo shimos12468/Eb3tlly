@@ -4,12 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
-
 import com.armjld.eb3tly.Chat.Chats;
-import com.armjld.eb3tly.Orders.MapsActivity;
-import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Fragments.SectionsPagerAdapter;
@@ -18,23 +14,18 @@ import com.armjld.eb3tly.Wallet.MyWallet;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.Login_Options;
-import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.Passaword.ChangePassword;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Utilites.UserSetting;
-import com.armjld.eb3tly.confermations.Account_Confirm;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -42,19 +33,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.util.Objects;
-
-import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class NewProfile extends AppCompatActivity {
@@ -73,15 +59,13 @@ public class NewProfile extends AppCompatActivity {
     String isConfirmed = UserInFormation.getisConfirm();
 
 
-    public NewProfile() { }
-
     @Override
     public void onBackPressed() {
         finish();
         startActivity(new Intent(this, HomeActivity.class));
     }
 
-    @SuppressLint("RtlHardcoded")
+    @SuppressLint({"RtlHardcoded", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,22 +120,15 @@ public class NewProfile extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        btnWallet.setOnClickListener(v-> {
-            startActivityForResult(new Intent(this, MyWallet.class), 1);
+        btnWallet.setOnClickListener(v-> startActivityForResult(new Intent(this, MyWallet.class), 1));
 
-        });
-
-        btnChats.setOnClickListener(v-> {
-            startActivityForResult(new Intent(this, Chats.class), 1);
-        });
+        btnChats.setOnClickListener(v-> startActivityForResult(new Intent(this, Chats.class), 1));
 
         if(isConfirmed.equals("true")) {
             imgVerf.setVisibility(View.VISIBLE);
         }
 
-        imgVerf.setOnClickListener(v -> {
-            Toast.makeText(this, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show();
-        });
+        imgVerf.setOnClickListener(v -> Toast.makeText(this, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show());
 
         constNoti.setOnClickListener(v -> {
             vibe.vibrate(40);
@@ -168,7 +145,6 @@ public class NewProfile extends AppCompatActivity {
 
         // NAV BAR
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_timeline, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
 
         btnNavbarProfile.setOnClickListener(v -> {
             if (drawer.isDrawerOpen(Gravity.LEFT)) {
@@ -256,51 +232,9 @@ public class NewProfile extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
-
-
-
     }
 
-    public void getRatings() {
-        uDatabase.child(uId).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String one = "0";
-                String two = "0";
-                String three = "0";
-                String four = "0";
-                String five = "0";
-                if(snapshot.child("one").exists()) {
-                    one = snapshot.child("one").getValue().toString();
-                }
-                if(snapshot.child("two").exists()) {
-                    two = snapshot.child("two").getValue().toString();
-                }
-                if(snapshot.child("three").exists()) {
-                    three = snapshot.child("three").getValue().toString();
-                }
-                if(snapshot.child("four").exists()) {
-                    four = snapshot.child("four").getValue().toString();
-                }
-                if(snapshot.child("five").exists()) {
-                    five = snapshot.child("five").getValue().toString();
-                }
-
-                Ratings _ratings = new Ratings();
-
-                rbProfile.setRating(_ratings.calculateRating(one,two,three,four,five));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    private void getOrderCountDel() {
+    /*private void getOrderCountDel() {
         mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint({"SetTextI18n", "ResourceAsColor"})
             @Override
@@ -330,7 +264,7 @@ public class NewProfile extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 
     private void whichProfile () {
         if(uType.equals("Supplier")) {

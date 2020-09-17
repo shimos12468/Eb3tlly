@@ -9,7 +9,8 @@ public class notiData {
     String datee;
     String isRead;
     public static String action = "";
-    public static String uName = "";
+    public static String uName = "Quicker";
+    public static String ppURL = "https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f";
 
     public String getuName() {
         return uName;
@@ -27,7 +28,7 @@ public class notiData {
         this.ppURL = ppURL;
     }
 
-    String ppURL;
+
     public notiData () {};
 
     public String getFrom() {

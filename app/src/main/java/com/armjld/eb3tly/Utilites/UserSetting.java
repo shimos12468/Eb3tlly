@@ -97,6 +97,178 @@ public class UserSetting extends AppCompatActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_setting);
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("تغيير البيانات الشخصية");
+
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth = FirebaseAuth.getInstance();
+        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
+        UserImage = findViewById(R.id.imgEditPhoto);
+        name = findViewById(R.id.txtEditName);
+        Email = findViewById(R.id.txtEditEmail);
+        mdialog = new ProgressDialog(this);
+        confirm = findViewById(R.id.btnEditInfo);
+        spState = findViewById(R.id.spState);
+        chkStateNoti = findViewById(R.id.chkStateNoti);
+        constUserSettings = findViewById(R.id.constUserSettings);
+        btnConfirmAccount = findViewById(R.id.btnConfirmAccount);
+        btnConfirmAccount.setVisibility(View.GONE);
+
+        for(UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if(user.getProviderId().equals("google.com")) {
+                Email.setEnabled(false);
+                Email.setClickable(false);
+                Email.setKeyListener(null);
+            } else {
+                Email.setEnabled(true);
+                Email.setClickable(true);
+
+                //Email.setKeyListener(KeyListener);
+            }
+        }
+
+        if(isConfirmed.equals("false")) {
+            Snackbar snackbar = Snackbar.make(constUserSettings, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
+                finish();
+                startActivity(new Intent(this, Account_Confirm.class));
+            });
+            snackbar.getView().setBackgroundColor(Color.RED);
+            snackbar.show();
+        } else if (isConfirmed.equals("pending")) {
+            Snackbar snackbar = Snackbar.make(constUserSettings, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
+            snackbar.getView().setBackgroundColor(Color.YELLOW);
+            snackbar.show();
+        }
+
+        btnConfirmAccount.setOnClickListener(v ->{
+            finish();
+            startActivity(new Intent(this, Account_Confirm.class));
+        });
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(UserSetting.this, R.array.txtStates, R.layout.color_spinner_layout);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spState.setPrompt("اختار المحافظة");
+        spState.setAdapter(adapter);
+
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            chkStateNoti.setVisibility(View.GONE);
+        }
+
+        oldPass = UserInFormation.getPass();
+        name.setText(UserInFormation.getUserName());
+        Email.setText(UserInFormation.getEmail());
+        Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(UserImage);
+
+
+
+        // ---------------------- Get Current Data -------------------------- //
+        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String sendOrderNoti = "true";
+                if(dataSnapshot.child("sendOrderNoti").exists()) {
+                    sendOrderNoti = Objects.requireNonNull(dataSnapshot.child("sendOrderNoti").getValue()).toString();
+                }
+                if(dataSnapshot.child("userState").exists()) {
+                    spState.setSelection(getIndex(spState, Objects.requireNonNull(dataSnapshot.child("userState").getValue()).toString()));
+                }
+                if(sendOrderNoti.equals("false")) {
+                    chkStateNoti.setChecked(false);
+                } else if (sendOrderNoti.equals("true")){
+                    chkStateNoti.setChecked(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+        UserImage.setOnClickListener(view -> {
+            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
+            if (ContextCompat.checkSelfPermission(UserSetting.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if(intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, TAKE_IMAGE_CODE);
+                }
+            }
+        });
+
+        confirm.setOnClickListener(view -> {
+            email = Email.getText().toString().trim();
+            Name = name.getText().toString().trim();
+            Log.i(TAG, "Old Pass : " + oldPass);
+
+            if(TextUtils.isEmpty(Name)){
+                name.setError("يجب ادخال اسم المستخدم");
+                return;
+            }
+            if(TextUtils.isEmpty(email)){
+                Email.setError("يجب ادخال البريد ألالكتروني");
+                return;
+            }
+
+            FirebaseUser user = mAuth.getCurrentUser();
+
+            // ------------------ Update the Name -----------------//
+            uDatabase.child(uId).child("name").setValue(name.getText().toString().trim());
+            uDatabase.child(uId).child("userState").setValue(spState.getSelectedItem().toString());
+
+            UserInFormation.setUserName(name.getText().toString());
+
+
+            // -------------- Get auth credentials from the user for re-authentication
+            if(!Email.getText().toString().equals(mAuth.getCurrentUser().getEmail())) {
+                AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()), oldPass); // Current Login Credentials \\
+                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //----------------Code for Changing Email Address----------\\
+                        mAuth.getCurrentUser().updateEmail(Email.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    uDatabase.child(uId).child("email").setValue(Email.getText().toString().trim());
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                Log.i(TAG, "The Email is the same no need to re auth");
+            }
+
+            if(bitmap != null) {
+                handleUpload(bitmap);
+                mdialog.setMessage("جاري تحديث الصور الشخصية ...");
+                mdialog.show();
+                Log.i(TAG, "Photo Updated and current user is : " + FirebaseAuth.getInstance().getCurrentUser());
+            } else {
+                Log.i(TAG, "no Photo to update.");
+                Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
+                finish();
+                whichProfile();
+            }
+
+            if(chkStateNoti.isChecked()) {
+                uDatabase.child(uId).child("sendOrderNoti").setValue("true");
+            } else {
+                uDatabase.child(uId).child("sendOrderNoti").setValue("false");
+            }
+
+        });
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
@@ -266,174 +438,7 @@ public class UserSetting extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_setting);
 
-        TextView tbTitle = findViewById(R.id.toolbar_title);
-        tbTitle.setText("تغيير البيانات الشخصية");
-
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
-            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        mAuth = FirebaseAuth.getInstance();
-        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        UserImage = findViewById(R.id.imgEditPhoto);
-        name = findViewById(R.id.txtEditName);
-        Email = findViewById(R.id.txtEditEmail);
-        mdialog = new ProgressDialog(this);
-        confirm = findViewById(R.id.btnEditInfo);
-        spState = findViewById(R.id.spState);
-        chkStateNoti = findViewById(R.id.chkStateNoti);
-        constUserSettings = findViewById(R.id.constUserSettings);
-        btnConfirmAccount = findViewById(R.id.btnConfirmAccount);
-        btnConfirmAccount.setVisibility(View.GONE);
-
-        for(UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
-            if(user.getProviderId().equals("google.com")) {
-                Email.setEnabled(false);
-                Email.setKeyListener(null);
-            } else {
-                Email.setEnabled(true);
-                //Email.setKeyListener(KeyListener);
-            }
-        }
-
-        if(isConfirmed.equals("false")) {
-            Snackbar snackbar = Snackbar.make(constUserSettings, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
-                finish();
-                startActivity(new Intent(this, Account_Confirm.class));
-            });
-            snackbar.getView().setBackgroundColor(Color.RED);
-            snackbar.show();
-        } else if (isConfirmed.equals("pending")) {
-            Snackbar snackbar = Snackbar.make(constUserSettings, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
-            snackbar.getView().setBackgroundColor(Color.YELLOW);
-            snackbar.show();
-        }
-
-        btnConfirmAccount.setOnClickListener(v ->{
-            finish();
-            startActivity(new Intent(this, Account_Confirm.class));
-        });
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(UserSetting.this, R.array.txtStates, R.layout.color_spinner_layout);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spState.setPrompt("اختار المحافظة");
-        spState.setAdapter(adapter);
-
-        if(UserInFormation.getAccountType().equals("Supplier")) {
-            chkStateNoti.setVisibility(View.GONE);
-        }
-
-        // ---------------------- Get Current Data -------------------------- //
-        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String url = Objects.requireNonNull(dataSnapshot.child("ppURL").getValue()).toString();
-                String sendOrderNoti = "true";
-                if(dataSnapshot.child("sendOrderNoti").exists()) {
-                    sendOrderNoti = Objects.requireNonNull(dataSnapshot.child("sendOrderNoti").getValue()).toString();
-                }
-                oldPass = Objects.requireNonNull(dataSnapshot.child("mpass").getValue()).toString();
-                name.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
-                Email.setText(Objects.requireNonNull(dataSnapshot.child("email").getValue()).toString());
-                Picasso.get().load(Uri.parse(url)).into(UserImage);
-
-                if(dataSnapshot.child("userState").exists()) {
-                    spState.setSelection(getIndex(spState, Objects.requireNonNull(dataSnapshot.child("userState").getValue()).toString()));
-                }
-
-                if(sendOrderNoti.equals("false")) {
-                    chkStateNoti.setChecked(false);
-                } else if (sendOrderNoti.equals("true")){
-                    chkStateNoti.setChecked(true);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-        UserImage.setOnClickListener(view -> {
-            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
-            if (ContextCompat.checkSelfPermission(UserSetting.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if(intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, TAKE_IMAGE_CODE);
-                }
-            }
-        });
-
-        confirm.setOnClickListener(view -> {
-            email = Email.getText().toString().trim();
-            Name = name.getText().toString().trim();
-            Log.i(TAG, "Old Pass : " + oldPass);
-
-            if(TextUtils.isEmpty(Name)){
-                name.setError("يجب ادخال اسم المستخدم");
-                return;
-            }
-            if(TextUtils.isEmpty(email)){
-                Email.setError("يجب ادخال البريد ألالكتروني");
-                return;
-            }
-
-            FirebaseUser user = mAuth.getCurrentUser();
-
-            // ------------------ Update the Name -----------------//
-            uDatabase.child(uId).child("name").setValue(name.getText().toString().trim());
-            uDatabase.child(uId).child("userState").setValue(spState.getSelectedItem().toString());
-
-            UserInFormation.setUserName(name.getText().toString());
-
-
-            // -------------- Get auth credentials from the user for re-authentication
-            if(!Email.getText().toString().equals(mAuth.getCurrentUser().getEmail())) {
-                AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()), oldPass); // Current Login Credentials \\
-                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        //----------------Code for Changing Email Address----------\\
-                        mAuth.getCurrentUser().updateEmail(Email.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    uDatabase.child(uId).child("email").setValue(Email.getText().toString().trim());
-                                }
-                            }
-                        });
-                    }
-                });
-            } else {
-                Log.i(TAG, "The Email is the same no need to re auth");
-            }
-
-            if(bitmap != null) {
-                handleUpload(bitmap);
-                mdialog.setMessage("جاري تحديث الصور الشخصية ...");
-                mdialog.show();
-                Log.i(TAG, "Photo Updated and current user is : " + FirebaseAuth.getInstance().getCurrentUser());
-            } else {
-                Log.i(TAG, "no Photo to update.");
-                Toast.makeText(UserSetting.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
-                finish();
-                whichProfile();
-            }
-
-            if(chkStateNoti.isChecked()) {
-                uDatabase.child(uId).child("sendOrderNoti").setValue("true");
-            } else {
-                uDatabase.child(uId).child("sendOrderNoti").setValue("false");
-            }
-
-        });
-    }
 
     private int getIndex(Spinner spinner, String value) {
         for(int i=0;i <spinner.getCount(); i++) {
