@@ -14,9 +14,17 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.armjld.eb3tly.Notifications.Notifications;
+import com.armjld.eb3tly.Orders.AddOrders;
+import com.armjld.eb3tly.Orders.EditOrders;
+import com.armjld.eb3tly.Orders.MapsActivity;
+import com.armjld.eb3tly.Profiles.NewProfile;
+import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Wallet.MyWallet;
+import com.armjld.eb3tly.main.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,8 +36,15 @@ import com.google.firebase.messaging.RemoteMessage;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import Model.Data;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -39,73 +54,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private DatabaseReference uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
     private DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
     String body = "";
-    String nameFrom = "";
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    Intent intent = new Intent(this, Notifications.class);
+
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "From: " + remoteMessage.getFrom());
             Map<String, String> data = remoteMessage.getData();
-            String title = data.get("title");
+
+            String nameFrom = data.get("uName");
             String statue = data.get("statue");
+            String action = data.get("action");
             String OrderID = data.get("orderid");
-            String sendby = data.get("sendby");
-            String To = data.get("sendto");
-            Log.i(TAG, "Check This : " + statue + OrderID + sendby + To);
-            uDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    nameFrom = Objects.requireNonNull(snapshot.child(sendby).child("name").getValue()).toString();
-                    String ToType = Objects.requireNonNull(snapshot.child(To).child("accountType").getValue()).toString();
-                    mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String orderTo = Objects.requireNonNull(snapshot.child("dname").getValue()).toString();
-                            assert statue != null;
-                            switch (statue) {
-                                case "edited": {
-                                    body = " قام " + nameFrom + " بتعديل بعض بيانات الاوردر الذي قبلته ";
-                                    break;
-                                }
-                                case "deleted": {
-                                    if (ToType.equals("Supplier")) {
-                                        body = " قام " + nameFrom + " بالغاء الاوردر " + orderTo + " الذي قام بقبولة ";
-                                    } else {
-                                        body = " قام " + nameFrom + " بالغاء الاوردر ";
-                                    }
-                                    break;
-                                }
-                                case "delivered": {
-                                    body = " قام " + nameFrom + " بتوصيل اوردر " + orderTo;
-                                    break;
-                                }
-                                case "accepted": {
-                                    body = " قام " + nameFrom + " بقبول اوردر " + orderTo;
-                                    break;
-                                }
-                                case "recived": {
-                                    body = "قام" + nameFrom + " بتسليمك الاوردر";
-                                    break;
-                                }
-                                case "welcome": {
-                                    body = "اهلا بيك في برنامج ابعتلي, اول منصة مهمتها توصيل التاجر بمندوب الشحن";
-                                    break;
-                                }
-                                default: {
-                                    body = statue;
-                                    break;
-                                }
-                            }
-                            sendNotification(body,nameFrom);
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) { }
-                    });
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
+            sendNotification(statue, nameFrom,action, OrderID);
 
             if (true) {
                 scheduleJob();
@@ -138,17 +103,112 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    private void sendNotification(String messageBody, String title) {
+    private void sendNotification(String messageBody, String title, String action, String OrderID) {
+        intent = new Intent(this, Notifications.class);
+        switch (action) {
+            case "noting": {
+                intent = new Intent(this, Notifications.class);
+                break;
+            }
+            case "profile" : {
+                if(UserInFormation.getAccountType().equals("Supplier")) {
+                    intent = new Intent(this, supplierProfile.class);
+                } else {
+                    intent = new Intent(this, NewProfile.class);
+                }
+                break;
+            }
+            case "order": {
+                mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if((int) snapshot.getChildrenCount() > 1) {
+                            Data orderData = snapshot.getValue(Data.class);
+                            assert orderData != null;
+                            Log.i(TAG, orderData.getId() + " : " +orderData.getDDate());
+                            if(!orderData.getStatue().equals("placed")) {
+                                Toast.makeText(MyFirebaseMessagingService.this, "نعتذر, لقد تم قبول الاوردر بالفعل من مندوب اخر", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Date orderDate = null;
+                                Date myDate = null;
+                                try {
+                                    orderDate = format.parse(orderData.getDDate());
+                                    myDate =  format.parse(format.format(Calendar.getInstance().getTime()));
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
 
-        Intent intent = new Intent(this, Notifications.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                                assert orderDate != null;
+                                assert myDate != null;
+                                if(orderDate.compareTo(myDate) >= 0) {
+                                    Log.i(TAG, orderData.getId());
+                                    intent = new Intent(MyFirebaseMessagingService.this, com.armjld.eb3tly.Orders.OneOrder.class);
+                                    intent.putExtra("oID", orderData.getId());
+                                } else {
+                                    Toast.makeText(MyFirebaseMessagingService.this, "معاد تسليم الاوردر قد فات", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(MyFirebaseMessagingService.this, "تم حذف هذا الاوردر", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+                break;
+            }
+            case "home" : {
+                intent = new Intent(this, HomeActivity.class);
+                break;
+            }
+            case "facebook" : {
+                String fbLink = "https://www.facebook.com/Eb3tlyy/";
+                intent = new Intent(Intent.ACTION_VIEW , Uri.parse(fbLink));
+                break;
+            }
+            case "playstore" : {
+                String psLink = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
+                intent = new Intent( Intent.ACTION_VIEW , Uri.parse(psLink));
+                break;
+            }
+            case "add" : {
+                if(UserInFormation.getAccountType().equals("Supplier")) {
+                    intent = new Intent(this, AddOrders.class);
+                }
+                break;
+            }
+            case "edit" : {
+                if(UserInFormation.getAccountType().equals("Supplier")) {
+                    intent = new Intent(this, EditOrders.class);
+                    intent.putExtra("orderid", OrderID);
+                }
+                break;
+            }
+            case "map" : {
+                intent = new Intent(this, MapsActivity.class);
+
+                break;
+            }
+
+            case "wallet" : {
+                if(UserInFormation.getAccountType().equals("Delivery Worker")) {
+                    intent = new Intent(this, MyWallet.class);
+                }
+                break;
+            }
+
+            default: {
+                intent = new Intent(this, Notifications.class);
+            }
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_logo)
+                        .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
@@ -159,14 +219,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
             assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
 
         assert notificationManager != null;
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(0 , notificationBuilder.build());
     }
 }

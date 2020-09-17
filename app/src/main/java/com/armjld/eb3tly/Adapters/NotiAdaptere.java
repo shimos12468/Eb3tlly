@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.armjld.eb3tly.Orders.EditOrders;
+import com.armjld.eb3tly.Orders.MapsActivity;
+import com.armjld.eb3tly.Wallet.MyWallet;
 import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Profiles.NewProfile;
@@ -32,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import Model.Data;
 import Model.notiData;
 
@@ -77,16 +79,115 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         String ppURL = notiData.get(position).getPpURL();
 
         holder.setNoti(uName, Statue, Datee,ppURL);
+
         holder.myview.setOnClickListener(v-> {
             switch (action) {
-                case "": {
+                case "noting": {
+                    // ------------ Do Nothing
+                    break;
+                }
+                case "profile" : {
+                    whichProfile();
+                    break;
+                }
+                case "order": {
+                    mDatabase.child(OrderID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if((int) snapshot.getChildrenCount() > 1) {
+                                Data orderData = snapshot.getValue(Data.class);
+                                assert orderData != null;
+                                Log.i(TAG, orderData.getId() + " : " +orderData.getDDate());
+                                if(!orderData.getStatue().equals("placed")) {
+                                    Toast.makeText(context, "نعتذر, لقد تم قبول الاوردر بالفعل من مندوب اخر", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Date orderDate = null;
+                                    Date myDate = null;
+                                    try {
+                                        orderDate = format.parse(orderData.getDDate());
+                                        myDate =  format.parse(format.format(Calendar.getInstance().getTime()));
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
 
+                                    assert orderDate != null;
+                                    assert myDate != null;
+                                    if(orderDate.compareTo(myDate) >= 0) {
+                                        Log.i(TAG, orderData.getId());
+                                        Intent OneOrder = new Intent(context, com.armjld.eb3tly.Orders.OneOrder.class);
+                                        OneOrder.putExtra("oID", orderData.getId());
+                                        context.startActivity(OneOrder);
+                                    } else {
+                                        Toast.makeText(context, "معاد تسليم الاوردر قد فات", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(context, "تم حذف هذا الاوردر", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) { }
+                    });
+                    break;
+                }
+                case "home" : {
+                    context.startActivity(new Intent(context, HomeActivity.class));
+                    break;
+                }
+                case "facebook" : {
+                    String fbLink = "https://www.facebook.com/Eb3tlyy/";
+                    Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(fbLink));
+                    context.startActivity(browse);
+                    break;
+                }
+                case "playstore" : {
+                    String psLink = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
+                    Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse(psLink));
+                    context.startActivity(browse);
+                    break;
+                }
+                case "add" : {
+                    if(UserInFormation.getAccountType().equals("Supplier")) {
+                        context.startActivity(new Intent(context, AddOrders.class));
+                    }
+                    break;
+                }
+                case "edit" : {
+                    if(UserInFormation.getAccountType().equals("Supplier")) {
+                        Intent editInt = new Intent(context, EditOrders.class);
+                        editInt.putExtra("orderid", OrderID);
+                        context.startActivity(editInt);
+                    }
+                    break;
+                }
+                case "map" : {
+                    context.startActivity(new Intent(context, MapsActivity.class));
                     break;
                 }
 
+                case "wallet" : {
+                    if(UserInFormation.getAccountType().equals("Delivery Worker")) {
+                        context.startActivity(new Intent(context, MyWallet.class));
+                    }
+                    break;
+                }
 
+                default: {
+
+                }
             }
         });
+
+
+    }
+
+    private void whichProfile () {
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            context.startActivity(new Intent(context, supplierProfile.class));
+        } else {
+            context.startActivity(new Intent(context, NewProfile.class));
+        }
     }
 
 

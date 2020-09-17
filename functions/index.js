@@ -13,6 +13,8 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
   let to = noti.to;
   let statue = noti.statue;
   let orderid = noti.orderid;
+  let action = noti.action;
+  let uName = noti.uName;
 
     const fromUser = admin.database().ref(`Pickly/notificationRequests/${user_id}/${notification_id}`).once('value');
 	const sendName = admin.database().ref(`Pickly/users/${from}/name`).once('value');
@@ -26,16 +28,16 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
 	
 	const payload = {
     			notification: {
-    			  title : 'Eb3tly',
-    			  body: 'لديك اشعار جديد',
+    			  title : uName,
+    			  body: statue,
     			  icon: "default",
-    			  click_action : "com.armjld.eb3tly_Notifications",
+    			  click_action : "com.armjld.eb3tly.Notifications_Notifications",
     			},
     data : {
-         'title': sendName + '',
-          'body' : sendName + 'has ' + statue + ' your order',
+          'uName': uName,
           'statue' : statue,
           'orderid' : orderid,
+		  'action' : action,
           'sendby' : from,
           'sendto' : to
           }
