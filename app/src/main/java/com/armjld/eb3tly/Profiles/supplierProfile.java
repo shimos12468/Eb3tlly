@@ -61,7 +61,7 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class supplierProfile extends AppCompatActivity {
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP, imgStar,imgVerf, btnChats;
+    private ImageView imgSetPP, imgStar,imgVerf, btnChats,btnSettings;
     private TextView txtUserDate,uName,txtNotiCount;
     private String TAG = "Supplier Profile";
     String uType = UserInFormation.getAccountType();
@@ -129,10 +129,15 @@ public class supplierProfile extends AppCompatActivity {
         txtNotiCount = findViewById(R.id.txtNotiCount);
         imgStar = findViewById(R.id.imgStar);
         imgVerf= findViewById(R.id.imgVerf);
+        btnSettings = findViewById(R.id.btnSettings);
 
         //Title Bar
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("اوردراتي");
+
+        btnSettings.setOnClickListener(v-> {
+            startActivity(new Intent(this, SettingsActivity.class));
+        });
 
         btnChats.setOnClickListener(v-> {
             startActivityForResult(new Intent(this, Chats.class), 1);

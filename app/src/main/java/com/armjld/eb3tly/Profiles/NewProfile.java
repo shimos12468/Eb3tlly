@@ -48,7 +48,7 @@ public class NewProfile extends AppCompatActivity {
 
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP,imgStar, imgVerf,btnChats,btnNavbarProfile,btnOpenNoti;
+    private ImageView imgSetPP,imgStar, imgVerf,btnChats,btnNavbarProfile,btnOpenNoti,btnSettings;
     private TextView txtUserDate,usType;
     private TextView uName;
     private TextView txtNotiCount;
@@ -99,6 +99,7 @@ public class NewProfile extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.view_pager);
         txtNotiCount.setVisibility(View.GONE);
         usType = findViewById(R.id.txtUserType);
+        btnSettings = findViewById(R.id.btnSettings);
 
 
         uId = UserInFormation.getId();
@@ -140,6 +141,9 @@ public class NewProfile extends AppCompatActivity {
             startActivityForResult(new Intent(this, Notifications.class), 1);
         });
 
+        btnSettings.setOnClickListener(v-> {
+            startActivity(new Intent(this, SettingsActivity.class));
+        });
 
         // NAV BAR
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);

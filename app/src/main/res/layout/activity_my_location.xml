@@ -30,12 +30,12 @@
         android:id="@+id/txtDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:text="حذف"
         android:textColor="@color/colorAccent"
-        android:textSize="18sp"
-        android:visibility="gone"
+        android:textSize="24sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_home"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar_home" />
 
