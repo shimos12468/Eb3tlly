@@ -48,7 +48,7 @@
                 android:layout_weight="1"
                 android:text="من"
                 android:textAlignment="center"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/colorAccent"
                 android:textColorHint="@android:color/tertiary_text_light"
                 android:textSize="20dp" />
 
@@ -59,7 +59,7 @@
                 android:layout_weight="1"
                 android:text="الي"
                 android:textAlignment="center"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/colorAccent"
                 android:textColorHint="@android:color/tertiary_text_light"
                 android:textSize="20dp" />
 
@@ -70,7 +70,7 @@
                 android:layout_gravity="right"
                 android:gravity="center|right"
                 android:text="اعلى مقدم :"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/colorAccent"
                 android:textColorHint="@android:color/tertiary_text_light"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -141,11 +141,10 @@
 
             <EditText
                 android:id="@+id/txtFilterMoney"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:drawableEnd="@drawable/ic_add_money"
-                android:ems="10"
                 android:gravity="center"
                 android:hint="0"
                 android:inputType="none|number"

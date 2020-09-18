@@ -68,6 +68,16 @@ public class Notifications extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mm.size() >= 1) {
+            txtNoOrders.setVisibility(View.GONE);
+        } else {
+            txtNoOrders.setVisibility(View.VISIBLE);
+        }
+    }
+
     @SuppressLint("RtlHardcoded")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +101,6 @@ public class Notifications extends AppCompatActivity {
         refresh = findViewById(R.id.refresh);
         count =0;
         mm = new ArrayList<>();
-        txtNoOrders.setVisibility(View.GONE);
 
         //Title Bar
         TextView tbTitle = findViewById(R.id.toolbar_title);
@@ -207,7 +216,6 @@ public class Notifications extends AppCompatActivity {
         nDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                txtNoOrders.setVisibility(View.GONE);
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     String notiID = ds.getKey();
                     assert notiID != null;

@@ -1,6 +1,6 @@
 package com.armjld.eb3tly.LocationManeger;
 
-import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +14,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import Model.LocationDataType;
 
 public class LocationManeger {
     private FirebaseAuth mAuth;
@@ -41,33 +43,19 @@ public class LocationManeger {
         this.index = index;
     }
 
-    public boolean  add(LocationDataType loc , String id){
-            locHolder.add(index,loc);
-            index++;
-            String uId = UserInFormation.getId();
-            int i = 0;
-          if(uId == null ||uId.isEmpty()){
-              return false;
-          }
-
+    public boolean add(LocationDataType loc , String id){
           if(loc == null){
               return false;
-          }
-
-          else{
-              i++;
-              String location = "location";
-              location +=Integer.toString(i);
-              Bdatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("locations").child(id);;
-              Bdatabase.child("latitude").setValue(loc.getLattude());
-              Bdatabase.child("longitude").setValue(loc.getLontude());
-              Bdatabase.child("Address").setValue(loc.getAddress());
+          } else{
+              Bdatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(UserInFormation.getId()).child("locations").child(id);
+              Bdatabase.child("lattude").setValue(loc.getLattude());
+              Bdatabase.child("lontude").setValue(loc.getLontude());
+              Bdatabase.child("address").setValue(loc.getAddress());
               Bdatabase.child("region").child(loc.getRegion());
               Bdatabase.child("state").child(loc.getState());
               Bdatabase.child("title").child(loc.getTitle());
-              Bdatabase.child("LocationID").setValue(loc.getId());
-              Bdatabase.child("name").setValue(loc.getName());
-              location = "Location";
+              Bdatabase.child("id").setValue(loc.getId());
+              Log.i("Location Manager", "Added Location Successfully");
               return true;
           }
       }
@@ -84,21 +72,9 @@ public class LocationManeger {
 
             if(loc == null){
               return false;
-            }
-          else{
+            } else{
             Bdatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("locations").child(id);
-              Bdatabase.addValueEventListener(new ValueEventListener() {
-                  @Override
-                  public void onDataChange(@NonNull DataSnapshot snapshot) {
-                      Bdatabase.removeValue();
-                  }
-
-                  @Override
-                  public void onCancelled(@NonNull DatabaseError error) {
-
-                  }
-              });
-
+            Bdatabase.removeValue();
               return true;
           }
 
@@ -106,29 +82,26 @@ public class LocationManeger {
 
       public Boolean ImportLocation(){
           FirebaseUser user = mAuth.getCurrentUser();
-
           if(user == null){
               return false;
-          }
-          else{
+          } else{
               Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(user.getUid()).child("locations");
-              Bdatabase.addValueEventListener(new ValueEventListener() {
+              Bdatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                   @Override
                   public void onDataChange(@NonNull DataSnapshot snapshot) {
                       if(snapshot.exists()){
                           clear();
                           for(DataSnapshot ds : snapshot.getChildren()){
                               LocationDataType loc = new LocationDataType();
-                              double m = (double) ds.child("latitude").getValue();
+                              double m = (double) ds.child("lattude").getValue();
                               loc.setLattude(m);
-                              m = (double) ds.child("longitude").getValue();
+                              m = (double) ds.child("lontude").getValue();
                               loc.setLontude(m);
-                              loc.setAddress(ds.child("Address").getValue().toString());
+                              loc.setAddress(ds.child("address").getValue().toString());
                               loc.setState(ds.child("state").getValue().toString());
                               loc.setRegion(ds.child("region").getValue().toString());
-                              loc.setId(ds.child("LocationID").getValue().toString());
-                              loc.setName(ds.child("name").getValue().toString());
-                              loc.setName(ds.child("title").getValue().toString());
+                              loc.setId(ds.child("id").getValue().toString());
+                              loc.setTitle(ds.child("title").getValue().toString());
                               locHolder.add(loc);
                           }
 
@@ -136,9 +109,7 @@ public class LocationManeger {
                   }
 
                   @Override
-                  public void onCancelled(@NonNull DatabaseError error) {
-
-                  }
+                  public void onCancelled(@NonNull DatabaseError error) { }
               });
               return true;
           }

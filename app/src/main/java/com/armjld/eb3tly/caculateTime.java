@@ -38,7 +38,7 @@ public class caculateTime {
                 finalDate = "منذ ثانية";
             } else if(dS == 2) {
                 finalDate = "منذ ثانتين";
-            } else if (dS > 3 && dS <= 9) {
+            } else if (dS > 2 && dS <= 9) {
                 finalDate = "منذ " + dS + " ثواني";
             } else {
                 finalDate = "منذ " + dS + " ثانية";
@@ -48,7 +48,7 @@ public class caculateTime {
                 finalDate = "منذ دقيقة";
             } else if(dM == 2) {
                 finalDate = "منذ ثانتين";
-            } else if (dM > 3 && dM <= 9) {
+            } else if (dM > 2 && dM <= 9) {
                 finalDate = "منذ " + dM + " دقائق";
             } else {
                 finalDate = "منذ " + dM + " دقيقة";
@@ -58,7 +58,7 @@ public class caculateTime {
                 finalDate = "منذ ساعة";
             } else if(dH == 2) {
                 finalDate = "منذ ساعتين";
-            } else if (dH > 3 && dH <= 9) {
+            } else if (dH > 2 && dH <= 9) {
                 finalDate = "منذ " + dH + " ساعات";
             } else {
                 finalDate = "منذ " + dH + " ساعة";
@@ -68,7 +68,7 @@ public class caculateTime {
                 finalDate = "منذ يوم";
             } else if(dD == 2) {
                 finalDate = "منذ يومين";
-            } else if (dD > 3 && dD <= 9) {
+            } else if (dD > 2 && dD <= 9) {
                 finalDate = "منذ " + dD + " أيام";
             } else {
                 finalDate = "منذ " + dD + " يوم";

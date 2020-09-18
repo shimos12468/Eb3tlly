@@ -573,7 +573,7 @@ public class New_SignUp extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()) {
-                            Log.i(TAG ,"Phone Number is Already Exist");
+                            Log.i(TAG ,"Phone Number is Already Exist For uID : " + snapshot.getValue().toString());
                             mdialog.dismiss();
                             Toast.makeText(New_SignUp.this, "رقم الهاتف مسجل مسبقا", Toast.LENGTH_SHORT).show();
                         } else {
@@ -589,7 +589,6 @@ public class New_SignUp extends AppCompatActivity {
                         Toast.makeText(New_SignUp.this, "حدث خطأ في التاكد من البيانات", Toast.LENGTH_SHORT).show();
                         mdialog.dismiss();
                     }});
-                Log.i("ss" ,"out");
                 break;
             }
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import com.armjld.eb3tly.Chat.Chats;
 import com.armjld.eb3tly.MyLocation;
+import com.armjld.eb3tly.SettingsActivity;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Utilites.StartUp;
@@ -203,8 +204,8 @@ public class supplierProfile extends AppCompatActivity {
                 signOut();
             }
             if (id==R.id.nav_exit){
-                finishAffinity();
-                System.exit(0);
+                startActivity(new Intent(supplierProfile.this, SettingsActivity.class));
+
             }
             drawer.closeDrawer(Gravity.LEFT);
             return true;

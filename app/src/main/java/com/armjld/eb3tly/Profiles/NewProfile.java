@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 import com.armjld.eb3tly.Chat.Chats;
+import com.armjld.eb3tly.SettingsActivity;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Fragments.SectionsPagerAdapter;
@@ -47,7 +48,7 @@ public class NewProfile extends AppCompatActivity {
 
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private FirebaseAuth mAuth;
-    private ImageView imgSetPP,imgStar, imgVerf,btnChats,btnNavbarProfile,btnOpenNoti,btnWallet;
+    private ImageView imgSetPP,imgStar, imgVerf,btnChats,btnNavbarProfile,btnOpenNoti;
     private TextView txtUserDate,usType;
     private TextView uName;
     private TextView txtNotiCount;
@@ -87,7 +88,6 @@ public class NewProfile extends AppCompatActivity {
         btnNavbarProfile = findViewById(R.id.btnNavbarProfile);
         btnOpenNoti = findViewById(R.id.btnOpenNoti);
         uName = findViewById(R.id.txtUsername);
-        btnWallet = findViewById(R.id.btnWallet);
         txtUserDate = findViewById(R.id.txtUserDate);
         imgStar = findViewById(R.id.imgStar);
         imgSetPP = findViewById(R.id.imgPPP);
@@ -119,8 +119,6 @@ public class NewProfile extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
-        btnWallet.setOnClickListener(v-> startActivityForResult(new Intent(this, MyWallet.class), 1));
 
         btnChats.setOnClickListener(v-> startActivityForResult(new Intent(this, Chats.class), 1));
 
@@ -197,8 +195,7 @@ public class NewProfile extends AppCompatActivity {
                 signOut();
             }
             if (id==R.id.nav_exit){
-                finishAffinity();
-                System.exit(0);
+                startActivity(new Intent(this, SettingsActivity.class));
             }
             drawer.closeDrawer(Gravity.LEFT);
             return true;

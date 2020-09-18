@@ -8,19 +8,6 @@
     android:background="@color/colorBack"
     tools:context=".Notifications.Notifications">
 
-    <TextView
-        android:id="@+id/txtNoOrders"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorBack"
-        android:text="لا يوجد اشعارات في الوقت الحالي"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/drawer_layout" />
-
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="0dp"
@@ -71,6 +58,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/toolbar_home" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <TextView
+                android:id="@+id/txtNoOrders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBack"
+                android:text="لا يوجد اشعارات في الوقت الحالي"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/refresh"
+                app:layout_constraintStart_toStartOf="@+id/refresh"
+                app:layout_constraintTop_toTopOf="@+id/refresh" />
 
             <include
                 android:id="@+id/toolbar_home"

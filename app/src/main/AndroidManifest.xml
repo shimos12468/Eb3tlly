@@ -24,9 +24,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
+        <activity android:name=".LocationManeger.LocationForSup"></activity>
+        <activity android:name=".LocationManeger.LocationForDelv" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity android:name=".Wallet.MyWallet" />
         <activity android:name=".SignUp.New_SignUp" />
 

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -20,16 +19,24 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.armjld.eb3tly.LocationManeger.LocationDataType;
+import Model.LocationDataType;
+import Model.notiData;
+
+import com.armjld.eb3tly.LocationManeger.LocationForDelv;
+import com.armjld.eb3tly.LocationManeger.LocationForSup;
 import com.armjld.eb3tly.LocationManeger.LocationManeger;
 import com.armjld.eb3tly.LocationManeger.MakeLocationId;
-import com.armjld.eb3tly.Orders.AddOrders;
-import com.armjld.eb3tly.Orders.MapsActivity;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.android.gms.common.ConnectionResult;
@@ -46,32 +53,40 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MyLocation extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, GoogleMap.OnMapClickListener {
 
-    String Title = "";
-    String Address = "";
-    String Space = "";
-
     String uId = UserInFormation.getId();
 
-    EditText txtTitle, txtAddress, txtSpace;
-    Button btnSave;
 
-    LatLng currentLocation;
-    GoogleApiClient mGoogleApiClient;
     FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CHECK_SETTINGS = 102;
     LocationRequest mLocationRequest;
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase;
-    private View viewMap;
 
+    String Title = "";
+    String Address = "";
+    public EditText txtTitle, txtAddress;
+    Button btnSave;
+    ImageView btnBack;
+    LatLng currentLocation;
+    GoogleApiClient mGoogleApiClient;
+    private View viewMap;
     private static GoogleMap mMap;
+    Spinner spnGov, spnCity;
+    public static String Gov = "";
+    public static String City = "";
+    TextView txtDelete;
+    public static String type = "New";
+    String editID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,23 +95,87 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
 
         txtTitle = findViewById(R.id.txtTitle);
         txtAddress = findViewById(R.id.txtAddress);
-        txtSpace = findViewById(R.id.txtSpace);
         viewMap = findViewById(R.id.viewMap);
         btnSave = findViewById(R.id.btnSave);
+        btnBack = findViewById(R.id.btnBack);
+        txtDelete = findViewById(R.id.txtDelete);
+
+        spnCity = findViewById(R.id.spnCity);
+        spnGov = findViewById(R.id.spnGov);
+
+        intalizeSpiner();
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText("اضافة عنوان جديد");
 
         mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
 
-        viewMap.setOnClickListener(v-> {
-            Toast.makeText(this, "You Clicked The Map.", Toast.LENGTH_SHORT).show();
+        buildGoogleAPIClient();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.viewMap);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
+
+        btnBack.setOnClickListener(v-> {
+            finish();
         });
 
-        buildGoogleAPIClient();
+        if(!type.equals("New")) {
+            txtDelete.setVisibility(View.VISIBLE);
+            editID = getIntent().getStringExtra("locID");
+            uDatabase.child(uId).child("locations").child(editID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    txtTitle.setText(snapshot.child("title").getValue().toString());
+                    txtAddress.setText(snapshot.child("address").getValue().toString());
+                    getIndex(spnGov, snapshot.child("state").getValue().toString());
+                    getIndex(spnCity, snapshot.child("region").getValue().toString());
+
+                    Gov = snapshot.child("state").getValue().toString();
+                    City = snapshot.child("region").getValue().toString();
+
+                    double lati = Double.parseDouble(snapshot.child("lattude").getValue().toString());
+                    double longLat = Double.parseDouble(snapshot.child("lontude").getValue().toString());
+
+                    LatLng latLng = new LatLng(lati, longLat);
+                    currentLocation = latLng;
+                    if(mMap != null) {
+                        mMap.addMarker(new MarkerOptions().position(latLng));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        }
+
+        txtDelete.setOnClickListener(v-> {
+            DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        uDatabase.child(uId).child("locations").child(editID).removeValue();
+                        startActivity(new Intent(this, LocationForSup.class));
+                        finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            };
+            androidx.appcompat.app.AlertDialog.Builder builder2 = new androidx.appcompat.app.AlertDialog.Builder(this);
+            builder2.setMessage("هل تريد الغاء هذا العنوان ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
+
+        });
 
         btnSave.setOnClickListener(v-> {
             Title = txtTitle.getText().toString().trim();
             Address = txtAddress.getText().toString().trim();
-            Space = txtSpace.getText().toString().trim();
+
             if(currentLocation == null) {
                 Toast.makeText(this, "الرجاء تحديد مكانك علي الخريطة", Toast.LENGTH_SHORT).show();
                 return;
@@ -112,14 +191,11 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
                 return;
             }
 
-            if(Space.isEmpty()) {
-                txtSpace.requestFocus();
+            if(City.isEmpty() || Gov.isEmpty()) {
+                Toast.makeText(this, "اختار محافظتك و منطقتك", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            String[] parts = Space.split(" ");
-            String Government = parts[0];
-            String City = parts[1];
+            
             double lat = currentLocation.latitude;
             double _long = currentLocation.longitude;
 
@@ -129,30 +205,18 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
             MakeLocationId mID = new MakeLocationId(_long, lat);
             String locID = mID.getLocationid();
 
-            LocationDataType locData = new LocationDataType();
-            locData.setAddress(Address);
-            locData.setId(locID);
-            locData.setLattude(lat);
-            locData.setLontude(_long);
-            locData.setName(UserInFormation.getUserName());
-            locData.setRegion(City);
-            locData.setState(Government);
-            locData.setTitle(Title);
-
-            LocationManeger mLocation = new LocationManeger();
-            mLocation.add(locData, locID);
+            DatabaseReference Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(UserInFormation.getId()).child("locations").child(locID);
+            Bdatabase.child("lattude").setValue(lat);
+            Bdatabase.child("lontude").setValue(_long);
+            Bdatabase.child("address").setValue(Address);
+            Bdatabase.child("region").setValue(City);
+            Bdatabase.child("state").setValue(Gov);
+            Bdatabase.child("title").setValue(Title);
+            Bdatabase.child("id").setValue(locID);
 
             Toast.makeText(this, "تم اضافة العنوان", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, supplierProfile.class));
+            startActivity(new Intent(this, LocationForSup.class));
         });
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.viewMap);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
 
     }
 
@@ -237,7 +301,6 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //Initialize Google Play Services
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleAPIClient();
@@ -325,5 +388,185 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
         MarkerOptions marker = new MarkerOptions().position(latLng);
         this.mMap.addMarker(marker);
         currentLocation = latLng;
+    }
+
+    private void intalizeSpiner() {
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.txtStates, R.layout.color_spinner_layout);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnGov.setPrompt("اختار المحافظة");
+        spnGov.setAdapter(adapter2);
+
+        spnGov.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Gov = spnGov.getSelectedItem().toString();
+                int itemSelected = spnGov.getSelectedItemPosition();
+                if (itemSelected == 0) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtCairoRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة القاهرة");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 1) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtGizaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الجيزة");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 2) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtAlexRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الاسكندرية");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 3) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtMetroRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار محطة المترو");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 4) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtQalyobiaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة القليوبية");
+                    spnCity.setAdapter(adapter4);
+                }else if (itemSelected == 5) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtSharqyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الشرقية");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 6) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtDqhlyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الدقهليه");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 7) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtAsyutRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة اسيوط");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 8) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtAswanRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة اسوان");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 9) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtMenofyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة المنوفية");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 10) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtIsmaliaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الاسماعيليه");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 11) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtAqsorRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الاقصر");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 12) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtBeheraRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة البحيرة");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 13) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtBaniSwefRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة بين سويف");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 14) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtPortSaidRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة بور سعيد");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 15) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtRedSeaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة البحر الاحمر");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 16) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtSouthSeniaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة جنوب سيناء");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 17) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtDomyatRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة دمياط");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 18) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtSohagRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة سوهاج");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 19) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtSuezRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة السويس");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 20) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtGarbyaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الغربية");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 21) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtFayoumRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الفييوم");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 22) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtQenaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة قنا");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 23) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtKafrRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة كفر الشيخ");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 24) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtNorthSenia, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة شمال سيناْء");
+                    spnCity.setAdapter(adapter4);
+                }  else if (itemSelected == 25) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtMatrohRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة مطروح");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 26) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtMeiaRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة المنيا");
+                    spnCity.setAdapter(adapter4);
+                } else if (itemSelected == 27) {
+                    ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(MyLocation.this, R.array.txtNewWadiRegion, R.layout.color_spinner_layout);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spnCity.setPrompt("اختار منطقة محافظة الوادي الجديد");
+                    spnCity.setAdapter(adapter4);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spnCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                City = spnCity.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+    }
+
+    private int getIndex(Spinner spinner, String value) {
+        for(int i=0;i <spinner.getCount(); i++) {
+            Log.i("LocationForDelv", spinner.getItemAtPosition(i).toString());
+            if(spinner.getItemAtPosition(i).toString().equals(value)) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

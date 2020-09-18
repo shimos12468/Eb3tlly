@@ -374,14 +374,13 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
             uDatabase.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    userData uData = snapshot.getValue(userData.class);
-                    assert uData != null;
-                    txtName.setText(uData.getname());
-                    Picasso.get().load(Uri.parse(uData.getPpURL())).into(imgEditPhoto);
-                    //txtJoinDate.setText(uData.getDate());
-
-                    getRatings(id);
-                    //getOrderCountDel(id);
+                    if(snapshot.exists()) {
+                        userData uData = snapshot.getValue(userData.class);
+                        assert uData != null;
+                        txtName.setText(uData.getname());
+                        Picasso.get().load(Uri.parse(uData.getPpURL())).into(imgEditPhoto);
+                        getRatings(id);
+                    }
                 }
 
                 @Override

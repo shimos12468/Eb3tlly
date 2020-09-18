@@ -745,17 +745,19 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 case "accepted": {
                     txtGetStat.setVisibility(View.GONE);
                     txtGetStat.setEnabled(true);
-                    uDatabase.child(uAccepted).addValueEventListener(new ValueEventListener() {
+                    uDatabase.child(uAccepted).addListenerForSingleValueEvent(new ValueEventListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String mName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                            if(getStatue.equals("recived")) {
-                                txtGetStat.setText("تم استلام اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
-                            } else {
-                                txtGetStat.setText("تم قبول اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
+                            if(snapshot.exists()) {
+                                String mName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
+                                if(getStatue.equals("recived")) {
+                                    txtGetStat.setText("تم استلام اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
+                                } else {
+                                    txtGetStat.setText("تم قبول اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
+                                }
+                                txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                             }
-                            txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }

@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,26 +22,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class MyWallet extends AppCompatActivity {
 
     DatabaseReference mDatabase,uDatabase;
     ImageView btnBack;
     public static int TotalMoney = 0;
-    TextView txtTotal,btnPay;
+    TextView txtTotal,btnPay,txtEmpty;
 
     @Override
     public void onBackPressed() {
         finish();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
-
+        TotalMoney = 0;
         txtTotal = findViewById(R.id.txtTotal);
         btnPay = findViewById(R.id.btnPay);
         btnBack = findViewById(R.id.btnBack);
+        txtEmpty = findViewById(R.id.txtEmpty);
 
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
@@ -57,30 +62,40 @@ public class MyWallet extends AppCompatActivity {
             Toast.makeText(this,  "ستقوم بدفع " + TotalMoney + " ج بعد اتمام الربط بفوري.", Toast.LENGTH_SHORT).show();
         });
 
-        TotalMoney = 0;
+
+
+        if(UserInFormation.getCurrentdate().equals("none")) {
+            txtTotal.setText("فاتورتك : " + TotalMoney + " ج");
+            txtEmpty.setVisibility(View.VISIBLE);
+            return;
+        }
+
         uDatabase.child(UserInFormation.getId()).child("wallet").child(UserInFormation.getCurrentdate()).addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds:snapshot.getChildren()) {
-                    String orderid = ds.getKey();
-                    Log.i("My Wallet", "Order ID : " + orderid);
-                    assert orderid != null;
-                    mDatabase.child(orderid).child("gget").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot2) {
-                            int orderMoney = Integer.parseInt(snapshot2.getValue().toString());
-                            float precnt = (float) 0.2;
-                            TotalMoney = TotalMoney + orderMoney;
-                            Log.i("My Wallet", "New Money : " + orderMoney + " Total : " + TotalMoney);
-                            int Final = (int) (TotalMoney * precnt);
-                            txtTotal.setText("فاتورتك : " + Final + " ج");
-                        }
+                if(snapshot.exists()) {
+                    for(DataSnapshot ds:snapshot.getChildren()) {
+                        String orderid = ds.getKey();
+                        assert orderid != null;
+                        mDatabase.child(orderid).child("gget").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                                int orderMoney = Integer.parseInt(Objects.requireNonNull(snapshot2.getValue()).toString());
+                                float precnt = (float) 0.2;
+                                TotalMoney = TotalMoney + orderMoney;
+                                int Final = (int) (TotalMoney * precnt);
+                                txtTotal.setText("فاتورتك : " + Final + " ج");
+                            }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) { }
-                    });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+                        });
+                    }
+                } else {
+                    txtTotal.setText("فاتورتك : " + TotalMoney + " ج");
                 }
+
             }
 
             @Override

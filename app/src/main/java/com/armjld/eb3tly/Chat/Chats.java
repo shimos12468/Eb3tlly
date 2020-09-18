@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.armjld.eb3tly.Adapters.chatsAdapter;
@@ -37,6 +38,7 @@ public class Chats extends AppCompatActivity {
     RecyclerView recyclerChat;
     ArrayList<ChatsData> mChat;
     ImageView btnBack;
+    TextView txtEmpty;
 
     @Override
     public void onBackPressed() {
@@ -72,6 +74,7 @@ public class Chats extends AppCompatActivity {
         recyclerChat.setLayoutManager(layoutManager);
         TextView tbTitle = findViewById(R.id.toolbar_title);
         btnBack = findViewById(R.id.btnBack);
+        txtEmpty = findViewById(R.id.txtEmpty);
         tbTitle.setText("المحادثات");
 
         btnBack.setOnClickListener(v-> setBack());
@@ -98,15 +101,22 @@ public class Chats extends AppCompatActivity {
                             recyclerChat.setAdapter(_chatsAdapter);
                         }
                     }
-
                 }
-                Log.i("Chats", mChat.size() + "");
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mChat.size() >= 1 ) {
+            txtEmpty.setVisibility(View.GONE);
+        } else {
+            txtEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     private void whichProfile () {
