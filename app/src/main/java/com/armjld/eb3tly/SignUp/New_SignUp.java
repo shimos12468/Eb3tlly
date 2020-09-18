@@ -579,50 +579,8 @@ public class New_SignUp extends AppCompatActivity {
                         } else {
                             Log.i(TAG ,"Phone Number isn't Exist, Let's Continue");
                             mdialog.setMessage("جاري ارسال الكود ..");
-
-                            mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                                @Override
-                                public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                                    txtCode.setText(phoneAuthCredential.getSmsCode());
-                                    mdialog.setMessage("جاري التأكد من الرمز ..");
-                                    mdialog.show();
-                                    if(!provider.equals("Email")) {
-                                        link(phoneAuthCredential);
-                                    } else {
-                                        signUp(phoneAuthCredential);
-                                    }
-                                }
-
-                                @Override
-                                public void onVerificationFailed(@NonNull FirebaseException e) {
-                                    mdialog.dismiss();
-                                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                                        Toast.makeText(New_SignUp.this, "رقم هاتف غير صحيح", Toast.LENGTH_SHORT).show();
-                                    } else if (e instanceof FirebaseTooManyRequestsException) {
-                                        Snackbar.make(findViewById(android.R.id.content), "لقد حاولت كثيراو حاول بعد قليلي", Snackbar.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                                    super.onCodeSent(s, forceResendingToken);
-                                    Toast.makeText(New_SignUp.this, "تم ارسال الرمز", Toast.LENGTH_SHORT).show();
-                                    mdialog.dismiss();
-                                    mVerificationId = s;
-                                    Log.i(TAG, "Code has been sent to : " + phoneNumb + " and Verf id has been set : " + mVerificationId);
-                                    viewFlipper.setDisplayedChild(3);
-                                }
-
-                                @Override
-                                public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
-                                    super.onCodeAutoRetrievalTimeOut(s);
-                                    Log.i("mnkg" ,s);
-                                }
-                            };
-
+                            mCallBack();
                             sendCode(phoneNumb);
-
-
                         }
                     }
 
@@ -819,7 +777,6 @@ public class New_SignUp extends AppCompatActivity {
 
             @Override
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                super.onCodeSent(verificationId, token);
                 Toast.makeText(New_SignUp.this, "تم ارسال الرمز", Toast.LENGTH_SHORT).show();
                 mdialog.dismiss();
                 mVerificationId = verificationId;
