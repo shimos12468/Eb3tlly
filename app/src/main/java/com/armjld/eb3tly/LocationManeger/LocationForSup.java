@@ -5,17 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.armjld.eb3tly.Adapters.LocationsAdapter;
-import com.armjld.eb3tly.MyLocation;
 import com.armjld.eb3tly.R;
+import com.armjld.eb3tly.Utilites.SettingsActivity;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import Model.Data;
 import Model.LocationDataType;
 
 public class LocationForSup extends AppCompatActivity {
@@ -54,7 +51,10 @@ public class LocationForSup extends AppCompatActivity {
         linNew = findViewById(R.id.linNew);
         tbTitle.setText("عناويني");
 
-        btnBack.setOnClickListener(v-> finish());
+        btnBack.setOnClickListener(v-> {
+            finish();
+            startActivity(new Intent(this, SettingsActivity.class));
+        });
 
         linText.setOnClickListener(v-> {
             MyLocation.type = "New";

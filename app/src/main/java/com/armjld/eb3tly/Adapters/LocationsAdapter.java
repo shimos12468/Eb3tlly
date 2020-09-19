@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.armjld.eb3tly.MyLocation;
-import com.armjld.eb3tly.Orders.EditOrders;
+import com.armjld.eb3tly.LocationManeger.MyLocation;
 import com.armjld.eb3tly.R;
 
 import java.util.ArrayList;

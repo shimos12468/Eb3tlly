@@ -1,4 +1,4 @@
-package com.armjld.eb3tly;
+package com.armjld.eb3tly.Utilites;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.armjld.eb3tly.LocationManeger.LocationForDelv;
 import com.armjld.eb3tly.LocationManeger.LocationForSup;
 import com.armjld.eb3tly.Passaword.ChangePassword;
+import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Utilites.UserSetting;
 import com.armjld.eb3tly.Wallet.MyWallet;

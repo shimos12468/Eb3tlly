@@ -102,6 +102,12 @@ public class Chats extends AppCompatActivity {
                         }
                     }
                 }
+
+                if(mChat.size() >= 1 ) {
+                    txtEmpty.setVisibility(View.GONE);
+                } else {
+                    txtEmpty.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -112,11 +118,6 @@ public class Chats extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(mChat.size() >= 1 ) {
-            txtEmpty.setVisibility(View.GONE);
-        } else {
-            txtEmpty.setVisibility(View.VISIBLE);
-        }
     }
 
     private void whichProfile () {

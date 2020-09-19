@@ -89,7 +89,7 @@ public class LocationForDelv extends AppCompatActivity {
                     City =  snapshot.child("userCity").getValue().toString();
 
                 }
-                getIndex(spnGov, Gov, spnCity, City);
+                getIndex(Gov, City);
             }
 
             @Override
@@ -267,19 +267,27 @@ public class LocationForDelv extends AppCompatActivity {
 
 
 
-    private void getIndex(Spinner spinner, String value, Spinner spinner2, String value2) {
-        for(int i=0;i <spinner.getCount(); i++) {
-            if(spinner.getItemAtPosition(i).toString().equals(value)) {
+    private void getIndex(String value, String value2) {
+        for(int i=0;i <spnGov.getCount(); i++) {
+            if(spnGov.getItemAtPosition(i).toString().equals(value)) {
                 spnGov.setSelection(i);
+                secondSpiin(value2);
                 break;
             }
         }
+    }
 
-        for(int i=0;i <spinner2.getCount(); i++) {
-            if(spinner2.getItemAtPosition(i).toString().equals(value2)) {
-                spnCity.setSelection(i);
-                break;
+    private void secondSpiin(String value) {
+        if(spnCity.getCount() > 0) {
+            for(int i=0;i <spnCity.getCount(); i++) {
+                Log.i("Spinner", "Searching for : " + value  + " On : " + spnCity.getItemAtPosition(i).toString());
+                if(spnCity.getItemAtPosition(i).toString().equals(value)) {
+                    spnCity.setSelection(i);
+                    break;
+                }
             }
+        } else {
+            Log.i("Spinner", "ZERO COUNT");
         }
 
     }

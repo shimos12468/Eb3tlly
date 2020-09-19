@@ -106,22 +106,26 @@ public class StartUp extends AppCompatActivity {
     }
 
     private void whatToDo() {
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-            reRoute();
-        } else {
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
+                if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    reRoute();
+                } else {
                     if(sharedPreferences.getBoolean("firstrun", true)) {
-                        startActivity(new Intent(StartUp.this, IntroFirstRun.class));
                         sharedPreferences.edit().putBoolean("firstrun", false).apply();
+                        finish();
+                        startActivity(new Intent(StartUp.this, IntroFirstRun.class));
                     } else {
+                        finish();
                         startActivity(new Intent(StartUp.this, Login_Options.class));
                     }
                 }
-            }, 2500);
-        }
+            }
+        }, 2500);
+
+
     }
 
     public void reRoute () {
@@ -133,7 +137,6 @@ public class StartUp extends AppCompatActivity {
                 if(snapshot.exists()) {
                     String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
 
-                    // ------------------ Set Device Token ----------------- //
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(StartUp.this, instanceIdResult -> {
                         String deviceToken = instanceIdResult.getToken();
                         uDatabase.child(mAuth.getCurrentUser().getUid()).child("device_token").setValue(deviceToken);
@@ -155,6 +158,11 @@ public class StartUp extends AppCompatActivity {
                     if(snapshot.child("isConfirmed").exists()) {
                         UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
                     }
+
+                    if(snapshot.child("currentDate").exists()) {
+                        UserInFormation.setCurrentdate(Objects.requireNonNull(snapshot.child("currentDate").getValue()).toString());
+                    }
+
                     dataset = true;
 
                     //setUserData(mAuth.getCurrentUser().getUid());
@@ -250,8 +258,8 @@ public class StartUp extends AppCompatActivity {
                 UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
                 UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
                 UserInFormation.setisConfirm("false");
-                if(snapshot.child("accountType").getValue().toString().equals("Delivery Worker") && snapshot.child("currentDate").exists()) {
-                    UserInFormation.setCurrentdate(snapshot.child("currentDate").getValue().toString());
+                if(snapshot.child("currentDate").exists()) {
+                    UserInFormation.setCurrentdate(Objects.requireNonNull(snapshot.child("currentDate").getValue()).toString());
                 }
                 if(snapshot.child("isConfirmed").exists()) {
                     UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());

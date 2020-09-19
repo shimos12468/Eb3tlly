@@ -33,13 +33,13 @@
         android:text="لم تقم بتوصيل اي شحنات مؤخرا"
         android:textSize="30sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerView2"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerView2"
+        app:layout_constraintBottom_toBottomOf="@+id/walletRecycler"
+        app:layout_constraintEnd_toEndOf="@+id/walletRecycler"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView2"
+        android:id="@+id/walletRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout12"

@@ -71,11 +71,6 @@ public class Notifications extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(mm.size() >= 1) {
-            txtNoOrders.setVisibility(View.GONE);
-        } else {
-            txtNoOrders.setVisibility(View.VISIBLE);
-        }
     }
 
     @SuppressLint("RtlHardcoded")
@@ -225,6 +220,11 @@ public class Notifications extends AppCompatActivity {
                     recyclerView.setAdapter(orderAdapter);
                     nDatabase.child(uId).child(notiID).child("isRead").setValue("true");
                     count++;
+                }
+                if(mm.size() >= 1) {
+                    txtNoOrders.setVisibility(View.GONE);
+                } else {
+                    txtNoOrders.setVisibility(View.VISIBLE);
                 }
                 recyclerView.setVisibility(View.VISIBLE);
                 refresh.setRefreshing(false);

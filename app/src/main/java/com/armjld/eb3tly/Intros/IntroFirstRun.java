@@ -20,9 +20,9 @@ public class IntroFirstRun extends AppIntro {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addSlide(AppIntroFragment.newInstance( "اهلا بيك", "بنرحب بيك في ابلكيشن ابعتلي, اول ابلكيشن في مصر بيوصل مندوبين الشحن المقدم بالتجار", R.drawable.firstintro1, Color.parseColor("#FF0099CC")));
-        addSlide(AppIntroFragment.newInstance( "عايز تكسب ؟", "لو انت مندوب شحن او حتي شخص بيحاول يكسب فلوس من المشاوير الي بيعملها كل يوم, تقدر تسجل في الابلكيشن و تختار الاوردرات الي في سكتك و توصلها معاك.",R.drawable.firstintro2, Color.parseColor("#FF0099CC")));
-        addSlide(AppIntroFragment.newInstance( "عايز شغلك يوصل ؟", "لو انت تاجر و محتاج اوردرك يوصل في معادو, تقدر تنزل الاوردر بتاعك و واحد من المندوبين هيكلمك و يجي يستلمو منك",R.drawable.firstintro3, Color.parseColor("#FF0099CC")));
+        addSlide(AppIntroFragment.newInstance( "اهلا بيك", "بنرحب بيك في ابلكيشن ابعتلي, اول ابلكيشن في مصر بيوصل مندوبين الشحن المقدم بالتجار", R.drawable.app_icon, Color.parseColor(String.valueOf(R.color.ic_profile_background))));
+        addSlide(AppIntroFragment.newInstance( "عايز تكسب ؟", "لو انت مندوب شحن او حتي شخص بيحاول يكسب فلوس من المشاوير الي بيعملها كل يوم, تقدر تسجل في الابلكيشن و تختار الاوردرات الي في سكتك و توصلها معاك.",R.drawable.firstintro2, Color.parseColor(String.valueOf(R.color.ic_profile_background))));
+        addSlide(AppIntroFragment.newInstance( "عايز شغلك يوصل ؟", "لو انت تاجر و محتاج اوردرك يوصل في معادو, تقدر تنزل الاوردر بتاعك و واحد من المندوبين هيكلمك و يجي يستلمو منك",R.drawable.firstintro3, Color.parseColor(String.valueOf(R.color.ic_profile_background))));
     }
 
     @Override

@@ -9,26 +9,21 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.armjld.eb3tly.Chat.Chats;
-import com.armjld.eb3tly.MyLocation;
-import com.armjld.eb3tly.SettingsActivity;
+import com.armjld.eb3tly.Utilites.SettingsActivity;
 import com.armjld.eb3tly.Utilites.About;
 import com.armjld.eb3tly.Utilites.Conatact;
 import com.armjld.eb3tly.Utilites.StartUp;
-import com.armjld.eb3tly.Wallet.MyWallet;
 import com.armjld.eb3tly.main.HomeActivity;
 import com.armjld.eb3tly.Utilites.HowTo;
 import com.armjld.eb3tly.main.Login_Options;
-import com.armjld.eb3tly.main.MainActivity;
 import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Passaword.ChangePassword;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.armjld.eb3tly.Utilites.UserSetting;
-import com.armjld.eb3tly.confermations.Account_Confirm;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -38,7 +33,6 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -55,7 +49,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.util.Objects;
 
-import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class supplierProfile extends AppCompatActivity {

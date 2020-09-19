@@ -1,4 +1,4 @@
-package com.armjld.eb3tly;
+package com.armjld.eb3tly.LocationManeger;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,14 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import Model.LocationDataType;
-import Model.notiData;
-
-import com.armjld.eb3tly.LocationManeger.LocationForDelv;
-import com.armjld.eb3tly.LocationManeger.LocationForSup;
-import com.armjld.eb3tly.LocationManeger.LocationManeger;
-import com.armjld.eb3tly.LocationManeger.MakeLocationId;
-import com.armjld.eb3tly.Profiles.supplierProfile;
+import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Utilites.UserInFormation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -122,6 +115,7 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
 
         btnBack.setOnClickListener(v-> {
             finish();
+            startActivity(new Intent(this, LocationForSup.class));
         });
 
         if(!type.equals("New")) {
@@ -215,6 +209,7 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
             Bdatabase.child("id").setValue(locID);
 
             Toast.makeText(this, "تم اضافة العنوان", Toast.LENGTH_LONG).show();
+            finish();
             startActivity(new Intent(this, LocationForSup.class));
         });
 

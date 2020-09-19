@@ -328,54 +328,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             mSwipeRefreshLayout.setRefreshing(false);
         });
 
-        // ------------------------ CHECK FOR REALTIME CHANGES IN ORDERS --------------------------- //
-        mDatabase.orderByChild("ddate").startAt(filterDate).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())) {
-                        if(orderAdapter!=null){
-                            orderAdapter.addItem(i, orderData);
-                        }
-                        else{
-                            Log.i(TAG,"adapter is null here");
-                            orderAdapter  = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
-                            orderAdapter.addItem(i, orderData);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())) {
-                        orderData.setRemoved("true");
-                        if(orderAdapter!=null)
-                            orderAdapter.addItem(i, orderData);
-                        else{
-                            Log.i(TAG,"adapter is null here");
-                            orderAdapter  = new MyAdapter(HomeActivity.this, mm, getApplicationContext(), count);
-                            orderAdapter.addItem(i, orderData);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
         // ---------------------- GET ALL THE ORDERS -------------------//
         Log.i(TAG, "MM Size : " + mm.size());
         if(mm.size() > 0) {

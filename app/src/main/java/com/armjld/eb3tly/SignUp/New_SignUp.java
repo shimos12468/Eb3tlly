@@ -615,6 +615,12 @@ public class New_SignUp extends AppCompatActivity {
 
     private void sendCode(String uPhone) {
         Log.i(TAG, "Sending Code to Phone Numb " + cCode + uPhone);
+
+        if(mCallbacks == null) {
+            mCallBack();
+            Log.i(TAG, "mCallbacks was null");
+        }
+
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 cCode + uPhone,
                 60,
@@ -777,6 +783,7 @@ public class New_SignUp extends AppCompatActivity {
 
             @Override
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                super.onCodeSent(verificationId, token);
                 Toast.makeText(New_SignUp.this, "تم ارسال الرمز", Toast.LENGTH_SHORT).show();
                 mdialog.dismiss();
                 mVerificationId = verificationId;
