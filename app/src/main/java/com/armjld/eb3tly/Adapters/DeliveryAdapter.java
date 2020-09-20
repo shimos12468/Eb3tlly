@@ -35,6 +35,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.Profiles.NewProfile;
+import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Ratings;
 import com.armjld.eb3tly.Utilites.UserInFormation;
@@ -42,6 +43,10 @@ import com.armjld.eb3tly.Wallet.wallet;
 import com.armjld.eb3tly.caculateTime;
 import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
 import com.armjld.eb3tly.messeges.Messages;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,6 +75,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     String datee = sdf.format(new Date());
     private static final int PHONE_CALL_CODE = 100;
     public static caculateTime _cacu = new caculateTime();
+    ReviewInfo reviewInfo;
 
     public void addItem(int position , Data data){
         int size = filtersData.size();
@@ -232,6 +238,20 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
                 Ratings _rate = new Ratings();
                 _rate.setRating(owner, intRating);
+
+                ReviewManager manager = ReviewManagerFactory.create(context);
+                Task<ReviewInfo> request = manager.requestReviewFlow();
+                request.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        reviewInfo = task.getResult();
+                        Log.i(TAG, "Task is Success");
+
+                        Task<Void> flow = manager.launchReviewFlow(((supplierProfile)context), reviewInfo);
+                        flow.addOnCompleteListener(task2 -> {
+                            Log.i(TAG, "Dialog is Showed");
+                        });
+                    }
+                });
 
                 Toast.makeText(context, "تم التقييم بالنجاح", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();

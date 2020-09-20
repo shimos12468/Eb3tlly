@@ -37,7 +37,7 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar_home"
         app:srcCompat="@drawable/ic_add" />
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/listLocations"
         android:layout_width="0dp"
         android:layout_height="0dp"

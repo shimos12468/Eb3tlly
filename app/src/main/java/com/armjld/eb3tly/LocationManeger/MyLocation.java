@@ -51,6 +51,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 
 public class MyLocation extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -150,20 +151,16 @@ public class MyLocation extends FragmentActivity implements OnMapReadyCallback, 
         }
 
         txtDelete.setOnClickListener(v-> {
-            DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(this).setTitle("حذف ؟").setMessage("هل انت متأكد من انك تريد حذف هذا العنوان ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_delete_white, (dialogInterface, which) -> {
+                        Toast.makeText(getApplicationContext(), "تم حذف العنوان بنجاح", Toast.LENGTH_SHORT).show();
                         uDatabase.child(uId).child("locations").child(editID).removeValue();
-                        startActivity(new Intent(this, LocationForSup.class));
+                        startActivity(new Intent(MyLocation.this, LocationForSup.class));
                         finish();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            };
-            androidx.appcompat.app.AlertDialog.Builder builder2 = new androidx.appcompat.app.AlertDialog.Builder(this);
-            builder2.setMessage("هل تريد الغاء هذا العنوان ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
-
+                        dialogInterface.dismiss();
+                    }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                        dialogInterface.dismiss();
+                    }).setAnimation(R.raw.location).build();
+            mBottomSheetDialog.show();
         });
 
         btnSave.setOnClickListener(v-> {

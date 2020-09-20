@@ -45,6 +45,10 @@ import com.armjld.eb3tly.delets.Delete_Delivery_From_Sup;
 import com.armjld.eb3tly.delets.Delete_Reason_Supplier;
 import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.messeges.Messages;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -84,6 +88,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     private static final int PHONE_CALL_CODE = 100;
     private BlockManeger block = new BlockManeger();
     public static caculateTime _cacu = new caculateTime();
+    ReviewInfo reviewInfo;
 
 
     public void addItem(int position , Data data){
@@ -351,6 +356,21 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
                 mDatabase.child(orderID).child("drated").setValue("true");
                 mDatabase.child(orderID).child("drateid").setValue(rId);
+
+                ReviewManager manager = ReviewManagerFactory.create(context);
+                Task<ReviewInfo> request = manager.requestReviewFlow();
+                request.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        reviewInfo = task.getResult();
+                        Log.i(TAG, "Task is Success");
+
+                        Task<Void> flow = manager.launchReviewFlow(((supplierProfile)context), reviewInfo);
+                        flow.addOnCompleteListener(task2 -> {
+                            Log.i(TAG, "Dialog is Showed");
+                        });
+                    }
+                });
+
 
                 Toast.makeText(context, "شكرا لتقيمك", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
