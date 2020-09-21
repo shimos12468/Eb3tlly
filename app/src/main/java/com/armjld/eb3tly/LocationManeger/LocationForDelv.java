@@ -246,6 +246,7 @@ public class LocationForDelv extends AppCompatActivity {
                     spnCity.setPrompt("اختار منطقة محافظة الوادي الجديد");
                     spnCity.setAdapter(adapter4);
                 }
+                Log.i("Spinner", "LISTNER");
             }
 
 
@@ -278,17 +279,12 @@ public class LocationForDelv extends AppCompatActivity {
     }
 
     private void secondSpiin(String value) {
-        if(spnCity.getCount() > 0) {
-            for(int i=0;i <spnCity.getCount(); i++) {
-                Log.i("Spinner", "Searching for : " + value  + " On : " + spnCity.getItemAtPosition(i).toString());
-                if(spnCity.getItemAtPosition(i).toString().equals(value)) {
-                    spnCity.setSelection(i);
-                    break;
-                }
+        for(int i=0;i <spnCity.getCount(); i++) {
+            Log.i("Spinner", "Searching for : " + value  + " On : " + spnCity.getItemAtPosition(i).toString());
+            if(spnCity.getItemAtPosition(i).toString().equals(value)) {
+                spnCity.setSelection(i);
+                break;
             }
-        } else {
-            Log.i("Spinner", "ZERO COUNT");
         }
-
     }
 }

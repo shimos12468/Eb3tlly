@@ -118,6 +118,8 @@ public class New_SignUp extends AppCompatActivity {
     Spinner spnGov, spnCity;
 
     public static AuthCredential googleCred;
+    public static AuthCredential faceCred;
+
 
     @Override
     public void onBackPressed() {
@@ -173,12 +175,13 @@ public class New_SignUp extends AppCompatActivity {
         btnPrev.setVisibility(View.GONE);
         viewFlipper.setDisplayedChild(0);
 
+        Log.i(TAG, "PPURL : " + defultPP);
         Picasso.get().load(Uri.parse(defultPP)).into(imgSetPP);
         txtEmail.setText(newEmail);
         txtLastName.setText(newLastName);
         txtFirstName.setText(newFirstName);
 
-        if(provider.equals("Google")) {
+        if(provider.equals("Google") || provider.equals("facebook")) {
             txtEmail.setEnabled(false);
             txtEmail.setFocusable(false);
             txtEmail.setKeyListener(null);
@@ -639,8 +642,10 @@ public class New_SignUp extends AppCompatActivity {
         }
 
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        if(!provider.equals("Email")) {
-            link(credential);
+        if(provider.equals("Google")) {
+            linkGoogle(credential);
+        } else if(provider.equals("facebook")) {
+            linkFace(credential);
         } else {
             signUp(credential);
         }
@@ -712,13 +717,37 @@ public class New_SignUp extends AppCompatActivity {
         mdialog.dismiss();
     }
 
-    private void link(PhoneAuthCredential credential) {
+    private void linkGoogle(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(googleCred).addOnCompleteListener(New_SignUp.this, googleSign -> {
             if(googleSign.isSuccessful() && mAuth.getCurrentUser() != null) {
                 mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(New_SignUp.this, taskPhone -> {
                     if(taskPhone.isSuccessful()) {
                         AuthCredential emailCred = EmailAuthProvider.getCredential(newEmail, newPass);
                         Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
+                            if(taskEmail.isSuccessful()) {
+                                setUserData();
+                            } else {
+                                mdialog.dismiss();
+                                Toast.makeText(this, "حدث خطأ ما حاول لاحقا", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        if (taskPhone.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            Toast.makeText(this, "كود التفعيل غير صحيح", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void linkFace(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(faceCred).addOnCompleteListener(New_SignUp.this, faceSign -> {
+            if(faceSign.isSuccessful() && mAuth.getCurrentUser() != null) {
+                mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(New_SignUp.this, taskPhone -> {
+                    if(taskPhone.isSuccessful()) {
+                        AuthCredential emailCred = EmailAuthProvider.getCredential(newEmail, newPass);
+                       mAuth.getCurrentUser().linkWithCredential(emailCred).addOnCompleteListener(New_SignUp.this, taskEmail -> {
                             if(taskEmail.isSuccessful()) {
                                 setUserData();
                             } else {
@@ -764,8 +793,10 @@ public class New_SignUp extends AppCompatActivity {
                 txtCode.setText(credential.getSmsCode());
                 mdialog.setMessage("جاري التأكد من الرمز ..");
                 mdialog.show();
-                if(!provider.equals("Email")) {
-                    link(credential);
+                if(provider.equals("Google")) {
+                    linkGoogle(credential);
+                } else if(provider.equals("facebook")) {
+                    linkFace(credential);
                 } else {
                     signUp(credential);
                 }
@@ -956,7 +987,7 @@ public class New_SignUp extends AppCompatActivity {
     private void handleUpload (Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
-        String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         final StorageReference reference = FirebaseStorage.getInstance().getReference().child("ppUsers").child(uID + ".jpeg");
         final String did = uID;
         reference.putBytes(baos.toByteArray()).addOnSuccessListener(taskSnapshot -> {

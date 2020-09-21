@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,6 +30,9 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 
 import com.armjld.eb3tly.R;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -45,11 +52,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.utilities.Utilities;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Login_Options extends AppCompatActivity {
 
@@ -63,7 +80,8 @@ public class Login_Options extends AppCompatActivity {
     private ProgressDialog mdialog;
     public static GoogleSignInClient mGoogleSignInClient;
     boolean isLinked = false;
-
+    boolean fbLink = false;
+    String fbEmail;
 
     @Override
     public void onBackPressed() {
@@ -90,6 +108,8 @@ public class Login_Options extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         callbackManager = CallbackManager.Factory.create();
+        //FacebookSdk.sdkInitialize(Login_Options.this);
+        //AppEventsLogger.activateApp(Login_Options.this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -109,26 +129,131 @@ public class Login_Options extends AppCompatActivity {
             signInGoogle();
         });
 
+
+
+        // --------------- implement Facebook Login -----------------//
+        btnFacebook.setOnClickListener(v-> {
+            if(AccessToken.getCurrentAccessToken() != null) {
+                disconnectFromFacebook();
+                return;
+            }
+            connectToFacebook();
+        });
+
+    }
+
+    protected void connectToFacebook() {
+        ArrayList<String> fbList = new ArrayList<>();
+        fbList.add("email");
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                handleFacebookToken(loginResult.getAccessToken());
+                // App code
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), (json, response) -> {
+                    // Application code
+                    if (response.getError() != null) {
+                        Toast.makeText(Login_Options.this, "Error", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String jsonresult = String.valueOf(json);
+                        System.out.println("JSON Result" + jsonresult);
+                        String fbUserId = json.optString("id");
+                        String fbUserFirstName = json.optString("first_name");
+                        String fbUserLastName = json.optString("last_name");
+                        String fbUserProfilePics = "https://graph.facebook.com/" + fbUserId + "/picture?type=large";
+                        fbEmail = json.optString("email");
+                        handleFacebookToken(loginResult.getAccessToken(), fbEmail,fbUserFirstName,fbUserLastName,fbUserProfilePics);
+                        Log.i(TAG, "First Name : " + fbUserFirstName + " : " + fbUserLastName);
+                    }
+                    Log.v("FaceBook Response :", response.toString());
+                });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,first_name,last_name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
             public void onCancel() {
+                Toast.makeText(Login_Options.this, "cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onError(FacebookException error) {
+            public void onError(FacebookException exception) {
+                Toast.makeText(Login_Options.this, "Error" + exception.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        // --------------- implement Facebook Account -----------------//
-        btnFacebook.setOnClickListener(v-> {
-            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("user_photos", "email", "user_birthday", "public_profile")
-            );
+    private void handleFacebookToken(AccessToken accessToken, String fbEmail, String fbUserFirstName, String fbUserLastName, String fbUserProfilePics) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        uDatabase.orderByChild("email").equalTo(fbEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        linkFacebook(credential, ds.child("email").getValue().toString(), ds.child("mpass").getValue().toString());
+                        break;
+                    }
+                } else {
+                    fbNewAccount(fbEmail,fbUserFirstName,fbUserLastName,fbUserProfilePics, credential);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
+
+    }
+
+    private void linkFacebook(AuthCredential credential, String memail, String mpass) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(memail, mpass).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                for(UserInfo user: Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getProviderData()) {
+                    if(user.getProviderId().equals("facebook.com")) {
+                        fbLink = true;
+                    }
+                }
+                LoginExistFacebook(credential);
+            } else {
+                Toast.makeText(this, "فشل في الاتصال", Toast.LENGTH_SHORT).show();
+                mdialog.dismiss();
+            }
+        });
+    }
+
+    private void LoginExistFacebook(AuthCredential credential) {
+        if(!fbLink) {
+            Log.i(TAG, "Linking with Facebook Credential");
+            mAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(this, linkFace -> {
+                if(linkFace.isSuccessful()) {
+                    Log.i(TAG, "Linked to Facebook Succesfully, Logging in ..");
+                    Toast.makeText(this, "تم ربط حسابك بالفيس بوك", Toast.LENGTH_SHORT).show();
+                    letsGo();
+                    mdialog.dismiss();
+                } else {
+                    Log.i(TAG, "Linked to Facebook Failed");
+                    Toast.makeText(this, "فشل في الاتصال بالفيس بوك", Toast.LENGTH_SHORT).show();
+                    mdialog.dismiss();
+                }
+            });
+            mdialog.dismiss();
+        } else {
+            Log.i(TAG, "Account is Linked to Facebook, Logging ..");
+            letsGo();
+            mdialog.dismiss();
+        }
+    }
+
+    private void fbNewAccount(String fbEmail, String fbFirstName, String fbLastName, String fbPP, AuthCredential credential) {
+        New_SignUp.provider = "facebook";
+        New_SignUp.newEmail = fbEmail;
+        New_SignUp.newFirstName = fbFirstName;
+        New_SignUp.newLastName = fbLastName;
+        New_SignUp.defultPP = fbPP;
+        New_SignUp.faceCred = credential;
+        finish();
+        startActivity(new Intent(Login_Options.this, New_SignUp.class));
     }
 
     private void signInGoogle() {
@@ -208,17 +333,6 @@ public class Login_Options extends AppCompatActivity {
                     mdialog.dismiss();
                     letsGo();
                 }
-            } else {
-                mdialog.dismiss();
-            }
-        });
-    }
-
-    private void firebaseAuthWithGoogle(String idToken, AuthCredential credential) {
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
-            if (task.isSuccessful()) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                letsGo();
             } else {
                 mdialog.dismiss();
             }
@@ -322,18 +436,11 @@ public class Login_Options extends AppCompatActivity {
 
     }
 
-
-    private void handleFacebookToken(AccessToken accessToken) {
-        Toast.makeText(this, "Handling", Toast.LENGTH_SHORT).show();
-        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
-            if(task.isSuccessful()) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                Log.d("MAAAIn", "HAHAHAHA" );
-            } else {
-                Log.w(TAG, "signInWithCredential:failure", task.getException());
-            }
-        });
+    public void disconnectFromFacebook() {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return;
+        }
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, graphResponse -> LoginManager.getInstance().logOut()).executeAsync();
     }
 
 }

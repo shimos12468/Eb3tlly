@@ -516,6 +516,10 @@ public class   Filters extends AppCompatActivity {
 
     private void applyFilter(String spState,String spRegion, String sdState,String sdRegion, String money, String filterDate) {
         tsferAdapter();
+        if(HomeActivity.mm.size() > 0) {
+            getFromList();
+            return;
+        }
         mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -580,6 +584,10 @@ public class   Filters extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+
+    }
+
+    private void getFromList() {
 
     }
 
