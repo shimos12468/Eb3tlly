@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.armjld.eb3tly.CaptinProfile.capAcceptedTab;
+import com.armjld.eb3tly.CaptinProfile.capDelvTab;
 import com.armjld.eb3tly.Chat.ChatFragmet;
 import com.armjld.eb3tly.Home.HomeFragment;
 import com.armjld.eb3tly.Login.MainActivity;
@@ -17,6 +20,9 @@ import com.armjld.eb3tly.Settings.SettingFragment;
 import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
 import com.armjld.eb3tly.CaptinProfile.captinFragment;
+import com.armjld.eb3tly.SupplierProfile.acceptedTab;
+import com.armjld.eb3tly.SupplierProfile.dilveredTab;
+import com.armjld.eb3tly.SupplierProfile.placedTab;
 import com.armjld.eb3tly.SupplierProfile.supplierFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -43,7 +49,7 @@ public class HomeActivity extends AppCompatActivity  {
     public static boolean requests = false;
     public static boolean orders = false;
 
-    private String TAG = "Home Activity";
+    public static String TAG = "Home Activity";
     String uType = UserInFormation.getAccountType();
     static String uId = UserInFormation.getId();
     // Disable the Back Button
@@ -233,6 +239,11 @@ public class HomeActivity extends AppCompatActivity  {
                     assert orderData != null;
                     supList.add(orderData);
                 }
+
+                acceptedTab.getOrders();
+                dilveredTab.getOrders();
+                placedTab.getOrders();
+
             }
 
             @Override
@@ -243,6 +254,7 @@ public class HomeActivity extends AppCompatActivity  {
     public static void getDeliveryOrders() {
         delvList.clear();
         delvList.trimToSize();
+        Log.i(TAG, "Getting Captain Orders From Database");
         mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -251,6 +263,9 @@ public class HomeActivity extends AppCompatActivity  {
                     assert orderData != null;
                     delvList.add(orderData);
                 }
+
+                capAcceptedTab.getOrders();
+                capDelvTab.getOrders();
             }
 
             @Override

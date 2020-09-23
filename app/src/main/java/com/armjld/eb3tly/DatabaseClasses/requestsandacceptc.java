@@ -39,11 +39,7 @@ public class requestsandacceptc {
             }
         });
 
-        if(count <= 20){
-            return true;
-        }
-        else
-            return false;
+        return count <= 20;
 
     }
 
@@ -94,11 +90,7 @@ public class requestsandacceptc {
         Log.i("LOOOOOG", ""+count2 + count3);
 
 
-        if(count2<20 && count3<10){
-            return true;
-        } else {
-            return false;
-        }
+        return count2 < 20 && count3 < 10;
 
     }
 }

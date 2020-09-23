@@ -1,7 +1,10 @@
 package com.armjld.eb3tly.SupplierProfile;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,19 +30,15 @@ import Model.Data;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class placedTab extends Fragment {
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
-    private static ArrayList<Data> listSup;
-    private long countSup;
-    private SupplierAdapter supplierAdapter;
+    public static Context mContext;
+    public static SupplierAdapter supplierAdapter;
     private FirebaseAuth mAuth;
     private String TAG = "Profile";
-    private RecyclerView recyclerView;
-    String uType = UserInFormation.getAccountType();
+    private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
-    private TextView txtNoOrders;
+    public static TextView txtNoOrders;
     String uId;
 
     private String mParam1;
@@ -68,11 +67,6 @@ public class placedTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_placed_oreders_supplier, container, false);
-        mDatabase = getInstance().getReference().child("Pickly").child("orders");
-        uDatabase = getInstance().getReference().child("Pickly").child("users");
-        rDatabase = getInstance().getReference().child("Pickly").child("comments");
-        vDatabase = getInstance().getReference().child("Pickly").child("values");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
@@ -81,10 +75,6 @@ public class placedTab extends Fragment {
         refresh = view.findViewById(R.id.refresh);
         txtNoOrders = view.findViewById(R.id.txtNoOrders);
         recyclerView = view.findViewById(R.id.userRecyclr);
-
-        // Adapter
-        countSup = 0;
-        listSup = new ArrayList<>();
 
         // ------------ Refresh View ---------- //
         refresh.setOnRefreshListener(() -> {
@@ -109,20 +99,36 @@ public class placedTab extends Fragment {
         getOrders();
     }
 
-    private void getOrders(){
+    public static void getOrders(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            recyclerView.setAdapter(null);
             ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("placed")).collect(Collectors.toList());
-            supplierAdapter = new SupplierAdapter(getContext(), filterList);
-            recyclerView.setAdapter(supplierAdapter);
-            updateNone(filterList.size());
+            supplierAdapter = new SupplierAdapter(mContext, filterList);
+            if(recyclerView != null) {
+                recyclerView.setAdapter(supplierAdapter);
+                updateNone(filterList.size());
+            }
         }
     }
 
-    private void updateNone(int listSize) {
+    private static void updateNone(int listSize) {
         if(listSize > 0) {
             txtNoOrders.setVisibility(View.GONE);
         } else {
             txtNoOrders.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
     }
 }

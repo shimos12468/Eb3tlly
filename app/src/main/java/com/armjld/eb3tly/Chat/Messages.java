@@ -201,7 +201,7 @@ public class Messages extends AppCompatActivity {
 
     public void checkPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions((Activity) this, new String[] { permission }, requestCode);
+            ActivityCompat.requestPermissions(this, new String[] { permission }, requestCode);
         }
     }
 

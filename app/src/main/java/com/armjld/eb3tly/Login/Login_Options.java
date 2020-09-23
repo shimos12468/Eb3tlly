@@ -382,7 +382,7 @@ public class Login_Options extends AppCompatActivity {
                 } else{
                     Toast.makeText(getApplicationContext(), "سجل حسابك مرة اخري", Toast.LENGTH_LONG).show();
                     finish();
-                    startActivity(new Intent(Login_Options.this, Signup.class));
+                    startActivity(new Intent(Login_Options.this, New_SignUp.class));
                 }
                 mdialog.dismiss();
             }

@@ -1,11 +1,13 @@
 package com.armjld.eb3tly.SupplierProfile;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,17 +34,18 @@ public class acceptedTab extends Fragment {
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private static ArrayList<Data> listSup;
     private long countSup;
-    private SupplierAdapter supplierAdapter;
+    private static SupplierAdapter supplierAdapter;
     private FirebaseAuth mAuth;
     private String TAG = "Profile";
-    private RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
-    private TextView txtNoOrders;
+    private static TextView txtNoOrders;
     String uId;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    public static Context mContext;
 
     public acceptedTab() { }
 
@@ -111,20 +114,36 @@ public class acceptedTab extends Fragment {
         getOrders();
     }
 
-    private void getOrders() {
+    public static void getOrders() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            recyclerView.setAdapter(null);
             ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("accepted") || x.getStatue().equals("recived")).collect(Collectors.toList());
-            supplierAdapter = new SupplierAdapter(getContext(), filterList);
-            recyclerView.setAdapter(supplierAdapter);
-            updateNone(filterList.size());
+            supplierAdapter = new SupplierAdapter(mContext, filterList);
+            if(recyclerView != null) {
+                recyclerView.setAdapter(supplierAdapter);
+                updateNone(filterList.size());
+            }
         }
     }
 
-    private void updateNone(int listSize) {
+    private static void updateNone(int listSize) {
         if(listSize > 0) {
             txtNoOrders.setVisibility(View.GONE);
         } else {
             txtNoOrders.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
     }
 }

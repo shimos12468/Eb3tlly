@@ -30,7 +30,7 @@ public class LocationsAdapter extends ArrayAdapter<LocationDataType> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_locations, parent, false);
         }
-        TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
+        TextView tvName = convertView.findViewById(R.id.tvName);
         TextView tvGov = convertView.findViewById(R.id.tvGov);
         TextView tvAddress = convertView.findViewById(R.id.tvAddress);
 

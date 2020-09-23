@@ -1,12 +1,15 @@
 package com.armjld.eb3tly.CaptinProfile;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,19 +33,21 @@ public class capDelvTab extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static String TAG = "CapDelvTab";
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
     private static ArrayList<Data> listDelv;
     private long countDelv;
-    private DeliveryAdapter deliveryAdapter;
+    private static DeliveryAdapter deliveryAdapter;
     private FirebaseAuth mAuth;
-    private String TAG = "Profile";
-    private RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
-    private TextView txtNoOrders;
+    private static TextView txtNoOrders;
     String uType = UserInFormation.getAccountType();
     String uId;
     private String mParam1;
     private String mParam2;
+    private static Context mContext;
+    public static ArrayList<Data> filterList;
 
     public capDelvTab() { }
 
@@ -73,10 +78,6 @@ public class capDelvTab extends Fragment {
         refresh = view.findViewById(R.id.refresh);
         txtNoOrders = view.findViewById(R.id.txtNoOrders);
 
-        // Adapter
-        countDelv = 0;
-        listDelv = new ArrayList<>();
-
         // ---- Refresh ----------- //
         refresh.setOnRefreshListener(() -> {
             refresh.setRefreshing(true);
@@ -89,7 +90,11 @@ public class capDelvTab extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+
         getOrders();
+        recyclerView.setAdapter(deliveryAdapter);
+        updateNone(filterList.size());
+
         return view;
     }
 
@@ -100,20 +105,36 @@ public class capDelvTab extends Fragment {
         getOrders();
     }
 
-    private void getOrders(){
+    public static void getOrders(){
+        Log.i(TAG, "Setting orders in ArrayList");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("delivered")).collect(Collectors.toList());
-            deliveryAdapter = new DeliveryAdapter(getContext(), filterList);
-            recyclerView.setAdapter(deliveryAdapter);
-            updateNone(filterList.size());
+            filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("delivered")).collect(Collectors.toList());
+            deliveryAdapter = new DeliveryAdapter(mContext, filterList);
+            if(recyclerView != null) {
+                recyclerView.setAdapter(deliveryAdapter);
+                updateNone(filterList.size());
+            }
         }
     }
 
-    private void updateNone(int listSize) {
+    private static void updateNone(int listSize) {
         if(listSize > 0) {
             txtNoOrders.setVisibility(View.GONE);
         } else {
             txtNoOrders.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
     }
 }

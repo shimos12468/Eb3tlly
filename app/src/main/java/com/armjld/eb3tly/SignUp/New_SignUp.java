@@ -166,7 +166,7 @@ public class New_SignUp extends AppCompatActivity {
         txtPass2 = findViewById(R.id.txtPass2);
         imgSetPP = findViewById(R.id.imgEditPhoto);
         txtPhone = findViewById(R.id.txtPhone);
-        ccp = (CountryCodePicker) findViewById(R.id.ccp);
+        ccp = findViewById(R.id.ccp);
 
         txtCode = findViewById(R.id.txtCode);
 
@@ -865,7 +865,7 @@ public class New_SignUp extends AppCompatActivity {
         if (data != null) {
             Uri photoUri = data.getData();
             try {
-                Bitmap source = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                Bitmap source = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 bitmap = resizeBitmap (source, 150);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Chat.chatListclass;
+import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.rquests;
 import com.armjld.eb3tly.Home.StartUp;
@@ -113,7 +114,9 @@ public class Delete_Reason_Supplier extends AppCompatActivity {
 
                         mDatabase.child(orderID).child("statue").setValue("deleted");
                         Toast.makeText(this, "شكرا لك, تم حذف الاوردر بنجاح", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Delete_Reason_Supplier.this, supplierProfile.class));
+                        
+                        HomeActivity.whichFrag = "Profile";
+                        startActivity(new Intent(Delete_Reason_Supplier.this, HomeActivity.class));
 
                         assert acceptID != null;
                         if(!acceptID.equals("")) {

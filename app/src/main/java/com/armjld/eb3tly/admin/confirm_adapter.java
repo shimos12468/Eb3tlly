@@ -217,10 +217,6 @@ public class confirm_adapter extends RecyclerView.Adapter<confirm_adapter.MyView
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
-        if (date == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return date != null;
     }
 }

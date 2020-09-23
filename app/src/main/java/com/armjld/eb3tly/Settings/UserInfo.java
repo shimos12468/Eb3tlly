@@ -273,7 +273,7 @@ public class UserInfo extends AppCompatActivity {
         if (data != null) {
             Uri photoUri = data.getData();
             try {
-                Bitmap source = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                Bitmap source = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 bitmap = resizeBitmap(source, 150);
             } catch (IOException e) {
                 e.printStackTrace();

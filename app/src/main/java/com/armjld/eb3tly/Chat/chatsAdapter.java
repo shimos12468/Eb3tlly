@@ -70,7 +70,7 @@ public class chatsAdapter extends RecyclerView.Adapter<chatsAdapter.MyViewHolder
             intent.putExtra("rid", chat.getUserId());
             context.startActivity(intent);
             Messages.cameFrom = "Chats";
-            Chats.cameFrom = "Chat";
+            ChatFragmet.cameFrom = "Chat";
         });
 
         uDatabase.child(talkerID).addListenerForSingleValueEvent(new ValueEventListener() {

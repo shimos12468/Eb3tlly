@@ -95,7 +95,7 @@ public class Admin extends Activity {
             return;
         }
 
-        Vibrator vibe = (Vibrator) Objects.requireNonNull((Admin)this).getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibe = (Vibrator) Objects.requireNonNull(this).getSystemService(Context.VIBRATOR_SERVICE);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -136,7 +136,7 @@ public class Admin extends Activity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("Admin Panel");
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_profile, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
 
@@ -160,7 +160,7 @@ public class Admin extends Activity {
                 startActivity(new Intent(getApplicationContext(), ChangePassword.class));
             }
             if (id == R.id.nav_how) {
-                startActivity(new Intent(getApplicationContext(), HowTo.class));
+                //startActivity(new Intent(getApplicationContext(), HowTo.class));
             }
             if (id == R.id.nav_contact) {
                 startActivity(new Intent(getApplicationContext(), Conatact.class));
@@ -281,7 +281,7 @@ public class Admin extends Activity {
         });
 
         // -------------------------- Check the Reports ------------------------------------//
-        btnReports.setOnClickListener((View.OnClickListener) v -> {
+        btnReports.setOnClickListener(v -> {
             AlertDialog.Builder theReports = new AlertDialog.Builder(Admin.this);
             LayoutInflater inflater = LayoutInflater.from(Admin.this);
             View reportsView = inflater.inflate(R.layout.admin_reports, null);
@@ -289,7 +289,7 @@ public class Admin extends Activity {
             AlertDialog dialog = theReports.create();
             dialog.show();
 
-            ListView listReports = (ListView) reportsView.findViewById(R.id.listReports);
+            ListView listReports = reportsView.findViewById(R.id.listReports);
             final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(Admin.this, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
             listReports.setAdapter(arrayAdapterLessons);
             mArraylistSectionLessons.clear();
@@ -875,7 +875,7 @@ public class Admin extends Activity {
                                 }
                             }
 
-                            int intProfit = (int) Integer.parseInt(Objects.requireNonNull(ds.child("profit").getValue()).toString());
+                            int intProfit = Integer.parseInt(Objects.requireNonNull(ds.child("profit").getValue()).toString());
                             profitCount = profitCount + intProfit;
                             if(intProfit > 0) {
                                 ++usedUsers;

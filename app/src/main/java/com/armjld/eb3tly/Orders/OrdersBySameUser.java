@@ -95,7 +95,6 @@ public class OrdersBySameUser extends AppCompatActivity {
         count =0;
         mm = new ArrayList<>();
         toolbar = findViewById(R.id.toolbar_home);
-        btnNavBar = findViewById(R.id.btnNavBar);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("اوردرات " + dName);
@@ -113,115 +112,6 @@ public class OrdersBySameUser extends AppCompatActivity {
         //Recycler
         recyclerView=findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
-
-        // NAV BAR
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        AppBarConfiguration mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_profile, R.id.nav_signout, R.id.nav_share).setDrawerLayout(drawer).build();
-
-        btnNavBar.setOnClickListener(v -> {
-            if (drawer.isDrawerOpen(Gravity.LEFT)) {
-                drawer.closeDrawer(Gravity.LEFT);
-            } else {
-                drawer.openDrawer(Gravity.LEFT);
-            }
-        });
-
-        final Intent newIntentNB = new Intent(this, HomeActivity.class);
-        // Navigation Bar Buttons Function
-        navigationView.setNavigationItemSelectedListener(menuItem -> {
-            int id = menuItem.getItemId();
-            if (id == R.id.nav_timeline) {
-                newIntentNB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                finish();
-                startActivity(newIntentNB);
-            }
-            if (id == R.id.nav_changepass) {
-                startActivity(new Intent(getApplicationContext(), ChangePassword.class));
-            }
-            if (id==R.id.nav_profile){
-                finish();
-                whichProfile();
-            }
-            if(id == R.id.nav_info) {
-                startActivity(new Intent(getApplicationContext(), UserInfo.class));
-
-            }
-            if (id == R.id.nav_how) {
-                startActivity(new Intent(getApplicationContext(), HowTo.class));
-            }
-            if (id==R.id.nav_signout){
-                finish();
-                startActivity(new Intent(OrdersBySameUser.this, MainActivity.class));
-                mAuth.signOut();
-            }
-            if (id==R.id.nav_about){
-                startActivity(new Intent(OrdersBySameUser.this, About.class));
-            }
-            if(id==R.id.nav_share){
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String shareBody = "https://play.google.com/store/apps/details?id=com.armjld.eb3tly";
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Play Store Link");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "شارك البرنامج مع اخرون"));
-            }
-            if (id == R.id.nav_contact) {
-                startActivity(new Intent(getApplicationContext(), Conatact.class));
-            }
-            if (id==R.id.nav_exit){
-                finishAffinity();
-                System.exit(0);
-            }
-            drawer.closeDrawer(Gravity.LEFT);
-            return true;
-        });
-
-        mDatabase.orderByChild("uId").equalTo(userID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())) {
-                        if(orderAdapter!=null)
-                            orderAdapter.addItem(i, orderData);
-                        else{
-                            Log.i(TAG,"adapter is null here");
-                            orderAdapter  = new MyAdapter(OrdersBySameUser.this, mm, getApplicationContext(), count);
-                            orderAdapter.addItem(i, orderData);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())) {
-                        orderData.setRemoved("true");
-                        if(orderAdapter!=null)
-                            orderAdapter.addItem(i, orderData);
-                        else{
-                            Log.i(TAG,"adapter is null here");
-                            orderAdapter  = new MyAdapter(OrdersBySameUser.this, mm, getApplicationContext(), count);
-                            orderAdapter.addItem(i, orderData);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
 
         getOrdersByLatest(userID);
     }
@@ -278,11 +168,4 @@ public class OrdersBySameUser extends AppCompatActivity {
         }
     }
 
-    private void whichProfile () {
-        if(uType.equals("Supplier")) {
-            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
-        } else {
-            startActivity(new Intent(getApplicationContext(), NewProfile.class));
-        }
-    }
 }

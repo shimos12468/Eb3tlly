@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Chat.chatListclass;
+import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.Ratings;
@@ -352,21 +353,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 mDatabase.child(orderID).child("drated").setValue("true");
                 mDatabase.child(orderID).child("drateid").setValue(rId);
 
-                ReviewManager manager = ReviewManagerFactory.create(context);
-                Task<ReviewInfo> request = manager.requestReviewFlow();
-                request.addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        reviewInfo = task.getResult();
-                        Log.i(TAG, "Task is Success");
-
-                        Task<Void> flow = manager.launchReviewFlow(((supplierProfile)context), reviewInfo);
-                        flow.addOnCompleteListener(task2 -> {
-                            Log.i(TAG, "Dialog is Showed");
-                        });
-                    }
-                });
-
-
                 Toast.makeText(context, "شكرا لتقيمك", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });
@@ -618,7 +604,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ((supplierProfile)context).onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ((HomeActivity)context).onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PHONE_CALL_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(context, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
@@ -726,7 +712,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                                     if(ds.child("statue").exists()) {
                                                         assert rData != null;
                                                         if(rData.getStatue().equals("N/A")) { // Get only the not decliend requests
-                                                            mm.add((int) count, rData);
+                                                            mm.add(count, rData);
                                                             count++;
                                                             RequestsAdapter req = new RequestsAdapter(context, mm, count, orderID);
                                                             requestRecycler.setAdapter(req);

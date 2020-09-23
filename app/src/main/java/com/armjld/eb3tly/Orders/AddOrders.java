@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
@@ -723,7 +724,8 @@ public class AddOrders extends AppCompatActivity {
 
                         mdialog.dismiss();
                         Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(AddOrders.this, supplierProfile.class));
+                        HomeActivity.whichFrag = "Profile";
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         mdialog.dismiss();
@@ -961,7 +963,7 @@ public class AddOrders extends AppCompatActivity {
     private Double checkFactor(String from, String to) {
         String Region = "";
         double factor;
-        factor = (double) 0;
+        factor = 0;
 
         if(from.equals("اسوان") || from.equals("الاقصر") || to.equals("اسوان") || to.equals("الاقصر")) {
             Region = "الصعيد";
@@ -977,27 +979,27 @@ public class AddOrders extends AppCompatActivity {
 
         switch (Region) {
             case "الصعيد" : {
-                factor = (Double) 1.4;
+                factor = 1.4;
                 break;
             }
             case "بحري" : {
-                factor = (Double) 1.2;
+                factor = 1.2;
                 break;
             }
             case "المنبوذين" : {
-                factor = (Double) 1.6;
+                factor = 1.6;
                 break;
             }
             case "القاهرة الكبري" : {
-                factor = (Double) 1.1;
+                factor = 1.1;
                 break;
             }
             case "السويس" : {
-                factor = (Double) 1.3;
+                factor = 1.3;
                 break;
             }
             default: {
-                factor = (Double) 1.3;
+                factor = 1.3;
                 break;
             }
         }

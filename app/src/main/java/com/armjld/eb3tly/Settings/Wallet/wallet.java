@@ -45,12 +45,7 @@ public class wallet {
         diffHours = diff / (60 * 60 * 1000);
 
         Log.d(TAG , "You Have " + (48 - diffHours) + " Hours left!");
-        if(diffHours<48){
-            return true;
-        }
-        else {
-            return false;
-        }
+        return diffHours < 48;
 
     }
 

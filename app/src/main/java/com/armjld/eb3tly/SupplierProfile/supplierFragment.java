@@ -177,7 +177,6 @@ public class supplierFragment extends Fragment {
             vibe.vibrate(40);
             mdialog.setMessage("جاري التاكد من اتصال الانترنت ..");
             mdialog.show();
-            //startActivity(new Intent(getActivity(), MyLocation.class));
             vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

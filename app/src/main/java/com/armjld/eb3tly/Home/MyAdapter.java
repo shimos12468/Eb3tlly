@@ -84,7 +84,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count) {
         this.count = count;
-        this.context = context;
+        MyAdapter.context = context;
         this.filtersData =filtersData;
         this.context1 = context1;
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");

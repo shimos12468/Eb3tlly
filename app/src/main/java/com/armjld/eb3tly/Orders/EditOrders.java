@@ -113,10 +113,10 @@ public class EditOrders extends AppCompatActivity {
         chkBid = findViewById(R.id.chkBid);
 
         //Spinners
-        spPState = (Spinner) findViewById(R.id.txtPState);
-        spPRegion = (Spinner) findViewById(R.id.txtPRegion);
-        spDState = (Spinner) findViewById(R.id.txtDState);
-        spDRegion = (Spinner) findViewById(R.id.txtDRegion);
+        spPState = findViewById(R.id.txtPState);
+        spPRegion = findViewById(R.id.txtPRegion);
+        spDState = findViewById(R.id.txtDState);
+        spDRegion = findViewById(R.id.txtDRegion);
         imgHelpMoney = findViewById(R.id.imgHelpMoney);
         imgHelpGet = findViewById(R.id.imgHelpGet);
 
@@ -166,14 +166,14 @@ public class EditOrders extends AppCompatActivity {
                 acceptedID = orderData.getuAccepted();
                 statee = orderData.getStatue();
                 uID = orderData.getuId();
-                PAddress.setText(orderData.getmPAddress().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                PShop.setText(orderData.getmPShop().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DAddress.setText(orderData.getDAddress().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DDate.setText(orderData.getDDate().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DPhone.setText(orderData.getDPhone().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DName.setText(orderData.getDName().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                GMoney.setText(orderData.getGMoney().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                GGet.setText(orderData.getGGet().toString().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                PAddress.setText(orderData.getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                PShop.setText(orderData.getmPShop().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DAddress.setText(orderData.getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DDate.setText(orderData.getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DPhone.setText(orderData.getDPhone().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                DName.setText(orderData.getDName().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                GMoney.setText(orderData.getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
+                GGet.setText(orderData.getGGet().replaceAll("(^\\h*)|(\\h*$)","").trim());
 
                 if(orderData.getType() == null) {
                     chkBid.setChecked(false);
@@ -679,9 +679,11 @@ public class EditOrders extends AppCompatActivity {
 
                                 mdialog.dismiss();
                                 if(UserInFormation.getAccountType().equals("Admin")) {
+                                    HomeActivity.whichFrag = "Home";
                                     startActivity(new Intent(EditOrders.this, HomeActivity.class));
                                 } else {
-                                    startActivity(new Intent(EditOrders.this, supplierProfile.class));
+                                    HomeActivity.whichFrag = "Profile";
+                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                                 }
                                 Toast.makeText(EditOrders.this, "تم تعديل الاوردر الخاص بك", Toast.LENGTH_LONG).show();
                                 break;

@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.SupplierProfile.LocationsAdapter;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
@@ -52,7 +54,9 @@ public class LocationForSup extends AppCompatActivity {
 
         btnBack.setOnClickListener(v-> {
             finish();
-            startActivity(new Intent(this, SettingsActivity.class));
+            HomeActivity.whichFrag = "Settings";
+
+            startActivity(new Intent(this, HomeActivity.class));
         });
 
         linText.setOnClickListener(v-> {

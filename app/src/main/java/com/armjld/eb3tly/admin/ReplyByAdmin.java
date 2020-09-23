@@ -67,7 +67,7 @@ public class ReplyByAdmin extends AppCompatActivity {
         btnDeactive = findViewById(R.id.btnDeactive);
         btnInfo = findViewById(R.id.btnInfo);
 
-        vibe = (Vibrator) Objects.requireNonNull((ReplyByAdmin)this).getSystemService(Context.VIBRATOR_SERVICE);
+        vibe = (Vibrator) Objects.requireNonNull(this).getSystemService(Context.VIBRATOR_SERVICE);
 
 
         count = 0;

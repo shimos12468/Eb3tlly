@@ -389,7 +389,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return (int) filtersData.size();
+        return filtersData.size();
     }
 
     @Override
@@ -488,7 +488,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                     btnChat.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
 
-                    txtGetStat.setVisibility(View.VISIBLE);
+                    txtGetStat.setVisibility(View.GONE);
                     txtGetStat.setText("تواصل مع التاجر لاستلام الاوردر");
                     txtGetStat.setBackgroundColor(Color.RED);
                     break;
@@ -499,7 +499,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                     btnDelivered.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
 
-                    txtGetStat.setVisibility(View.VISIBLE);
+                    txtGetStat.setVisibility(View.GONE);
                     txtGetStat.setText("تم استلام الاوردر من التاجر");
                     txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                     break;

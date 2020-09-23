@@ -236,10 +236,6 @@ public class NotiAdaptere extends RecyclerView.Adapter<NotiAdaptere.MyViewHolder
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
-        if (date == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return date != null;
     }
 }

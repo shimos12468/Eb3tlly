@@ -57,6 +57,7 @@ public class captinFragment extends Fragment {
     static String uId;
     String isConfirmed = UserInFormation.getisConfirm();
     SectionsPagerAdapter sectionsPagerAdapter;
+    private Context mContext;
 
     public captinFragment() { }
 
@@ -160,5 +161,18 @@ public class captinFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
     }
 }

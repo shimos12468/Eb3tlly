@@ -1,12 +1,16 @@
 package com.armjld.eb3tly.CaptinProfile;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,21 +34,20 @@ public class capAcceptedTab extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
-    private static ArrayList<Data> listDelv;
-    private long countDelv;
-    private DeliveryAdapter deliveryAdapter;
+    private static String TAG = "CapAcceptedTab";
+    private static DeliveryAdapter deliveryAdapter;
     private FirebaseAuth mAuth;
-    private String TAG = "Profile";
-    private RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
-    private TextView txtNoOrders;
+    private static TextView txtNoOrders;
+    public static ArrayList<Data> filterList;
     String uType = UserInFormation.getAccountType();
     String uId;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    public static Context mContext;
 
     public capAcceptedTab() { }
 
@@ -72,11 +75,6 @@ public class capAcceptedTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view =  inflater.inflate(R.layout.fragment_blank, container, false);
-        mDatabase = getInstance().getReference().child("Pickly").child("orders");
-        uDatabase = getInstance().getReference().child("Pickly").child("users");
-        rDatabase = getInstance().getReference().child("Pickly").child("comments");
-        vDatabase = getInstance().getReference().child("Pickly").child("values");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         assert mUser != null;
@@ -85,10 +83,6 @@ public class capAcceptedTab extends Fragment {
         recyclerView = view.findViewById(R.id.userRecycle);
         refresh = view.findViewById(R.id.refresh);
         txtNoOrders = view.findViewById(R.id.txtNoOrders);
-
-        // Adapter
-        countDelv = 0;
-        listDelv = new ArrayList<>();
 
         // ---- Refresh ----------- //
         refresh.setOnRefreshListener(() -> {
@@ -105,6 +99,8 @@ public class capAcceptedTab extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         getOrders();
+        recyclerView.setAdapter(deliveryAdapter);
+        updateNone(filterList.size());
 
         return view;
     }
@@ -115,16 +111,32 @@ public class capAcceptedTab extends Fragment {
         getOrders();
     }
 
-    private void getOrders(){
+    public static void getOrders(){
+        Log.i(TAG, "Setting orders in ArrayList");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("accepted") || x.getStatue().equals("recived")).collect(Collectors.toList());
-            deliveryAdapter = new DeliveryAdapter(getContext(), filterList);
-            recyclerView.setAdapter(deliveryAdapter);
-            updateNone(filterList.size());
+            filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("accepted") || x.getStatue().equals("recived")).collect(Collectors.toList());
+            deliveryAdapter = new DeliveryAdapter(mContext, filterList);
+            if(recyclerView != null) {
+                recyclerView.setAdapter(deliveryAdapter);
+                updateNone(filterList.size());
+            }
         }
     }
 
-    private void updateNone(int listSize) {
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
+    }
+
+    private static void updateNone(int listSize) {
         if(listSize > 0) {
             txtNoOrders.setVisibility(View.GONE);
         } else {

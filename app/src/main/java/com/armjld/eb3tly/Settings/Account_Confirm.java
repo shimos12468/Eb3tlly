@@ -270,7 +270,7 @@ public class Account_Confirm extends AppCompatActivity {
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         reauthenticate();
-        Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(credential).addOnCompleteListener(this, (OnCompleteListener<AuthResult>) task -> {
+        Objects.requireNonNull(mAuth.getCurrentUser()).linkWithCredential(credential).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 mdialog.dismiss();
                 Toast.makeText(this, "تم تفعيل رقم هاتفك", Toast.LENGTH_SHORT).show();
@@ -346,7 +346,7 @@ public class Account_Confirm extends AppCompatActivity {
         if (data != null) {
             Uri photoUri = data.getData();
             try {
-                Bitmap source = (Bitmap) MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                Bitmap source = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                 bitmap = resizeBitmap(source, 500);
             } catch (IOException e) {
                 e.printStackTrace();

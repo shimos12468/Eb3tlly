@@ -109,11 +109,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 break;
             }
             case "profile" : {
-                if(UserInFormation.getAccountType().equals("Supplier")) {
-                    intent = new Intent(this, supplierProfile.class);
-                } else {
-                    intent = new Intent(this, NewProfile.class);
-                }
+                HomeActivity.whichFrag = "Profile";
+                startActivity(new Intent(this, HomeActivity.class));
                 break;
             }
             case "order": {
