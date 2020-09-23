@@ -2,49 +2,33 @@ package com.armjld.eb3tly.SupplierProfile;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.armjld.eb3tly.Home.HomeActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-
 import Model.Data;
-
-import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class acceptedTab extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
-    private static ArrayList<Data> listSup;
-    private long countSup;
+    private static String TAG = "SupplierAccepted";
     private static SupplierAdapter supplierAdapter;
-    private FirebaseAuth mAuth;
-    private String TAG = "Profile";
     private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
     private static TextView txtNoOrders;
     String uId;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     public static Context mContext;
 
     public acceptedTab() { }
@@ -61,24 +45,12 @@ public class acceptedTab extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view =  inflater.inflate(R.layout.fragment_accepted_orders_supplier, container, false);
-        mDatabase = getInstance().getReference().child("Pickly").child("orders");
-        uDatabase = getInstance().getReference().child("Pickly").child("users");
-        rDatabase = getInstance().getReference().child("Pickly").child("comments");
-        vDatabase = getInstance().getReference().child("Pickly").child("values");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser mUser = mAuth.getCurrentUser();
-        assert mUser != null;
         uId = UserInFormation.getId();
 
         refresh = view.findViewById(R.id.refresh);
@@ -92,17 +64,14 @@ public class acceptedTab extends Fragment {
             refresh.setRefreshing(false);
         });
 
-        // Adapter
-        countSup = 0;
-        listSup = new ArrayList<>();
 
         //Recycler
-
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+
         getOrders();
         return view;
     }
@@ -115,8 +84,8 @@ public class acceptedTab extends Fragment {
     }
 
     public static void getOrders() {
+        Log.i(TAG, "Setting Orders in Local List");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            recyclerView.setAdapter(null);
             ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("accepted") || x.getStatue().equals("recived")).collect(Collectors.toList());
             supplierAdapter = new SupplierAdapter(mContext, filterList);
             if(recyclerView != null) {
@@ -138,7 +107,6 @@ public class acceptedTab extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mContext = context;
-
     }
 
     @Override

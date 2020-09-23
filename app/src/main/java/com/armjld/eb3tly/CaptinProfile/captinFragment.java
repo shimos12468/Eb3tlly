@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.Handler;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,24 +40,16 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class captinFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     private static DatabaseReference mDatabase;
     private DatabaseReference nDatabase;
-    private ImageView imgSetPP,imgStar, imgVerf;
+    private ImageView imgSetPP, imgVerf;
     private TextView txtUserDate,usType;
     private TextView uName;
     private TextView txtNotiCount;
     private String TAG = "Delivery Profile";
     RatingBar rbProfile;
-    String uType = UserInFormation.getAccountType();
     static String uId;
     String isConfirmed = UserInFormation.getisConfirm();
-    SectionsPagerAdapter sectionsPagerAdapter;
     private Context mContext;
 
     public captinFragment() { }
@@ -64,8 +57,6 @@ public class captinFragment extends Fragment {
     public static captinFragment newInstance(String param1, String param2) {
         captinFragment fragment = new captinFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,10 +64,6 @@ public class captinFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -86,7 +73,6 @@ public class captinFragment extends Fragment {
 
         Vibrator vibe = (Vibrator) Objects.requireNonNull((HomeActivity)getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
 
-        //txtTotalOrders = view.findViewById(R.id.txtTotalOrders);
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         mDatabase.orderByChild("uAccepted").equalTo(UserInFormation.getId()).keepSynced(true);
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
@@ -94,7 +80,6 @@ public class captinFragment extends Fragment {
         ConstraintLayout constNoti = view.findViewById(R.id.constNoti);
         uName = view.findViewById(R.id.txtUsername);
         txtUserDate = view.findViewById(R.id.txtUserDate);
-        imgStar = view.findViewById(R.id.imgStar);
         imgSetPP = view.findViewById(R.id.imgPPP);
         txtNotiCount = view.findViewById(R.id.txtNotiCount);
         rbProfile = view.findViewById(R.id.rbProfile);
@@ -107,11 +92,10 @@ public class captinFragment extends Fragment {
         uId = UserInFormation.getId();
         //Title Bar
         TextView tbTitle = view.findViewById(R.id.toolbar_title);
-        NavigationView navigationView = view.findViewById(R.id.nav_view);
-
         txtUserDate.setText("اشترك : " + UserInFormation.getUserDate());
         tbTitle.setText("اوردراتي");
         usType.setText("كابتن");
+
         rbProfile.setRating(UserInFormation.getRating());
         uName.setText(UserInFormation.getUserName());
         Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
@@ -175,4 +159,6 @@ public class captinFragment extends Fragment {
         super.onDetach();
         mContext = null;
     }
+
+
 }

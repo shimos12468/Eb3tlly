@@ -86,57 +86,10 @@ public class OneOrder extends AppCompatActivity {
                     Data orderData = snapshot.getValue(Data.class);
                     mm.add((int) count, orderData);
                     count++;
-                    orderAdapter = new MyAdapter(OneOrder.this, mm, getApplicationContext(), count);
+                    orderAdapter = new MyAdapter(OneOrder.this, mm);
                     recyclerView.setAdapter(orderAdapter);
                 }
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-        // ------------------------ CHECK FOR REALTIME CHANGES IN ORDERS --------------------------- //
-        mDatabase.child(orderID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())) {
-                        if(orderAdapter!=null) {
-                            orderAdapter.addItem(i, orderData);
-                        } else{
-                            Log.i(TAG,"adapter is null here");
-                            orderAdapter  = new MyAdapter(OneOrder.this, mm, getApplicationContext(), count);
-                            orderAdapter.addItem(i, orderData);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
-                for(int i = 0;i<mm.size();i++){
-                    if(mm.get(i).getId().equals(orderData.getId())) {
-                        orderData.setRemoved("true");
-                        if(orderAdapter!=null) {
-                            orderAdapter.addItem(i, orderData);
-                        } else {
-                            Log.i(TAG,"adapter is null here");
-                            orderAdapter  = new MyAdapter(OneOrder.this, mm, getApplicationContext(), count);
-                            orderAdapter.addItem(i, orderData);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }

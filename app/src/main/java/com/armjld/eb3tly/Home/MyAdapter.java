@@ -19,11 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.DatabaseClasses.rquests;
-
 import com.armjld.eb3tly.Settings.Wallet.wallet;
 import com.armjld.eb3tly.DatabaseClasses.caculateTime;
 import com.armjld.eb3tly.Login.MainActivity;
@@ -36,7 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,32 +41,23 @@ import java.util.Objects;
 import Model.Data;
 import Model.notiData;
 
-import static com.google.firebase.database.FirebaseDatabase.getInstance;
-
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
      static Context context;
-    Context context1;
-     long count;
      ArrayList<Data>filtersData;
      private FirebaseAuth mAuth = FirebaseAuth.getInstance();
      private DatabaseReference mDatabase;
      private DatabaseReference uDatabase;
      private DatabaseReference nDatabase;
-     private DatabaseReference Database;
-     private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
      private String TAG = "My Adapter";
      String uType = UserInFormation.getAccountType();
      String uId = UserInFormation.getId();
-     private BlockManeger block = new BlockManeger();
 
      public static caculateTime _cacu = new caculateTime();
-
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
      String datee = sdf.format(new Date());
-    int howMany = 0;
 
     public void addItem(int position , Data data){
         int size = filtersData.size();
@@ -82,14 +69,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public MyAdapter(Context context, ArrayList<Data> filtersData, Context context1, long count) {
-        this.count = count;
+    public MyAdapter(Context context, ArrayList<Data> filtersData) {
         MyAdapter.context = context;
         this.filtersData =filtersData;
-        this.context1 = context1;
+        
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
     }
 
     @NonNull
@@ -104,7 +90,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         Vibrator vibe = (Vibrator) (context).getSystemService(Context.VIBRATOR_SERVICE);
-        //holder.btnBid.setVisibility(View.GONE);
         // Get Post Date
         holder.lin1.setVisibility(View.GONE);
         holder.txtWarning.setVisibility(View.GONE);
@@ -192,78 +177,75 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
 
-        holder.btnBid.setOnClickListener(v1 -> {
-            mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()) {
-                        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
+        holder.btnBid.setOnClickListener(v1 -> mDatabase.child(orderID).child("requests").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
 
-                                    // ------------------- Send Request -------------------- //
-                                    rquests _rquests = new rquests();
-                                    _rquests.deleteReq(uId, orderID);
+                                // ------------------- Send Request -------------------- //
+                                rquests _rquests = new rquests();
+                                _rquests.deleteReq(uId, orderID);
 
-                                    holder.setBid("false");
+                                holder.setBid("false");
 
-                                    Toast.makeText(context, "تم الغاء التقديم", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    break;
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-
-                    } else {
-                         wallet w = new wallet();
-                         if(!w.workerbid()){
-                             Toast.makeText(context1, "يجب دفع المبلغ السمتحق اولا", Toast.LENGTH_LONG).show();
-                             return;
-                         }
-
-                        if(HomeActivity.requests) {
-                            Toast.makeText(context1, "لا يمكنك ارسال اكثر من 10 طلبات في اليوم", Toast.LENGTH_LONG).show();
-                            return;
+                                Toast.makeText(context, "تم الغاء التقديم", Toast.LENGTH_SHORT).show();
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
                         }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
-                        if(HomeActivity.orders) {
-                            Toast.makeText(context1, "لديك 20 اوردر معلق حتي الان, قم بتوصيلهم اولا", Toast.LENGTH_LONG).show();
-                            return;
-                        }
+                } else {
+                     wallet w = new wallet();
+                     if(!w.workerbid()){
+                         Toast.makeText(context, "يجب دفع المبلغ السمتحق اولا", Toast.LENGTH_LONG).show();
+                         return;
+                     }
 
-                        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-
-                                    // ------------------- Send Request -------------------- //
-                                    rquests _rquests = new rquests();
-                                    _rquests.addrequest(orderID, datee);
-
-                                    // ------------------ Notificatiom ------------------ //
-                                    String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName();
-                                    notiData Noti = new notiData(uId, owner,orderID,message,datee,"false","order", UserInFormation.getUserName(), UserInFormation.getUserURL());
-                                    nDatabase.child(owner).push().setValue(Noti);
-
-                                    holder.setBid("true");
-                                    Toast.makeText(context, "تم التقديم علي الشحنه", Toast.LENGTH_SHORT).show();
-
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    break;
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                    if(HomeActivity.requests) {
+                        Toast.makeText(context, "لا يمكنك ارسال اكثر من 10 طلبات في اليوم", Toast.LENGTH_LONG).show();
+                        return;
                     }
+
+                    if(HomeActivity.orders) {
+                        Toast.makeText(context, "لديك 20 اوردر معلق حتي الان, قم بتوصيلهم اولا", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                // ------------------- Send Request -------------------- //
+                                rquests _rquests = new rquests();
+                                _rquests.addrequest(orderID, datee);
+
+                                // ------------------ Notificatiom ------------------ //
+                                String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + filtersData.get(position).getDName();
+                                notiData Noti = new notiData(uId, owner,orderID,message,datee,"false","order", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                                nDatabase.child(owner).push().setValue(Noti);
+
+                                holder.setBid("true");
+                                Toast.makeText(context, "تم التقديم علي الشحنه", Toast.LENGTH_SHORT).show();
+
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
-
-        });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        }));
 
 
         //More Info Button
@@ -356,9 +338,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     @Override
-    public int getItemCount() {
-        return (int) count;
-    }
+    public int getItemCount() { return (int) filtersData.size(); }
 
     @Override
     public int getItemViewType(int position) {

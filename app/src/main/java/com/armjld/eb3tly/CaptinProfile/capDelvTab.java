@@ -31,21 +31,12 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class capDelvTab extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static String TAG = "CapDelvTab";
-    private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase, vDatabase;
-    private static ArrayList<Data> listDelv;
-    private long countDelv;
     private static DeliveryAdapter deliveryAdapter;
-    private FirebaseAuth mAuth;
     private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
     private static TextView txtNoOrders;
-    String uType = UserInFormation.getAccountType();
     String uId;
-    private String mParam1;
-    private String mParam2;
     private static Context mContext;
     public static ArrayList<Data> filterList;
 
@@ -54,8 +45,6 @@ public class capDelvTab extends Fragment {
     public static capDelvTab newInstance(String param1, String param2) {
         capDelvTab fragment = new capDelvTab();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,14 +53,6 @@ public class capDelvTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_blank2, container, false);
 
-        mDatabase = getInstance().getReference().child("Pickly").child("orders");
-        uDatabase = getInstance().getReference().child("Pickly").child("users");
-        rDatabase = getInstance().getReference().child("Pickly").child("comments");
-        vDatabase = getInstance().getReference().child("Pickly").child("values");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser mUser = mAuth.getCurrentUser();
-        assert mUser != null;
         uId = UserInFormation.getId();
 
         recyclerView=view.findViewById(R.id.userRecyclr);

@@ -39,11 +39,8 @@ public class   Filters extends AppCompatActivity {
     private String TAG = "Filters";
      int filterDuplicte =0;
     private MyAdapter filterAdapter;
-    private long countFilter =0;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     String filterDate;
-    BlockManeger block = new BlockManeger();
-
     RecyclerView recyclerView;
     TextView txtNoOrders;
     int filterValue;
@@ -78,7 +75,6 @@ public class   Filters extends AppCompatActivity {
         txtFilterMoney = findViewById(R.id.txtFilterMoney);
         recyclerView = findViewById(R.id.recyclerView);
         txtNoOrders = findViewById(R.id.txtNoOrders);
-        countFilter = 0;
         filterDate = format.format(Calendar.getInstance().getTime());
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
@@ -91,7 +87,7 @@ public class   Filters extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         TextView fitlerTitle = findViewById(R.id.toolbar_title);
-        fitlerTitle.setText("تصفية الاوردرات");
+        fitlerTitle.setText("انشاء خط سر");
 
         //-------------------SPINNERS -------------------------//
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(Filters.this, R.array.txtStates, R.layout.color_spinner_layout);
@@ -460,14 +456,6 @@ public class   Filters extends AppCompatActivity {
         });
     }
 
-    private void applyFilter() {
-        tsferAdapter();
-        if(HomeFragment.mm.size() > 0) {
-            getFromList(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), txtFilterMoney.getText().toString(), filterDate);
-            return;
-        }
-    }
-
     private void getFromList(String spState,String spRegion, String sdState,String sdRegion, String money, String filterDate) {
         filterList.clear();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -480,19 +468,19 @@ public class   Filters extends AppCompatActivity {
             // ------------------------ CHECKING AREAS FILTERS --------------------------//
             if(spRegion.equals("كل المناطق")) {
                 if(sdRegion.equals("كل المناطق")) {
-                    filterList = (ArrayList<Data>) HomeFragment.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getTxtPState().equals(spState) && x.getTxtDState().equals(sdState)).collect(Collectors.toList());
+                    filterList = (ArrayList<Data>) HomeActivity.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getTxtPState().equals(spState) && x.getTxtDState().equals(sdState)).collect(Collectors.toList());
                 } else {
-                    filterList = (ArrayList<Data>) HomeFragment.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getTxtPState().equals(spState) && x.getmDRegion().equals(sdRegion)).collect(Collectors.toList());
+                    filterList = (ArrayList<Data>) HomeActivity.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getTxtPState().equals(spState) && x.getmDRegion().equals(sdRegion)).collect(Collectors.toList());
                 }
             } else {
                 if(sdState.equals("كل المناطق")) {
-                    filterList = (ArrayList<Data>) HomeFragment.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getmPRegion().equals(spRegion) && x.getTxtDState().equals(sdState)).collect(Collectors.toList());
+                    filterList = (ArrayList<Data>) HomeActivity.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getmPRegion().equals(spRegion) && x.getTxtDState().equals(sdState)).collect(Collectors.toList());
                 } else {
-                    filterList = (ArrayList<Data>) HomeFragment.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getmPRegion().equals(spRegion) && x.getmDRegion().equals(sdRegion)).collect(Collectors.toList());
+                    filterList = (ArrayList<Data>) HomeActivity.mm.stream().filter(x -> x.getStatue().equals("placed") && Integer.parseInt(x.getGMoney()) <= filterValue && x.getmPRegion().equals(spRegion) && x.getmDRegion().equals(sdRegion)).collect(Collectors.toList());
                 }
             }
             updateNone(filterList.size());
-            filterAdapter = new MyAdapter(Filters.this, filterList, getApplicationContext(), filterList.size());
+            filterAdapter = new MyAdapter(Filters.this, filterList);
             recyclerView.setAdapter(filterAdapter);
             filterDuplicte++;
         }
@@ -501,7 +489,6 @@ public class   Filters extends AppCompatActivity {
     private void tsferAdapter() {
         filterList.clear();
         filterList.trimToSize();
-        countFilter = 0;
         recyclerView.setAdapter(null);
     }
 

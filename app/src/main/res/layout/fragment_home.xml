@@ -21,30 +21,55 @@
         android:id="@+id/btnMaps"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="@+id/toolbar_home"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_home"
-        app:srcCompat="@drawable/ic_map_24" />
-
-    <ImageView
-        android:id="@+id/filters_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="@+id/toolbar_home"
         app:layout_constraintTop_toTopOf="@+id/toolbar_home"
-        app:srcCompat="@drawable/ic_filter_white" />
+        app:srcCompat="@drawable/ic_map_24" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ic_profile_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
+
+        <TextView
+            android:id="@+id/txtOrderCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/ic_profile_background"
+            android:drawableRight="@drawable/ic_counter"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/filters_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/ic_profile_background"
+            android:drawableRight="@drawable/ic_filter_white"
+            android:drawablePadding="10dp"
+            android:gravity="center|right"
+            android:paddingRight="10dp"
+            android:text="انشاء خط سير"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <include
         android:id="@+id/footer"
         layout="@layout/footer_advice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="617dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/txtNoOrders"
@@ -53,19 +78,19 @@
         android:text="لا يوجد اوردرات متاحة في الوقت الحالي"
         android:textColor="@android:color/tertiary_text_light"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
+        app:layout_constraintEnd_toEndOf="@+id/refresh"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"

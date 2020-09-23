@@ -123,6 +123,7 @@ public class OrdersBySameUser extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
         assert uIDD != null;
+
         mDatabase.orderByChild("uId").equalTo(uIDD).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -146,7 +147,7 @@ public class OrdersBySameUser extends AppCompatActivity {
                                 mm.add((int) count, orderData);
                                 count++;
                             }
-                            orderAdapter = new MyAdapter(OrdersBySameUser.this, mm, getApplicationContext(), count);
+                            orderAdapter = new MyAdapter(OrdersBySameUser.this, mm);
                             recyclerView.setAdapter(orderAdapter);
                             updateNone(mm.size());
                         }

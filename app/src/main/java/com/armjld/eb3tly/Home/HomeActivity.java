@@ -10,14 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.CaptinProfile.capAcceptedTab;
 import com.armjld.eb3tly.CaptinProfile.capDelvTab;
 import com.armjld.eb3tly.Chat.ChatFragmet;
-import com.armjld.eb3tly.Home.HomeFragment;
 import com.armjld.eb3tly.Login.MainActivity;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Settings.SettingFragment;
-import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
 import com.armjld.eb3tly.CaptinProfile.captinFragment;
 import com.armjld.eb3tly.SupplierProfile.acceptedTab;
@@ -31,12 +30,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ValueEventListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import Model.Data;
+
 
 
 public class HomeActivity extends AppCompatActivity  {
@@ -49,24 +53,38 @@ public class HomeActivity extends AppCompatActivity  {
     public static boolean requests = false;
     public static boolean orders = false;
 
+    static BlockManeger block = new BlockManeger();
+
     public static String TAG = "Home Activity";
     String uType = UserInFormation.getAccountType();
     static String uId = UserInFormation.getId();
     // Disable the Back Button
 
     boolean doubleBackToExitPressedOnce = false;
-    private BottomNavigationView bottomNavigationView;
     public static String whichFrag = "Home";
+    BottomNavigationView bottomNavigationView;
+
+    static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    @SuppressLint("SimpleDateFormat")
+    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            finishAffinity();
-            System.exit(0);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Home");
+        if(fragment != null && fragment.isVisible()) {
+            if (doubleBackToExitPressedOnce) {
+                finishAffinity();
+                System.exit(0);
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "اضغط مرة اخري للخروج من التطبيق", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+        } else {
+            whichFrag = "Home";
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment(), whichFrag).addToBackStack("Home").commit();
+            bottomNavigationView.setSelectedItemId(R.id.home);
         }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "اضغط مرة اخري للخروج من التطبيق", Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+
     }
 
     @Override
@@ -81,10 +99,8 @@ public class HomeActivity extends AppCompatActivity  {
     // On Create Fun
     @SuppressLint("RtlHardcoded")
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
             startActivity(new Intent(this, MainActivity.class));
@@ -92,12 +108,9 @@ public class HomeActivity extends AppCompatActivity  {
             return;
         }
 
-        //Database
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
-
         bottomNavigationView = findViewById(R.id.bottomNav);
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomNavMethod);
-
         makeChecks();
 
         if(UserInFormation.getAccountType().equals("Supplier")) {
@@ -106,7 +119,8 @@ public class HomeActivity extends AppCompatActivity  {
             getDeliveryOrders();
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, whichFrag()).commit();
+        getOrdersByLatest();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, whichFrag(), whichFrag).addToBackStack("Home").commit();
 
     }
 
@@ -196,14 +210,17 @@ public class HomeActivity extends AppCompatActivity  {
 
     private BottomNavigationView.OnNavigationItemSelectedListener bottomNavMethod = item -> {
         Fragment fragment = null;
+        String fragTag = "";
         switch (item.getItemId()) {
             case R.id.home : {
                 fragment = new HomeFragment();
+                fragTag = "Home";
                 break;
             }
 
             case R.id.settings : {
                 fragment = new SettingFragment();
+                fragTag = "Settings";
                 break;
             }
 
@@ -213,16 +230,18 @@ public class HomeActivity extends AppCompatActivity  {
                 } else {
                     fragment = new captinFragment();
                 }
+                fragTag = "Profile";
                 break;
             }
 
             case R.id.chats : {
                 fragment = new ChatFragmet();
+                fragTag = "Chats";
                 break;
             }
         }
         assert fragment != null;
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, fragTag).addToBackStack("Home").commit();
         return true;
     };
 
@@ -231,6 +250,8 @@ public class HomeActivity extends AppCompatActivity  {
     public static void getSupOrders() {
         supList.clear();
         supList.trimToSize();
+        Log.i(TAG, "Getting Supplier Orders From Database");
+
         mDatabase.orderByChild("uId").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -270,6 +291,48 @@ public class HomeActivity extends AppCompatActivity  {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    public static void getOrdersByLatest() {
+        mm.clear();
+        mm.trimToSize();
+        Log.i(TAG, "Getting All Orders From Database");
+
+        mDatabase.orderByChild("statue").equalTo("placed").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Data orderData = ds.getValue(Data.class);
+                        assert orderData != null;
+                        Date orderDate = null;
+                        Date myDate = null;
+                        try {
+                            orderDate = format.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString());
+                            myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        assert orderDate != null;
+                        assert myDate != null;
+
+                        if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed") && !block.check(orderData.getuId())) {
+                            mm.add(orderData);
+                        }
+
+                        Collections.sort(mm, (o1, o2) -> {
+                            String one = o1.getDate();
+                            String two = o2.getDate();
+                            return one.compareTo(two);
+                        });
+                    }
+
+                    HomeFragment.getOrders();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
