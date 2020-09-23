@@ -20,11 +20,9 @@ import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.Orders.MapsActivity;
-import com.armjld.eb3tly.Profiles.NewProfile;
-import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Wallet.MyWallet;
-import com.armjld.eb3tly.main.HomeActivity;
+import com.armjld.eb3tly.Settings.Wallet.MyWallet;
+import com.armjld.eb3tly.Home.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,9 +40,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import Model.Data;
+import Model.UserInFormation;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

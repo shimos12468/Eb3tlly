@@ -12,10 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.armjld.eb3tly.Adapters.MyAdapter;
+import com.armjld.eb3tly.Home.MyAdapter;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Utilites.StartUp;
-import com.armjld.eb3tly.Utilites.UserInFormation;
+import com.armjld.eb3tly.Home.StartUp;
+import Model.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
 import Model.Data;
 

@@ -5,10 +5,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenLocal()
         mavenCentral()
-        flatDir {
-            dirs 'libs'
-        }
+        flatDir {dirs 'libs'}
         
     }
     dependencies {

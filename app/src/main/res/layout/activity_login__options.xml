@@ -5,10 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
-    tools:context=".main.Login_Options">
+    tools:context=".Login.Login_Options">
 
     <LinearLayout
-        android:id="@+id/parentLinear"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginLeft="10dp"
@@ -34,7 +33,6 @@
             android:textSize="75sp" />
 
         <TextView
-            android:id="@+id/textView55"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -42,7 +40,6 @@
             android:text="Ship With Champions" />
 
         <TextView
-            android:id="@+id/textView56"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"

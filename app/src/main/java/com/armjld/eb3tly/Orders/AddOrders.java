@@ -32,11 +32,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.armjld.eb3tly.Profiles.NewProfile;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Utilites.StartUp;
-import com.armjld.eb3tly.Utilites.UserInFormation;
-import com.armjld.eb3tly.Profiles.supplierProfile;
+import com.armjld.eb3tly.Home.StartUp;
+import Model.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -94,11 +92,7 @@ public class AddOrders extends AppCompatActivity {
     }
 
     private void whichProfile() {
-        if (uType.equals("Supplier")) {
-            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
-        } else {
-            startActivity(new Intent(getApplicationContext(), NewProfile.class));
-        }
+        finish();
     }
 
     @SuppressLint("ClickableViewAccessibility")

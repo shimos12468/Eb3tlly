@@ -9,7 +9,7 @@
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     android:visibility="visible"
     app:popupTheme="@style/Base.ThemeOverlay.AppCompat.Dark"
-    tools:context=".Utilites.Conatact"
+    tools:context=".Settings.Conatact"
     tools:ignore="ExtraText">
 
     <include

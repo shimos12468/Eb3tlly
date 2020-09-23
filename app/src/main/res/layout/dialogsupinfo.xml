@@ -52,7 +52,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/linearLayout10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -188,7 +187,6 @@
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:id="@+id/toArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -211,7 +209,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linerDate2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
@@ -233,7 +230,6 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/date4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|right"
@@ -245,7 +241,6 @@
                         android:textSize="18sp" />
 
                     <ImageView
-                        android:id="@+id/imageView144"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|right"
@@ -345,7 +340,6 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/date2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|right"
@@ -357,7 +351,6 @@
                         android:textSize="18sp" />
 
                     <ImageView
-                        android:id="@+id/imageView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|right"
@@ -443,7 +436,6 @@
                 android:visibility="gone" />
 
             <ScrollView
-                android:id="@+id/scrlComments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone">

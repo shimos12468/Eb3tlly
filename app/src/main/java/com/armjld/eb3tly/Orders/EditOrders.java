@@ -24,12 +24,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.armjld.eb3tly.Utilites.StartUp;
-import com.armjld.eb3tly.main.HomeActivity;
-import com.armjld.eb3tly.main.MainActivity;
+import com.armjld.eb3tly.Home.StartUp;
+import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.Login.MainActivity;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Utilites.UserInFormation;
-import com.armjld.eb3tly.Profiles.supplierProfile;
+import Model.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +42,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import Model.Data;
-import Model.notiData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 

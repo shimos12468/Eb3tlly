@@ -64,7 +64,6 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView39"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -101,7 +100,6 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView35"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -174,7 +172,6 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView37"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"

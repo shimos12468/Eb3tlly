@@ -5,12 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,16 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.armjld.eb3tly.Block.BlockManeger;
-import com.armjld.eb3tly.Profiles.NewProfile;
-import com.armjld.eb3tly.Profiles.supplierProfile;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Requests.rquests;
-import com.armjld.eb3tly.Utilites.UserInFormation;
-import com.armjld.eb3tly.Wallet.requestsandacceptc;
-import com.armjld.eb3tly.Wallet.wallet;
-import com.armjld.eb3tly.caculateTime;
-import com.armjld.eb3tly.delets.Delete_Reaon_Delv;
-import com.armjld.eb3tly.main.HomeActivity;
+import com.armjld.eb3tly.DatabaseClasses.rquests;
+import Model.UserInFormation;
+import com.armjld.eb3tly.Settings.Wallet.wallet;
+import com.armjld.eb3tly.DatabaseClasses.caculateTime;
+import com.armjld.eb3tly.CaptinProfile.Delete_Reaon_Delv;
+import com.armjld.eb3tly.Home.HomeActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -87,11 +81,7 @@ public class OrderInfo extends AppCompatActivity {
     }
 
     private void whichProfile () {
-        if(UserInFormation.getAccountType().equals("Supplier")) {
-            startActivity(new Intent(getApplicationContext(), supplierProfile.class));
-        } else {
-            startActivity(new Intent(getApplicationContext(), NewProfile.class));
-        }
+        finish();
     }
 
     @Override

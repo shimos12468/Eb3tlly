@@ -24,12 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".LocationManeger.LocationForSup"></activity>
-        <activity android:name=".LocationManeger.LocationForDelv" />
-        <activity
-            android:name=".Utilites.SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".Wallet.MyWallet" />
+        <activity android:name=".Settings.delv_statics"></activity>
+        <activity android:name=".Settings.LocationForSup" />
+        <activity android:name=".Settings.LocationForDelv" />
+        <activity android:name=".Settings.Wallet.MyWallet" />
         <activity android:name=".SignUp.New_SignUp" />
 
         <meta-data
@@ -52,46 +50,43 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".LocationManeger.MyLocation"
+            android:name=".Settings.AddLocation"
             android:label="@string/title_activity_my_location" />
         <activity
             android:name=".Orders.Maps_User_Location"
             android:label="@string/title_activity_maps__user__location" />
         <activity android:name=".Orders.MapsActivity" />
         <activity android:name=".Orders.OrderInfo" />
-        <activity android:name=".Requests.RequestsForSup" />
         <activity android:name=".Passaword.Forget_Password" />
         <activity
-            android:name=".main.Login_Options"
+            android:name=".Login.Login_Options"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".messeges.Messages"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Chat.Chats"
+            android:name=".Chat.Messages"
             android:screenOrientation="portrait" />
         <activity
             android:name=".admin.Admin_Confirm"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".confermations.Account_Confirm"
+            android:name=".Settings.Account_Confirm"
             android:screenOrientation="portrait" />
         <activity
             android:name=".admin.Admin_Delete_Statics"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".delets.Delete_Delivery_From_Sup"
+            android:name=".SupplierProfile.Delete_Delivery_From_Sup"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".delets.Delete_Reaon_Delv"
+            android:name=".CaptinProfile.Delete_Reaon_Delv"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".delets.Delete_Reason_Supplier"
+            android:name=".SupplierProfile.Delete_Reason_Supplier"
             android:screenOrientation="portrait" />
         <activity
             android:name=".admin.AdminReports"
@@ -106,13 +101,7 @@
         </service>
 
         <activity
-            android:name=".Profiles.NewProfile"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Profiles.supplierProfile"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Intros.IntroFirstRun"
+            android:name=".SignUp.Intros.IntroFirstRun"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Orders.EditOrders"
@@ -127,49 +116,43 @@
             android:name=".Orders.OneOrder"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Utilites.Filters"
+            android:name=".Home.Filters"
             android:screenOrientation="portrait" />
         <activity
             android:name=".admin.ReplyByAdmin"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Utilites.HowTo"
+            android:name=".SignUp.Terms"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Utilites.Terms"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".main.HomeActivity"
+            android:name=".Home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".admin.Admin"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SignUp.Signup"
+            android:name=".Login.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainActivity"
+            android:name=".Settings.UserInfo"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Utilites.UserSetting"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Passaword.ChangePassword"
+            android:name=".Settings.ChangePassword"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Passaword.ForgetPass"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Utilites.About"
+            android:name=".Settings.About"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Intros.introSup"
+            android:name=".SignUp.Intros.introSup"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Utilites.Conatact"
+            android:name=".Settings.Conatact"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Intros.intro2"
+            android:name=".SignUp.Intros.introCaptin"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Notifications.Notifications"
@@ -181,7 +164,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Utilites.StartUp"
+            android:name=".Home.StartUp"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

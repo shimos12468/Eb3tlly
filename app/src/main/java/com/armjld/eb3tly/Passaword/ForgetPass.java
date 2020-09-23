@@ -13,9 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.armjld.eb3tly.main.MainActivity;
+import com.armjld.eb3tly.Login.MainActivity;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Utilites.UserInFormation;
+import Model.UserInFormation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
     android:background="@color/colorBack"
-    tools:context="com.armjld.eb3tly.main.MainActivity">
+    tools:context="com.armjld.eb3tly.Login.MainActivity">
 
     <include
         android:id="@+id/toolbar_home"
@@ -42,7 +42,6 @@
 
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

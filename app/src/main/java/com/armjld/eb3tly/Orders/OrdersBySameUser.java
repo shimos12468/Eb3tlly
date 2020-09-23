@@ -19,19 +19,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.armjld.eb3tly.Utilites.About;
-import com.armjld.eb3tly.Passaword.ChangePassword;
-import com.armjld.eb3tly.Utilites.Conatact;
-import com.armjld.eb3tly.Utilites.StartUp;
-import com.armjld.eb3tly.main.HomeActivity;
-import com.armjld.eb3tly.Utilites.HowTo;
-import com.armjld.eb3tly.main.MainActivity;
-import com.armjld.eb3tly.Adapters.MyAdapter;
-import com.armjld.eb3tly.Profiles.NewProfile;
+import com.armjld.eb3tly.Settings.About;
+import com.armjld.eb3tly.Settings.ChangePassword;
+import com.armjld.eb3tly.Settings.Conatact;
+import com.armjld.eb3tly.Home.StartUp;
+import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.Login.MainActivity;
+import com.armjld.eb3tly.Home.MyAdapter;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Utilites.UserInFormation;
-import com.armjld.eb3tly.Utilites.UserSetting;
-import com.armjld.eb3tly.Profiles.supplierProfile;
+import Model.UserInFormation;
+import com.armjld.eb3tly.Settings.UserInfo;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -147,7 +144,7 @@ public class OrdersBySameUser extends AppCompatActivity {
                 whichProfile();
             }
             if(id == R.id.nav_info) {
-                startActivity(new Intent(getApplicationContext(), UserSetting.class));
+                startActivity(new Intent(getApplicationContext(), UserInfo.class));
 
             }
             if (id == R.id.nav_how) {

@@ -31,7 +31,6 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/linFromTo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -53,7 +52,6 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/toArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -99,7 +97,6 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/linerDate2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -118,7 +115,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/date4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|right"
@@ -131,7 +127,6 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/imageView144"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|right"
@@ -161,7 +156,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/date2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|right"
@@ -174,7 +168,6 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/imageView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|right"
@@ -283,7 +276,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/lin2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -324,7 +316,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lin4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"

@@ -75,7 +75,6 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/toArrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -148,7 +147,6 @@
                     tools:ignore="RtlCompat" />
 
                 <TextView
-                    android:id="@+id/date2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
@@ -162,7 +160,6 @@
                     tools:ignore="RtlCompat" />
 
                 <ImageView
-                    android:id="@+id/imageView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"

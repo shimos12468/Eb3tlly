@@ -35,13 +35,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.armjld.eb3tly.Intros.intro2;
-import com.armjld.eb3tly.Intros.introSup;
+import com.armjld.eb3tly.SignUp.Intros.introCaptin;
+import com.armjld.eb3tly.SignUp.Intros.introSup;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.Ratings;
-import com.armjld.eb3tly.Utilites.StartUp;
-import com.armjld.eb3tly.Utilites.UserInFormation;
-import com.armjld.eb3tly.main.Login_Options;
+import com.armjld.eb3tly.DatabaseClasses.Ratings;
+import com.armjld.eb3tly.Home.StartUp;
+import Model.UserInFormation;
+import com.armjld.eb3tly.Login.Login_Options;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
@@ -711,7 +711,7 @@ public class New_SignUp extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), introSup.class));
         } else if (newType.equals("Delivery Worker")) {
             finish();
-            startActivity(new Intent(getApplicationContext(), intro2.class));
+            startActivity(new Intent(getApplicationContext(), introCaptin.class));
         }
         Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
         mdialog.dismiss();

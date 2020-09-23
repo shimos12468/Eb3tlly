@@ -2,7 +2,7 @@ package com.armjld.eb3tly.Block;
 
 import androidx.annotation.NonNull;
 
-import com.armjld.eb3tly.Utilites.UserInFormation;
+import Model.UserInFormation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

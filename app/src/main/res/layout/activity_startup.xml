@@ -20,7 +20,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView58"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -32,7 +31,6 @@
             android:textSize="100sp" />
 
         <TextView
-            android:id="@+id/textView59"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

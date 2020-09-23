@@ -17,22 +17,16 @@
         <item name="material_dialog_positive_button_color">@color/colorAccent</item>
         <item name="material_dialog_positive_button_text_color">#FFFFFF</item>
         <item name="material_dialog_negative_button_text_color">@color/colorAccent</item>
+
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:navigationBarColor">@color/ic_profile_background</item>
     </style>
+
 
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">#D3D3D3</item>
         <item name="colorControlActivated">#ffc922</item>
-    </style>
-
-    <style name="MyButton" parent="android:Widget.Material.Button">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:layout_margin">0dip</item>
-        <item name="android:background">#000000</item>
-    </style>
-
-    <style name="DialogTheme" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">#ffffff</item>
     </style>
 
     <style name="AppTheme.SpinnerDialog" parent="Theme.AppCompat.Dialog">
@@ -40,14 +34,5 @@
         <item name="android:background">@color/colorBack</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

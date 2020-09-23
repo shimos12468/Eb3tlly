@@ -8,8 +8,8 @@ android {
         applicationId "com.armjld.eb3tly"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 22
-        versionName "2.6"
+        versionCode 23
+        versionName "2.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -86,6 +86,7 @@ dependencies {
     implementation 'com.shreyaspatil:MaterialDialog:2.1'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.airbnb.android:lottie:3.4.0'
+    implementation 'com.aurelhubert:ahbottomnavigation:2.3.4'
 
 }
 
