@@ -3,10 +3,8 @@ package com.armjld.eb3tly.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -16,7 +14,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -28,7 +25,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,14 +32,13 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.Home.StartUp;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Login.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,22 +51,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
-
 import Model.UserInFormation;
-
-import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE;
 
 public class UserInfo extends AppCompatActivity {
 
-    EditText name,Email;
-    Button confirm,btnConfirmAccount;
+    EditText Email;
+    Button confirm;
     private ImageView UserImage;
-    String email,Name;
+    String email;
     int TAKE_IMAGE_CODE = 10001;
     private FirebaseAuth mAuth;
     private DatabaseReference uDatabase;
@@ -79,19 +70,17 @@ public class UserInfo extends AppCompatActivity {
     private ProgressDialog mdialog;
     private String ppURL = "";
     String oldPass = "";
-    private CheckBox chkStateNoti;
-    private Spinner spState;
     private static String TAG = "User Settings";
     private static final int READ_EXTERNAL_STORAGE_CODE = 101;
     String uId = UserInFormation.getId();
     String isConfirmed = UserInFormation.getisConfirm();
-    private ConstraintLayout constUserSettings;
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
-            StartUp.setUserData(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+        if(!LoginManager.dataset) {
+            finish();
+            startActivity(new Intent(this, StartUp.class));
         }
     }
 
@@ -113,15 +102,12 @@ public class UserInfo extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         UserImage = findViewById(R.id.imgEditPhoto);
-        name = findViewById(R.id.txtEditName);
         Email = findViewById(R.id.txtEditEmail);
         mdialog = new ProgressDialog(this);
         confirm = findViewById(R.id.btnEditInfo);
-        spState = findViewById(R.id.spState);
-        chkStateNoti = findViewById(R.id.chkStateNoti);
-        constUserSettings = findViewById(R.id.constUserSettings);
-        btnConfirmAccount = findViewById(R.id.btnConfirmAccount);
-        btnConfirmAccount.setVisibility(View.GONE);
+
+        ImageView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v-> finish());
 
         for(com.google.firebase.auth.UserInfo user:FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
             if(user.getProviderId().equals("google.com")) {
@@ -131,12 +117,10 @@ public class UserInfo extends AppCompatActivity {
             } else {
                 Email.setEnabled(true);
                 Email.setClickable(true);
-
-                //Email.setKeyListener(KeyListener);
             }
         }
 
-        if(isConfirmed.equals("false")) {
+        /*if(isConfirmed.equals("false")) {
             Snackbar snackbar = Snackbar.make(constUserSettings, "لم تقم بتأكيد حسابك بعد", LENGTH_INDEFINITE).setAction("تأكيد الحساب", view -> {
                 finish();
                 startActivity(new Intent(this, Account_Confirm.class));
@@ -147,50 +131,11 @@ public class UserInfo extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(constUserSettings, "جاري التحقق من بيانات حسابك", LENGTH_INDEFINITE).setTextColor(Color.BLACK);
             snackbar.getView().setBackgroundColor(Color.YELLOW);
             snackbar.show();
-        }
-
-        btnConfirmAccount.setOnClickListener(v ->{
-            finish();
-            startActivity(new Intent(this, Account_Confirm.class));
-        });
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(UserInfo.this, R.array.txtStates, R.layout.color_spinner_layout);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spState.setPrompt("اختار المحافظة");
-        spState.setAdapter(adapter);
-
-        if(UserInFormation.getAccountType().equals("Supplier")) {
-            chkStateNoti.setVisibility(View.GONE);
-        }
+        }*/
 
         oldPass = UserInFormation.getPass();
-        name.setText(UserInFormation.getUserName());
         Email.setText(UserInFormation.getEmail());
         Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(UserImage);
-
-
-
-        // ---------------------- Get Current Data -------------------------- //
-        uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String sendOrderNoti = "true";
-                if(dataSnapshot.child("sendOrderNoti").exists()) {
-                    sendOrderNoti = Objects.requireNonNull(dataSnapshot.child("sendOrderNoti").getValue()).toString();
-                }
-                if(dataSnapshot.child("userState").exists()) {
-                    spState.setSelection(getIndex(spState, Objects.requireNonNull(dataSnapshot.child("userState").getValue()).toString()));
-                }
-                if(sendOrderNoti.equals("false")) {
-                    chkStateNoti.setChecked(false);
-                } else if (sendOrderNoti.equals("true")){
-                    chkStateNoti.setChecked(true);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
 
         UserImage.setOnClickListener(view -> {
             checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
@@ -204,64 +149,37 @@ public class UserInfo extends AppCompatActivity {
 
         confirm.setOnClickListener(view -> {
             email = Email.getText().toString().trim();
-            Name = name.getText().toString().trim();
-            Log.i(TAG, "Old Pass : " + oldPass);
 
-            if(TextUtils.isEmpty(Name)){
-                name.setError("يجب ادخال اسم المستخدم");
-                return;
-            }
             if(TextUtils.isEmpty(email)){
                 Email.setError("يجب ادخال البريد ألالكتروني");
                 return;
             }
 
             FirebaseUser user = mAuth.getCurrentUser();
-
-            // ------------------ Update the Name -----------------//
-            uDatabase.child(uId).child("name").setValue(name.getText().toString().trim());
-            uDatabase.child(uId).child("userState").setValue(spState.getSelectedItem().toString());
-
-            UserInFormation.setUserName(name.getText().toString());
-
-
-            // -------------- Get auth credentials from the user for re-authentication
-            if(!Email.getText().toString().equals(mAuth.getCurrentUser().getEmail())) {
+            if(!Email.getText().toString().equals(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())) {
                 AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()), oldPass); // Current Login Credentials \\
-                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        //----------------Code for Changing Email Address----------\\
-                        mAuth.getCurrentUser().updateEmail(Email.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    uDatabase.child(uId).child("email").setValue(Email.getText().toString().trim());
-                                }
+                assert user != null;
+                user.reauthenticate(credential).addOnCompleteListener(task -> {
+                    mAuth.getCurrentUser().updateEmail(Email.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                uDatabase.child(uId).child("email").setValue(Email.getText().toString().trim());
+                                UserInFormation.setEmail(Email.getText().toString().trim());
                             }
-                        });
-                    }
+                        }
+                    });
                 });
-            } else {
-                Log.i(TAG, "The Email is the same no need to re auth");
             }
 
             if(bitmap != null) {
                 handleUpload(bitmap);
                 mdialog.setMessage("جاري تحديث الصور الشخصية ...");
                 mdialog.show();
-                Log.i(TAG, "Photo Updated and current user is : " + FirebaseAuth.getInstance().getCurrentUser());
             } else {
                 Log.i(TAG, "no Photo to update.");
                 Toast.makeText(UserInfo.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
                 finish();
-                whichProfile();
-            }
-
-            if(chkStateNoti.isChecked()) {
-                uDatabase.child(uId).child("sendOrderNoti").setValue("true");
-            } else {
-                uDatabase.child(uId).child("sendOrderNoti").setValue("false");
             }
 
         });
@@ -401,20 +319,16 @@ public class UserInfo extends AppCompatActivity {
         final String did = uId;
         reference.putBytes(baos.toByteArray()).addOnSuccessListener(taskSnapshot -> {
             getDownUrl(did, reference);
-            Log.i("Updating ", " onSuccess");
         }).addOnFailureListener(e -> Log.e("Upload Error: ", "Fail:", e.getCause()));
-        Log.i("Updating", " Handel Upload");
     }
 
     private void getDownUrl(final String uIDd, StorageReference reference) {
         reference.getDownloadUrl().addOnSuccessListener(uri -> {
-            Log.i("Sign UP", " add Profile URL");
             uDatabase.child(uIDd).child("ppURL").setValue(uri.toString());
             UserInFormation.setUserURL(uri.toString());
             mdialog.dismiss();
             Toast.makeText(UserInfo.this, "تم تغيير البيانات بنجاح", Toast.LENGTH_SHORT).show();
             finish();
-            whichProfile();
         });
     }
 
@@ -481,10 +395,5 @@ public class UserInfo extends AppCompatActivity {
             Log.i("SignUp", "Returned the source Photo");
             return source;
         }
-    }
-
-    private void whichProfile () {
-        HomeActivity.whichFrag = "Profile";
-        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
     }
 }

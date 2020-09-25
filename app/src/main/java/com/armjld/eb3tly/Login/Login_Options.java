@@ -324,73 +324,8 @@ public class Login_Options extends AppCompatActivity {
     }
 
     private void letsGo() {
-        final String userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        // ------------------ Set Device Token ----------------- //
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Login_Options.this, instanceIdResult -> {
-            String deviceToken = instanceIdResult.getToken();
-            uDatabase.child(userID).child("device_token").setValue(deviceToken);
-        });
-        FirebaseDatabase.getInstance().getReference("Pickly").child("users").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists() && mAuth.getCurrentUser() != null){
-                    String isCompleted = Objects.requireNonNull(snapshot.child("completed").getValue()).toString();
-                    if (isCompleted.equals("true")) {
-                        String uType = Objects.requireNonNull(snapshot.child("accountType").getValue()).toString();
-                        String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-                        UserInFormation.setAccountType(uType);
-                        UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                        UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                        UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
-                        UserInFormation.setId(mAuth.getCurrentUser().getUid());
-
-                        UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
-                        UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
-                        UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
-
-                        Ratings _ratings = new Ratings();
-                        _ratings.setMyRating();
-
-                        if(snapshot.child("accountType").getValue().toString().equals("Delivery Worker") && snapshot.child("currentDate").exists()) {
-                            UserInFormation.setCurrentdate(snapshot.child("currentDate").getValue().toString());
-                        }
-                        UserInFormation.setisConfirm("false");
-                        if(snapshot.child("isConfirmed").exists()) {
-                            UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
-                        }
-                        StartUp.dataset = true;
-
-                        if (isActive.equals("true")) { // Check if the account is Disabled
-                            // --------------------- check account types and send each type to it's activity --------------//
-                            ImportBlockedUsers();
-                            switch (uType) {
-                                case "Supplier":
-                                case "Delivery Worker":
-                                    finish();
-                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                                    break;
-                                case "Admin":
-                                    finish();
-                                    startActivity(new Intent(getApplicationContext(), Admin.class));
-                                    break;
-                            }
-                        } else {
-                            Toast.makeText(Login_Options.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
-                            mAuth.signOut();
-                        }
-                    }
-                } else{
-                    Toast.makeText(getApplicationContext(), "سجل حسابك مرة اخري", Toast.LENGTH_LONG).show();
-                    finish();
-                    startActivity(new Intent(Login_Options.this, New_SignUp.class));
-                }
-                mdialog.dismiss();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                mdialog.dismiss();
-            }
-        });
+        com.armjld.eb3tly.LoginManager _lgnMn = new com.armjld.eb3tly.LoginManager();
+        _lgnMn.setMyInfo(Login_Options.this);
     }
 
     private void ImportBlockedUsers() {
@@ -417,7 +352,7 @@ public class Login_Options extends AppCompatActivity {
 
     }
 
-    public void disconnectFromFacebook() {
+    public static void disconnectFromFacebook() {
         if (AccessToken.getCurrentAccessToken() == null) {
             return;
         }

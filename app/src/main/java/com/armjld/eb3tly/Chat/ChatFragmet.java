@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.Home.HomeFragment;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.google.firebase.database.DataSnapshot;
@@ -79,6 +81,13 @@ public class ChatFragmet extends Fragment {
         btnBack = view.findViewById(R.id.btnBack);
         txtEmpty = view.findViewById(R.id.txtEmpty);
         tbTitle.setText("المحادثات");
+
+        btnBack.setOnClickListener(v-> {
+            HomeActivity.whichFrag = "Home";
+            assert getFragmentManager() != null;
+            getFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment(), HomeActivity.whichFrag).addToBackStack("Home").commit();
+            HomeActivity.bottomNavigationView.setSelectedItemId(R.id.home);
+        });
 
         messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms");
         mChat = new ArrayList<>();

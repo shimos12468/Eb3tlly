@@ -19,13 +19,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.CaptinProfile.DeliveryAdapter;
+import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.MapsActivity;
 import com.armjld.eb3tly.R;
 
 import Model.UserInFormation;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -79,7 +83,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_home, container, false);
-
         //Find View
         TextView filtrs_btn = view.findViewById(R.id.filters_btn);
         ImageView btnMaps = view.findViewById(R.id.btnMaps);
@@ -90,6 +93,20 @@ public class HomeFragment extends Fragment {
 
         footer = view.findViewById(R.id.footer);
         footer.setVisibility(View.GONE);
+
+        FloatingActionButton btnAdd = view.findViewById(R.id.btnAdd);
+
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            btnAdd.setVisibility(View.VISIBLE);
+        } else {
+            btnAdd.setVisibility(View.GONE);
+        }
+
+        btnAdd.setOnClickListener(v -> {
+            if(UserInFormation.getAccountType().equals("Supplier")) {
+                startActivity(new Intent(getActivity(), AddOrders.class));
+            }
+        });
 
         TextView tbTitle = view.findViewById(R.id.toolbar_title);
         tbTitle.setText("جميع الاوردرات المتاحة");
@@ -155,9 +172,9 @@ public class HomeFragment extends Fragment {
                 int lastVisible = layoutManager.findLastVisibleItemPosition();
                 boolean endHasBeenReached;
 
-                endHasBeenReached = lastVisible -2  <= totalItemCount;
+                endHasBeenReached = lastVisible >= totalItemCount;
 
-                if (totalItemCount > 0 && endHasBeenReached) {
+                if (endHasBeenReached) {
                     footer.setVisibility(View.VISIBLE);
                 } else {
                     footer.setVisibility(View.GONE);

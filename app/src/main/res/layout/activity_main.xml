@@ -57,48 +57,55 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/black"
             android:textSize="24sp"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlCompat" />
 
-        <EditText
-            android:id="@+id/txtEditName"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlEmail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="20dp"
-            android:drawableLeft="@drawable/ic_add_email"
-            android:ems="10"
-            android:gravity="left"
+            android:layout_height="wrap_content"
             android:hint="البريد الالكتروني"
-            android:inputType="textEmailAddress"
-            android:textColor="#000000"
-            android:textColorHint="@android:color/tertiary_text_light"
-            android:textSize="24sp"
-            tools:ignore="MissingConstraints" />
+            app:endIconMode="none"
+            app:errorTextAppearance="@style/error"
+            app:hintTextColor="@color/colorAccent">
 
-        <EditText
-            android:id="@+id/txtEditPassword"
+            <EditText
+                android:id="@+id/txtEditName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlPass"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="47dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="20dp"
-            android:drawableLeft="@drawable/ic_add_key"
-            android:ems="10"
+            android:layout_height="wrap_content"
+            android:hint="الرقم السري"
+            app:errorTextAppearance="@style/error"
+            app:hintTextColor="@color/colorAccent"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorAccent">
 
-            android:gravity="left"
-            android:hint="كلمة السر"
-            android:inputType="textPassword"
-            android:textColor="#000000"
-            android:textColorHint="@android:color/tertiary_text_light"
-            android:textSize="24sp"
-            tools:ignore="HardcodedText,MissingConstraints" />
+            <EditText
+                android:id="@+id/txtEditPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:ems="10"
+                android:imeOptions="actionGo"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnEditInfo"

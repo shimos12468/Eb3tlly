@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,9 @@ public class Conatact extends AppCompatActivity {
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("تواصل معنا");
+
+        ImageView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v-> finish());
 
         btnSend = findViewById(R.id.btnSend);
         txtContact = findViewById(R.id.txtContact);

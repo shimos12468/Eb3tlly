@@ -21,11 +21,30 @@
         android:id="@+id/btnMaps"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar_home"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_home"
+        app:layout_constraintStart_toStartOf="@+id/toolbar_home"
         app:layout_constraintTop_toTopOf="@+id/toolbar_home"
         app:srcCompat="@drawable/ic_map_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAdd"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/btndesign"
+        android:backgroundTint="@color/ic_profile_background"
+        android:cropToPadding="false"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="#FFFFFF"
+        app:ensureMinTouchTargetSize="false"
+        app:fabCustomSize="50dp"
+        app:fabSize="auto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="#FFFFFF" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -62,15 +81,6 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/footer"
-        layout="@layout/footer_advice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/txtNoOrders"
         android:layout_width="wrap_content"
@@ -82,6 +92,15 @@
         app:layout_constraintEnd_toEndOf="@+id/refresh"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <include
+        android:id="@+id/footer"
+        layout="@layout/footer_advice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"

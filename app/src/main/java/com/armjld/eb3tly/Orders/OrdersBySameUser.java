@@ -19,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.Settings.About;
 import com.armjld.eb3tly.Settings.ChangePassword;
 import com.armjld.eb3tly.Settings.Conatact;
@@ -64,14 +65,14 @@ public class OrdersBySameUser extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private Toolbar toolbar;
-    private ImageView btnNavBar;
+    private ImageView btnBack;
     String userID;
     String dName = "";
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
@@ -97,6 +98,9 @@ public class OrdersBySameUser extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_home);
         txtNoOrders = findViewById(R.id.txtNoOrders);
         TextView tbTitle = findViewById(R.id.toolbar_title);
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v-> finish());
+
         tbTitle.setText("اوردرات " + dName);
         
         

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.armjld.eb3tly.Home.StartUp;
 import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.Login.MainActivity;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
@@ -70,7 +71,7 @@ public class EditOrders extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }

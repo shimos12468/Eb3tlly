@@ -21,36 +21,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@color/colorGreen"
-                android:foregroundGravity="center"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtOrderMoney"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="30sp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:layout_weight="4"
             android:orientation="vertical">
 
@@ -58,6 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -96,39 +68,10 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/txtgMoney"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:layout_marginRight="10dp"
-                android:drawableRight="@drawable/ic_add_money"
-                android:gravity="center|right"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/colorAccent"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:ignore="RtlCompat" />
-
-            <TextView
-                android:id="@+id/txtgGet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:drawableRight="@drawable/ic_add_money"
-                android:gravity="center|right"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/colorAccent"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:ignore="RtlCompat" />
-
             <LinearLayout
                 android:id="@+id/linerDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:gravity="right"
@@ -136,7 +79,7 @@
 
                 <TextView
                     android:id="@+id/txtDate"
-                    android:layout_width="88dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
                     android:gravity="center|right"
@@ -152,7 +95,7 @@
                     android:layout_gravity="center|right"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:text="تاريخ التسليم : "
+                    android:text="تاريخ التوصيل :"
                     android:textAlignment="viewEnd"
                     android:textColor="@color/colorAccent"
                     android:textSize="14sp"

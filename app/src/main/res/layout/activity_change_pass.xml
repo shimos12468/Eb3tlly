@@ -23,81 +23,113 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="@+id/toolbar_home"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_arrow_back_white" />
+        android:src="@drawable/ic_arrow_back_white"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_home"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_home" />
 
-    <EditText
-        android:id="@+id/txtEditPassword"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:drawableRight="@drawable/ic_add_key"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:ems="10"
-        android:hint="كلمة السر الجديدة"
-        android:inputType="textPassword"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/secondary_text_light"
-        android:textSize="24sp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtOldPassword"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
-    <EditText
-        android:id="@+id/txtOldPassword"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:drawableRight="@drawable/ic_add_key"
-        android:layout_marginTop="74dp"
-        android:ems="10"
-        android:hint="كلمه السر القديمة"
-        android:inputType="textPassword"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/secondary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
-        tools:ignore="MissingConstraints" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlOldPass"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            android:hint="كلمة السر القديمة"
+            app:errorIconDrawable="@null"
+            app:errorTextAppearance="@style/error"
+            app:hintTextColor="@color/colorAccent"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorAccent">
 
-    <EditText
-        android:id="@+id/txtEditPassword2"
-        android:layout_width="280dp"
-        android:layout_height="47dp"
-        android:drawableRight="@drawable/ic_add_key"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="اعادة كتابه كلمة السر الجديدة"
-        android:inputType="textPassword"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textColorHint="@android:color/secondary_text_light"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditPassword"
-        tools:ignore="MissingConstraints" />
+            <EditText
+                android:id="@+id/txtOldPass"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                tools:ignore="RtlCompat" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEditInfo"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/btn_defult"
-        android:text="تغيير كلمه السر"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditPassword2"
-        tools:ignore="MissingConstraints" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlPass1"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            app:errorIconDrawable="@null"
+
+            android:hint="انشاء كلمة مرور"
+            app:errorTextAppearance="@style/error"
+            app:hintTextColor="@color/colorAccent"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorAccent">
+
+            <EditText
+                android:id="@+id/txtPass1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                tools:ignore="RtlCompat" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlPass2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            android:hint="اعد ادخال كلمة المرور"
+            app:errorTextAppearance="@style/error"
+            app:errorIconDrawable="@null"
+            app:hintTextColor="@color/colorAccent"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorAccent">
+
+            <EditText
+                android:id="@+id/txtPass2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                tools:ignore="RtlCompat" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnEditInfo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/btn_defult"
+            android:text="تغيير كلمة المرور"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent"
+            tools:ignore="MissingConstraints" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

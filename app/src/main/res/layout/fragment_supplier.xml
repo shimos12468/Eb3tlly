@@ -28,6 +28,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_home"
+            app:layout_constraintStart_toStartOf="@+id/toolbar_home"
+            app:layout_constraintTop_toTopOf="@+id/toolbar_home"
+            app:layout_constraintVertical_bias="0.312"
+            app:srcCompat="@drawable/ic_back_black" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constNoti"
             android:layout_width="wrap_content"
@@ -173,26 +184,6 @@
                     tools:srcCompat="@color/colorWhite" />
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnAdd"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="28dp"
-            android:background="@drawable/btndesign"
-            android:backgroundTint="@color/ic_profile_background"
-            android:cropToPadding="false"
-            android:src="@drawable/ic_add"
-            app:backgroundTint="#FFFFFF"
-            app:ensureMinTouchTargetSize="false"
-            app:fabCustomSize="50dp"
-            app:fabSize="auto"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.956"
-            app:layout_constraintStart_toStartOf="parent"
-            app:rippleColor="#FFFFFF" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"

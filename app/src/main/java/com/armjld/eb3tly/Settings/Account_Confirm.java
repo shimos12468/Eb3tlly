@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
@@ -95,7 +96,7 @@ public class Account_Confirm extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }

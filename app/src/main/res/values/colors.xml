@@ -7,5 +7,6 @@
     <color name="colorBack">#FFFFFF</color>
     <color name="colorGreen">#4CAF50</color>
     <color name="colorYellow">#050505</color>
+    <color name="red_500">#FF0000</color>
 
 </resources>

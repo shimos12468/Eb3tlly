@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Home.MyAdapter;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
@@ -45,6 +47,7 @@ public class OneOrder extends AppCompatActivity {
     FirebaseAuth mAuth;
 
 
+
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
@@ -53,7 +56,7 @@ public class OneOrder extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
@@ -68,6 +71,9 @@ public class OneOrder extends AppCompatActivity {
         toolbar_title.setText("اوردر جديد");
         mAuth = FirebaseAuth.getInstance();
         mDatabase = getInstance().getReference("Pickly").child("orders");
+
+        ImageView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v-> finish());
 
         String orderID = getIntent().getStringExtra("oID");
         assert orderID != null;

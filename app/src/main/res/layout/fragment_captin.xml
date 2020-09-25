@@ -26,6 +26,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_home"
+            app:layout_constraintStart_toStartOf="@+id/toolbar_home"
+            app:layout_constraintTop_toTopOf="@+id/toolbar_home"
+            app:layout_constraintVertical_bias="0.312"
+            app:srcCompat="@drawable/ic_back_black" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constNoti"

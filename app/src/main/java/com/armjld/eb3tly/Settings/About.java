@@ -33,12 +33,10 @@ public class About extends AppCompatActivity {
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("عن البرنامج");
 
-        imgFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openWebURL(fbLink);
-            }
-        });
+        ImageView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v-> finish());
+
+        imgFacebook.setOnClickListener(v -> openWebURL(fbLink));
 
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);

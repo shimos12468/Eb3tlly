@@ -12,13 +12,24 @@
 
     <include
         android:id="@+id/addToolbar"
-        layout="@layout/toolbar"
+        layout="@layout/toolbar_white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/addToolbar"
+        app:layout_constraintStart_toStartOf="@+id/addToolbar"
+        app:layout_constraintTop_toTopOf="@+id/addToolbar"
+        app:layout_constraintVertical_bias="0.312"
+        app:srcCompat="@drawable/ic_back_black" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -60,26 +71,6 @@
             </androidx.cardview.widget.CardView>
 
             <EditText
-                android:id="@+id/txtEditName"
-                android:layout_width="280dp"
-                android:layout_height="47dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:drawableRight="@drawable/ic_add_person"
-                android:ems="10"
-                android:hint="الاسم"
-                android:inputType="textPersonName"
-                android:textAlignment="textStart"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:textSize="24sp"
-                tools:ignore="MissingConstraints" />
-
-            <EditText
                 android:id="@+id/txtEditEmail"
                 android:layout_width="280dp"
                 android:layout_height="47dp"
@@ -98,44 +89,6 @@
                 android:textColorHint="@android:color/tertiary_text_light"
                 android:textSize="24sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginBottom="5dp"
-                android:gravity="right"
-                android:text="المحافظة :"
-                android:textColor="#000000"
-                android:textSize="18sp" />
-
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                android:id="@+id/spState"
-                android:layout_width="280dp"
-                android:layout_height="47dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:spinnerMode="dialog"
-                android:textAlignment="viewStart" />
-
-            <CheckBox
-                android:id="@+id/chkStateNoti"
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:button="@null"
-                android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
-                android:text="ارسال اشعار عند وجود اوردر جديد بمحافظتك"
-                android:textColor="#000000" />
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnEditInfo"
                 android:layout_width="200dp"
@@ -149,24 +102,7 @@
                 android:background="@drawable/btn_defult"
                 android:text="تعديل البيانات الشخصيه"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/white"
-                tools:ignore="MissingConstraints" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnConfirmAccount"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/btn_defult"
-                android:text="تأكيد الحساب"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
+                android:textColor="@color/colorAccent"
                 tools:ignore="MissingConstraints" />
 
         </LinearLayout>

@@ -35,6 +35,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.armjld.eb3tly.Login.MainActivity;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.SignUp.Intros.introCaptin;
 import com.armjld.eb3tly.SignUp.Intros.introSup;
 import com.armjld.eb3tly.R;
@@ -687,32 +690,9 @@ public class New_SignUp extends AppCompatActivity {
             mdialog.dismiss();
         }
 
-        // ------------- Welcome message in Notfications----------------------//
-        UserInFormation.setAccountType(newType);
-        UserInFormation.setUserName(muser);
-        UserInFormation.setUserDate(acDate);
-        UserInFormation.setUserURL(defultPP);
-        UserInFormation.setId(id);
+        LoginManager _lgnMn = new LoginManager();
+        _lgnMn.setMyInfo(New_SignUp.this);
 
-        UserInFormation.setEmail(memail);
-        UserInFormation.setPass(mpass);
-        UserInFormation.setPhone(mPhone);
-
-        Ratings _ratings = new Ratings();
-        _ratings.setMyRating();
-
-        if(newType.equals("Delivery Worker")) {
-            UserInFormation.setCurrentdate("none");
-        }
-        StartUp.dataset = true;
-        UserInFormation.setisConfirm("false");
-        if (newType.equals("Supplier")) {
-            finish();
-            startActivity(new Intent(getApplicationContext(), introSup.class));
-        } else if (newType.equals("Delivery Worker")) {
-            finish();
-            startActivity(new Intent(getApplicationContext(), introCaptin.class));
-        }
         Toast.makeText(getApplicationContext(),"تم انشاء حسابك بنجاح" , Toast.LENGTH_LONG).show();
         mdialog.dismiss();
     }

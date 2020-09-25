@@ -13,12 +13,18 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.armjld.eb3tly.Chat.chatListclass;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.rquests;
 import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
+
+import com.armjld.eb3tly.Settings.AddLocation;
+import com.armjld.eb3tly.Settings.LocationForSup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -45,7 +51,7 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
@@ -101,43 +107,40 @@ public class Delete_Delivery_From_Sup extends AppCompatActivity {
                 Msg = txtContact.getText().toString();
             }
 
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(this).setMessage("هل انت متاكد من انك تريد الغاء المندوب ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_delete_white, (dialogInterface, which) -> {
 
-                        // --------------------------- Send Notifications ---------------------//
-                        String message = "قام " + UserInFormation.getUserName() + " بألغاء الاوردر الذي قكت بقوبلة";
-                        notiData Noti = new notiData(owner, acceptedID, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
-                        assert acceptedID != null;
-                        nDatabase.child(acceptedID).push().setValue(Noti);
+                // --------------------------- Send Notifications ---------------------//
+                String message = "قام " + UserInFormation.getUserName() + " بألغاء الاوردر الذي قكت بقوبلة";
+                notiData Noti = new notiData(owner, acceptedID, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                assert acceptedID != null;
+                nDatabase.child(acceptedID).push().setValue(Noti);
 
 
-                        assert orderID != null;
+                assert orderID != null;
 
-                        mDatabase.child(orderID).child("statue").setValue("placed");
-                        mDatabase.child(orderID).child("uAccepted").setValue("");
-                        mDatabase.child(orderID).child("acceptTime").setValue("");
+                mDatabase.child(orderID).child("statue").setValue("placed");
+                mDatabase.child(orderID).child("uAccepted").setValue("");
+                mDatabase.child(orderID).child("acceptTime").setValue("");
 
-                        String id = dDatabase.child(orderID).push().getKey();
-                        DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
-                        assert id != null;
-                        dDatabase.child(orderID).child(id).setValue(deleteData);
+                String id = dDatabase.child(orderID).push().getKey();
+                DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
+                assert id != null;
+                dDatabase.child(orderID).child(id).setValue(deleteData);
 
-                        rquests _req = new rquests();
-                        _req.deleteReq(acceptedID, orderID);
+                rquests _req = new rquests();
+                _req.deleteReq(acceptedID, orderID);
 
-                        chatListclass chatList = new chatListclass();
-                        chatList.supplierchat(acceptedID);
-                        finish();
+                chatListclass chatList = new chatListclass();
+                chatList.supplierchat(acceptedID);
 
-                        Toast.makeText(this, "تم الغاء المندوب و جاري عرض اوردرك علي باقي المندوبين", Toast.LENGTH_LONG).show();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("هل انت متاكد من انك تريد الغاء المندوب ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                Toast.makeText(this, "تم الغاء المندوب و جاري عرض اوردرك علي باقي المندوبين", Toast.LENGTH_LONG).show();
+                finish();
+
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            mBottomSheetDialog.show();
 
         });
 

@@ -53,7 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
     String body = "";
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    Intent intent = new Intent(this, Notifications.class);
+    Intent intent = new Intent(getApplicationContext(), Notifications.class);
 
 
     @Override

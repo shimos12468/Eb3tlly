@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.armjld.eb3tly.DatabaseClasses.caculateTime;
 import com.armjld.eb3tly.R;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class WalletAdapter extends  RecyclerView.Adapter<WalletAdapter.ViewHolde
     Context context;
     ArrayList<Data>orderData;
     public static String TAG = "Wallet Adapter";
+    public static caculateTime _cacu = new caculateTime();
+
 
 
     public WalletAdapter(ArrayList<Data> orderData, Context context) {
@@ -38,18 +41,13 @@ public class WalletAdapter extends  RecyclerView.Adapter<WalletAdapter.ViewHolde
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String gGet = orderData.get(position).getGGet();
-        String gMoney = orderData.get(position).getGMoney();
-        String orderFrom = orderData.get(position).reStateP();
-        String orderTo = orderData.get(position).reStateD();
-        String dDate = orderData.get(position).getDDate();
+        String orderFrom = orderData.get(position).getmPRegion();
+        String orderTo = orderData.get(position).getmDRegion();
+        String dDate =  _cacu.setPostDate(orderData.get(position).getDilverTime());
 
         holder.txtDate.setText(dDate);
         holder.txtOrderTo.setText(orderTo);
         holder.txtOrderFrom.setText(orderFrom);
-        holder.txtgMoney.setText("مقدم الاوردر : " + gMoney + " ج");
-        holder.txtgGet.setText("مصاريف الشحن : " + gGet + " ج");
-        holder.txtOrderMoney.setText(caculateMoney(gGet) + " ج");
     }
 
 
@@ -72,18 +70,14 @@ public class WalletAdapter extends  RecyclerView.Adapter<WalletAdapter.ViewHolde
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View myview;
-        public TextView txtgGet, txtgMoney,txtDate,txtOrderFrom,txtOrderTo,txtOrderMoney;
+        public TextView txtDate,txtOrderFrom,txtOrderTo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             myview = itemView;
             txtDate = myview.findViewById(R.id.txtDate);
-            txtgGet = myview.findViewById(R.id.txtgGet);
-            txtgMoney = myview.findViewById(R.id.txtgMoney);
             txtOrderFrom = myview.findViewById(R.id.txtOrderFrom);
             txtOrderTo = myview.findViewById(R.id.txtOrderTo);
-            txtOrderMoney = myview.findViewById(R.id.txtOrderMoney);
-
         }
     }
 }

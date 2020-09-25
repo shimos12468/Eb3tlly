@@ -21,6 +21,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.Home.HomeFragment;
 import com.armjld.eb3tly.Utilites.FragmentsAdapters.SectionsPagerAdapter;
 import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.R;
@@ -42,7 +43,7 @@ public class captinFragment extends Fragment {
 
     private static DatabaseReference mDatabase;
     private DatabaseReference nDatabase;
-    private ImageView imgSetPP, imgVerf;
+    private ImageView imgSetPP, imgVerf,btnBack;
     private TextView txtUserDate,usType;
     private TextView uName;
     private TextView txtNotiCount;
@@ -76,7 +77,7 @@ public class captinFragment extends Fragment {
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         mDatabase.orderByChild("uAccepted").equalTo(UserInFormation.getId()).keepSynced(true);
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
-
+        btnBack = view.findViewById(R.id.btnBack);
         ConstraintLayout constNoti = view.findViewById(R.id.constNoti);
         uName = view.findViewById(R.id.txtUsername);
         txtUserDate = view.findViewById(R.id.txtUserDate);
@@ -87,6 +88,13 @@ public class captinFragment extends Fragment {
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         txtNotiCount.setVisibility(View.GONE);
         usType = view.findViewById(R.id.txtUserType);
+
+        btnBack.setOnClickListener(v-> {
+            HomeActivity.whichFrag = "Home";
+            assert getFragmentManager() != null;
+            getFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment(), HomeActivity.whichFrag).addToBackStack("Home").commit();
+            HomeActivity.bottomNavigationView.setSelectedItemId(R.id.home);
+        });
 
 
         uId = UserInFormation.getId();

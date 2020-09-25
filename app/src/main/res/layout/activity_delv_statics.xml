@@ -36,70 +36,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
-        <LinearLayout
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:hint="من تاريخ ؟"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/error">
 
             <EditText
                 android:id="@+id/fromDate"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:clickable="true"
+                android:drawableStart="@drawable/ic_data_black"
+                android:drawablePadding="10dp"
                 android:ems="10"
-                android:enabled="false"
-                android:inputType="date"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent" />
+                android:focusable="false"
+                android:inputType="none"
+                android:textAlignment="gravity"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="من تاريخ :"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
 
-        </LinearLayout>
-
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_marginBottom="10dp"
+            android:hint="الي تاريخ ؟"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/error">
 
             <EditText
                 android:id="@+id/toDate"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:clickable="true"
+                android:drawableStart="@drawable/ic_data_black"
+                android:drawablePadding="10dp"
                 android:ems="10"
-                android:enabled="false"
-                android:inputType="date"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent" />
+                android:focusable="false"
+                android:inputType="none"
+                android:textAlignment="gravity"
+                android:textColor="#000000" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="الي تاريخ :"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

@@ -2,16 +2,34 @@ package Model;
 
 public class UserInFormation {
 
-    private static String userName;
-    private static String AccountType;
-    private static String userDate;
-    private static String userURL;
-    private static String id;
-    private static String uPhone;
-    private static String isConfirm;
-    private static String email;
-    private static String pass;
+    private static String userName = "";
+    private static String AccountType = "";
+    private static String userDate = "";
+    private static String userURL = "";
+    private static String id = "";
+    private static String uPhone = "";
+    private static String isConfirm = "";
+    private static String email = "";
+    private static String pass = "";
+    private static String sendGovNoti = "false";
+
+    public static String getSendCityNoti() {
+        return sendCityNoti;
+    }
+
+    public static void setSendCityNoti(String sendCityNoti) {
+        UserInFormation.sendCityNoti = sendCityNoti;
+    }
+
+    private static String sendCityNoti = "false";
+
+
+
     private static int rating = 5;
+
+
+    public static String getSendGovNoti() { return sendGovNoti; }
+    public static void setSendGovNoti(String sendGovNoti) { UserInFormation.sendGovNoti = sendGovNoti; }
 
     public static String getCurrentdate() {
         return currentdate;
@@ -81,5 +99,21 @@ public class UserInFormation {
 
     public static int getRating() {
         return rating;
+    }
+
+    public static void clearUser() {
+        setAccountType("");
+        setCurrentdate("");
+        setEmail("");
+        setId("");
+        setisConfirm("");
+        setPass("");
+        setPhone("");
+        setRating(5);
+        setUserDate("");
+        setUserName("");
+        setUserURL("");
+        setSendGovNoti("false");
+        setSendCityNoti("false");
     }
 }

@@ -15,6 +15,7 @@ import com.armjld.eb3tly.CaptinProfile.capAcceptedTab;
 import com.armjld.eb3tly.CaptinProfile.capDelvTab;
 import com.armjld.eb3tly.Chat.ChatFragmet;
 import com.armjld.eb3tly.Login.MainActivity;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Settings.SettingFragment;
 import Model.UserInFormation;
@@ -62,7 +63,7 @@ public class HomeActivity extends AppCompatActivity  {
 
     boolean doubleBackToExitPressedOnce = false;
     public static String whichFrag = "Home";
-    BottomNavigationView bottomNavigationView;
+    public static BottomNavigationView bottomNavigationView;
 
     static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     @SuppressLint("SimpleDateFormat")
@@ -90,7 +91,7 @@ public class HomeActivity extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }

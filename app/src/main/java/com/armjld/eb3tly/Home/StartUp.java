@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.SignUp.Intros.IntroFirstRun;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.Ratings;
@@ -46,8 +47,6 @@ public class StartUp extends AppCompatActivity {
     private ConstraintLayout startConst;
     public UserInFormation userInfo = new UserInFormation();
     int codee = 10001;
-    public static boolean dataset = false;
-
     static DatabaseReference uDatabase;
     LinearLayout linLogo;
     DatabaseReference Database;
@@ -108,7 +107,8 @@ public class StartUp extends AppCompatActivity {
             public void run() {
                 sharedPreferences = getSharedPreferences("com.armjld.eb3tly", MODE_PRIVATE);
                 if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    reRoute();
+                    LoginManager _lgnMn = new LoginManager();
+                    _lgnMn.setMyInfo(StartUp.this);
                 } else {
                     if(sharedPreferences.getBoolean("firstrun", true)) {
                         sharedPreferences.edit().putBoolean("firstrun", false).apply();
@@ -121,89 +121,6 @@ public class StartUp extends AppCompatActivity {
                 }
             }
         }, 2500);
-
-
-    }
-
-    public void reRoute () {
-        mAuth = FirebaseAuth.getInstance();
-        uDatabase.child(mAuth.getCurrentUser().getUid()).keepSynced(true);
-        uDatabase.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    String isActive = Objects.requireNonNull(snapshot.child("active").getValue()).toString();
-
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(StartUp.this, instanceIdResult -> {
-                        String deviceToken = instanceIdResult.getToken();
-                        uDatabase.child(mAuth.getCurrentUser().getUid()).child("device_token").setValue(deviceToken);
-                    });
-
-                    UserInFormation.setAccountType(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString());
-                    UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                    UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                    UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
-                    UserInFormation.setId(mAuth.getCurrentUser().getUid());
-                    UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
-                    UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
-                    UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
-                    UserInFormation.setisConfirm("false");
-
-                    Ratings _ratings = new Ratings();
-                    _ratings.setMyRating();
-
-                    if(snapshot.child("isConfirmed").exists()) {
-                        UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
-                    }
-
-                    if(snapshot.child("currentDate").exists()) {
-                        UserInFormation.setCurrentdate(Objects.requireNonNull(snapshot.child("currentDate").getValue()).toString());
-                    }
-
-                    dataset = true;
-
-                    //setUserData(mAuth.getCurrentUser().getUid());
-
-                    if(isActive.equals("true")) {
-                        if(!snapshot.child("userState").exists()) {
-                            Toast.makeText(StartUp.this, "لا تنسي اضافه محافظتك في بياناتك الشخصيه", Toast.LENGTH_LONG).show();
-                        }
-
-                        try {
-                            PackageInfo pInfo = StartUp.this.getPackageManager().getPackageInfo(getPackageName(), 0);
-                            String version = pInfo.versionName;
-                            uDatabase.child(mAuth.getCurrentUser().getUid()).child("app_version").setValue(version);
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        ImportBlockedUsers();
-                        switch (UserInFormation.getAccountType()) {
-                            case "Supplier":
-                            case "Delivery Worker":
-                                finish();
-                                startActivity(new Intent(StartUp.this, HomeActivity.class));
-                                break;
-                            case "Admin":
-                                finish();
-                                startActivity(new Intent(StartUp.this, Admin.class));
-                                break;
-                        }
-                    } else {
-                        Toast.makeText(StartUp.this, "تم تعطيل حسابك بسبب مشاكل مع المستخدمين", Toast.LENGTH_SHORT).show();
-                        mAuth.signOut();
-                        finish();
-                        startActivity(new Intent(StartUp.this, Login_Options.class));
-                    }
-                } else {
-                    mAuth.signOut();
-                    finish();
-                    startActivity(new Intent(StartUp.this, Login_Options.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
     }
 
     @Override
@@ -215,54 +132,5 @@ public class StartUp extends AppCompatActivity {
                 Toast.makeText(this, "لم يتم تحديث التطبيق", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private void ImportBlockedUsers() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        assert user != null;
-        Database = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(user.getUid());
-        Database.child("Blocked").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    BlockManeger blocedUsers = new BlockManeger();
-                    blocedUsers.clear();
-                    for(DataSnapshot ds : snapshot.getChildren()){
-                        blocedUsers.add(ds.child("id").getValue().toString());
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
-    }
-
-    public static void setUserData(String uid) {
-        uDatabase.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserInFormation.setAccountType(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString());
-                UserInFormation.setUserName(Objects.requireNonNull(snapshot.child("name").getValue()).toString());
-                UserInFormation.setUserDate(Objects.requireNonNull(snapshot.child("date").getValue()).toString());
-                UserInFormation.setUserURL(Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString());
-                UserInFormation.setId(uid);
-                UserInFormation.setEmail(Objects.requireNonNull(snapshot.child("email").getValue()).toString());
-                UserInFormation.setPass(Objects.requireNonNull(snapshot.child("mpass").getValue()).toString());
-                UserInFormation.setPhone(Objects.requireNonNull(snapshot.child("phone").getValue()).toString());
-                UserInFormation.setisConfirm("false");
-                if(snapshot.child("currentDate").exists()) {
-                    UserInFormation.setCurrentdate(Objects.requireNonNull(snapshot.child("currentDate").getValue()).toString());
-                }
-                if(snapshot.child("isConfirmed").exists()) {
-                    UserInFormation.setisConfirm(Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString());
-                }
-                dataset = true;
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
     }
 }

@@ -18,6 +18,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dsToolbar"
+        app:layout_constraintStart_toStartOf="@+id/dsToolbar"
+        app:layout_constraintTop_toTopOf="@+id/dsToolbar"
+        app:srcCompat="@drawable/ic_back_black" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -28,123 +38,86 @@
         app:layout_constraintTop_toBottomOf="@+id/dsToolbar">
 
         <LinearLayout
-            android:id="@+id/linearLayout9"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
             android:foregroundGravity="right"
             android:gravity="right"
             android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="من"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:textSize="20dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="الي"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:textSize="20dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="right"
-                android:gravity="center|right"
-                android:text="اعلى مقدم :"
-                android:textColor="@color/colorAccent"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:foregroundGravity="right"
-            android:gravity="right"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayout9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/spFilterPRegion"
-                    style="@style/AppTheme.SpinnerDialog"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="#FFFFFF"
-                    tools:ignore="HardcodedText,MissingClass" />
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/spFilterPState"
-                    style="@style/AppTheme.SpinnerDialog"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:textColor="#FFFFFF"
-                    tools:ignore="MissingClass" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-5dp"
-                android:orientation="horizontal">
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/spFilterDRegion"
-                    style="@style/AppTheme.SpinnerDialog"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="#FFFFFF"
-                    tools:ignore="HardcodedText,MissingClass" />
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/spFilterDState"
-                    style="@style/AppTheme.SpinnerDialog"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:textColor="#FFFFFF"
-                    tools:ignore="HardcodedText,MissingClass" />
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/txtFilterMoney"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:drawableEnd="@drawable/ic_add_money"
-                android:gravity="center"
-                android:hint="0"
-                android:inputType="none|number"
-                android:textAlignment="viewEnd"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light" />
+                android:layout_height="match_parent"
+                android:hint="من مدينة ؟"
+                app:endIconMode="none">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoComp"
+                    style="@style/Base.Widget.MaterialComponents.AutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:backgroundTint="@color/colorWhite"
+                    android:completionThreshold="1"
+                    android:drawableRight="@drawable/ic_add_location"
+                    android:drawablePadding="10dp"
+                    android:inputType="textShortMessage"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"
+                    tools:ignore="RtlHardcoded" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="الي مدينة ؟"
+                app:endIconMode="none">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompDrop"
+                    style="@style/Base.Widget.MaterialComponents.AutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:backgroundTint="@color/colorWhite"
+                    android:completionThreshold="1"
+                    android:drawableRight="@drawable/ic_add_location"
+                    android:drawablePadding="10dp"
+                    android:inputType="textShortMessage"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"
+                    tools:ignore="RtlHardcoded" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="اعلي ثمن للرسالة ؟"
+                app:endIconMode="none">
+
+                <EditText
+                    android:id="@+id/txtFilterMoney"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:drawableEnd="@drawable/ic_add_money"
+                    android:drawablePadding="10dp"
+                    android:inputType="none|number"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
         </LinearLayout>
 

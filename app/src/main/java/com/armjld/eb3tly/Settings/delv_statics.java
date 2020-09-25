@@ -62,11 +62,6 @@ public class delv_statics extends AppCompatActivity {
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
 
-        fromDate.setFocusable(false);
-        fromDate.setEnabled(false);
-        toDate.setFocusable(false);
-        toDate.setEnabled(false);
-
         btnBack = findViewById(R.id.btnBack);
         txtAllOrders = findViewById(R.id.txtAllOrders);
         txtAllGMoney= findViewById(R.id.txtAllGMoney);
@@ -103,9 +98,9 @@ public class delv_statics extends AppCompatActivity {
         };
 
         fromDate.setOnClickListener(v -> {
-            dpd = new DatePickerDialog(this, _fromDate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+            dpd = new DatePickerDialog(this, _fromDate, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             DatePicker dp = dpd.getDatePicker();
-            dp.setMaxDate(myCalendar.getTimeInMillis());
+            dp.setMaxDate(Calendar.getInstance().getTimeInMillis());
             dpd.show();
         });
 
@@ -126,10 +121,10 @@ public class delv_statics extends AppCompatActivity {
         };
 
         toDate.setOnClickListener(v -> {
-            dpd = new DatePickerDialog(this, _toDate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH));
+            dpd = new DatePickerDialog(this, _toDate, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             DatePicker dp = dpd.getDatePicker();
-            dp.setMaxDate(myCalendar.getTimeInMillis()); // disable all the previos dates
+            dp.setMaxDate(Calendar.getInstance().getTimeInMillis()); // disable all the previos dates
             dpd.show();
         });
 
@@ -158,11 +153,22 @@ public class delv_statics extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) { }
         });
+
         getStates();
     }
 
     @SuppressLint("SetTextI18n")
     private void getStates() {
+
+        AllOrders = 0;
+        AllGMoney = 0;
+        AllgGet = 0;
+        allPrcen = 0;
+        periodGGet = 0;
+        periodGMoney = 0;
+        periodPrcen = 0;
+        numOfOrdersPerDay = 0;
+
         AllOrders = HomeActivity.delvList.size();
 
         for(int i = 0; i < HomeActivity.delvList.size(); i++) {

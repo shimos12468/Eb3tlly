@@ -15,12 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Chat.chatListclass;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.rquests;
 import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +54,7 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
@@ -117,42 +119,38 @@ public class Delete_Reaon_Delv extends AppCompatActivity {
                 Msg = "التاجر لا يرد علي الهاتف";
             }
 
-            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(this).setMessage("هل انت متاكد من انك تريد حذف الاوردر ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_delete_white, (dialogInterface, which) -> {
 
-                        assert orderID != null;
-                        String id = dDatabase.child(orderID).push().getKey();
-                        DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
-                        dDatabase.child(orderID).child(id).setValue(deleteData);
+                assert orderID != null;
+                String id = dDatabase.child(orderID).push().getKey();
+                DeleteData deleteData = new DeleteData(uId, orderID, Msg, datee, UserInFormation.getAccountType(), id);
+                assert id != null;
+                dDatabase.child(orderID).child(id).setValue(deleteData);
 
-                        // --------------- Setting the order as placed again ---------------- //
-                        mDatabase.child(orderID).child("statue").setValue("placed");
-                        mDatabase.child(orderID).child("uAccepted").setValue("");
-                        mDatabase.child(orderID).child("acceptTime").setValue("");
+                // --------------- Setting the order as placed again ---------------- //
+                mDatabase.child(orderID).child("statue").setValue("placed");
+                mDatabase.child(orderID).child("uAccepted").setValue("");
+                mDatabase.child(orderID).child("acceptTime").setValue("");
 
-                        rquests _req = new rquests();
-                        _req.deleteReq(uId,orderID);
+                rquests _req = new rquests();
+                _req.deleteReq(uId,orderID);
 
-                        chatListclass chatList = new chatListclass();
-                        chatList.dlevarychat(owner);
+                chatListclass chatList = new chatListclass();
+                chatList.dlevarychat(owner);
 
-                        // --------------------------- Send Notifications ---------------------//
-                        String message = "قام " + UserInFormation.getUserName() + " بالغاء اوردر " + clientName;
-                        notiData Noti = new notiData(uId, owner, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
-                        assert owner != null;
-                        nDatabase.child(owner).push().setValue(Noti);
-                        finish();
+                // --------------------------- Send Notifications ---------------------//
+                String message = "قام " + UserInFormation.getUserName() + " بالغاء اوردر " + clientName;
+                notiData Noti = new notiData(uId, owner, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                assert owner != null;
+                nDatabase.child(owner).push().setValue(Noti);
+                Toast.makeText(this, "تم الغاء الاوردر", Toast.LENGTH_SHORT).show();
+                finish();
 
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(Delete_Reaon_Delv.this);
-            builder.setMessage("هل انت متاكد من انك تريد حذف الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            mBottomSheetDialog.show();
         });
     }
 }

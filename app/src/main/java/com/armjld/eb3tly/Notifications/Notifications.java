@@ -9,11 +9,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Home.StartUp;
 import com.armjld.eb3tly.Login.MainActivity;
+import com.armjld.eb3tly.LoginManager;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +39,7 @@ public class Notifications extends AppCompatActivity {
     public static String TAG = "Notifications";
     String uType = UserInFormation.getAccountType();
     String uId = UserInFormation.getId();
+    private ImageView btnBack;
 
 
     @Override
@@ -47,7 +50,7 @@ public class Notifications extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!StartUp.dataset) {
+        if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
@@ -71,7 +74,7 @@ public class Notifications extends AppCompatActivity {
             return;
         }
 
-
+        btnBack = findViewById(R.id.btnBack);
         mAuth = FirebaseAuth.getInstance();
         nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -103,6 +106,8 @@ public class Notifications extends AppCompatActivity {
 
         refresh.setRefreshing(true);
         getNoti();
+
+        btnBack.setOnClickListener(v->finish());
 
     }
 

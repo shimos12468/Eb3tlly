@@ -67,6 +67,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,7 +98,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     BlockManeger block = new BlockManeger();
     // import firebase
-    private FirebaseAuth mAuth;
     private DatabaseReference mDatabase, uDatabase, Database;
     private ImageView btnHome;
     private FloatingActionButton btnGCL;
@@ -123,7 +123,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         filterDate = format.format(Calendar.getInstance().getTime());
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //Database
-        mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         mDatabase.keepSynced(true);
@@ -144,10 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("خريطة الاوردرات");
 
-        btnHome.setOnClickListener(v -> {
-            finish();
-            //startActivity(new Intent(this, HomeActivity.class));
-        });
+        btnHome.setOnClickListener(v -> finish());
 
         btnGCL.setVisibility(View.GONE);
         btnGCL.setOnClickListener(v -> {
@@ -162,17 +158,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void buildAlertMessageNoGps() {
-        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        };
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(MapsActivity.this);
-        builder.setMessage("الرجاء فتح اعدادات اللوكيشن ؟").setPositiveButton("حسنا", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(MapsActivity.this).setMessage("الرجاء فتح اعدادات اللوكيشن ؟").setCancelable(true).setPositiveButton("حسنا", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            dialogInterface.dismiss();
+        }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+            dialogInterface.dismiss();
+        }).setAnimation(R.raw.location).build();
+        mBottomSheetDialog.show();
+
+
     }
 
     private void fetchLocation() {
@@ -220,7 +214,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         btnGCL.setVisibility(View.VISIBLE);
@@ -263,7 +256,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
                                     String snipText = "من : " + pAddress + "\n" +  " الي : " + orderData.getDAddress() + "\n" + " مقدم : " + orderData.getGMoney() + "\n" + " مصاريف شحن : " + orderData.getGGet() + "\n" + " اضغط هنا للمزيد من البيانات.";
                                     Marker marker = mMap.addMarker(new MarkerOptions().position(
-                                            new LatLng(lati,longLat)).title(uName).snippet(snipText).icon(bitmapDescriptorFromVector(MapsActivity.this, R.drawable.app_icon)));
+                                            new LatLng(lati,longLat)).title(uName).snippet(snipText).icon(bitmapDescriptorFromVector(MapsActivity.this, R.drawable.ic_add_address)));
                                     marker.setTag(orderData.getId());
 
                                     mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {

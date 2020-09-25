@@ -147,7 +147,8 @@
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="RtlCompat" />
 
                     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                         android:id="@+id/spnGov"
@@ -182,7 +183,8 @@
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="RtlCompat" />
 
                     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                         android:id="@+id/spnCity"
@@ -377,12 +379,14 @@
                         android:layout_height="25dp"
                         android:layout_gravity="center"
                         app:cardCornerRadius="50dp"
+                        android:foregroundGravity="center"
                         app:layout_constraintBottom_toBottomOf="@+id/cardView"
                         app:layout_constraintStart_toStartOf="parent">
 
                         <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
                             app:srcCompat="@drawable/ic_baseline_camera_enhance_24"
                             tools:srcCompat="@drawable/ic_baseline_camera_enhance_24" />
 
@@ -390,58 +394,76 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <EditText
-                    android:id="@+id/txtFirstName"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="0dp"
-                    android:backgroundTint="@android:color/secondary_text_dark"
-                    android:ems="10"
+                    android:layout_marginBottom="15dp"
                     android:hint="الاسم الاول"
-                    android:inputType="textPersonName"
-                    android:textAlignment="viewStart"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/secondary_text_dark"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints" />
+                    app:errorIconDrawable="@null"
+                    app:endIconMode="none">
 
-                <EditText
-                    android:id="@+id/txtLastName"
+                    <EditText
+                        android:id="@+id/txtFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textColor="#000000"
+                        android:textSize="24sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="0dp"
-                    android:backgroundTint="@android:color/secondary_text_dark"
-                    android:ems="10"
+                    android:layout_marginBottom="15dp"
                     android:hint="الاسم الاخير"
-                    android:inputType="textPersonName"
-                    android:textAlignment="viewStart"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/secondary_text_dark"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints" />
+                    app:errorIconDrawable="@null"
 
-                <EditText
-                    android:id="@+id/txtEmail"
+                    app:errorTextAppearance="@style/error"
+                    app:hintTextColor="@color/colorAccent"
+                    tools:ignore="HardcodedText">
+
+                    <EditText
+                        android:id="@+id/txtLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textColor="#000000"
+                        android:textSize="24sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="0dp"
-                    android:backgroundTint="@android:color/secondary_text_dark"
-                    android:ems="10"
-                    android:hint="البريد ألالكتروني"
-                    android:inputType="textEmailAddress"
-                    android:textAlignment="viewStart"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/secondary_text_dark"
-                    android:textSize="24sp" />
+                    android:layout_marginBottom="15dp"
+                    android:hint="البريد الالكتروني"
+                    app:errorIconDrawable="@null"
+
+                    app:errorTextAppearance="@style/error"
+                    app:hintTextColor="@color/colorAccent">
+
+                    <EditText
+                        android:id="@+id/txtEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:ems="10"
+                        android:inputType="textEmailAddress"
+                        android:textColor="#000000"
+                        android:textSize="24sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -454,7 +476,8 @@
                     <com.rilixtech.widget.countrycodepicker.CountryCodePicker
                         android:id="@+id/ccp"
                         android:layout_width="47dp"
-                        android:layout_height="47dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
                         android:foregroundGravity="center"
                         android:gravity="center"
                         android:textAlignment="center"
@@ -483,63 +506,76 @@
                         android:text="+20"
                         android:textAlignment="viewStart"
                         android:textColor="@color/colorAccent"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        tools:ignore="RtlCompat" />
 
                     <EditText
                         android:id="@+id/txtPhone"
                         android:layout_width="match_parent"
-                        android:layout_height="47dp"
-                        android:layout_marginTop="2dp"
+                        android:layout_height="wrap_content"
                         android:backgroundTint="@android:color/secondary_text_dark"
                         android:ems="10"
                         android:gravity="right"
-                        android:hint="101-165-6179"
+                        android:hint="15 987 65 432"
                         android:inputType="number"
                         android:textAlignment="viewStart"
                         android:textColor="#000000"
                         android:textColorHint="@android:color/secondary_text_dark"
                         android:textSize="24sp"
-                        tools:ignore="MissingConstraints,RtlCompat" />
-
+                        tools:ignore="MissingConstraints,RtlCompat,RtlHardcoded,TextFields" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/txtPass1"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="0dp"
-                    android:backgroundTint="@android:color/secondary_text_dark"
-                    android:ems="10"
-                    android:gravity="right"
-                    android:hint="كلمة المرور"
-                    android:inputType="textPassword"
-                    android:textAlignment="viewStart"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/secondary_text_dark"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints,RtlCompat" />
+                    android:layout_marginBottom="15dp"
+                    android:hint="انشاء كلمة مرور"
+                    app:errorIconDrawable="@null"
+                    app:errorTextAppearance="@style/error"
+                    app:hintTextColor="@color/colorAccent"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/colorAccent">
 
-                <EditText
-                    android:id="@+id/txtPass2"
+                    <EditText
+                        android:id="@+id/txtPass1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:textColor="#000000"
+                        android:textSize="24sp"
+                        tools:ignore="RtlCompat" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="0dp"
-                    android:backgroundTint="@android:color/secondary_text_dark"
-                    android:ems="10"
-                    android:gravity="right"
+                    android:layout_marginBottom="15dp"
                     android:hint="اعد ادخال كلمة المرور"
-                    android:inputType="textPassword"
-                    android:textAlignment="viewStart"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/secondary_text_dark"
-                    android:textSize="24sp"
-                    tools:ignore="MissingConstraints,RtlCompat" />
+                    app:errorIconDrawable="@null"
+                    app:errorTextAppearance="@style/error"
+                    app:hintTextColor="@color/colorAccent"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/colorAccent">
+
+                    <EditText
+                        android:id="@+id/txtPass2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:textColor="#000000"
+                        android:textSize="24sp"
+                        tools:ignore="RtlCompat" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:layout_width="match_parent"

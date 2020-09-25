@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -239,24 +240,19 @@ public class OrderInfo extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    // ------------------- Send Request -------------------- //
-                                    rquests _rquests = new rquests();
-                                    _rquests.deleteReq(uId, orderID);
+                        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(OrderInfo.this).setMessage("هل انت متأكد من انك تريد الغاء التقديم علي هذه الشحنه ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                            // ------------------- Send Request -------------------- //
+                            rquests _rquests = new rquests();
+                            _rquests.deleteReq(uId, orderID);
 
-                                    // ------------------ Notificatiom ------------------ //
-                                    setBid("false");
-                                    Toast.makeText(OrderInfo.this, "تم الغاء التقديم", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    break;
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(OrderInfo.this);
-                        builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
-
+                            // ------------------ Notificatiom ------------------ //
+                            setBid("false");
+                            Toast.makeText(OrderInfo.this, "تم الغاء التقديم", Toast.LENGTH_SHORT).show();
+                            dialogInterface.dismiss();
+                        }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                            dialogInterface.dismiss();
+                        }).build();
+                        mBottomSheetDialog.show();
                     } else {
                         wallet w = new wallet();
                         if (!w.workerbid()) {
@@ -272,28 +268,24 @@ public class OrderInfo extends AppCompatActivity {
                             Toast.makeText(OrderInfo.this, "لديك 20 اوردر معلق حتي الان, قم بتوصيلهم اولا", Toast.LENGTH_LONG).show();
                             return;
                         }
-                        DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    // ------------------- Send Request -------------------- //
-                                    rquests _rquests = new rquests();
-                                    _rquests.addrequest(orderID, datee);
 
-                                    // ------------------ Notificatiom ------------------ //
-                                    String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + dName;
-                                    notiData Noti = new notiData(uId, owner, orderID, message, datee, "false", "order",UserInFormation.getUserName(), UserInFormation.getUserURL());
-                                    nDatabase.child(owner).push().setValue(Noti);
-                                    setBid("true");
+                        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(OrderInfo.this).setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                            // ------------------- Send Request -------------------- //
+                            rquests _rquests = new rquests();
+                            _rquests.addrequest(orderID, datee);
 
-                                    Toast.makeText(OrderInfo.this, "تم التقديم علي الشحنه", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    break;
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(OrderInfo.this);
-                        builder.setMessage("هل انت متأكد من انك تريد التقديم علي هذه الشحنه ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                            // ------------------ Notificatiom ------------------ //
+                            String message = "قام " + UserInFormation.getUserName() + " بالتقديم علي اوردر " + dName;
+                            notiData Noti = new notiData(uId, owner, orderID, message, datee, "false", "order",UserInFormation.getUserName(), UserInFormation.getUserURL());
+                            nDatabase.child(owner).push().setValue(Noti);
+                            setBid("true");
 
+                            Toast.makeText(OrderInfo.this, "تم التقديم علي الشحنه", Toast.LENGTH_SHORT).show();
+                            dialogInterface.dismiss();
+                        }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                            dialogInterface.dismiss();
+                        }).build();
+                        mBottomSheetDialog.show();
                     }
                 }
 

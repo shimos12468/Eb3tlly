@@ -21,6 +21,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.Home.HomeFragment;
 import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.R;
@@ -43,12 +44,6 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
 public class supplierFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     private static DatabaseReference mDatabase;
     private DatabaseReference nDatabase;
     private DatabaseReference vDatabase;
@@ -61,14 +56,13 @@ public class supplierFragment extends Fragment {
     private ViewPager viewPager;
     private ProgressDialog mdialog;
     private String isConfirmed;
+    private ImageView btnBack;
 
     public supplierFragment() { }
     
     public static supplierFragment newInstance(String param1, String param2) {
         supplierFragment fragment = new supplierFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,10 +70,6 @@ public class supplierFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -96,14 +86,21 @@ public class supplierFragment extends Fragment {
         vDatabase = getInstance().getReference().child("Pickly").child("values");
         nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         constSupProfile= view.findViewById(R.id.constSupProfile);
+        btnBack = view.findViewById(R.id.btnBack);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser mUser = mAuth.getCurrentUser();
         mdialog = new ProgressDialog(getActivity());
         assert mUser != null;
         isConfirmed = UserInFormation.getisConfirm();
 
+        btnBack.setOnClickListener(v-> {
+            HomeActivity.whichFrag = "Home";
+            assert getFragmentManager() != null;
+            getFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment(), HomeActivity.whichFrag).addToBackStack("Home").commit();
+            HomeActivity.bottomNavigationView.setSelectedItemId(R.id.home);
+        });
 
-        FloatingActionButton btnAdd = view.findViewById(R.id.btnAdd);
+
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getActivity(), getChildFragmentManager());
         viewPager = view.findViewById(R.id.view_pager);
@@ -170,28 +167,6 @@ public class supplierFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-
-        btnAdd.setOnClickListener(v -> {
-            vibe.vibrate(40);
-            mdialog.setMessage("جاري التاكد من اتصال الانترنت ..");
-            mdialog.show();
-            vDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()) {
-                        if(Objects.requireNonNull(dataSnapshot.child("adding").getValue()).toString().equals("false")) {
-                            Toast.makeText(getActivity(), "عذرا لا يمكنك اضافه اوردرات في الوقت الحالي حاول في وقت لاحق", Toast.LENGTH_LONG).show();
-                        } else {
-                            startActivity(new Intent(getActivity(), AddOrders.class));
-                        }
-                        mdialog.dismiss();
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
         });
         
         return view;
