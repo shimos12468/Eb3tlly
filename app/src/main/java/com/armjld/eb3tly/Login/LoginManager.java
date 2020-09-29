@@ -74,6 +74,15 @@ public class LoginManager {
                     if(snapshot.child("sendOrderNotiCity").exists()) {
                         UserInFormation.setSendCityNoti(Objects.requireNonNull(snapshot.child("sendOrderNoti").getValue()).toString());
                     }
+
+                    if(snapshot.child("fawrycode").exists()) {
+                        UserInFormation.setFawrycode(Objects.requireNonNull(snapshot.child("fawrycode").getValue()).toString());
+                    }
+
+                    if(snapshot.child("walletmoney").exists()) {
+                        UserInFormation.setWalletmoney(Objects.requireNonNull(snapshot.child("walletmoney").getValue()).toString());
+                    }
+
                     dataset = true;
                     if(isActive.equals("true")) {
                         try {

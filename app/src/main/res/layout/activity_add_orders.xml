@@ -64,6 +64,7 @@
                 android:textSize="24sp" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlPickDate"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -91,15 +92,16 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDName"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@style/error"
                 android:hint="اسم العميل"
-                app:endIconMode="none">
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
 
                 <EditText
                     android:id="@+id/txtDName"
@@ -113,8 +115,8 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDPhone"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,9 +124,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:hint="رقم هاتف العميل"
+                app:endIconMode="none"
                 app:errorEnabled="true"
-                app:errorTextAppearance="@style/error"
-                app:endIconMode="none">
+                app:errorTextAppearance="@style/error">
 
                 <EditText
                     android:id="@+id/txtDPhone"
@@ -138,16 +140,17 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDDate"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@style/error"
                 android:layout_marginRight="20dp"
                 android:hint="تاريخ تسليم الاوردر"
-                app:endIconMode="none">
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
 
                 <EditText
                     android:id="@+id/txtDDate"
@@ -164,15 +167,16 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDropCity"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@style/error"
                 android:hint="مدينة التسليم"
-                app:endIconMode="none">
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
 
                 <AutoCompleteTextView
                     android:id="@+id/txtDropCity"
@@ -190,17 +194,18 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDAddress"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@style/error"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:hint="العنوان بالتفصيل"
                 android:textColorHint="@color/colorPrimary"
-                app:endIconMode="none">
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
 
                 <EditText
                     android:id="@+id/txtDAddress"
@@ -215,6 +220,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlWeight"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -237,6 +243,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlType"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -279,17 +286,18 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlGMoney"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:hint="مقدم الاوردر"
                     app:endIconMode="none"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/error"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imgHelpMoney"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:errorEnabled="true"
-                    app:errorTextAppearance="@style/error"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <EditText
@@ -319,27 +327,28 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlGGet"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:hint="مصاريف الشحن"
                     app:endIconMode="none"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imgHelpGet"
                     app:errorEnabled="true"
                     app:errorTextAppearance="@style/error"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imgHelpGet"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                <EditText
-                    android:id="@+id/txtGGet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/ic_add_money"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:textColor="#000000" />
+                    <EditText
+                        android:id="@+id/txtGGet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_add_money"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:textColor="#000000" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView

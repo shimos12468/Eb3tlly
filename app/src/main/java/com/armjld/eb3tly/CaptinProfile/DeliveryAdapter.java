@@ -144,6 +144,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل قمت باستلام الاوردر من التاجر ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
                 mDatabase.child(orderID).child("statue").setValue("recived2");
+                mDatabase.child(orderID).child("recived2Time").setValue(datee);
 
                 String message = "قام " + UserInFormation.getUserName() + " بتأكد استلام الاوردر";
                 notiData Noti = new notiData(uId, owner, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
@@ -173,7 +174,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
                 // ----- Add money to the Wallet
                 wallet w = new wallet();
-                w.SupsetDilivared(orderID);
+                w.SupsetDilivared(orderID, filtersData.get(position).getGGet());
 
                 // --------------------------- Send Notifications ---------------------//
                 String message =  "قام " + UserInFormation.getUserName() + " بتوصل الاردر";
@@ -203,15 +204,17 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
         holder.btnOrderBack.setOnClickListener(v-> {
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("لم يستلم العميل الشحنة ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+
                 mDatabase.child(orderID).child("statue").setValue("denied");
+                mDatabase.child(orderID).child("dilverTime").setValue(datee);
 
                 String message = "قام " + filtersData.get(position).getDName() + " برفض استلام اوردرك من الكابتن.";
-                notiData Noti = new notiData(uId,owner, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                notiData Noti = new notiData(uId, owner, orderID, message, datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
                 nDatabase.child(owner).push().setValue(Noti);
 
                 // ----- Add money to the Wallet
                 wallet w = new wallet();
-                w.SupsetDilivared(orderID);
+                w.SupsetDilivared(orderID, filtersData.get(position).getGGet());
 
                 filtersData.get(position).setStatue("denied");
                 holder.setDilveredButton("denied");

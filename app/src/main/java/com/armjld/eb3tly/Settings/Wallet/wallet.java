@@ -33,14 +33,15 @@ public class wallet {
         String currentdate = UserInFormation.getCurrentdate();
         if(currentdate.equals("none")){
             return true;
-        }
-        try {
-             start =sdf.parse(currentdate);
-             end = sdf.parse(datee);
+        } try {
+            start =sdf.parse(currentdate);
+            end = sdf.parse(datee);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        assert end != null;
+        assert start != null;
         long diff = end.getTime() - start.getTime();
         diffHours = diff / (60 * 60 * 1000);
 
@@ -48,25 +49,34 @@ public class wallet {
         return diffHours < 72;
     }
 
-    public void SupsetDilivared(String orderid){
+    public void SupsetDilivared(String orderid, String addMoney){
         String id = UserInFormation.getId();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.ENGLISH);
         String datee = sdf.format(new Date());
         String currentdate = UserInFormation.getCurrentdate();
-        walletDS = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id);
-        if(!currentdate.equals("none")){
-            walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(currentdate).child(orderid);
-            walletDS.child("payed").setValue("false");
-            Log.i(TAG, "Order add to your current wallted : " + currentdate);
 
-        } else{
-            walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id);
-            walletDS.child("currentDate").setValue(datee);
-            UserInFormation.setCurrentdate(datee);
-            walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(datee).child(orderid);
-            walletDS.child("payed").setValue("false");
-            Log.i(TAG, "Created a new wallet for you : " + UserInFormation.getCurrentdate());
+        // ------------- set money in the wallet ----------------------- //
+        int orderMoney = (int) (Integer.parseInt(addMoney) * (float) 0.2 * -1);
+        double finalMoney = (Double.parseDouble(UserInFormation.getWalletmoney()) + orderMoney);
+        FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("walletmoney").setValue(finalMoney);
+        UserInFormation.setWalletmoney(String.valueOf(finalMoney));
 
+        if(finalMoney < 0) {
+            walletDS = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id);
+            if(!currentdate.equals("none")){
+                walletDS = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(currentdate).child(orderid);
+                walletDS.child("value").setValue(addMoney);
+                walletDS.child("payed").setValue("false");
+                Log.i(TAG, "Order add to your current wallted : " + currentdate);
+            } else {
+                walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id);
+                walletDS.child("currentDate").setValue(datee);
+                UserInFormation.setCurrentdate(datee);
+                walletDS =FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("wallet").child(datee).child(orderid);
+                walletDS.child("value").setValue(addMoney);
+                walletDS.child("payed").setValue("false");
+                Log.i(TAG, "Created a new wallet for you : " + UserInFormation.getCurrentdate());
+            }
         }
     }
 
@@ -102,7 +112,5 @@ public class wallet {
 
             }
         });
-
     }
-
 }

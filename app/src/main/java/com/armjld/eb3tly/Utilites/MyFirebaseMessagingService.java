@@ -20,6 +20,7 @@ import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.Orders.MapsActivity;
+import com.armjld.eb3tly.Orders.OneOrder;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Settings.Wallet.MyWallet;
 import com.armjld.eb3tly.Home.HomeActivity;
@@ -53,7 +54,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
     String body = "";
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    Intent intent = new Intent(getApplicationContext(), Notifications.class);
+    //Intent intent = new Intent(getApplicationContext(), Notifications.class);
 
 
     @Override
@@ -62,13 +63,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "From: " + remoteMessage.getFrom());
             Map<String, String> data = remoteMessage.getData();
 
-            String nameFrom = data.get("uName");
-            String statue = data.get("statue");
-            String action = data.get("action");
-            String OrderID = data.get("orderid");
-
-
-            sendNotification(statue, nameFrom,action, OrderID);
+            if(data.get("type").equals("normal")) {
+                String nameFrom = data.get("title");
+                String statue = data.get("body");
+                String action = data.get("action");
+                String OrderID = data.get("orderid");
+                sendNotification(statue, nameFrom,action, OrderID);
+                Log.i(TAG, "This is a normal Notification");
+            } else {
+                String title = data.get("title");
+                String body = data.get("body");
+                chatNoti(title, body);
+                Log.i(TAG, "This is a Chat Notification");
+            }
 
             if (true) {
                 scheduleJob();
@@ -101,9 +108,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
+    private void chatNoti (String title, String body) {
+        Intent chatintent = new Intent(this, HomeActivity.class);
+        chatintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent2 = PendingIntent.getActivity(this, 0 /* Request code */, chatintent, PendingIntent.FLAG_ONE_SHOT);
+
+        String channelId = getString(R.string.default_notification_channel_id);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent2);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        assert notificationManager != null;
+        notificationManager.notify(0 , notificationBuilder.build());
+    }
+
     private void sendNotification(String messageBody, String title, String action, String OrderID) {
-        intent = new Intent(this, Notifications.class);
-        switch (action) {
+        Intent intent = new Intent(this, Notifications.class);
+        /*switch (action) {
             case "noting": {
                 intent = new Intent(this, Notifications.class);
                 break;
@@ -137,7 +173,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 assert myDate != null;
                                 if(orderDate.compareTo(myDate) >= 0) {
                                     Log.i(TAG, orderData.getId());
-                                    intent = new Intent(MyFirebaseMessagingService.this, com.armjld.eb3tly.Orders.OneOrder.class);
+                                    intent = new Intent(MyFirebaseMessagingService.this, OneOrder.class);
                                     intent.putExtra("oID", orderData.getId());
                                 } else {
                                     Toast.makeText(MyFirebaseMessagingService.this, "معاد تسليم الاوردر قد فات", Toast.LENGTH_SHORT).show();
@@ -196,7 +232,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             default: {
                 intent = new Intent(this, Notifications.class);
             }
-        }
+        }*/
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         String channelId = getString(R.string.default_notification_channel_id);

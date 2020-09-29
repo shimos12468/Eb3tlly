@@ -37,18 +37,16 @@ public class delv_statics extends AppCompatActivity {
 
     Calendar cal = GregorianCalendar.getInstance();
 
-    int AllOrders = 0;
-    int AllGMoney = 0;
-    int AllgGet = 0;
-    int allPrcen = 0;
     int periodGGet = 0;
     int periodGMoney = 0;
-    int periodPrcen = 0;
-    int numOfOrdersPerDay = 0;
+    int accepted = 0;
+    int recived = 0;
+    int dilv = 0;
+
     DatePickerDialog dpd;
     EditText fromDate, toDate;
 
-    TextView txtAllOrders,txtAllGMoney,txtAllGGet,txtAllPrcen,txtPeriodGGet,txtPeriodGMoney,txtPeriodPrecn,txtOrdersPerDay;
+    TextView txtPeriodGGet,txtPeriodGMoney, txtAccepted, txtRecived, txtDliv;
     ImageView btnBack;
 
     @Override
@@ -63,14 +61,12 @@ public class delv_statics extends AppCompatActivity {
         toDate = findViewById(R.id.toDate);
 
         btnBack = findViewById(R.id.btnBack);
-        txtAllOrders = findViewById(R.id.txtAllOrders);
-        txtAllGMoney= findViewById(R.id.txtAllGMoney);
-        txtAllGGet= findViewById(R.id.txtAllGGet);
-        txtAllPrcen= findViewById(R.id.txtAllPrcen);
         txtPeriodGGet= findViewById(R.id.txtPeriodGGet);
         txtPeriodGMoney= findViewById(R.id.txtPeriodGMoney);
-        txtPeriodPrecn= findViewById(R.id.txtPeriodPrecn);
-        txtOrdersPerDay= findViewById(R.id.txtOrdersPerDay);
+
+        txtAccepted= findViewById(R.id.txtAccepted);
+        txtRecived= findViewById(R.id.txtRecived);
+        txtDliv= findViewById(R.id.txtDliv);
 
         cal.add(Calendar.DAY_OF_YEAR, -7);
         String lastWeek = sDF.format(cal.getTime());
@@ -159,26 +155,8 @@ public class delv_statics extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void getStates() {
-
-        AllOrders = 0;
-        AllGMoney = 0;
-        AllgGet = 0;
-        allPrcen = 0;
         periodGGet = 0;
         periodGMoney = 0;
-        periodPrcen = 0;
-        numOfOrdersPerDay = 0;
-
-        AllOrders = HomeActivity.delvList.size();
-
-        for(int i = 0; i < HomeActivity.delvList.size(); i++) {
-            Data c = HomeActivity.delvList.get(i);
-            String gMoney = c.getGMoney();
-            String gGet = c.getGGet();
-            AllGMoney = AllGMoney + Integer.parseInt(gMoney);
-            AllgGet = AllgGet + Integer.parseInt(gGet);
-        }
-        allPrcen = (int) (AllgGet * (float) 0.2);
 
         ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x-> {
             try {
@@ -193,19 +171,34 @@ public class delv_statics extends AppCompatActivity {
             Data c = filterList.get(i);
             String gMoney = c.getGMoney();
             String gGet = c.getGGet();
+            switch (c.getStatue()) {
+                case "accepted" : {
+                    accepted ++;
+                    break;
+                }
+
+                case "recived2" :
+                case "recived" : {
+                    recived ++;
+                    break;
+                }
+
+                case "deniedback":
+                case "denied" :
+                case "delivered" : {
+                    dilv++;
+                    break;
+                }
+            }
             periodGMoney = periodGMoney + Integer.parseInt(gMoney);
             periodGGet = periodGGet + Integer.parseInt(gGet);
         }
-        periodPrcen = (int) (periodGGet * (float) 0.2);
 
-        txtAllOrders.setText("مجموع عدد الاورورات التي قمت بقبولها : " + AllOrders +  " اوردر");
-        txtAllGMoney.setText("مجموع المقدمات التي دفعتها :  " + AllGMoney +  " ج");
-        txtAllGGet.setText("مجموع مصاريف الشحن : " + AllgGet +  " ج");
-        txtAllPrcen.setText("مجموع المبلغ المدفوع للشركة :  " + allPrcen +  " ج");
+        txtAccepted.setText("تم قبول : " + accepted + " شحنة");
+        txtRecived.setText("تم استلام : " + recived + " شحنة");
+        txtDliv.setText("تم تسليم : " + dilv + " شحنة");
         txtPeriodGGet.setText("مصاريف الشحن في التفرة المححدة : " + periodGGet +  " ج");
         txtPeriodGMoney.setText("المقدمات المدفوعة في الفترة المحددة :  " + periodGMoney +  " ج");
-        txtPeriodPrecn.setText("المبلغ المدفوع للشركة في الفترة المحددة : " + periodPrcen +  " ج");
-
     }
 
     private Date conv(String orderDate) throws ParseException {

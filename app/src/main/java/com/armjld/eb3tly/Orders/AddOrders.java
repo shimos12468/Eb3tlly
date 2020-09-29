@@ -35,12 +35,14 @@ import com.armjld.eb3tly.Home.StartUp;
 import Model.LocationDataType;
 import Model.UserInFormation;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,8 +56,9 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class AddOrders extends AppCompatActivity {
 
     private static final String TAG = "Add Orders";
-    private EditText DAddress, DDate, DPhone, DName, GMoney, GGet;
-    private EditText txtPickDate, txtWeight, txtType;
+    private EditText DAddress, DDate, DPhone, DName, GMoney, GGet,txtPickDate, txtWeight, txtType;
+    private TextInputLayout tlDAddress, tlDDate, tlDPhone, tlDName, tlGMoney, tlGGet,tlPickDate, tlWeight, tlType, tlDropCity;
+
     private AutoCompleteTextView txtDropCity;
     private Spinner spnMyLocations;
 
@@ -147,6 +150,18 @@ public class AddOrders extends AppCompatActivity {
         btnSaveAdd = findViewById(R.id.btnSaveAdd);
         mdialog = new ProgressDialog(this);
 
+        tlDAddress = findViewById(R.id.tlDAddress);
+        tlDDate = findViewById(R.id.tlDDate);
+        tlDPhone = findViewById(R.id.tlDPhone);
+        tlDName = findViewById(R.id.tlDName);
+        tlGMoney = findViewById(R.id.tlGMoney);
+        tlGGet = findViewById(R.id.tlGGet);
+        tlPickDate = findViewById(R.id.tlPickDate);
+        tlWeight = findViewById(R.id.tlWeight);
+        tlType = findViewById(R.id.tlType);
+        tlDropCity = findViewById(R.id.tlDropCity);
+
+
 
         // ----------- Set Auto Complete for Cities ----------------- //
         String[] cities = getResources().getStringArray(R.array.arrayCities);
@@ -199,7 +214,6 @@ public class AddOrders extends AppCompatActivity {
                 pickAdd = choosen.getAddress();
                 pickCity = choosen.getState();
                 pickGov = choosen.getRegion();
-                Log.i(TAG, "You Choosed : " + choosen.getTitle());
             }
 
             @Override
@@ -278,7 +292,7 @@ public class AddOrders extends AppCompatActivity {
             dpd.show();
         });
 
-        GGet.setOnFocusChangeListener((v, event) -> {
+        /*GGet.setOnFocusChangeListener((v, event) -> {
             if(!TextUtils.isEmpty(GMoney.getText().toString()) && GGet.isFocused()) {
                 int min;
                 int max;
@@ -307,12 +321,12 @@ public class AddOrders extends AppCompatActivity {
                     }
                 }
                 max = (int) (min * 1.4);
-
-                GGet.setError("مصاريف الشحن المقترحه من : " + (Math.round(min/5.0)*5) + " ج الي : " + (Math.round(max/5.0)*5) + " ج");
+                int Med = (int) (((Math.round(min/5.0)*5) + (Math.round(max/5.0)*5)) / 2);
+                GGet.setText(Med);
             } else if(TextUtils.isEmpty(GMoney.getText().toString())) {
-                GMoney.setError("ضع مقدم الاوردر اولا حتي نتمكن من اقتراح سعر الشحن");
+                tlGMoney.setError("ضع مقدم الاوردر اولا حتي نتمكن من اقتراح سعر الشحن");
             }
-        });
+        });*/
 
         // ----------------- Save the Order --------------------//
         btnsave.setOnClickListener(v -> {
@@ -323,7 +337,6 @@ public class AddOrders extends AppCompatActivity {
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(AddOrders.this).setMessage("هل انت متاكد من صحه البيانات و انك تريد اضافة الاوردر ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
                 addOrder();
                 clearText();
-                HomeActivity.whichFrag = "Profile";
                 finish();
                 dialogInterface.dismiss();
             }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
@@ -338,7 +351,6 @@ public class AddOrders extends AppCompatActivity {
              if(!check()) {
                  return;
              }
-
              BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(AddOrders.this).setMessage("هل انت متاكد من صحه البيانات و انك تريد اضافة الاوردر ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
                  addOrder();
                  clearText();
@@ -387,59 +399,68 @@ public class AddOrders extends AppCompatActivity {
         }
 
         if(TextUtils.isEmpty(pickDate)) {
-            txtPickDate.setError("الرجاء ادخال البيانات");
-            txtPickDate.requestFocus();
+            tlPickDate.setError("الرجاء ادخال تاريخ الاستلام");
+            return false;
+        }
+
+        if(!isValidFormat("yyyy-MM-dd", pickDate)) {
+            tlPickDate.setError("الرجاء ادخال تاريخ الاستلام");
             return false;
         }
 
         if (TextUtils.isEmpty(mDName)) {
-            DName.setError("الرجاء ادخال البيانات");
+            tlDName.setError("الرجاء ادخال اسم السمتلم");
             DName.requestFocus();
             return false;
         }
 
         if(mDPhone.length() != 11) {
-            DPhone.setError("الرجاء ادخال البيانات");
+            tlDPhone.setError("الرجاء ادخال رقم هاتف صحيح");
             DPhone.requestFocus();
             return false;
         }
 
         if (TextUtils.isEmpty(mDDate)) {
-            DDate.setError("الرجاء ادخال البيانات");
-            Toast.makeText(AddOrders.this, "ادخل تاريخ تسليم الاوردر", Toast.LENGTH_SHORT).show();
+            tlDDate.setError("الرجاء ادخال تاريخ التسليم");
+            return false;
+        }
+
+        if(!isValidFormat("yyyy-MM-dd", mDDate)) {
+            tlDDate.setError("الرجاء ادخال تاريخ التسليم");
             return false;
         }
 
         if(dropVar.isEmpty() || strDropCity.isEmpty() || strDropGov.isEmpty()) {
-            Toast.makeText(this, "Drop Address is Empty", Toast.LENGTH_SHORT).show();
+            tlDropCity.setError("الرجاء ادخال اسم المدينة");
+            txtDropCity.requestFocus();
             return false;
         }
 
         if (TextUtils.isEmpty(mDAddress)) {
-            DAddress.setError("الرجاء ادخال البيانات");
+            tlDAddress.setError("الرجاء ادخال عنوان التسلم بالتفصيل");
             DAddress.requestFocus();
             return false;
         }
 
         if(TextUtils.isEmpty(weight)) {
-            txtWeight.setError("الرجاء ادخال البيانات");
+            tlWeight.setError("الرجاء ادخال وزن الشحنة بالكيلو");
             txtWeight.requestFocus();
             return false;
         }
 
         if(TextUtils.isEmpty(type)) {
-            txtType.setError("الرجاء ادخال البيانات");
+            tlType.setError("الرجاء توضيح محتوي الشحنة");
             txtType.requestFocus();
             return false;
         }
 
         if (TextUtils.isEmpty(mGMoney)) {
-            GMoney.setError("الرجاء ادخال البيانات");
+            tlGMoney.setError("الرجاء تحديد سعر الشحنة");
             GMoney.requestFocus();
             return false;
         }
         if (TextUtils.isEmpty(mGGet)) {
-            GGet.setError("الرجاء ادخال البيانات");
+            tlGGet.setError("الرجاء تحديد سعر الشحن");
             GGet.requestFocus();
             return false;
         }
@@ -447,11 +468,10 @@ public class AddOrders extends AppCompatActivity {
         intget = Integer.parseInt(mGGet);
 
         if(intget == 0) {
-            GGet.setError("الرجاء وضع سعر للشحن");
+            tlGGet.setError("الرجاء وضع سعر للشحن");
             GGet.requestFocus();
             return false;
         }
-
         return true;
     }
 
@@ -482,17 +502,17 @@ public class AddOrders extends AppCompatActivity {
          String owner = UserInFormation.getUserName();
          // Send order to Data Base using the DATA MODEL
          Data data = new Data(pickGov, pickCity, pickAdd, "", strDropGov, strDropCity, mDAddress, mDDate, mDPhone, mDName, mGMoney, mGGet, datee, id, uId, "", "", "", "", states, uAccepted, srate, srateid, drate, drateid, "", "", "","Bid",owner, strPickDate, weight, strType);
-        assert id != null;
-        mDatabase.child(id).setValue(data);
-        HomeActivity.supList.add(data);
+         assert id != null;
+         mDatabase.child(id).setValue(data);
+         HomeActivity.supList.add(data);
 
          mDatabase.child(id).child("lastedit").setValue(datee);
          mDatabase.child(id).child("lat").setValue(lat);
          mDatabase.child(id).child("long").setValue(_long);
-         sendNotiState(pickGov, strDropGov, id);
+         sendNotiState(pickGov, pickCity, id);
 
          mdialog.dismiss();
-         Toast.makeText(AddOrders.this, "تم اضافة اوردرك و في انتظار قبولة من مندوبين الشحن", Toast.LENGTH_LONG).show();
+         Toast.makeText(AddOrders.this, "تم اضافة اوردرك بنجاح", Toast.LENGTH_LONG).show();
     }
 
 
@@ -541,87 +561,73 @@ public class AddOrders extends AppCompatActivity {
     return factor;
     }
 
-    private void sendNotiState(String pState, String dState, String id) {
-        if(!pState.equals(dState)) {
-            // --------------------- Send notification to all users in State ---------------//
-            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for(DataSnapshot ds : snapshot.getChildren()) {
-                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
-                            if(accType.equals("Delivery Worker")) {
-                                String sendOrderNoti = "true";
-                                if(ds.child("sendOrderNoti").exists()) {
-                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
-                                }
+    private void sendNotiState(String pickGov, String picCity, String id) {
+        uDatabase.orderByChild("userState").equalTo(pickGov).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                        String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
 
-                                if(sendOrderNoti.equals("true")) {
-                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order",UserInFormation.getUserName(), UserInFormation.getUserURL());
-                                    nDatabase.child(usId).push().setValue(Noti);
-                                }
+                        if(accType.equals("Delivery Worker")) {
+                            String sendOrderNoti = "false";
+                            if(ds.child("sendOrderNoti").exists()) {
+                                sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
+                            }
+
+                            if(sendOrderNoti.equals("true")) {
+                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في محافظنك",datee,"false", "order",UserInFormation.getUserName(), UserInFormation.getUserURL());
+                                nDatabase.child(usId).push().setValue(Noti);
                             }
                         }
                     }
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
 
-            uDatabase.orderByChild("userState").equalTo(pState).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for(DataSnapshot ds : snapshot.getChildren()) {
-                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+        uDatabase.orderByChild("userCity").equalTo(picCity).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
+                        String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
+                        if(accType.equals("Delivery Worker")) {
+                            String sendOrderNoti = "false";
+                            if(ds.child("sendOrderNotiCity").exists()) {
+                                sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNotiCity").getValue()).toString();
+                            }
 
-                            if(accType.equals("Delivery Worker")) {
-                                String sendOrderNoti = "true";
-                                if(ds.child("sendOrderNoti").exists()) {
-                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
-                                }
-
-                                if(sendOrderNoti.equals("true")) {
-                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false", "order",UserInFormation.getUserName(), UserInFormation.getUserURL());
-                                    nDatabase.child(usId).push().setValue(Noti);
-                                }
+                            if(sendOrderNoti.equals("true")) {
+                                notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في مدينتك",datee,"false","order",UserInFormation.getUserName(), UserInFormation.getUserURL());
+                                nDatabase.child(usId).push().setValue(Noti);
                             }
                         }
                     }
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
-        } else {
-            uDatabase.orderByChild("userState").equalTo(dState).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for(DataSnapshot ds : snapshot.getChildren()) {
-                            String usId = Objects.requireNonNull(ds.child("id").getValue()).toString();
-                            String accType = Objects.requireNonNull(ds.child("accountType").getValue()).toString();
-                            if(accType.equals("Delivery Worker")) {
-                                String sendOrderNoti = "true";
-                                if(ds.child("sendOrderNoti").exists()) {
-                                    sendOrderNoti = Objects.requireNonNull(ds.child("sendOrderNoti").getValue()).toString();
-                                }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
 
-                                if(sendOrderNoti.equals("true")) {
-                                    notiData Noti = new notiData("VjAuarDirNeLf0pwtHX94srBMBg1", usId,id,"يوجد اوردر جديد في منطقتك",datee,"false","order",UserInFormation.getUserName(), UserInFormation.getUserURL());
-                                    nDatabase.child(usId).push().setValue(Noti);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
+    public boolean isValidFormat(String format, String value) {
+        Date date = null;
+        try {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            assert date != null;
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
         }
+        return date != null;
     }
 }

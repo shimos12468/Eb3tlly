@@ -13,6 +13,22 @@ public class UserInFormation {
     private static String pass = "";
     private static String sendGovNoti = "false";
 
+    public static String getWalletmoney() {
+        return walletmoney;
+    }
+
+    public static void setWalletmoney(String walletmoney) {
+        UserInFormation.walletmoney = walletmoney;
+    }
+
+    private static String walletmoney = "0";
+
+    public static String getFawrycode() { return fawrycode; }
+
+    public static void setFawrycode(String fawrycode) { UserInFormation.fawrycode = fawrycode; }
+
+    private static String fawrycode = "none";
+
     public static String getSendCityNoti() {
         return sendCityNoti;
     }
@@ -115,5 +131,6 @@ public class UserInFormation {
         setUserURL("");
         setSendGovNoti("false");
         setSendCityNoti("false");
+        setFawrycode("none");
     }
 }

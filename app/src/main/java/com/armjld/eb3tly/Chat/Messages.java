@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -137,7 +138,7 @@ public class Messages extends AppCompatActivity {
                 if(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString().equals("Supplier")) {
                     txtType.setText("تاجر");
                 } else if(Objects.requireNonNull(snapshot.child("accountType").getValue()).toString().equals("Delivery Worker")){
-                    txtType.setText("مندوب شحن");
+                    txtType.setText("كابتن");
                 } else {
                     txtType.setText("خدمة العملاء");
                 }
@@ -153,24 +154,18 @@ public class Messages extends AppCompatActivity {
 
             if(msg.length() == 0) {
                 editWriteMessage.requestFocus();
-                Toast.makeText(this, "Fuck", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            String msgID =  FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).push().getKey();
-            assert msgID != null;
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("senderid").setValue(uId);
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("reciverid").setValue(rId);
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("msg").setValue(msg);
-            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).child(msgID).child("timestamp").setValue(datee);
+            HashMap<String, Object> newMsg = new HashMap<>();
+            newMsg.put("reciverid", rId);
+            newMsg.put("senderid", uId);
+            newMsg.put("msg", msg);
+            newMsg.put("timestamp", datee);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("chatRooms").child(roomId).push().setValue(newMsg);
 
-            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(rId);
-            messageDatabase.child("timestamp").setValue(datee);
-
-            messageDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(rId).child("chats").child(uId);
-            messageDatabase.child("timestamp").setValue(datee);
-
-            Log.i("KOSMY", roomId);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("chats").child(rId).child("timestamp").setValue(datee);
+            FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(rId).child("chats").child(uId).child("timestamp").setValue(datee);
 
             editWriteMessage.setText("");
         });

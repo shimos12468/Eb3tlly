@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/toolbar_home"
-        layout="@layout/toolbar_white"
+        layout="@layout/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,11 +26,39 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar_home"
         app:srcCompat="@drawable/ic_back_black" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ic_profile_background"
+        android:gravity="center|top"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
+
+        <TextView
+            android:id="@+id/txtMyMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="الرصيد المتاح بمحفظتك" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/txtEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="لم تقم بتوصيل اي شحنات مؤخرا"
+        android:text="لا يوجد شحنات لم يتم دفعها"
         android:textSize="30sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/walletRecycler"
@@ -42,46 +70,27 @@
         android:id="@+id/walletRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout12"
+        app:layout_constraintBottom_toTopOf="@+id/btnPay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <LinearLayout
-        android:id="@+id/linearLayout12"
+    <TextView
+        android:id="@+id/btnPay"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="50dp"
+        android:layout_weight="2"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:text="اضافة رصيد"
+        android:textAlignment="center"
+        android:textColor="@color/ic_profile_background"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/btnPay"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="2"
-            android:background="@color/colorAccent"
-            android:gravity="center"
-            android:text="ادفع"
-            android:textAlignment="center"
-            android:textColor="@color/ic_profile_background"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/txtTotal"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@color/ic_profile_background"
-            android:gravity="center"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="18sp" />
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

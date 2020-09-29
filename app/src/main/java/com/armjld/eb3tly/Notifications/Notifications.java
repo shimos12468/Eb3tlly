@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.DatabaseClasses.rquests;
 import com.armjld.eb3tly.Home.StartUp;
 import com.armjld.eb3tly.Login.MainActivity;
 import com.armjld.eb3tly.Login.LoginManager;
@@ -24,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.MaterialDialog;
+
 import java.util.ArrayList;
 import Model.notiData;
 
@@ -39,7 +43,7 @@ public class Notifications extends AppCompatActivity {
     public static String TAG = "Notifications";
     String uType = UserInFormation.getAccountType();
     String uId = UserInFormation.getId();
-    private ImageView btnBack;
+    private ImageView btnBack, btnClear;
 
 
     @Override
@@ -75,6 +79,7 @@ public class Notifications extends AppCompatActivity {
         }
 
         btnBack = findViewById(R.id.btnBack);
+        btnClear = findViewById(R.id.btnClear);
         mAuth = FirebaseAuth.getInstance();
         nDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("notificationRequests");
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
@@ -101,7 +106,19 @@ public class Notifications extends AppCompatActivity {
         refresh.setOnRefreshListener(() -> {
             getNoti();
             recyclerView.setVisibility(View.GONE);
-            refresh.setRefreshing(false);
+        });
+
+        // ----------- Clear All Noti ------------ //
+        btnClear.setOnClickListener(v-> {
+            MaterialDialog materialDialog = new MaterialDialog.Builder(this).setMessage("هل تريد الغاء كل الاشعارات ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_delete_white, (dialogInterface, which) -> {
+                nDatabase.child(uId).removeValue();
+                getNoti();
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            materialDialog.show();
+
         });
 
         refresh.setRefreshing(true);
@@ -125,34 +142,36 @@ public class Notifications extends AppCompatActivity {
         nDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    String notiID = ds.getKey();
-                    assert notiID != null;
-                    notiData notiDB = ds.getValue(notiData.class);
-                    mm.add((int) count, notiDB);
-                    NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
-                    recyclerView.setAdapter(orderAdapter);
-                    nDatabase.child(uId).child(notiID).child("isRead").setValue("true");
-                    count++;
-                }
-                if(mm.size() >= 1) {
-                    txtNoOrders.setVisibility(View.GONE);
+                if(snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String notiID = ds.getKey();
+                        assert notiID != null;
+                        notiData notiDB = ds.getValue(notiData.class);
+                        mm.add((int) count, notiDB);
+                        NotiAdaptere orderAdapter = new NotiAdaptere(Notifications.this, mm, getApplicationContext(), mm.size());
+                        recyclerView.setAdapter(orderAdapter);
+                        nDatabase.child(uId).child(notiID).child("isRead").setValue("true");
+                        count++;
+                    }
+                    checkCount();
+                    recyclerView.setVisibility(View.VISIBLE);
+                    refresh.setRefreshing(false);
                 } else {
+                    refresh.setRefreshing(false);
                     txtNoOrders.setVisibility(View.VISIBLE);
                 }
-                recyclerView.setVisibility(View.VISIBLE);
-                refresh.setRefreshing(false);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
-    private void signOut() {
-        uDatabase.child(uId).child("device_token").setValue("");
-        finish();
-        mAuth.signOut();
-        startActivity(new Intent(this, MainActivity.class));
-        Toast.makeText(getApplicationContext(), "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
+    private void checkCount() {
+        if(mm.size() >= 1) {
+            txtNoOrders.setVisibility(View.GONE);
+        } else {
+            txtNoOrders.setVisibility(View.VISIBLE);
+        }
     }
 }

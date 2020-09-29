@@ -282,7 +282,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
         holder.btnOrderBack.setOnClickListener(v-> {
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل استلمت المرتجع من الكابتن ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+
                 mDatabase.child(orderID).child("statue").setValue("deniedback");
+                mDatabase.child(orderID).child("deniedbackTime").setValue(datee);
 
                 String message = "قام " + UserInFormation.getUserName() + " باستلام المرتجع منك";
                 notiData Noti = new notiData(uId,data.getuAccepted() , orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
@@ -308,6 +310,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل قام الندوب باستلام الشحنة منك ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
                 mDatabase.child(orderID).child("statue").setValue("recived");
+                mDatabase.child(orderID).child("recivedTime").setValue(datee);
 
                 String message = "قام " + UserInFormation.getUserName() + " بتسليمك الاوردر";
                 notiData Noti = new notiData(uId,data.getuAccepted() , orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());

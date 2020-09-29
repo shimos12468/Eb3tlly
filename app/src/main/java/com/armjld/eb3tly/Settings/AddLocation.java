@@ -191,11 +191,6 @@ public class AddLocation extends FragmentActivity implements OnMapReadyCallback,
             Title = txtTitle.getText().toString().trim();
             Address = txtAddress.getText().toString().trim();
 
-            if(currentLocation == null) {
-                Toast.makeText(this, "الرجاء تحديد مكانك علي الخريطة", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             if(Title.isEmpty()) {
                 tlTitle.setError("الرجاء ادخال اسم العنوان الخاص بك");
                 txtTitle.requestFocus();
@@ -203,7 +198,7 @@ public class AddLocation extends FragmentActivity implements OnMapReadyCallback,
             }
 
             if(Address.isEmpty()) {
-                tlAddress.setError("الرجاء ادخال رقم المبن و اسم الشارع");
+                tlAddress.setError("الرجاء ادخال رقم المبني و اسم الشارع");
                 txtAddress.requestFocus();
                 return;
             }
@@ -213,12 +208,23 @@ public class AddLocation extends FragmentActivity implements OnMapReadyCallback,
                 txtDropCity.requestFocus();
                 return;
             }
+
+            if(currentLocation == null) {
+                Toast.makeText(this, "الرجاء تحديد مكانك علي الخريطة", Toast.LENGTH_SHORT).show();
+                return;
+            }
             
             double lat = currentLocation.latitude;
             double _long = currentLocation.longitude;
 
             MakeLocationId mID = new MakeLocationId(_long, lat);
-            String locID = mID.getLocationid();
+            String locID;
+
+            if(type.equals("New")) {
+                locID = mID.getLocationid();
+            } else {
+                locID = editID;
+            }
 
             DatabaseReference Bdatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(UserInFormation.getId()).child("locations").child(locID);
             Bdatabase.child("lattude").setValue(lat);
@@ -238,7 +244,7 @@ public class AddLocation extends FragmentActivity implements OnMapReadyCallback,
                 startActivity(new Intent(this, AddOrders.class));
             } else {
                 finish();
-                startActivity(new Intent(this, LocationForSup.class));
+                //startActivity(new Intent(this, LocationForSup.class));
             }
         });
 

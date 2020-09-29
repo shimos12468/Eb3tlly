@@ -6,12 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.armjld.eb3tly.Home.HomeActivity;
@@ -20,6 +25,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import Model.Data;
 
@@ -28,14 +37,17 @@ public class MyWallet extends AppCompatActivity {
     DatabaseReference mDatabase,uDatabase;
     ImageView btnBack;
     public static int TotalMoney = 0;
-    TextView txtTotal,btnPay,txtEmpty;
+    TextView txtMyMoney,btnPay,txtEmpty;
     int count;
     ArrayList<Data> mm;
     private WalletAdapter walletAdapter;
     RecyclerView walletRecycler;
+    LinearLayout linerPay;
     int Final;
     float precnt = (float) 0.2;
     ArrayList<Data> orderList = new ArrayList<>();
+    String myFawryCode = UserInFormation.getFawrycode();
+    String QuickerCode = "5050";
 
 
 
@@ -54,13 +66,13 @@ public class MyWallet extends AppCompatActivity {
         count = 0;
         mm = new ArrayList<>();
 
-        txtTotal = findViewById(R.id.txtTotal);
+        txtMyMoney = findViewById(R.id.txtMyMoney);
         btnPay = findViewById(R.id.btnPay);
         btnBack = findViewById(R.id.btnBack);
         txtEmpty = findViewById(R.id.txtEmpty);
         walletRecycler = findViewById(R.id.walletRecycler);
 
-        LinearLayoutManager layoutManager= new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(false);
         layoutManager.setStackFromEnd(false);
         walletRecycler.setLayoutManager(layoutManager);
@@ -76,16 +88,38 @@ public class MyWallet extends AppCompatActivity {
             finish();
         });
 
+        txtMyMoney.setText(UserInFormation.getWalletmoney() + " ج");
+
+
         btnPay.setOnClickListener(v-> {
-            Toast.makeText(this,  "ستقوم بدفع " + Final + " ج بعد اتمام الربط بفوري.", Toast.LENGTH_SHORT).show();
+            if(myFawryCode.equals("none")) {
+                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(this).setTitle("لم يتم اصدار كود الدفع الخاص بك").setMessage("يتم اصدار كود الدفع الخاص بك بعد 24 ساعه من تسجيلك لحساب جديد, حاول الدفع لاحقا ..").setCancelable(true).build();
+                mBottomSheetDialog.show();
+                return;
+            }
+
+            AlertDialog.Builder myDialogMore = new AlertDialog.Builder(this);
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View pay = inflater.inflate(R.layout.payment, null);
+            myDialogMore.setView(pay);
+            final AlertDialog dialog = myDialogMore.create();
+            dialog.show();
+
+            TextView txtQuickerCode = pay.findViewById(R.id.txtQuickerCode);
+            TextView txtUserCode = pay.findViewById(R.id.txtUserCode);
+            ImageView btnBack = pay.findViewById(R.id.btnBack);
+            TextView tbTitle2 = pay.findViewById(R.id.toolbar_title);
+            tbTitle2.setText("خطوات الدفع");
+
+            btnBack.setOnClickListener(v1-> {
+                dialog.dismiss();
+            });
+            txtQuickerCode.setText(QuickerCode);
+            txtUserCode.setText(myFawryCode);
         });
 
-
-
         if(UserInFormation.getCurrentdate().equals("none")) {
-            txtTotal.setText("فاتورتك : " + TotalMoney + " ج");
             txtEmpty.setVisibility(View.VISIBLE);
-            return;
         }
 
         uDatabase.child(UserInFormation.getId()).child("wallet").child(UserInFormation.getCurrentdate()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,7 +129,6 @@ public class MyWallet extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     orderList.clear();
-                    int OrdersCount = (int) snapshot.getChildrenCount();
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String orderid = ds.getKey();
                         assert orderid != null;
@@ -106,34 +139,15 @@ public class MyWallet extends AppCompatActivity {
 
                         Data c = HomeActivity.delvList.stream().filter(x -> x.getId().equals(orderid)).findFirst().get();
                         orderList.add(c);
-                        if(orderList.size() == OrdersCount) {
-                            cacuculte();
-                            break;
-                        }
                     }
 
                     walletAdapter = new WalletAdapter(orderList, MyWallet.this);
                     walletRecycler.setAdapter(walletAdapter);
-                } else {
-                    txtTotal.setText("فاتورتك : " + TotalMoney + " ج");
                 }
-
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
-    }
-
-    private void cacuculte() {
-        if(orderList.size() > 0) {
-            for (int i = 0; i < orderList.size(); i++) {
-                Data oneOrder = HomeActivity.delvList.get(i);
-                TotalMoney = TotalMoney + Integer.parseInt(oneOrder.getGGet());
-                Final = (int) (TotalMoney * precnt);
-                txtTotal.setText("فاتورتك : " + Final + " ج");
-            }
-        }
     }
 }

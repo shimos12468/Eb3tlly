@@ -671,6 +671,9 @@ public class New_SignUp extends AppCompatActivity {
             uDatabase.child(id).child("isTruck").setValue(isTruck);
             uDatabase.child(id).child("userState").setValue(Gov);
             uDatabase.child(id).child("userCity").setValue(City);
+            uDatabase.child(id).child("sendOrderNoti").setValue("true");
+            uDatabase.child(id).child("sendOrderNotiCity").setValue("true");
+            uDatabase.child(id).child("walletmoney").setValue("0");
         }
 
         // ------------------ Set Device Token ----------------- //

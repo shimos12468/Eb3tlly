@@ -96,17 +96,19 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout14">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="20dp" >
+            android:padding="20dp">
 
             <TextView
-                android:id="@+id/txtAllOrders"
+                android:id="@+id/txtAccepted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -115,7 +117,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/txtAllGMoney"
+                android:id="@+id/txtRecived"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -124,16 +126,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/txtAllGGet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="TextView"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/txtAllPrcen"
+                android:id="@+id/txtDliv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -159,23 +152,6 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/txtPeriodPrecn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="TextView"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/txtOrdersPerDay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="TextView"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
 

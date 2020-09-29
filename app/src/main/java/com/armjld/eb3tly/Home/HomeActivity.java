@@ -96,6 +96,12 @@ public class HomeActivity extends AppCompatActivity  {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
+
+        if(UserInFormation.getAccountType().equals("Supplier")) {
+            getSupOrders();
+        } else {
+            getDeliveryOrders();
+        }
     }
 
     // On Create Fun
@@ -131,6 +137,8 @@ public class HomeActivity extends AppCompatActivity  {
         switch (whichFrag) {
             case "Home" : {
                 frag = new HomeFragment();
+                bottomNavigationView.setSelectedItemId(R.id.home);
+
                 break;
             }
             case "Profile" : {
@@ -139,16 +147,21 @@ public class HomeActivity extends AppCompatActivity  {
                 } else {
                     frag = new supplierFragment();
                 }
+                bottomNavigationView.setSelectedItemId(R.id.profile);
+
                 break;
             }
 
             case "Chats" : {
                 frag = new ChatFragmet();
+                bottomNavigationView.setSelectedItemId(R.id.chats);
+
                 break;
             }
 
             case "Settings" : {
                 frag = new SettingFragment();
+                bottomNavigationView.setSelectedItemId(R.id.settings);
                 break;
             }
         }

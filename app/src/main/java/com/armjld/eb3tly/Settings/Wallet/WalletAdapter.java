@@ -43,7 +43,11 @@ public class WalletAdapter extends  RecyclerView.Adapter<WalletAdapter.ViewHolde
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String orderFrom = orderData.get(position).getmPRegion();
         String orderTo = orderData.get(position).getmDRegion();
-        String dDate =  _cacu.setPostDate(orderData.get(position).getDilverTime());
+        String dDate = "";
+
+        if(orderData.get(position).getDilverTime() != null && !orderData.get(position).getDilverTime().equals("")) {
+            dDate =  _cacu.setPostDate(orderData.get(position).getDilverTime());
+        }
 
         holder.txtDate.setText(dDate);
         holder.txtOrderTo.setText(orderTo);

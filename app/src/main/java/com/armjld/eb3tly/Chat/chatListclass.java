@@ -97,6 +97,7 @@ public class chatListclass {
                     Bdatabase.child("talk").setValue("true");
 
                     Intent intent = new Intent(context, Messages.class);
+
                     intent.putExtra("roomid", Objects.requireNonNull(snapshot.child("roomid").getValue()).toString());
                     intent.putExtra("rid", hisId);
                     ((Activity)context).startActivityForResult(intent, 1);
