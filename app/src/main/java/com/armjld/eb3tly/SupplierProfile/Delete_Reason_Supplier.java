@@ -1,9 +1,7 @@
 package com.armjld.eb3tly.SupplierProfile;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Chat.chatListclass;
-import com.armjld.eb3tly.Home.HomeActivity;
-import com.armjld.eb3tly.LoginManager;
+import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.rquests;
 import com.armjld.eb3tly.Home.StartUp;

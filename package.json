@@ -1,0 +1,24 @@
+{
+  "name": "eb3tlly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "firebase-functions": "^3.7.0",
+    "firebase-admin": "^8.12.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shimos12468/Eb3tlly.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shimos12468/Eb3tlly/issues"
+  },
+  "homepage": "https://github.com/shimos12468/Eb3tlly#readme"
+}

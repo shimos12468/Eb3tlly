@@ -10,6 +10,19 @@ public class LocationDataType {
     private String id;
     private String title;
 
+    public LocationDataType () {};
+
+    public LocationDataType(String lontude, String lattude, String address, String region, String state, String id, String title) {
+        this.lontude = Double.parseDouble(lontude);
+        this.lattude = Double.parseDouble(lattude);
+        this.address = address;
+        this.region = region;
+        this.state = state;
+        this.id = id;
+        this.title = title;
+    }
+
+
     public String getId() {
         return id;
     }
@@ -65,4 +78,5 @@ public class LocationDataType {
     public void setTitle(String title) {
         this.title = title;
     }
+
 }

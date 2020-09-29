@@ -393,24 +393,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/dsOrderNotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:drawableEnd="@drawable/ic_add_notes"
-                    android:gravity="center|right"
-                    android:text="الملاحظات"
-                    android:textAlignment="viewEnd"
-                    android:textColor="#000000"
-                    android:textColorHint="#FFFFFF"
-                    android:textSize="18sp" />
-
-                <TextView
                     android:id="@+id/txtTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -466,6 +448,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginBottom="30dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/btn_defult"
                 android:text="قبول الاوردر"
@@ -480,6 +463,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginBottom="30dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/btn_bad"
                 android:text="الغاء الاوردر"

@@ -23,12 +23,14 @@ import android.widget.Toast;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.CaptinProfile.DeliveryAdapter;
+import com.armjld.eb3tly.DatabaseClasses.LocationManeger.LocationManeger;
 import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.MapsActivity;
 import com.armjld.eb3tly.R;
 
 import Model.UserInFormation;
 
+import com.armjld.eb3tly.Settings.AddLocation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment {
     public static ArrayList<Data> filterList;
     public static Context mContext;
     static TextView txtOrderCount;
+    public static LocationManeger _Loc = new LocationManeger();
 
     public HomeFragment() { }
     
@@ -104,6 +107,12 @@ public class HomeFragment extends Fragment {
 
         btnAdd.setOnClickListener(v -> {
             if(UserInFormation.getAccountType().equals("Supplier")) {
+                if(LocationManeger.locHolder.size() == 0) {
+                    AddLocation.type = "New";
+                    AddLocation.goTo = "Add Orders";
+                    startActivity(new Intent(mContext, AddLocation.class));
+                    return;
+                }
                 startActivity(new Intent(getActivity(), AddOrders.class));
             }
         });

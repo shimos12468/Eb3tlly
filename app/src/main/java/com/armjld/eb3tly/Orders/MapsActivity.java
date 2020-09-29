@@ -165,8 +165,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             dialogInterface.dismiss();
         }).setAnimation(R.raw.location).build();
         mBottomSheetDialog.show();
-
-
     }
 
     private void fetchLocation() {

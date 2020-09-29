@@ -342,6 +342,21 @@
                     android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnOrderBack"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_bad"
+                    android:text="تم استلام المرتجع"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnEdit"
                     android:layout_width="0dp"
                     android:layout_height="38dp"

@@ -20,13 +20,6 @@ public class rquests {
     private String uId = UserInFormation.getId();
     private DatabaseReference Bdatabase;
     int count;
-    //public static int getNum_of_requests() {
-      //  return num_of_requests;
-    //}
-
-    //public static void setNum_of_requests(int num_of_requests) {
-      //  rquests.num_of_requests = num_of_requests;
-    //}
 
     public static ArrayList<String> getRequests() {
         return requests;

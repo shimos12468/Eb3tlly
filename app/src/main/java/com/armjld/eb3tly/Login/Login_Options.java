@@ -12,12 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Block.BlockManeger;
-import com.armjld.eb3tly.DatabaseClasses.Ratings;
 import com.armjld.eb3tly.SignUp.New_SignUp;
-import com.armjld.eb3tly.Home.StartUp;
-import Model.UserInFormation;
-import com.armjld.eb3tly.admin.Admin;
-import com.armjld.eb3tly.Home.HomeActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -46,7 +41,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -324,7 +318,7 @@ public class Login_Options extends AppCompatActivity {
     }
 
     private void letsGo() {
-        com.armjld.eb3tly.LoginManager _lgnMn = new com.armjld.eb3tly.LoginManager();
+        com.armjld.eb3tly.Login.LoginManager _lgnMn = new com.armjld.eb3tly.Login.LoginManager();
         _lgnMn.setMyInfo(Login_Options.this);
     }
 

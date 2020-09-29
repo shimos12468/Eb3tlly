@@ -89,7 +89,7 @@ public class capDelvTab extends Fragment {
     public static void getOrders(){
         Log.i(TAG, "Setting orders in ArrayList");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("delivered")).collect(Collectors.toList());
+            filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("delivered") || x.getStatue().equals("denied") || x.getStatue().equals("deniedback")).collect(Collectors.toList());
             deliveryAdapter = new DeliveryAdapter(mContext, filterList);
             if(recyclerView != null) {
                 recyclerView.setAdapter(deliveryAdapter);

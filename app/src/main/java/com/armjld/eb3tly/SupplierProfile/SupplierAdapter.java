@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.EditOrders;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.Ratings;
@@ -53,6 +54,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import com.squareup.picasso.Picasso;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -134,7 +136,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         holder.setFee(data.getGGet());
         holder.setPostDate(startDate);
         holder.setAccepted();
-        holder.setStatue(data.getStatue(), data.getuAccepted(), data.getDDate(), data.getId());
+        holder.setStatue(data.getStatue(), data.getuAccepted(), data.getDDate(), data.getId(), position);
         holder.setDilveredButton(data.getStatue());
         holder.setRateButton(data.getDrated(), data.getStatue());
         holder.setType(data.getIsCar(), data.getIsMotor(), data.getIsMetro(), data.getIsTrans());
@@ -143,7 +145,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         final String dilvID = data.getuAccepted();
         final String sID = data.getuId();
         final String orderID = data.getId();
-        //final String rateUID = data.getuId();
 
         mDatabase.child(orderID).child("requests").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -279,29 +280,51 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             Messages.cameFrom = "Profile";
         });
 
+        holder.btnOrderBack.setOnClickListener(v-> {
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل استلمت المرتجع من الكابتن ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                mDatabase.child(orderID).child("statue").setValue("deniedback");
+
+                String message = "قام " + UserInFormation.getUserName() + " باستلام المرتجع منك";
+                notiData Noti = new notiData(uId,data.getuAccepted() , orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                nDatabase.child(data.getuAccepted()).push().setValue(Noti);
+
+                filtersData.get(position).setStatue("deniedback");
+                holder.setDilveredButton("deniedback");
+
+                chatListclass _ch = new chatListclass();
+                _ch.supplierchat(data.getuAccepted());
+
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            mBottomSheetDialog.show();
+        });
+
         // ---------------- Set order to Recived
         holder.btnRecived.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
 
-            DialogInterface.OnClickListener dialogClickListener2 = (dialog, which) -> {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        mDatabase.child(orderID).child("statue").setValue("recived");
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل قام الندوب باستلام الشحنة منك ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                mDatabase.child(orderID).child("statue").setValue("recived");
 
-                        String message = "قام " + UserInFormation.getUserName() + " بتسليمك الاوردر";
-                        notiData Noti = new notiData(uId,data.getuAccepted() , orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
-                        nDatabase.child(data.getuAccepted()).push().setValue(Noti);
+                String message = "قام " + UserInFormation.getUserName() + " بتسليمك الاوردر";
+                notiData Noti = new notiData(uId,data.getuAccepted() , orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                nDatabase.child(data.getuAccepted()).push().setValue(Noti);
 
-                        Toast.makeText(context, "تم تسليم الاوردر للمندوب", Toast.LENGTH_SHORT).show();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            };
-            AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
-            builder2.setMessage("هل قام امندوب بالتسلام الاوردر منك ؟").setPositiveButton("نعم", dialogClickListener2).setNegativeButton("لا", dialogClickListener2).show();
-        });
+                filtersData.get(position).setStatue("recived");
+                holder.setDilveredButton("recived");
+
+                Toast.makeText(context, "في انتظار تأكيد المندوب باستلامة الشحنة", Toast.LENGTH_LONG).show();
+
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            mBottomSheetDialog.show();
+
+            });
 
         // ------------------------------------- Comment button ---------------------------------- //
         holder.btnRate.setOnClickListener(v -> {
@@ -349,6 +372,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
                 Ratings _rate = new Ratings();
                 _rate.setRating(dilvID, intRating);
+
+                holder.setRateButton("true", filtersData.get(position).getStatue());
 
                 mDatabase.child(orderID).child("drated").setValue("true");
                 mDatabase.child(orderID).child("drateid").setValue(rId);
@@ -556,7 +581,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
         listComment.setAdapter(arrayAdapterLessons);
         mArraylistSectionLessons.clear();
-        txtNodsComments.setVisibility(View.VISIBLE);// To not dublicate comments
+        txtNodsComments.setVisibility(View.VISIBLE);
         rDatabase.child(getuAccepted).orderByChild("dId").equalTo(getuAccepted).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -616,7 +641,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
-        public Button btnEdit,btnDelete,btnChat,btnRate,btnRecived;
+        public Button btnEdit,btnDelete,btnChat,btnRate,btnRecived,btnOrderBack;
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate,linerAll;
         public RatingBar drStar;
@@ -651,6 +676,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             txtPostDate = myview.findViewById(R.id.txtPostDate);
             mImageButton = myview.findViewById(R.id.imageButton);
             requestRecycler = myview.findViewById(R.id.requestRecycler);
+            btnOrderBack = myview.findViewById(R.id.btnOrderBack);
 
 
             icnArrowDown = myview.findViewById(R.id.icnArrowDown);
@@ -662,7 +688,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
 
         @SuppressLint("ResourceAsColor")
-        public void setStatue(final String getStatue, final String uAccepted, String ddate, String orderID){
+        public void setStatue(final String getStatue, final String uAccepted, String ddate, String orderID, int position){
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date yesterday = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24));
             Date strDate = null;
@@ -714,7 +740,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                                         if(rData.getStatue().equals("N/A")) { // Get only the not decliend requests
                                                             mm.add(count, rData);
                                                             count++;
-                                                            RequestsAdapter req = new RequestsAdapter(context, mm, count, orderID);
+                                                            RequestsAdapter req = new RequestsAdapter(context, mm, count, orderID, filtersData.get(position));
                                                             requestRecycler.setAdapter(req);
                                                         }
                                                     }
@@ -742,24 +768,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 }
                 case "accepted": {
                     txtGetStat.setVisibility(View.GONE);
-                    txtGetStat.setEnabled(true);
-                    uDatabase.child(uAccepted).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()) {
-                                String mName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                                if(getStatue.equals("recived")) {
-                                    txtGetStat.setText("تم استلام اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
-                                } else {
-                                    txtGetStat.setText("تم قبول اوردرك من : " + mName + " اضغط هنا للمزيد من التفاصيل و للتواصل مع المندوب");
-                                }
-                                txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
+                    txtGetStat.setEnabled(false);
                     break;
                 }
                 case "delivered": {
@@ -768,6 +777,28 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                     txtGetStat.setText("تم توصيل اوردرك");
                     txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
                     break;
+                }
+
+                case "denied" : {
+                    txtGetStat.setEnabled(false);
+                    txtGetStat.setVisibility(View.VISIBLE);
+                    txtGetStat.setText("لم يقبل العميل استلام الاوردر");
+                    txtGetStat.setBackgroundColor(Color.parseColor("#ff0000"));
+                    break;
+                }
+
+                case "deniedback" : {
+                    txtGetStat.setEnabled(false);
+                    txtGetStat.setVisibility(View.VISIBLE);
+                    txtGetStat.setText("مرتجع");
+                    txtGetStat.setBackgroundColor(Color.parseColor("#ff0000"));
+                    break;
+                }
+
+                default: {
+                    txtGetStat.setEnabled(false);
+                    txtGetStat.setVisibility(View.GONE);
+                    txtGetStat.setText("");
                 }
             }
         }
@@ -784,7 +815,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 }
                 case "false" : {
                     btnRate.setVisibility(View.GONE);
-                    if ("delivered".equals(statue)) {
+                    if (statue.equals("delivered") || statue.equals("deniedback")) {
                         btnRate.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -800,6 +831,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         btnDelete.setVisibility(View.VISIBLE);
                         btnRecived.setVisibility(View.GONE);
                         btnChat.setVisibility(View.GONE);
+                        btnOrderBack.setVisibility(View.GONE);
                         break;
                     }
                     case "accepted": {
@@ -807,6 +839,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         btnEdit.setVisibility(View.GONE);
                         btnDelete.setVisibility(View.VISIBLE);
                         btnChat.setVisibility(View.VISIBLE);
+                        btnOrderBack.setVisibility(View.GONE);
+
                         break;
                     }
                     case "recived": {
@@ -814,12 +848,33 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                         btnRecived.setVisibility(View.GONE);
                         btnEdit.setVisibility(View.GONE);
                         btnDelete.setVisibility(View.GONE);
+                        btnOrderBack.setVisibility(View.GONE);
+
                     }
                     case "delivered" : {
                         btnChat.setVisibility(View.GONE);
                         btnRecived.setVisibility(View.GONE);
                         btnEdit.setVisibility(View.GONE);
                         btnDelete.setVisibility(View.GONE);
+                        btnOrderBack.setVisibility(View.GONE);
+                        break;
+                    }
+
+                    case "denied": {
+                        btnChat.setVisibility(View.GONE);
+                        btnRecived.setVisibility(View.GONE);
+                        btnEdit.setVisibility(View.GONE);
+                        btnDelete.setVisibility(View.GONE);
+                        btnOrderBack.setVisibility(View.VISIBLE);
+                        break;
+                    }
+
+                    case "deniedback": {
+                        btnChat.setVisibility(View.GONE);
+                        btnRecived.setVisibility(View.GONE);
+                        btnEdit.setVisibility(View.GONE);
+                        btnDelete.setVisibility(View.GONE);
+                        btnOrderBack.setVisibility(View.GONE);
                         break;
                     }
                 }

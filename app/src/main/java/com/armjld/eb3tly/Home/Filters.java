@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.FilterAdapter;
-import com.armjld.eb3tly.LoginManager;
+import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
 import java.util.ArrayList;
 import java.util.Objects;

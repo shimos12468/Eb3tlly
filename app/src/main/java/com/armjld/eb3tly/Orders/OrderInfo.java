@@ -55,7 +55,7 @@ public class OrderInfo extends AppCompatActivity {
 
     TextView date3, date, orderto, OrderFrom,txtPack,txtWeight,ordercash2,fees2,txtPostDate2;
     TextView dsUsername,txtTitle,ddCount,txtNoddComments;
-    TextView dsPAddress,dsDAddress,dsOrderNotes;
+    TextView dsPAddress,dsDAddress;
     ImageView ppStar,imgVerf,supPP;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
     RatingBar rbUser;
@@ -107,7 +107,6 @@ public class OrderInfo extends AppCompatActivity {
         dsUsername = findViewById(R.id.ddUsername);
         dsPAddress = findViewById(R.id.ddPhone);
         dsDAddress = findViewById(R.id.dsDAddress);
-        dsOrderNotes = findViewById(R.id.dsOrderNotes);
         txtTitle = findViewById(R.id.txtTitle);
         supPP = findViewById(R.id.supPP);
         ppStar = findViewById(R.id.ppStar);
@@ -165,13 +164,12 @@ public class OrderInfo extends AppCompatActivity {
 
                 String PAddress = "عنوان الاستلام : " + orderData.getmPAddress();
                 String DAddress = "عنوان التسليم : " + orderData.getDAddress();
-                String notes = "الملاحظات : " + orderData.getNotes();
                 String fees = "مصاريف الشحن : " + orderData.getGGet();
                 String money = "سعر الرساله : " + orderData.getGMoney();
                 String pDate = orderData.getpDate();
                 String dDate = orderData.getDDate();
-                String pack = "الرساله : " + orderData.getPackType();
-                String weight = "وزن الرسالة : " + orderData.getPackWeight();
+                String pack = "محتوي الرساله : " + orderData.getPackType();
+                String weight = "وزن الرسالة : " + orderData.getPackWeight() + " كيلؤ";
                 String from = orderData.reStateP();
                 String to = orderData.reStateD();
 
@@ -186,12 +184,6 @@ public class OrderInfo extends AppCompatActivity {
                 } else {
                     dsDAddress.setText(DAddress);
                     dsDAddress.setVisibility(View.VISIBLE);
-                }
-                if (notes.trim().equals("")) {
-                    dsOrderNotes.setVisibility(View.GONE);
-                } else {
-                    dsOrderNotes.setText(notes);
-                    dsOrderNotes.setVisibility(View.VISIBLE);
                 }
 
                 fees2.setText(fees + " ج");

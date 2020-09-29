@@ -1287,8 +1287,11 @@
     <string name="tab_text_3">الاوردرات الجديدة</string>
     <string name="tab_text_4">الاوردرات المقبولة</string>
     <string name="tab_text_5">الاوردرات التي سلمت</string>
+    <string name="tab_text_6">اوردرات قيد التسلم</string>
     <string name="title_activity_maps__user__location">Map</string>
     <string name="title_activity_my_location">Map</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Preference Titles -->
 

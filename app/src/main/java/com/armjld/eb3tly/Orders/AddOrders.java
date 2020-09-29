@@ -1,19 +1,10 @@
 package com.armjld.eb3tly.Orders;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,22 +24,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.armjld.eb3tly.FilterAdapter;
 import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.LocationSpinnerAdapter;
-import com.armjld.eb3tly.LoginManager;
+import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Home.StartUp;
 
 import Model.LocationDataType;
 import Model.UserInFormation;
 
-import com.armjld.eb3tly.Settings.AddLocation;
-import com.armjld.eb3tly.Settings.LocationForSup;
-import com.armjld.eb3tly.SupplierProfile.LocationsAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -151,8 +136,8 @@ public class AddOrders extends AppCompatActivity {
         spnMyLocations = findViewById(R.id.spnMyLocations);
         txtDropCity = findViewById(R.id.txtDropCity);
 
-        //btnBack = findViewById(R.id.btnClose);
-        //btnBack.setOnClickListener(v-> finish());
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v-> finish());
 
 
         imgHelpMoney = findViewById(R.id.imgHelpMoney);
@@ -212,8 +197,8 @@ public class AddOrders extends AppCompatActivity {
                 lat = String.valueOf(choosen.getLattude());
                 _long = String.valueOf(choosen.getLontude());
                 pickAdd = choosen.getAddress();
-                pickCity = choosen.getRegion();
-                pickGov = choosen.getState();
+                pickCity = choosen.getState();
+                pickGov = choosen.getRegion();
                 Log.i(TAG, "You Choosed : " + choosen.getTitle());
             }
 
@@ -499,6 +484,7 @@ public class AddOrders extends AppCompatActivity {
          Data data = new Data(pickGov, pickCity, pickAdd, "", strDropGov, strDropCity, mDAddress, mDDate, mDPhone, mDName, mGMoney, mGGet, datee, id, uId, "", "", "", "", states, uAccepted, srate, srateid, drate, drateid, "", "", "","Bid",owner, strPickDate, weight, strType);
         assert id != null;
         mDatabase.child(id).setValue(data);
+        HomeActivity.supList.add(data);
 
          mDatabase.child(id).child("lastedit").setValue(datee);
          mDatabase.child(id).child("lat").setValue(lat);

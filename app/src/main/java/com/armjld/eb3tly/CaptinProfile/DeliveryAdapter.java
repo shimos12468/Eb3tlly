@@ -31,6 +31,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.armjld.eb3tly.Chat.chatListclass;
 import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.Ratings;
@@ -47,6 +48,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -134,47 +137,90 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             OrderInfo.cameFrom = "Profile";
         });
 
+        // ---------------- Set order to Recived
+        holder.btnRecived.setOnClickListener(v -> {
+            assert vibe != null;
+            vibe.vibrate(20);
+
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل قمت باستلام الاوردر من التاجر ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                mDatabase.child(orderID).child("statue").setValue("recived2");
+
+                String message = "قام " + UserInFormation.getUserName() + " بتأكد استلام الاوردر";
+                notiData Noti = new notiData(uId, owner, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                nDatabase.child(owner).push().setValue(Noti);
+
+                Toast.makeText(context, "تم تأكيد استلام الشحنة", Toast.LENGTH_SHORT).show();
+
+                filtersData.get(position).setStatue("recived2");
+                holder.setDilveredButton("recived2");
+
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            mBottomSheetDialog.show();
+        });
+
         // -----------------------   Set ORDER as Delivered
         holder.btnDelivered.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
 
-            // Changing the values in the orders db
-            mDatabase.child(orderID).child("statue").setValue("delivered");
-            mDatabase.child(orderID).child("dilverTime").setValue(datee);
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل قمت بتسليم الاوردر ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                // Changing the values in the orders db
+                mDatabase.child(orderID).child("statue").setValue("delivered");
+                mDatabase.child(orderID).child("dilverTime").setValue(datee);
 
-            // ----- Add money to the Wallet
-            wallet w = new wallet();
-            w.SupsetDilivared(orderID);
+                // ----- Add money to the Wallet
+                wallet w = new wallet();
+                w.SupsetDilivared(orderID);
 
-            // Add the Profit of the Dilvery Worker
-            uDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists() && dataSnapshot.child("profit").exists()) {
-                        String dbprofits = Objects.requireNonNull(dataSnapshot.child("profit").getValue()).toString();
-                        int longProfit = Integer.parseInt(dbprofits);
-                        int finalProfits = (longProfit + Integer.parseInt(data.getGGet()));
-                        uDatabase.child(uId).child("profit").setValue(String.valueOf(finalProfits));
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
+                // --------------------------- Send Notifications ---------------------//
+                String message =  "قام " + UserInFormation.getUserName() + " بتوصل الاردر";
 
-            // --------------------------- Send Notifications ---------------------//
-            String message =  "قام " + UserInFormation.getUserName() + " بتوصل الاردر";
+                notiData Noti = new notiData(uId, owner,orderID,message,datee,"false","profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                nDatabase.child(owner).push().setValue(Noti);
 
-            notiData Noti = new notiData(uId, owner,orderID,message,datee,"false","profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
-            nDatabase.child(owner).push().setValue(Noti);
+                Toast.makeText(context, "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
+                vibe.vibrate(20);
+                //context.startActivity(new Intent(context, NewProfile.class));
 
-            Toast.makeText(context, "تم توصيل الاوردر", Toast.LENGTH_SHORT).show();
-            vibe.vibrate(20);
-            //context.startActivity(new Intent(context, NewProfile.class));
+                filtersData.get(position).setStatue("delivered");
+                holder.setDilveredButton("delivered");
 
-            ViewPager viewPager = ((HomeActivity) context).findViewById(R.id.view_pager);
-            viewPager.setCurrentItem(1, true);
+                chatListclass _ch = new chatListclass();
+                _ch.dlevarychat(owner);
+
+                ViewPager viewPager = ((HomeActivity) context).findViewById(R.id.view_pager);
+                viewPager.setCurrentItem(1, true);
+
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            mBottomSheetDialog.show();
+        });
+
+        holder.btnOrderBack.setOnClickListener(v-> {
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("لم يستلم العميل الشحنة ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                mDatabase.child(orderID).child("statue").setValue("denied");
+
+                String message = "قام " + filtersData.get(position).getDName() + " برفض استلام اوردرك من الكابتن.";
+                notiData Noti = new notiData(uId,owner, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
+                nDatabase.child(owner).push().setValue(Noti);
+
+                // ----- Add money to the Wallet
+                wallet w = new wallet();
+                w.SupsetDilivared(orderID);
+
+                filtersData.get(position).setStatue("denied");
+                holder.setDilveredButton("denied");
+
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            mBottomSheetDialog.show();
         });
 
 
@@ -230,6 +276,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
                 Ratings _rate = new Ratings();
                 _rate.setRating(owner, intRating);
+
+                holder.setRateButton("true", filtersData.get(position).getStatue());
 
                 Toast.makeText(context, "تم التقييم بالنجاح", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -411,7 +459,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
-        public Button btnDelete,btnInfo,btnDelivered,btnRate,btnChat;
+        public Button btnDelete,btnInfo,btnDelivered,btnRate,btnChat,btnRecived,btnOrderBack;
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate;
         public LinearLayout linerDate, linerAll;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans;
@@ -419,7 +467,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            myview=itemView;
+
+            myview = itemView;
+
             btnDelivered = myview.findViewById(R.id.btnDelivered);
             btnInfo = myview.findViewById(R.id.btnInfo);
             btnDelete = myview.findViewById(R.id.btnDelete);
@@ -428,7 +478,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtGetStat = myview.findViewById(R.id.txtStatue);
             linerAll = myview.findViewById(R.id.linerAll);
             btnChat = myview.findViewById(R.id.btnChat);
-
+            btnRecived = myview.findViewById(R.id.btnRecived);
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
             txtgMoney = myview.findViewById(R.id.ordercash);
@@ -442,6 +492,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtOrderFrom = myview.findViewById(R.id.OrderFrom);
             txtOrderTo = myview.findViewById(R.id.orderto);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
+            btnOrderBack = myview.findViewById(R.id.btnOrderBack);
         }
 
 
@@ -471,7 +522,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 }
                 case "false" : {
                     btnRate.setVisibility(View.GONE);
-                    if ("delivered".equals(statue)) {
+                    if (statue.equals("delivered") || statue.equals("deniedback")) {
                         btnRate.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -487,8 +538,9 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                     btnDelivered.setVisibility(View.GONE);
                     btnChat.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
-
+                    btnRecived.setVisibility(View.GONE);
                     txtGetStat.setVisibility(View.GONE);
+                    btnOrderBack.setVisibility(View.GONE);
                     txtGetStat.setText("تواصل مع التاجر لاستلام الاوردر");
                     txtGetStat.setBackgroundColor(Color.RED);
                     break;
@@ -496,21 +548,39 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 case "recived" : {
                     btnDelete.setVisibility(View.GONE);
                     btnChat.setVisibility(View.VISIBLE);
-                    btnDelivered.setVisibility(View.VISIBLE);
+                    btnDelivered.setVisibility(View.GONE);
                     btnInfo.setVisibility(View.VISIBLE);
-
+                    btnRecived.setVisibility(View.VISIBLE);
                     txtGetStat.setVisibility(View.GONE);
+                    btnOrderBack.setVisibility(View.GONE);
                     txtGetStat.setText("تم استلام الاوردر من التاجر");
                     txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
                     break;
                 }
-                case "delivered" : {
+
+                case "recived2" : {
+                    btnDelete.setVisibility(View.GONE);
+                    btnChat.setVisibility(View.VISIBLE);
+                    btnDelivered.setVisibility(View.VISIBLE);
+                    btnInfo.setVisibility(View.VISIBLE);
+                    btnRecived.setVisibility(View.GONE);
+                    txtGetStat.setVisibility(View.GONE);
+                    btnOrderBack.setVisibility(View.VISIBLE);
+                    txtGetStat.setText("تم استلام الاوردر من التاجر");
+                    txtGetStat.setBackgroundColor(Color.parseColor("#ffc922"));
+                    break;
+                }
+
+                case "delivered" :
+                case "denied" :
+                case "deniedback" : {
                     btnDelivered.setVisibility(View.GONE);
                     btnDelete.setVisibility(View.GONE);
                     btnChat.setVisibility(View.GONE);
                     btnInfo.setVisibility(View.GONE);
-
+                    btnRecived.setVisibility(View.GONE);
                     txtGetStat.setVisibility(View.GONE);
+                    btnOrderBack.setVisibility(View.GONE);
                     txtGetStat.setText("تم توصيل الاوردر بنجاح");
                     txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
                     break;

@@ -100,6 +100,10 @@ public class MyWallet extends AppCompatActivity {
                         String orderid = ds.getKey();
                         assert orderid != null;
 
+                        if(HomeActivity.delvList.size() == 0) {
+                            return;
+                        }
+
                         Data c = HomeActivity.delvList.stream().filter(x -> x.getId().equals(orderid)).findFirst().get();
                         orderList.add(c);
                         if(orderList.size() == OrdersCount) {

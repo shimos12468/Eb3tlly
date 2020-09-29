@@ -86,7 +86,7 @@ public class acceptedTab extends Fragment {
     public static void getOrders() {
         Log.i(TAG, "Setting Orders in Local List");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("accepted") || x.getStatue().equals("recived")).collect(Collectors.toList());
+            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("accepted") || x.getStatue().equals("recived") || x.getStatue().equals("recived2") || x.getStatue().equals("denied")).collect(Collectors.toList());
             supplierAdapter = new SupplierAdapter(mContext, filterList);
             if(recyclerView != null) {
                 recyclerView.setAdapter(supplierAdapter);

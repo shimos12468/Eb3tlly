@@ -54,4 +54,18 @@ public class LocationSpinnerAdapter extends ArrayAdapter<LocationDataType> {
         locTitle.setText(locData.get(i).getTitle());
         return locTitle;
     }
+
+    @Override
+    public View getDropDownView (int position, View view, ViewGroup viewGroup) {
+        TextView locTitle;
+        if(view != null) {
+            locTitle = (TextView) view;
+        } else {
+            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
+            locTitle = (TextView) inflater.inflate(android.R.layout.simple_dropdown_item_1line,null);
+        }
+        locTitle.setText(locData.get(position).getTitle());
+        return locTitle;
+    }
+
 }

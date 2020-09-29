@@ -55,17 +55,18 @@ public class LocationForSup extends AppCompatActivity {
         btnBack.setOnClickListener(v-> {
             finish();
             HomeActivity.whichFrag = "Settings";
-
             startActivity(new Intent(this, HomeActivity.class));
         });
 
         linText.setOnClickListener(v-> {
             AddLocation.type = "New";
+            AddLocation.goTo = "";
             startActivity(new Intent(this, AddLocation.class));
         });
 
         btnAdd.setOnClickListener(v-> {
             AddLocation.type = "New";
+            AddLocation.goTo = "";
             startActivity(new Intent(this, AddLocation.class));
         });
 

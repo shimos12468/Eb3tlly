@@ -29,7 +29,7 @@
             android:layout_marginTop="5dp"
             app:layout_constraintStart_toStartOf="@+id/toolbar_home"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_menu" />
+            app:srcCompat="@drawable/ic_arrow_back_white" />
 
         <TextView
             android:id="@+id/txtNoOrders"

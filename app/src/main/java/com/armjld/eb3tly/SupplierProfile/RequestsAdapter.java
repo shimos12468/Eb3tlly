@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.R;
+
+import Model.Data;
 import Model.UserInFormation;
 import com.armjld.eb3tly.DatabaseClasses.requestsandacceptc;
 import com.armjld.eb3tly.DatabaseClasses.caculateTime;
@@ -52,6 +54,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
     Context context;
     long count;
     String orderId;
+    Data order;
     ArrayList<requestsData>requestsData;
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -64,11 +67,12 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
 
 
 
-    public RequestsAdapter(Context context, ArrayList<Model.requestsData> requestsData, long count, String orderId) {
+    public RequestsAdapter(Context context, ArrayList<Model.requestsData> requestsData, long count, String orderId, Data order) {
         this.count = count;
         this.context = context;
         this.requestsData = requestsData;
         this.orderId = orderId;
+        this.order = order;
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
@@ -317,7 +321,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                                 mDatabase.child("statue").setValue("declined");
                                 uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(requestsData.get(i).getId()).child("requests").child(orderId);
                                 uDatabase.child("statue").setValue("declined");
-                            } else{
+                            } else {
                                 mDatabase =FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderId).child("requests").child(requestsData.get(i).getId());
                                 mDatabase.child("statue").setValue("accepted");
                                 uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(requestsData.get(i).getId()).child("requests").child(orderId);
@@ -325,9 +329,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                             }
                         }
 
-                        Toast.makeText(context, "تم قبول المندوب", Toast.LENGTH_SHORT).show();
-                        HomeActivity.whichFrag = "Profile";
-                        context.startActivity(new Intent(context, HomeActivity.class));
+                        placedTab.filterList.remove(order);
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;

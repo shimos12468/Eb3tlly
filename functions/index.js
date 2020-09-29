@@ -49,3 +49,42 @@ exports.sendNotification = functions.database.ref('Pickly/notificationRequests/{
 
 	
 });
+
+exports.fawrypayment = functions.database.ref('Pickly/fawrypayments/{payment_id}').onCreate((snap, context)=>{
+	
+		console.log('Money added');		
+		const fawrycode = context.params.payment_id;
+		const fawrymony = snap.child("money").val();
+		
+		console.log(fawrycode);		
+		var ref = admin.database().ref("Pickly/users");
+		
+		ref.orderByChild('fawrycode').equalTo(fawrycode).on("value", function(snapshot) {
+			snapshot.forEach(function(childSnapshot) {
+			  
+				let uid = childSnapshot.key;
+				var money = childSnapshot.child("walletmoney").val();
+				var lastmoney = fawrymony - money;
+				
+				console.log(money);
+				console.log(lastmoney);
+				console.log(uid);
+			
+				var lref = admin.database().ref('Pickly/users');
+				lref.child(uid).update({
+					'walletmoney': lastmoney
+				});
+			});
+		});	
+	});
+
+exports.fawrycode = functions.database.ref('Pickly/fawrycode/{fawry_id}').onCreate((snap, context)=>{
+	    console.log('Code added');
+		const fawryid = context.params.fawry_id;
+		var userid = snap.child("uId").val();
+		var db = admin.database();
+		var buf = db.ref("Pickly/users");
+		buf.child(userid).update({
+			'fawrycode':Fawryid
+		});
+	});

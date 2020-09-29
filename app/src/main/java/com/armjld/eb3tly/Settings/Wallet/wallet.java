@@ -30,7 +30,6 @@ public class wallet {
         String datee = sdf.format(new Date());
         Date start = null;
         Date end = null;
-        String id = UserInFormation.getId();
         String currentdate = UserInFormation.getCurrentdate();
         if(currentdate.equals("none")){
             return true;
@@ -41,12 +40,12 @@ public class wallet {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
         long diff = end.getTime() - start.getTime();
         diffHours = diff / (60 * 60 * 1000);
 
         Log.d(TAG , "You Have " + (48 - diffHours) + " Hours left!");
-        return diffHours < 48;
-
+        return diffHours < 72;
     }
 
     public void SupsetDilivared(String orderid){

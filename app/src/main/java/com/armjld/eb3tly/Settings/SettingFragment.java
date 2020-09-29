@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -29,7 +28,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -38,13 +36,12 @@ import android.widget.Toast;
 
 import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.Home.HomeFragment;
-import com.armjld.eb3tly.LoginManager;
+import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
 
 import Model.UserInFormation;
 
 import com.armjld.eb3tly.Settings.Wallet.MyWallet;
-import com.armjld.eb3tly.Login.Login_Options;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

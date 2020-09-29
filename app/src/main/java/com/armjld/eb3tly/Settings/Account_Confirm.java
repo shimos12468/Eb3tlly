@@ -32,16 +32,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.armjld.eb3tly.LoginManager;
+import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Home.StartUp;
 import Model.UserInFormation;
-import com.google.android.gms.tasks.OnCompleteListener;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;

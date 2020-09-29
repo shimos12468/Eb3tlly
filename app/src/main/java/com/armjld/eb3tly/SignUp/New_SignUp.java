@@ -36,13 +36,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.armjld.eb3tly.Login.MainActivity;
-import com.armjld.eb3tly.LoginManager;
-import com.armjld.eb3tly.SignUp.Intros.introCaptin;
-import com.armjld.eb3tly.SignUp.Intros.introSup;
+import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
-import com.armjld.eb3tly.DatabaseClasses.Ratings;
-import com.armjld.eb3tly.Home.StartUp;
+
 import Model.UserInFormation;
 import com.armjld.eb3tly.Login.Login_Options;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

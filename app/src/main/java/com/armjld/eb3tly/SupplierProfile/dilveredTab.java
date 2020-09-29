@@ -77,7 +77,7 @@ public class dilveredTab extends Fragment {
     public static void getOrders() {
         Log.i(TAG, "Getting Local Delivered Orders for Supplier");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("delivered") || x.getStatue().equals("recived")).collect(Collectors.toList());
+            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("delivered") || x.getStatue().equals("deniedback")).collect(Collectors.toList());
             supplierAdapter = new SupplierAdapter(mContext, filterList);
             if(recyclerView != null) {
                 recyclerView.setAdapter(supplierAdapter);

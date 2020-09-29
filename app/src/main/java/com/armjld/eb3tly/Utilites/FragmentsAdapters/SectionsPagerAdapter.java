@@ -10,16 +10,12 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.armjld.eb3tly.CaptinProfile.capAcceptedTab;
 import com.armjld.eb3tly.CaptinProfile.capDelvTab;
+import com.armjld.eb3tly.CaptinProfile.captinRecived;
 import com.armjld.eb3tly.R;
-
-/**
- * A [FragmentPagerAdapter] that returns a fragment corresponding to
- * one of the sections/tabs/pages.
- */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_6,R.string.tab_text_2};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -35,6 +31,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                fragment = new capAcceptedTab();
                break;
            case 1:
+               fragment = new captinRecived();
+               break;
+           case 2:
                fragment = new capDelvTab();
                break;
        }
@@ -49,7 +48,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 2;
+        return 3;
     }
 }

@@ -98,6 +98,7 @@ public class ChatFragmet extends Fragment {
                 for(DataSnapshot ds:snapshot.getChildren()) {
                     if(ds.child("roomid").exists()) {
                         ChatsData cchatData = ds.getValue(ChatsData.class);
+
                         String talk = "true";
                         if(ds.child("talk").exists()) {
                             talk = Objects.requireNonNull(ds.child("talk").getValue()).toString();

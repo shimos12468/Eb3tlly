@@ -13,9 +13,10 @@ import androidx.fragment.app.Fragment;
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.CaptinProfile.capAcceptedTab;
 import com.armjld.eb3tly.CaptinProfile.capDelvTab;
+import com.armjld.eb3tly.CaptinProfile.captinRecived;
 import com.armjld.eb3tly.Chat.ChatFragmet;
 import com.armjld.eb3tly.Login.MainActivity;
-import com.armjld.eb3tly.LoginManager;
+import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Settings.SettingFragment;
 import Model.UserInFormation;
@@ -261,11 +262,9 @@ public class HomeActivity extends AppCompatActivity  {
                     assert orderData != null;
                     supList.add(orderData);
                 }
-
+                placedTab.getOrders();
                 acceptedTab.getOrders();
                 dilveredTab.getOrders();
-                placedTab.getOrders();
-
             }
 
             @Override
@@ -285,9 +284,9 @@ public class HomeActivity extends AppCompatActivity  {
                     assert orderData != null;
                     delvList.add(orderData);
                 }
-
                 capAcceptedTab.getOrders();
                 capDelvTab.getOrders();
+                captinRecived.getOrders();
             }
 
             @Override

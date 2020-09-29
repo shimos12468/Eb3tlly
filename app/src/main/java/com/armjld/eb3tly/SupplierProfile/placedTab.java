@@ -30,6 +30,7 @@ public class placedTab extends Fragment {
     private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
     public static TextView txtNoOrders;
+    public static ArrayList<Data> filterList = new ArrayList<>();
     String uId;
 
 
@@ -85,9 +86,11 @@ public class placedTab extends Fragment {
     }
 
     public static void getOrders(){
+        filterList.clear();
+        filterList.trimToSize();
         Log.i(TAG, "Getting Local Placed Orders for Supplier");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("placed")).collect(Collectors.toList());
+            filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("placed")).collect(Collectors.toList());
             supplierAdapter = new SupplierAdapter(mContext, filterList);
             if(recyclerView != null) {
                 recyclerView.setAdapter(supplierAdapter);

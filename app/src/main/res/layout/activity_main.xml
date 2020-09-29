@@ -67,13 +67,14 @@
             android:hint="البريد الالكتروني"
             app:endIconMode="none"
             app:errorTextAppearance="@style/error"
-            app:hintTextColor="@color/colorAccent">
+            app:hintTextColor="@color/colorAccent"
+            android:layout_marginBottom="20dp"
+            >
 
             <EditText
                 android:id="@+id/txtEditName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:ems="10"
                 android:inputType="textEmailAddress"
                 android:textColor="#000000"

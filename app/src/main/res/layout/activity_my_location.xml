@@ -49,72 +49,79 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="40dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="40dp"
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlTitle"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                android:hint="اسم العنوان"
+                app:endIconMode="none"
+                app:errorTextAppearance="@style/error"
+                app:hintTextColor="@color/colorAccent">
+
+                <EditText
+                    android:id="@+id/txtTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:textColor="#000000"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlAddress"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="الاسم :"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp" />
+                android:layout_marginBottom="20dp"
+                android:hint="رقم المنبي"
+                app:endIconMode="none"
+                app:errorTextAppearance="@style/error"
+                app:hintTextColor="@color/colorAccent">
 
-            <EditText
-                android:id="@+id/txtTitle"
+                <EditText
+                    android:id="@+id/txtAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:textColor="#000000"
+                    android:textSize="24sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlCity"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="البيت, المحل, الشغل .." />
+                android:hint="المدينة"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="العنوان :"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp" />
+                <AutoCompleteTextView
+                    android:id="@+id/txtDropCity"
+                    style="@style/Base.Widget.MaterialComponents.AutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:completionThreshold="1"
+                    android:inputType="textShortMessage"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="24sp"
+                    tools:ignore="RtlHardcoded" />
 
-            <EditText
-                android:id="@+id/txtAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="21 ش الدقي .." />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="المحافظة :"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp" />
-
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                android:id="@+id/spnGov"
-                android:layout_width="match_parent"
-                android:layout_height="47dp"
-                android:spinnerMode="dialog"
-                android:textAlignment="viewStart" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="المدينة :"
-                android:textColor="@color/colorAccent"
-                android:textSize="24sp" />
-
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                android:id="@+id/spnCity"
-                android:layout_width="match_parent"
-                android:layout_height="47dp"
-                android:spinnerMode="dialog"
-                android:textAlignment="viewStart" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -139,7 +146,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/btn_defult"
-                android:text="حفظ"
+                android:text="اضافة عنوان جديد"
                 android:textColor="@color/colorAccent"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.DatabaseClasses.rquests;
+import com.armjld.eb3tly.Settings.Wallet.MyWallet;
 import com.armjld.eb3tly.Settings.Wallet.wallet;
 import com.armjld.eb3tly.DatabaseClasses.caculateTime;
 import com.armjld.eb3tly.Login.MainActivity;
@@ -201,7 +202,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 } else {
                      wallet w = new wallet();
                      if(!w.workerbid()){
-                         Toast.makeText(context, "يجب دفع المبلغ السمتحق اولا", Toast.LENGTH_LONG).show();
+                         context.startActivity(new Intent(context, MyWallet.class));
                          return;
                      }
 
