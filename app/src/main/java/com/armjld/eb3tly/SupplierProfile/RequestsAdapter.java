@@ -95,7 +95,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         holder.setPostDate(date);
         holder.setUserInfo(id);
 
-        holder.imgEditPhoto.setOnClickListener(v-> {
+        /*holder.imgEditPhoto.setOnClickListener(v-> {
             AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             View dialogMore = inflater.inflate(R.layout.dialogdevinfo, null);

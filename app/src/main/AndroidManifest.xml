@@ -24,7 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".Settings.delv_statics"></activity>
+        <activity android:name=".Settings.sup_statics"></activity>
+        <activity android:name=".Settings.delv_statics" />
         <activity android:name=".Settings.LocationForSup" />
         <activity android:name=".Settings.LocationForDelv" />
         <activity android:name=".Settings.Wallet.MyWallet" />

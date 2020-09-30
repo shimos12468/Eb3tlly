@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,15 +62,15 @@ public class Messages extends AppCompatActivity {
         switch (cameFrom) {
             case "Chats" : {
                 HomeActivity.whichFrag = "Chats";
+                startActivity(new Intent(this, HomeActivity.class));
                 break;
             }
             case "Profile" : {
-                HomeActivity.whichFrag = "Profile";
+                //HomeActivity.whichFrag = "Profile";
+                finish();
                 break;
             }
         }
-        startActivity(new Intent(this, HomeActivity.class));
-
     }
 
     @Override
@@ -109,15 +111,27 @@ public class Messages extends AppCompatActivity {
 
         btnCall.setOnClickListener(v-> {
             if(!phoneNumb.equals("")) {
-                checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + phoneNumb));
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                startActivity(callIntent);
+
+                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(Messages.this).setMessage("هل تريد الاتصال ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_add_phone, (dialogInterface, which) -> {
+
+                    checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + phoneNumb));
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    startActivity(callIntent);
+
+                    dialogInterface.dismiss();
+                }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                    dialogInterface.dismiss();
+                }).build();
+                mBottomSheetDialog.show();
+
+
+
             } else {
-                Toast.makeText(this, "التاجر لم ضع رقم هاتف", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "التاجر لم يضع رقم هاتف", Toast.LENGTH_SHORT).show();
             }
         });
 

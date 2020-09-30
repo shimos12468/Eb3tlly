@@ -128,7 +128,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         String startDate = data.getDate();
         requestNumber = 0;
 
-        holder.setDate(filtersData.get(position).getDDate());
+        holder.setDate(filtersData.get(position).getDDate(), filtersData.get(position).getpDate());
         holder.setUsername(data.getDName());
         holder.setOrdercash(data.getGMoney());
         holder.setOrderFrom(data.reStateP());
@@ -156,12 +156,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-
-
-        if(data.getStatue().equals("placed")) {
-            holder.mImageButton.setVisibility(View.GONE);
-        }
-
+        holder.mImageButton.setVisibility(View.GONE);
         holder.mImageButton.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
@@ -397,14 +392,11 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
         // ------------------ Show delivery Worker Info -----------------------//
         holder.txtGetStat.setOnClickListener(v -> {
-            if(filtersData.get(position).getStatue().equals("accepted") || filtersData.get(position).getStatue().equals("recived")) {
-                getInfo(filtersData.get(position).getuId(), orderID,filtersData.get(position).getuAccepted());
-            } else if (filtersData.get(position).getStatue().equals("placed") && requestNumber > 0){
+            if (filtersData.get(position).getStatue().equals("placed") && requestNumber > 0){
                 if(holder.requestRecycler.isShown()) {
                     holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_down_black));
                     holder.requestRecycler.setVisibility(View.GONE);
                     holder.txtGetStat.setVisibility(View.VISIBLE);
-
                 } else {
                     holder.icnArrowDown.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_up_black));
                     holder.requestRecycler.setVisibility(View.VISIBLE);
@@ -425,195 +417,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             }
         });
 
-    }
-
-
-
-    public void getInfo(String getuId, String orderID, String getuAccepted) {
-        AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogMore = inflater.inflate(R.layout.dialogdevinfo, null);
-        myDialogMore.setView(dialogMore);
-        final AlertDialog dialog = myDialogMore.create();
-
-        TextView tbTitle = dialogMore.findViewById(R.id.toolbar_title);
-        tbTitle.setText("بيانات المندوب");
-
-        ImageView btnClose = dialogMore.findViewById(R.id.btnClose);
-        TextView txtTitle = dialogMore.findViewById(R.id.txtTitle);
-
-        btnClose.setOnClickListener(v12 -> dialog.dismiss());
-
-        final TextView ddUsername = dialogMore.findViewById(R.id.ddUsername);
-        final TextView ddPhone = dialogMore.findViewById(R.id.ddPhone);
-        ddPhone.setPaintFlags(ddPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
-        final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
-        final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
-        final ImageView imgVerfe = dialogMore.findViewById(R.id.imgVerf);
-        final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
-        final ImageView dPP = dialogMore.findViewById(R.id.dPP);
-        final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
-        final ImageView btnBlock = dialogMore.findViewById(R.id.btnBlock);
-
-        btnBlock.setOnClickListener(v1 -> {
-            DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-
-                        // --------------------------- Send Notifications ---------------------//
-                        String message =  "قام " + UserInFormation.getUserName() + " بألغاء الاوردر";
-                        notiData Noti = new notiData(uId, getuAccepted, orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
-                        nDatabase.child(getuAccepted).push().setValue(Noti);
-
-
-                        // -------------------------- Delete the Acceptance -------------------//
-                        assert orderID != null;
-                        mDatabase.child(orderID).child("uAccepted").setValue("");
-                        mDatabase.child(orderID).child("statue").setValue("placed");
-
-                        // -------------------------- Start Blocking ---------------------//
-                        boolean flag=block.addUser(getuId);
-                        if(flag)
-                            Toast.makeText(context, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(context, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
-        });
-
-        imgVerfe.setOnClickListener(v1 -> Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show());
-
-        ddPhone.setOnClickListener(v1 -> {
-            checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:" + ddPhone.getText().toString()));
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            context.startActivity(callIntent);
-        });
-
-        // --------------------- Get the user name && Phone Number -------------------//
-        uDatabase.child(getuAccepted).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String dUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                String dPhone = Objects.requireNonNull(snapshot.child("phone").getValue()).toString();
-                String sPP = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
-                Picasso.get().load(Uri.parse(sPP)).into(dPP);
-                ddUsername.setText(dUser);
-                ddPhone.setText(dPhone);
-
-                // Check if account is Verfied
-                String isConfirm = "false";
-                if(snapshot.child("isConfirmed").exists()) {
-                    isConfirm = Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString();
-                }
-                if(isConfirm.equals("true")) {
-                    imgVerfe.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-        // -------------------- Get the Rate Stars ------------------//
-        rDatabase.child(getuAccepted).orderByChild("dId").equalTo(getuAccepted).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    long total = 0;
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if(ds.exists()) {
-                            long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
-                            total = total + rating;
-                        }
-                    }
-                    double average = (double) total / dataSnapshot.getChildrenCount();
-                    if(String.valueOf(average).equals("NaN")) {
-                        average = 5;
-                    }
-                    ddRate.setRating((int) average);
-                } else {
-                    ddRate.setRating(5);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-        // -------------------------- Get total delivered orders
-        mDatabase.orderByChild("uAccepted").equalTo(getuAccepted).addListenerForSingleValueEvent (new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int oCount = 0;
-                if (dataSnapshot.exists()) {
-                    int count = (int) dataSnapshot.getChildrenCount();
-                    oCount = count;
-                    String strCount = String.valueOf(count);
-                    ddCount.setText( "وصل " + strCount + " اوردر");
-                } else {
-                    ddCount.setText("لم يقم بتوصيل اي اوردر");
-                }
-
-                if(oCount >= 10) {
-                    ddUsername.setTextColor(Color.parseColor("#ffc922"));
-                    ppStar.setVisibility(View.VISIBLE);
-                } else {
-                    ddUsername.setTextColor(Color.WHITE);
-                    ppStar.setVisibility(View.GONE);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-
-
-
-        // ------------------------------ Get that user Comments --------------------------- //
-        ListView listComment = dialogMore.findViewById(R.id.dsComment);
-        final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
-        listComment.setAdapter(arrayAdapterLessons);
-        mArraylistSectionLessons.clear();
-        txtNodsComments.setVisibility(View.VISIBLE);
-        rDatabase.child(getuAccepted).orderByChild("dId").equalTo(getuAccepted).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int comments = 0;
-                if(dataSnapshot.exists()) {
-                    for (DataSnapshot cData : dataSnapshot.getChildren()) {
-                        String tempComment = Objects.requireNonNull(cData.child("comment").getValue()).toString();
-                        Log.i(TAG, tempComment);
-                        if(!tempComment.equals("")) {
-                            mArraylistSectionLessons.add(tempComment);
-                            comments ++;
-                        }
-                        arrayAdapterLessons.notifyDataSetChanged();
-                    }
-                }
-                if(comments > 0) {
-                    txtNodsComments.setVisibility(View.GONE);
-                    listComment.setVisibility(View.VISIBLE);
-                    txtTitle.setVisibility(View.VISIBLE);
-                } else {
-                    txtNodsComments.setVisibility(View.VISIBLE);
-                    listComment.setVisibility(View.GONE);
-                    txtTitle.setVisibility(View.GONE);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-        dialog.show();
     }
 
     @Override
@@ -645,7 +448,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
         public Button btnEdit,btnDelete,btnChat,btnRate,btnRecived,btnOrderBack;
-        public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate;
+        public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate,pickDate;
         public LinearLayout linerDate,linerAll;
         public RatingBar drStar;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans,icnArrowDown;
@@ -665,6 +468,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             drStar = myview.findViewById(R.id.drStar);
             txtGetStat = myview.findViewById(R.id.txtStatue);
             linerAll = myview.findViewById(R.id.linerAll);
+            pickDate = myview.findViewById(R.id.pickDate);
 
             linerDate = myview.findViewById(R.id.linerDate);
             txtgGet = myview.findViewById(R.id.fees);
@@ -887,18 +691,19 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             txtOrderTo.setText(orderto);
         }
 
-        public void setDate (String date){
+        public void setDate (String date, String pDate){
             txtDate.setText(date);
+            pickDate.setText(pDate);
         }
 
         @SuppressLint("SetTextI18n")
         public void setOrdercash(String ordercash){
-            txtgMoney.setText(ordercash + " ج");
+            txtgMoney.setText("ثمن الشحنة : " + ordercash + " ج");
         }
 
         @SuppressLint("SetTextI18n")
         public void setFee(String fees) {
-            txtgGet.setText(fees + " ج");
+            txtgGet.setText("مصاريف الشحن : " + fees + " ج");
         }
 
         public void setAccepted() {

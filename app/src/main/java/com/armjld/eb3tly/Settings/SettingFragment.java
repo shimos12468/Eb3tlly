@@ -171,6 +171,8 @@ public class SettingFragment extends Fragment {
         txtReports.setOnClickListener(v-> {
             if(UserInFormation.getAccountType().equals("Delivery Worker")) {
                 startActivity(new Intent(getActivity(), delv_statics.class));
+            } else if(UserInFormation.getAccountType().equals("Supplier")) {
+                startActivity(new Intent(getActivity(), sup_statics.class));
             }
         });
 

@@ -1,5 +1,4 @@
 package com.armjld.eb3tly.Home;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.CaptinProfile.capAcceptedTab;
 import com.armjld.eb3tly.CaptinProfile.capDelvTab;
@@ -43,13 +41,11 @@ import java.util.Objects;
 
 import Model.Data;
 
-
-
 public class HomeActivity extends AppCompatActivity  {
 
-    public static ArrayList<Data> mm = new ArrayList<Data>();
-    public static ArrayList<Data> delvList = new ArrayList<Data>();
-    public static ArrayList<Data> supList = new ArrayList<Data>();
+    public static ArrayList<Data> mm = new ArrayList<>();
+    public static ArrayList<Data> delvList = new ArrayList<>();
+    public static ArrayList<Data> supList = new ArrayList<>();
 
     private static DatabaseReference mDatabase;
     public static boolean requests = false;
@@ -58,8 +54,6 @@ public class HomeActivity extends AppCompatActivity  {
     static BlockManeger block = new BlockManeger();
 
     public static String TAG = "Home Activity";
-    String uType = UserInFormation.getAccountType();
-    static String uId = UserInFormation.getId();
     // Disable the Back Button
 
     boolean doubleBackToExitPressedOnce = false;
@@ -95,12 +89,6 @@ public class HomeActivity extends AppCompatActivity  {
         if(!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
-        }
-
-        if(UserInFormation.getAccountType().equals("Supplier")) {
-            getSupOrders();
-        } else {
-            getDeliveryOrders();
         }
     }
 
@@ -172,8 +160,8 @@ public class HomeActivity extends AppCompatActivity  {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
         String datee = sdf.format(new Date());
 
-        if(uType.equals("Delivery Worker")) {
-            DatabaseReference Wdatabase =  FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(uId).child("requests");
+        if(UserInFormation.getAccountType().equals("Delivery Worker")) {
+            DatabaseReference Wdatabase =  FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(UserInFormation.getId()).child("requests");
             Wdatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -198,13 +186,13 @@ public class HomeActivity extends AppCompatActivity  {
                 public void onCancelled(@NonNull DatabaseError error) { }
             });
 
-            mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.orderByChild("uAccepted").equalTo(UserInFormation.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int count2 = 0;
                     if(snapshot.exists()){
                         for (DataSnapshot ds:snapshot.getChildren()){
-                            if(ds.child("statue").getValue().toString().equals("accepted")){
+                            if(Objects.requireNonNull(ds.child("statue").getValue()).toString().equals("accepted")){
                                 count2++;
                             }
                         }
@@ -265,9 +253,12 @@ public class HomeActivity extends AppCompatActivity  {
     public static void getSupOrders() {
         supList.clear();
         supList.trimToSize();
+        delvList.clear();
+        delvList.trimToSize();
+
         Log.i(TAG, "Getting Supplier Orders From Database");
 
-        mDatabase.orderByChild("uId").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.orderByChild("uId").equalTo(UserInFormation.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds : snapshot.getChildren()) {
@@ -286,10 +277,12 @@ public class HomeActivity extends AppCompatActivity  {
     }
 
     public static void getDeliveryOrders() {
+        supList.clear();
+        supList.trimToSize();
         delvList.clear();
         delvList.trimToSize();
         Log.i(TAG, "Getting Captain Orders From Database");
-        mDatabase.orderByChild("uAccepted").equalTo(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.orderByChild("uAccepted").equalTo(UserInFormation.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds : snapshot.getChildren()) {

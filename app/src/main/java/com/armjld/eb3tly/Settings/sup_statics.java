@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +24,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import Model.Data;
@@ -32,8 +31,7 @@ import ir.androidexception.datatable.DataTable;
 import ir.androidexception.datatable.model.DataTableHeader;
 import ir.androidexception.datatable.model.DataTableRow;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
-public class delv_statics extends AppCompatActivity {
+public class sup_statics extends AppCompatActivity {
 
     SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     SimpleDateFormat dbDate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -46,6 +44,8 @@ public class delv_statics extends AppCompatActivity {
     int accepted = 0;
     int recived = 0;
     int dilv = 0;
+    int placed = 0;
+    int denied = 0;
 
     DatePickerDialog dpd;
     EditText fromDate, toDate;
@@ -53,10 +53,11 @@ public class delv_statics extends AppCompatActivity {
     TextView txtPeriodGGet,txtPeriodGMoney, txtAccepted, txtRecived, txtDliv;
     ImageView btnBack;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delv_statics);
+        setContentView(R.layout.activity_sup_statics);
 
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("التقارير");
@@ -157,14 +158,21 @@ public class delv_statics extends AppCompatActivity {
         getStates();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("SetTextI18n")
     private void getStates() {
+
         periodGGet = 0;
         periodGMoney = 0;
+        accepted = 0;
+        recived = 0;
+        dilv = 0;
+        placed = 0;
+        denied = 0;
 
-        ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x-> {
+        ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x-> {
             try {
-                return conv(x.getAcceptedTime()).compareTo(sDF.parse(fromDate.getText().toString())) >= 0 &&  conv(x.getAcceptedTime()).compareTo(sDF.parse(toDate.getText().toString())) <= 0;
+                return conv(x.getDate()).compareTo(sDF.parse(fromDate.getText().toString())) >= 0 &&  conv(x.getDate()).compareTo(sDF.parse(toDate.getText().toString())) <= 0;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -175,6 +183,7 @@ public class delv_statics extends AppCompatActivity {
             Data c = filterList.get(i);
             String gMoney = c.getGMoney();
             String gGet = c.getGGet();
+            placed ++;
             switch (c.getStatue()) {
                 case "accepted" : {
                     accepted ++;
@@ -188,23 +197,29 @@ public class delv_statics extends AppCompatActivity {
                 }
 
                 case "deniedback":
-                case "denied" :
+                case "denied" : {
+                    denied ++;
+                    break;
+                }
                 case "delivered" : {
                     dilv++;
                     break;
                 }
             }
+
             periodGMoney = periodGMoney + Integer.parseInt(gMoney);
             periodGGet = periodGGet + Integer.parseInt(gGet);
+
         }
 
         DataTable dataTable = findViewById(R.id.data_table);
 
-        DataTableHeader header = new DataTableHeader.Builder()
-                .item("وجهة المقارنة", 2)
-                .item("العدد", 1).build();
+        DataTableHeader header = new DataTableHeader.Builder().item("وجهة المقارنة", 2).item("العدد", 1).build();
 
         ArrayList<DataTableRow> rows = new ArrayList<>();
+
+        DataTableRow row1 = new DataTableRow.Builder().value("اجمالي الشحنات").value(placed + " شحنة").build();
+        rows.add(row1);
 
         DataTableRow row = new DataTableRow.Builder().value("عدد الاوردرات المقبولة").value(accepted + " شحنة").build();
         rows.add(row);
@@ -215,22 +230,18 @@ public class delv_statics extends AppCompatActivity {
         DataTableRow row3 = new DataTableRow.Builder().value("عدد الاوردرات المسلمة").value(dilv + " شحنة").build();
         rows.add(row3);
 
+        DataTableRow row33 = new DataTableRow.Builder().value("عدد الاوردرات المرتجعه").value(denied + " شحنة").build();
+        rows.add(row33);
+
         DataTableRow row4 = new DataTableRow.Builder().value("اجمالي مصاريف الشحن").value(periodGGet + " جنية").build();
         rows.add(row4);
 
-        DataTableRow row5 = new DataTableRow.Builder().value("اجمالي المقدمات المدفوعة").value(periodGMoney + " جنية").build();
+        DataTableRow row5 = new DataTableRow.Builder().value("اجمالي سعر الشحنات").value(periodGMoney + " جنية").build();
         rows.add(row5);
 
         dataTable.setHeader(header);
         dataTable.setRows(rows);
         dataTable.inflate(this);
-
-        /*txtAccepted.setText("تم قبول : " + accepted + " شحنة");
-        txtRecived.setText("تم استلام : " + recived + " شحنة");
-        txtDliv.setText("تم تسليم : " + dilv + " شحنة");
-        txtPeriodGGet.setText("مصاريف الشحن في التفرة المححدة : " + periodGGet +  " ج");
-        txtPeriodGMoney.setText("المقدمات المدفوعة في الفترة المحددة :  " + periodGMoney +  " ج");
-         */
     }
 
     private Date conv(String orderDate) throws ParseException {

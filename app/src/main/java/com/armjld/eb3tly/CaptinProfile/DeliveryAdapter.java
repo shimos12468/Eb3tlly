@@ -115,7 +115,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         // Get Post Date
         String startDate = Objects.requireNonNull(data.getDate());
 
-        holder.setDate(data.getDDate());
+        holder.setDate(data.getDDate(), data.getpDate());
         holder.setUsername(data.getuId());
         holder.setOrdercash(data.getGMoney());
         holder.setOrderFrom(data.reStateP());
@@ -337,6 +337,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
 
         // --------- Report for Delvery
+        holder.mImageButton.setVisibility(View.GONE);
         holder.mImageButton.setOnClickListener(v -> {
             assert vibe != null;
             vibe.vibrate(20);
@@ -463,7 +464,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
         public Button btnDelete,btnInfo,btnDelivered,btnRate,btnChat,btnRecived,btnOrderBack;
-        public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate;
+        public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate,pickDate;
         public LinearLayout linerDate, linerAll;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans;
         public ImageButton mImageButton;
@@ -496,6 +497,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtOrderTo = myview.findViewById(R.id.orderto);
             txtPostDate = myview.findViewById(R.id.txtPostDate);
             btnOrderBack = myview.findViewById(R.id.btnOrderBack);
+            pickDate = myview.findViewById(R.id.pickDate);
         }
 
 
@@ -595,18 +597,19 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             txtOrderTo.setText(orderto);
         }
 
-        public void setDate (String date){
+        public void setDate (String date, String pDate){
             txtDate.setText(date);
+            pickDate.setText(pDate);
         }
 
         @SuppressLint("SetTextI18n")
         public void setOrdercash(String ordercash){
-            txtgMoney.setText(ordercash + " ج");
+            txtgMoney.setText("ثمن الرسالة : " + ordercash + " ج");
         }
 
         @SuppressLint("SetTextI18n")
         public void setFee(String fees) {
-            txtgGet.setText(fees + " ج");
+            txtgGet.setText("مصاريف الشحن : " + fees + " ج");
         }
 
 

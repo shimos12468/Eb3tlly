@@ -1,12 +1,10 @@
 package com.armjld.eb3tly.Login;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.armjld.eb3tly.Block.BlockManeger;
@@ -99,6 +97,7 @@ public class LoginManager {
                         switch (UserInFormation.getAccountType()) {
                             case "Supplier":
                             case "Delivery Worker":
+                                HomeActivity.whichFrag = "Home";
                                 mContext.startActivity(new Intent(mContext, HomeActivity.class));
                                 break;
                             case "Admin":
@@ -142,14 +141,18 @@ public class LoginManager {
     
     public void clearInfo(Context mContext) {
         uDatabase.child(Objects.requireNonNull(mAuth.getUid())).child("device_token").setValue("");
+
         if(Login_Options.mGoogleSignInClient != null) {
             Login_Options.mGoogleSignInClient.signOut();
         }
         Login_Options.disconnectFromFacebook();
+
         mAuth.signOut();
+
         ((Activity)mContext).finish();
         mContext.startActivity(new Intent(mContext, Login_Options.class));
         UserInFormation.clearUser();
+
         dataset = false;
         Toast.makeText(mContext, "تم تسجيل الخروج بنجاح", Toast.LENGTH_SHORT).show();
     }

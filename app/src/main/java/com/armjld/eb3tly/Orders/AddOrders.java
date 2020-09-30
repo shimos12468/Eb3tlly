@@ -333,7 +333,6 @@ public class AddOrders extends AppCompatActivity {
             if(!check()) {
                 return;
             }
-
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(AddOrders.this).setMessage("هل انت متاكد من صحه البيانات و انك تريد اضافة الاوردر ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
                 addOrder();
                 clearText();

@@ -1,8 +1,11 @@
 package com.armjld.eb3tly.Orders;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -15,9 +18,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Chat.Messages;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.rquests;
 import Model.UserInFormation;
@@ -30,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
+import com.shreyaspatil.MaterialDialog.MaterialDialog;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -55,13 +61,15 @@ public class OrderInfo extends AppCompatActivity {
 
     TextView date3, date, orderto, OrderFrom,txtPack,txtWeight,ordercash2,fees2,txtPostDate2;
     TextView dsUsername,txtTitle,ddCount,txtNoddComments;
-    TextView dsPAddress,dsDAddress;
+    TextView dsPAddress,dsDAddress,txtCallCustomer;
     ImageView ppStar,imgVerf,supPP;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
     RatingBar rbUser;
     ImageView btnBlock, btnClose;
     private BlockManeger block = new BlockManeger();
     Button btnBid, btnMore,btnDelete;
+    private static final int PHONE_CALL_CODE = 100;
+
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     SimpleDateFormat orderformat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -72,6 +80,7 @@ public class OrderInfo extends AppCompatActivity {
     String lastEdit = "";
     String dName = "";
     String ownerName = "";
+    String dPhone = "";
 
     private void getBack() {
         if(cameFrom.equals("Home Activity")) {
@@ -119,6 +128,7 @@ public class OrderInfo extends AppCompatActivity {
         txtPostDate2 = findViewById(R.id.txtPostDate2);
         btnBid = findViewById(R.id.btnBid);
         btnMore = findViewById(R.id.btnMore);
+        txtCallCustomer = findViewById(R.id.txtCallCustomer);
 
         date3 = findViewById(R.id.date3);
         date = findViewById(R.id.date);
@@ -140,6 +150,10 @@ public class OrderInfo extends AppCompatActivity {
             //getBack();
         });
 
+        if(UserInFormation.getId().equals(owner)) {
+            btnBlock.setVisibility(View.GONE);
+        }
+
         btnDelete.setOnClickListener(v -> {
             Intent deleteAct = new Intent(this, Delete_Reaon_Delv.class);
             deleteAct.putExtra("orderid", orderID);
@@ -150,7 +164,30 @@ public class OrderInfo extends AppCompatActivity {
             startActivity(deleteAct);
         });
 
+        txtCallCustomer.setOnClickListener(v -> {
+            if(!dPhone.equals("")) {
+                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(OrderInfo.this).setMessage("هل تريد الاتصال بالعميل ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_add_phone, (dialogInterface, which) -> {
+
+                    checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + dPhone));
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    startActivity(callIntent);
+
+                    dialogInterface.dismiss();
+                }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                    dialogInterface.dismiss();
+                }).build();
+                mBottomSheetDialog.show();
+            } else {
+                Toast.makeText(this, "التاجر لم يضع رقم هاتف", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Data orderData = snapshot.getValue(Data.class);
@@ -159,6 +196,7 @@ public class OrderInfo extends AppCompatActivity {
                 acceptedTime = orderData.getAcceptedTime();
                 lastEdit = orderData.getLastedit();
                 dName = orderData.getDName();
+                dPhone = orderData.getDPhone();
 
                 setPostDate(orderData.getDate());
 
@@ -195,6 +233,9 @@ public class OrderInfo extends AppCompatActivity {
                 orderto.setText(to);
                 OrderFrom.setText(from);
 
+                txtCallCustomer.setText("رقم هاتف العميل : " + dPhone);
+                txtCallCustomer.setPaintFlags(txtCallCustomer.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
                 if (orderState.equals("placed")) {
                     btnBid.setVisibility(View.VISIBLE);
                     btnDelete.setVisibility(View.GONE);
@@ -202,6 +243,7 @@ public class OrderInfo extends AppCompatActivity {
                     btnBid.setVisibility(View.GONE);
                     if(orderState.equals("accepted") && orderData.getuAccepted().equals(UserInFormation.getId())) {
                         btnDelete.setVisibility(View.VISIBLE);
+                        txtCallCustomer.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -449,24 +491,20 @@ public class OrderInfo extends AppCompatActivity {
 
 
         btnBlock.setOnClickListener(v1 -> {
-            DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        boolean flag = block.addUser(owner);
-                        if (flag) {
-                            Toast.makeText(this, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(this, HomeActivity.class));
-                        } else {
-                            Toast.makeText(this, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
+            MaterialDialog materialDialog = new MaterialDialog.Builder(OrderInfo.this).setMessage("هل تريد حظر التاجر نهائيا ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_block, (dialogInterface, which) -> {
+                boolean flag = block.addUser(owner);
+                if (flag) {
+                    Toast.makeText(this, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, HomeActivity.class));
+                } else {
+                    Toast.makeText(this, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
 
-                        }
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
                 }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("هل انت متاكد من انك تريد حظر هذا المستخدم ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
+                dialogInterface.dismiss();
+            }).build();
+            materialDialog.show();
         });
 
         imgVerf.setOnClickListener(v1 -> {
@@ -488,6 +526,24 @@ public class OrderInfo extends AppCompatActivity {
         } else {
             btnBid.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_defult));
             btnBid.setText("قبول الاوردر");
+        }
+    }
+
+    public void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[] { permission }, requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PHONE_CALL_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Phone Permission Denied", Toast.LENGTH_SHORT).show();
+            }
         }
     }
     
