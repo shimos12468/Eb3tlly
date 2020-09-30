@@ -90,7 +90,7 @@ public class captinRecived extends Fragment {
     public static void getOrders(){
         Log.i(TAG, "Setting orders in ArrayList");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("recived2")).collect(Collectors.toList());
+            filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x -> x.getStatue().equals("recived2") || x.getStatue().equals("denied")).collect(Collectors.toList());
             deliveryAdapter = new DeliveryAdapter(mContext, filterList);
             if(recyclerView != null) {
                 recyclerView.setAdapter(deliveryAdapter);

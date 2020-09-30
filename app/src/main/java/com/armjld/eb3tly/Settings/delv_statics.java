@@ -161,6 +161,9 @@ public class delv_statics extends AppCompatActivity {
     private void getStates() {
         periodGGet = 0;
         periodGMoney = 0;
+        accepted = 0;
+        recived = 0;
+        dilv = 0;
 
         ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.delvList.stream().filter(x-> {
             try {
@@ -201,18 +204,18 @@ public class delv_statics extends AppCompatActivity {
         DataTable dataTable = findViewById(R.id.data_table);
 
         DataTableHeader header = new DataTableHeader.Builder()
-                .item("وجهة المقارنة", 2)
+                .item("الحالة", 2)
                 .item("العدد", 1).build();
 
         ArrayList<DataTableRow> rows = new ArrayList<>();
 
-        DataTableRow row = new DataTableRow.Builder().value("عدد الاوردرات المقبولة").value(accepted + " شحنة").build();
+        DataTableRow row = new DataTableRow.Builder().value("عدد الشحنات المقبولة").value(accepted + " شحنة").build();
         rows.add(row);
 
-        DataTableRow row2 = new DataTableRow.Builder().value("عدد الاوردرات المستلمة").value(recived + " شحنة").build();
+        DataTableRow row2 = new DataTableRow.Builder().value("عدد الشحنات تحت التسليم").value(recived + " شحنة").build();
         rows.add(row2);
 
-        DataTableRow row3 = new DataTableRow.Builder().value("عدد الاوردرات المسلمة").value(dilv + " شحنة").build();
+        DataTableRow row3 = new DataTableRow.Builder().value("عدد الشحنات المسلمة").value(dilv + " شحنة").build();
         rows.add(row3);
 
         DataTableRow row4 = new DataTableRow.Builder().value("اجمالي مصاريف الشحن").value(periodGGet + " جنية").build();
@@ -224,13 +227,6 @@ public class delv_statics extends AppCompatActivity {
         dataTable.setHeader(header);
         dataTable.setRows(rows);
         dataTable.inflate(this);
-
-        /*txtAccepted.setText("تم قبول : " + accepted + " شحنة");
-        txtRecived.setText("تم استلام : " + recived + " شحنة");
-        txtDliv.setText("تم تسليم : " + dilv + " شحنة");
-        txtPeriodGGet.setText("مصاريف الشحن في التفرة المححدة : " + periodGGet +  " ج");
-        txtPeriodGMoney.setText("المقدمات المدفوعة في الفترة المحددة :  " + periodGMoney +  " ج");
-         */
     }
 
     private Date conv(String orderDate) throws ParseException {

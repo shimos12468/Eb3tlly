@@ -11,6 +11,14 @@
     app:cardCornerRadius="10dp"
     app:cardElevation="100dp">
 
+    <ImageView
+        android:id="@+id/btnInfo"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="5dp"
+        app:srcCompat="@drawable/ic_info" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|right"
-            android:layout_marginRight="10dp"
             android:gravity="center|right"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
@@ -278,12 +285,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="0dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnChat"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/btn_defult"
+                    android:text="تواصل"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnRecived"
@@ -292,25 +313,9 @@
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
                     android:text="تم تسليم الاوردر للمندوب"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnChat"
-                    android:layout_width="0dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="تواصل"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:visibility="gone" />
@@ -320,8 +325,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:visibility="visible">
@@ -332,7 +337,6 @@
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_bad"
@@ -347,8 +351,6 @@
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_bad"
                     android:text="تم استلام المرتجع"
@@ -363,7 +365,6 @@
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_bad"
                     android:text="تعديل الاوردر"

@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.armjld.eb3tly.CaptinProfile.DeliveryAdapter;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.armjld.eb3tly.Home.HomeActivity;
@@ -57,24 +59,27 @@ public class placedTab extends Fragment {
         assert mUser != null;
         uId = UserInFormation.getId();
 
+        recyclerView = view.findViewById(R.id.userRecyclr);
         refresh = view.findViewById(R.id.refresh);
         txtNoOrders = view.findViewById(R.id.txtNoOrders);
-        recyclerView = view.findViewById(R.id.userRecyclr);
 
-        // ------------ Refresh View ---------- //
+        // ---- Refresh ----------- //
         refresh.setOnRefreshListener(() -> {
             refresh.setRefreshing(true);
             HomeActivity.getSupOrders();
             refresh.setRefreshing(false);
         });
 
-        // -------------- Recycler
+        //Recycler
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+
         getOrders();
+        recyclerView.setAdapter(supplierAdapter);
+        updateNone(filterList.size());
 
         return view;
     }
@@ -82,13 +87,10 @@ public class placedTab extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        getOrders();
     }
 
     public static void getOrders(){
-        filterList.clear();
-        filterList.trimToSize();
-        Log.i(TAG, "Getting Local Placed Orders for Supplier");
+        Log.i(TAG, "Setting orders in ArrayList");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("placed")).collect(Collectors.toList());
             supplierAdapter = new SupplierAdapter(mContext, filterList);

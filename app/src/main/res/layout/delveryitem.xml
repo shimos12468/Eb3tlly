@@ -279,7 +279,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="0.5"
@@ -287,33 +287,18 @@
                 android:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnDelete"
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="false"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/btn_bad"
-                    android:text="الغاء الاوردر"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    android:visibility="gone"
-                    tools:visibility="gone" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnOrderBack"
+                    android:id="@+id/btnChat"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
-                    android:background="@drawable/btn_bad"
-                    android:text="مرتجع"
+                    android:background="@drawable/btn_defult"
+                    android:text="تواصل"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
-                    android:visibility="visible"
-                    tools:visibility="gone" />
+                    android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnDelivered"
@@ -327,8 +312,7 @@
                     android:text="تم تسليم الاوردر للعميل"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
-                    android:visibility="visible"
-                    tools:visibility="gone" />
+                    android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnRecived"
@@ -336,20 +320,20 @@
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_defult"
                     android:text="تأكيد استلام الشحنة"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
-                    android:visibility="visible"
-                    tools:visibility="gone" />
+                    android:visibility="gone" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
@@ -358,32 +342,30 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnInfo"
                     android:layout_width="match_parent"
+                    android:layout_marginRight="5dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
                     android:layout_weight="0.5"
                     android:background="@drawable/btn_bad"
                     android:text="المزيد من البيانات"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
-                    android:visibility="visible"
-                    tools:visibility="gone" />
+                    android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnChat"
+                    android:id="@+id/btnOrderBack"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="false"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="0.5"
-                    android:background="@drawable/btn_defult"
-                    android:text="تواصل"
+                    android:background="@drawable/btn_bad"
+                    android:text="مرتجع"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
-                    android:visibility="visible"
-                    tools:visibility="gone" />
+                    android:visibility="gone" />
 
             </LinearLayout>
 

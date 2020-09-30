@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.Home.MyAdapter;
 import com.armjld.eb3tly.R;
 
 import Model.Data;
@@ -52,9 +53,8 @@ import Model.userData;
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyViewHolder> implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     Context context;
-    long count;
     String orderId;
-    Data order;
+    int Pos;
     ArrayList<requestsData>requestsData;
     private DatabaseReference uDatabase,mDatabase,rDatabase,nDatabase;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
@@ -67,12 +67,11 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
 
 
 
-    public RequestsAdapter(Context context, ArrayList<Model.requestsData> requestsData, long count, String orderId, Data order) {
-        this.count = count;
+    public RequestsAdapter(Context context, ArrayList<Model.requestsData> requestsData, String orderId, int Pos) {
         this.context = context;
         this.requestsData = requestsData;
         this.orderId = orderId;
-        this.order = order;
+        this.Pos = Pos;
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         rDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("comments");
@@ -95,193 +94,16 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
         holder.setPostDate(date);
         holder.setUserInfo(id);
 
-        /*holder.imgEditPhoto.setOnClickListener(v-> {
-            AlertDialog.Builder myDialogMore = new AlertDialog.Builder(context);
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View dialogMore = inflater.inflate(R.layout.dialogdevinfo, null);
-            myDialogMore.setView(dialogMore);
-            final AlertDialog dialog = myDialogMore.create();
-
-            TextView tbTitle = dialogMore.findViewById(R.id.toolbar_title);
-            tbTitle.setText("بيانات المندوب");
-
-            ImageView btnClose = dialogMore.findViewById(R.id.btnClose);
-            TextView txtTitle = dialogMore.findViewById(R.id.txtTitle);
-
-            btnClose.setOnClickListener(v12 -> dialog.dismiss());
-
-            final TextView ddUsername = dialogMore.findViewById(R.id.ddUsername);
-            final TextView ddPhone = dialogMore.findViewById(R.id.ddPhone);
-            ddPhone.setPaintFlags(ddPhone.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
-            final TextView ddCount = dialogMore.findViewById(R.id.ddCount);
-            final ImageView ppStar = dialogMore.findViewById(R.id.ppStar);
-            final ImageView imgVerfe = dialogMore.findViewById(R.id.imgVerf);
-            final RatingBar ddRate = dialogMore.findViewById(R.id.ddRate);
-            final ImageView dPP = dialogMore.findViewById(R.id.dPP);
-            final TextView txtNodsComments = dialogMore.findViewById(R.id.txtNodsComments);
-            final ImageView btnBlock = dialogMore.findViewById(R.id.btnBlock);
-
-            btnBlock.setOnClickListener(v1 -> {
-                DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            // -------------------------- Start Blocking ---------------------//
-                            boolean flag = block.addUser(id);
-                            if(flag)
-                                Toast.makeText(context, "تم حظر المستخدم", Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(context, "حدث خطأ في العملية", Toast.LENGTH_SHORT).show();
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            break;
-                    }
-                };
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("هل انت متاكد من انك تريد خظر هذا المستخدم ؟").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
-            });
-
-            imgVerfe.setOnClickListener(v1 -> Toast.makeText(context, "هذا الحساب مفعل برقم الهاتف و البطاقة الشخصية", Toast.LENGTH_SHORT).show());
-
-            ddPhone.setOnClickListener(v1 -> {
-                checkPermission(Manifest.permission.CALL_PHONE, PHONE_CALL_CODE);
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + ddPhone.getText().toString()));
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                context.startActivity(callIntent);
-            });
-
-            // --------------------- Get the user name && Phone Number -------------------//
-            uDatabase.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String dUser = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                    String dPhone = Objects.requireNonNull(snapshot.child("phone").getValue()).toString();
-                    String sPP = Objects.requireNonNull(snapshot.child("ppURL").getValue()).toString();
-                    Picasso.get().load(Uri.parse(sPP)).into(dPP);
-                    ddUsername.setText(dUser);
-                    ddPhone.setText(dPhone);
-
-                    // Check if account is Verfied
-                    String isConfirm = "false";
-                    if(snapshot.child("isConfirmed").exists()) {
-                        isConfirm = Objects.requireNonNull(snapshot.child("isConfirmed").getValue()).toString();
-                    }
-                    if(isConfirm.equals("true")) {
-                        imgVerfe.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-
-            // -------------------- Get the Rate Stars ------------------//
-            rDatabase.child(id).orderByChild("dId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()) {
-                        long total = 0;
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            if(ds.exists()) {
-                                long rating = (long) Double.parseDouble(Objects.requireNonNull(ds.child("rate").getValue()).toString());
-                                total = total + rating;
-                            }
-                        }
-                        double average = (double) total / dataSnapshot.getChildrenCount();
-                        if(String.valueOf(average).equals("NaN")) {
-                            average = 5;
-                        }
-                        ddRate.setRating((int) average);
-                    } else {
-                        ddRate.setRating(5);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-
-            // -------------------------- Get total delivered orders
-            mDatabase.orderByChild("uAccepted").equalTo(id).addListenerForSingleValueEvent (new ValueEventListener() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    int oCount = 0;
-                    if (dataSnapshot.exists()) {
-                        int count = (int) dataSnapshot.getChildrenCount();
-                        oCount = count;
-                        String strCount = String.valueOf(count);
-                        ddCount.setText( "وصل " + strCount + " اوردر");
-                    } else {
-                        count = 0;
-                        ddCount.setText("لم يقم بتوصيل اي اوردر");
-                    }
-
-                    if(oCount >= 10) {
-                        ddUsername.setTextColor(Color.parseColor("#ffc922"));
-                        ppStar.setVisibility(View.VISIBLE);
-                    } else {
-                        ddUsername.setTextColor(Color.WHITE);
-                        ppStar.setVisibility(View.GONE);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-
-
-
-            // ------------------------------ Get that user Comments --------------------------- //
-            ListView listComment = dialogMore.findViewById(R.id.dsComment);
-            final ArrayAdapter<String> arrayAdapterLessons = new ArrayAdapter<>(context, R.layout.list_white_text, R.id.txtItem, mArraylistSectionLessons);
-            listComment.setAdapter(arrayAdapterLessons);
-            mArraylistSectionLessons.clear();
-            txtNodsComments.setVisibility(View.VISIBLE);// To not dublicate comments
-            rDatabase.child(id).orderByChild("dId").equalTo(id).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    int comments = 0;
-                    if(dataSnapshot.exists()) {
-                        for (DataSnapshot cData : dataSnapshot.getChildren()) {
-                            if(cData.exists()) {
-                                String tempComment = Objects.requireNonNull(cData.child("comment").getValue()).toString();
-                                if(!tempComment.equals("")) {
-                                    mArraylistSectionLessons.add(tempComment);
-                                    comments ++;
-                                }
-                                arrayAdapterLessons.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                    if(comments > 0) {
-                        txtNodsComments.setVisibility(View.GONE);
-                        listComment.setVisibility(View.VISIBLE);
-                        txtTitle.setVisibility(View.VISIBLE);
-                    } else {
-                        txtNodsComments.setVisibility(View.VISIBLE);
-                        listComment.setVisibility(View.GONE);
-                        txtTitle.setVisibility(View.GONE);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) { }
-            });
-            dialog.show();
-        });
-
-        /*holder.btnSendMessage.setOnClickListener(v-> {
-
-        });*/
-
         holder.btnDecline.setOnClickListener(v-> {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
-
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders").child(orderId).child("requests").child(id).child("statue").setValue("declined");
                         FirebaseDatabase.getInstance().getReference().child("Pickly").child("users").child(id).child("requests").child(orderId).child("statue").setValue("declined");
+
+                        requestsData.remove(position);
+                        notifyItemRemoved(position);
+
                         Toast.makeText(context, "تم الغاء المندوب", Toast.LENGTH_SHORT).show();
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -293,7 +115,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
             builder.setMessage("هل انت متاكد من انك تريد تريد الغاء طلب المندوب ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
 
         });
-
 
         holder.btnAccept.setOnClickListener(v -> {
             DialogInterface.OnClickListener dialogClickListener = (confirmDailog, which) -> {
@@ -309,8 +130,8 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                         mDatabase.child(orderId).child("statue").setValue("accepted");
                         mDatabase.child(orderId).child("acceptedTime").setValue(datee);
 
-                        // ------------------ Notificatiom ------------------ //
-                        notiData Noti = new notiData(UserInFormation.getId(), id,orderId,"قام " + UserInFormation.getUserName() + " بقبول طلبك لاستلام الاوردر ",datee,"false","order",UserInFormation.getUserName(), UserInFormation.getUserURL());
+                        // ------------------ Notification ------------------ //
+                        notiData Noti = new notiData(UserInFormation.getId(), id,orderId,"قام " + UserInFormation.getUserName() + " بقبول طلبك لاستلام الاوردر ",datee,"false","profile",UserInFormation.getUserName(), UserInFormation.getUserURL());
                         nDatabase.child(id).push().setValue(Noti);
 
                         //------------------ se request as accepted in user db ----------- //
@@ -329,7 +150,8 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
                             }
                         }
 
-                        placedTab.filterList.remove(order);
+                        requestsData.remove(position);
+                        notifyItemRemoved(position);
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;

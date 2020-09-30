@@ -46,6 +46,7 @@ public class sup_statics extends AppCompatActivity {
     int dilv = 0;
     int placed = 0;
     int denied = 0;
+    int deleted = 0;
 
     DatePickerDialog dpd;
     EditText fromDate, toDate;
@@ -169,6 +170,7 @@ public class sup_statics extends AppCompatActivity {
         dilv = 0;
         placed = 0;
         denied = 0;
+        deleted = 0;
 
         ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x-> {
             try {
@@ -201,10 +203,17 @@ public class sup_statics extends AppCompatActivity {
                     denied ++;
                     break;
                 }
+
+                case "deleted": {
+                    deleted++;
+                    break;
+                }
                 case "delivered" : {
                     dilv++;
                     break;
                 }
+
+
             }
 
             periodGMoney = periodGMoney + Integer.parseInt(gMoney);
@@ -214,30 +223,35 @@ public class sup_statics extends AppCompatActivity {
 
         DataTable dataTable = findViewById(R.id.data_table);
 
-        DataTableHeader header = new DataTableHeader.Builder().item("وجهة المقارنة", 2).item("العدد", 1).build();
+        DataTableHeader header = new DataTableHeader.Builder().item("الحالة", 2).item("العدد", 1).build();
 
         ArrayList<DataTableRow> rows = new ArrayList<>();
 
         DataTableRow row1 = new DataTableRow.Builder().value("اجمالي الشحنات").value(placed + " شحنة").build();
         rows.add(row1);
 
-        DataTableRow row = new DataTableRow.Builder().value("عدد الاوردرات المقبولة").value(accepted + " شحنة").build();
+        DataTableRow row = new DataTableRow.Builder().value("عدد الشحنات المقبولة").value(accepted + " شحنة").build();
         rows.add(row);
 
-        DataTableRow row2 = new DataTableRow.Builder().value("عدد الاوردرات المستلمة").value(recived + " شحنة").build();
+        DataTableRow row2 = new DataTableRow.Builder().value("عدد الشحنات تحت التسليم").value(recived + " شحنة").build();
         rows.add(row2);
 
-        DataTableRow row3 = new DataTableRow.Builder().value("عدد الاوردرات المسلمة").value(dilv + " شحنة").build();
+        DataTableRow row3 = new DataTableRow.Builder().value("عدد الشحنات المسلمة").value(dilv + " شحنة").build();
         rows.add(row3);
 
-        DataTableRow row33 = new DataTableRow.Builder().value("عدد الاوردرات المرتجعه").value(denied + " شحنة").build();
+        DataTableRow row33 = new DataTableRow.Builder().value("عدد الشحنات المرتجعه").value(denied + " شحنة").build();
         rows.add(row33);
+
+        DataTableRow row6 = new DataTableRow.Builder().value("الشحنات الملغية").value(deleted + " شحنة").build();
+        rows.add(row6);
 
         DataTableRow row4 = new DataTableRow.Builder().value("اجمالي مصاريف الشحن").value(periodGGet + " جنية").build();
         rows.add(row4);
 
         DataTableRow row5 = new DataTableRow.Builder().value("اجمالي سعر الشحنات").value(periodGMoney + " جنية").build();
         rows.add(row5);
+
+
 
         dataTable.setHeader(header);
         dataTable.setRows(rows);

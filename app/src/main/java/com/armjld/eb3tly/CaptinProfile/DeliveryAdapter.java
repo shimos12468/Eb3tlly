@@ -192,9 +192,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 chatListclass _ch = new chatListclass();
                 _ch.dlevarychat(owner);
 
-                ViewPager viewPager = ((HomeActivity) context).findViewById(R.id.view_pager);
-                viewPager.setCurrentItem(1, true);
-
                 dialogInterface.dismiss();
             }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
                 dialogInterface.dismiss();
@@ -425,18 +422,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             });
             popup.show();
         });
-
-        // -----------------------  Delete order for Delivery
-        holder.btnDelete.setOnClickListener(v -> {
-            assert vibe != null;
-            vibe.vibrate(20);
-            Intent deleteAct = new Intent(context, Delete_Reaon_Delv.class);
-            deleteAct.putExtra("orderid", orderID);
-            deleteAct.putExtra("owner", data.getuId());
-            deleteAct.putExtra("aTime", data.getAcceptedTime());
-            deleteAct.putExtra("eTime", data.getLastedit());
-            ((Activity)context).startActivityForResult(deleteAct, 1);
-        });
     }
 
     @Override
@@ -463,7 +448,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
-        public Button btnDelete,btnInfo,btnDelivered,btnRate,btnChat,btnRecived,btnOrderBack;
+        public Button btnInfo,btnDelivered,btnRate,btnChat,btnRecived,btnOrderBack;
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate, txtUsername, txtOrderFrom, txtOrderTo,txtPostDate,pickDate;
         public LinearLayout linerDate, linerAll;
         public ImageView icnCar,icnMotor,icnMetro,icnTrans;
@@ -476,7 +461,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
 
             btnDelivered = myview.findViewById(R.id.btnDelivered);
             btnInfo = myview.findViewById(R.id.btnInfo);
-            btnDelete = myview.findViewById(R.id.btnDelete);
             btnRate = myview.findViewById(R.id.btnRate);
             txtRate = myview.findViewById(R.id.drComment);
             txtGetStat = myview.findViewById(R.id.txtStatue);
@@ -539,7 +523,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             btnRate.setText("تقييم التاجر");
             switch (state) {
                 case "accepted" : {
-                    btnDelete.setVisibility(View.GONE);
                     btnDelivered.setVisibility(View.GONE);
                     btnChat.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
@@ -551,11 +534,11 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                     break;
                 }
                 case "recived" : {
-                    btnDelete.setVisibility(View.GONE);
                     btnChat.setVisibility(View.VISIBLE);
-                    btnDelivered.setVisibility(View.GONE);
                     btnInfo.setVisibility(View.VISIBLE);
                     btnRecived.setVisibility(View.VISIBLE);
+
+                    btnDelivered.setVisibility(View.GONE);
                     txtGetStat.setVisibility(View.GONE);
                     btnOrderBack.setVisibility(View.GONE);
                     txtGetStat.setText("تم استلام الاوردر من التاجر");
@@ -564,7 +547,6 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 }
 
                 case "recived2" : {
-                    btnDelete.setVisibility(View.GONE);
                     btnChat.setVisibility(View.VISIBLE);
                     btnDelivered.setVisibility(View.VISIBLE);
                     btnInfo.setVisibility(View.VISIBLE);
@@ -577,10 +559,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 }
 
                 case "delivered" :
-                case "denied" :
                 case "deniedback" : {
                     btnDelivered.setVisibility(View.GONE);
-                    btnDelete.setVisibility(View.GONE);
                     btnChat.setVisibility(View.GONE);
                     btnInfo.setVisibility(View.GONE);
                     btnRecived.setVisibility(View.GONE);
@@ -588,6 +568,18 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                     btnOrderBack.setVisibility(View.GONE);
                     txtGetStat.setText("تم توصيل الاوردر بنجاح");
                     txtGetStat.setBackgroundColor(Color.parseColor("#4CAF50"));
+                    break;
+                }
+
+                case "denied": {
+                    btnDelivered.setVisibility(View.GONE);
+                    btnChat.setVisibility(View.GONE);
+                    btnInfo.setVisibility(View.GONE);
+                    btnRecived.setVisibility(View.GONE);
+                    txtGetStat.setVisibility(View.GONE);
+                    btnOrderBack.setVisibility(View.GONE);
+                    txtGetStat.setText("مرتجع");
+                    txtGetStat.setBackgroundColor(Color.parseColor("#ff0000"));
                     break;
                 }
             }

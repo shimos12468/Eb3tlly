@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,10 @@ import android.widget.Toast;
 
 import com.armjld.eb3tly.Home.HomeFragment;
 import com.armjld.eb3tly.Notifications.Notifications;
-import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.armjld.eb3tly.Home.HomeActivity;
-import com.armjld.eb3tly.Utilites.main.SectionsPagerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.armjld.eb3tly.Utilites.supPageAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,10 +50,10 @@ public class supplierFragment extends Fragment {
     private String TAG = "Supplier Profile";
     private ConstraintLayout constSupProfile;
     private static String uId = UserInFormation.getId();
-    private ViewPager viewPager;
     private ProgressDialog mdialog;
     private String isConfirmed;
     private ImageView btnBack;
+    private Context mContext;
 
     public supplierFragment() { }
     
@@ -76,11 +73,7 @@ public class supplierFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_supplier, container, false);
-
         RatingBar rbProfile = view.findViewById(R.id.rbProfile);
-
-        Vibrator vibe = (Vibrator) Objects.requireNonNull((HomeActivity)getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
-
         mDatabase = getInstance().getReference().child("Pickly").child("orders");
         mDatabase.orderByChild("uId").equalTo(UserInFormation.getId()).keepSynced(true);
         vDatabase = getInstance().getReference().child("Pickly").child("values");
@@ -101,10 +94,8 @@ public class supplierFragment extends Fragment {
         });
 
 
-
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getActivity(), getChildFragmentManager());
-        viewPager = view.findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
+        ViewPager viewPager = view.findViewById(R.id.view_pager);
+        viewPager.setAdapter(new supPageAdapter(getActivity(), getChildFragmentManager()));
         TabLayout tabs = view.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
@@ -170,6 +161,19 @@ public class supplierFragment extends Fragment {
         });
         
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
     }
     
 }

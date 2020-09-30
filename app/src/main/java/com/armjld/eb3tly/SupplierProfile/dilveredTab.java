@@ -14,9 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.Home.HomeActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import Model.Data;
+import Model.UserInFormation;
 
 
 public class dilveredTab extends Fragment {
@@ -27,6 +31,8 @@ public class dilveredTab extends Fragment {
     private static RecyclerView recyclerView;
     private SwipeRefreshLayout refresh;
     private static TextView txtNoOrders;
+    public static ArrayList<Data> filterList = new ArrayList<>();
+
 
     public dilveredTab() { }
 
@@ -45,18 +51,16 @@ public class dilveredTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_dlivared_orders_supplier, container, false);
-
         recyclerView = view.findViewById(R.id.userRecyclr);
         refresh = view.findViewById(R.id.refresh);
         txtNoOrders = view.findViewById(R.id.txtNoOrders);
 
-        // ------------ Refresh View ---------- //
+        // ---- Refresh ----------- //
         refresh.setOnRefreshListener(() -> {
             refresh.setRefreshing(true);
             HomeActivity.getSupOrders();
             refresh.setRefreshing(false);
         });
-
 
         //Recycler
         recyclerView.setHasFixedSize(true);
@@ -64,20 +68,23 @@ public class dilveredTab extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+
         getOrders();
+        recyclerView.setAdapter(supplierAdapter);
+        updateNone(filterList.size());
+
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getOrders();
     }
 
-    public static void getOrders() {
-        Log.i(TAG, "Getting Local Delivered Orders for Supplier");
+    public static void getOrders(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            ArrayList<Data> filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("delivered") || x.getStatue().equals("deniedback")).collect(Collectors.toList());
+            filterList = (ArrayList<Data>) HomeActivity.supList.stream().filter(x -> x.getStatue().equals("delivered") ||  x.getStatue().equals("deniedback")).collect(Collectors.toList());
+
             supplierAdapter = new SupplierAdapter(mContext, filterList);
             if(recyclerView != null) {
                 recyclerView.setAdapter(supplierAdapter);
@@ -85,7 +92,6 @@ public class dilveredTab extends Fragment {
             }
         }
     }
-
 
     public static void updateNone(int listSize) {
         if(listSize > 0) {

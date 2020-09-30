@@ -38,6 +38,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_block" />
 
+    <ImageView
+        android:id="@+id/btnOrderMap"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnBlock"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_map_24" />
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"

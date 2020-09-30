@@ -8,11 +8,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -35,9 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.armjld.eb3tly.Block.BlockManeger;
+import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.R;
-import Model.UserInFormation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -61,19 +58,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 import Model.Data;
@@ -89,17 +75,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = "Maps";
     private GoogleMap mMap;
     LocationRequest mLocationRequest;
-
-    String filterDate;
-    String uType = UserInFormation.getAccountType();
-    String uId = UserInFormation.getId();
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    BlockManeger block = new BlockManeger();
-    // import firebase
-    private DatabaseReference mDatabase, uDatabase, Database;
-    private ImageView btnHome;
     private FloatingActionButton btnGCL;
 
 
@@ -107,7 +82,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onBackPressed() {
         finish();
-        //startActivity(new Intent(this, HomeActivity.class));
     }
 
     @Override
@@ -115,19 +89,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_orders);
         final LocationManager manager2 = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-        if (!manager2.isProviderEnabled(LocationManager.GPS_PROVIDER) ) { // Check if GPS is Enabled
+        if (!manager2.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
             buildAlertMessageNoGps();
         } else {
             fetchLocation();
         }
-        filterDate = format.format(Calendar.getInstance().getTime());
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //Database
-        uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
-        mDatabase.keepSynced(true);
-        uDatabase.keepSynced(true);
-        btnHome = findViewById(R.id.btnHome);
+
+        ImageView btnHome = findViewById(R.id.btnHome);
         btnGCL = findViewById(R.id.btnGCL);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -226,83 +196,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buildGoogleAPIClient();
             mMap.setMyLocationEnabled(true);
         }
-        mDatabase.orderByChild("ddate").startAt(filterDate).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                            Data orderData = ds.getValue(Data.class);
-                            assert orderData != null;
-                            Date orderDate = null;
-                            Date myDate = null;
-                            try {
-                                orderDate = format.parse(Objects.requireNonNull(ds.child("ddate").getValue()).toString().replaceAll("(^\\h*)|(\\h*$)",""));
-                                myDate =  format.parse(sdf.format(Calendar.getInstance().getTime()));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            assert orderDate != null;
-                            assert myDate != null;
-                        if(orderDate.compareTo(myDate) >= 0 && orderData.getStatue().equals("placed") && !block.check(orderData.getuId()) && ds.child("long").exists() && ds.child("lat").exists()) {
-                            String owner = orderData.getuId();
-                            String pAddress = orderData.getmPAddress();
-                            double lati = Double.parseDouble(Objects.requireNonNull(ds.child("lat").getValue()).toString());
-                            double longLat = Double.parseDouble(Objects.requireNonNull(ds.child("long").getValue()).toString());
-                            uDatabase.child(owner).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String uName = Objects.requireNonNull(snapshot.child("name").getValue()).toString();
-                                    String snipText = "من : " + pAddress + "\n" +  " الي : " + orderData.getDAddress() + "\n" + " مقدم : " + orderData.getGMoney() + "\n" + " مصاريف شحن : " + orderData.getGGet() + "\n" + " اضغط هنا للمزيد من البيانات.";
-                                    Marker marker = mMap.addMarker(new MarkerOptions().position(
-                                            new LatLng(lati,longLat)).title(uName).snippet(snipText).icon(bitmapDescriptorFromVector(MapsActivity.this, R.drawable.ic_add_address)));
-                                    marker.setTag(orderData.getId());
 
-                                    mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+        for (int i = 0; i <  HomeActivity.mm.size(); i++) {
+            Data thisOrder = HomeActivity.mm.get(i);
+            String pAddress = thisOrder.getmPAddress();
+            String owner = thisOrder.getOwner();
+            if(!thisOrder.getLat().equals("") && !thisOrder.get_long().equals("")) {
+                double newLat = Double.parseDouble(thisOrder.getLat());
+                double newLong = Double.parseDouble(thisOrder.get_long());
+                String snipText = "من : " + pAddress + "\n" +  " الي : " + thisOrder.getDAddress() + "\n" + " مقدم : " + thisOrder.getGMoney() + "\n" + " مصاريف شحن : " + thisOrder.getGGet() + "\n" + " اضغط هنا للمزيد من البيانات.";
+                Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(newLat, newLong)).title(owner).snippet(snipText).icon(bitmapDescriptorFromVector(MapsActivity.this, R.drawable.ic_add_address)));
+                marker.setTag(thisOrder.getId());
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
-                                        @Override
-                                        public View getInfoWindow(Marker arg0) {
-                                            return null;
-                                        }
-
-                                        @Override
-                                        public View getInfoContents(Marker marker) {
-
-                                            LinearLayout info = new LinearLayout(MapsActivity.this);
-                                            info.setOrientation(LinearLayout.VERTICAL);
-
-                                            TextView title = new TextView(MapsActivity.this);
-                                            title.setTextColor(Color.RED);
-                                            title.setGravity(Gravity.CENTER);
-                                            title.setTypeface(null, Typeface.BOLD);
-                                            title.setText(marker.getTitle());
-
-                                            TextView txt1 = new TextView(MapsActivity.this);
-                                            txt1.setGravity(Gravity.CENTER);
-                                            txt1.setTextColor(Color.BLACK);
-                                            txt1.setElegantTextHeight(true);
-                                            txt1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                                            txt1.setSingleLine(false);
-                                            txt1.setText(marker.getSnippet());
-
-                                            info.addView(title);
-                                            info.addView(txt1);
-
-                                            return info;
-                                        }
-                                    });
-
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) { }
-                            });
-                        }
+                    @Override
+                    public View getInfoWindow(Marker arg0) {
+                        return null;
                     }
-                }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+
+                        LinearLayout info = new LinearLayout(MapsActivity.this);
+                        info.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView title = new TextView(MapsActivity.this);
+                        title.setTextColor(Color.RED);
+                        title.setGravity(Gravity.CENTER);
+                        title.setTypeface(null, Typeface.BOLD);
+                        title.setText(marker.getTitle());
+
+                        TextView txt1 = new TextView(MapsActivity.this);
+                        txt1.setGravity(Gravity.CENTER);
+                        txt1.setTextColor(Color.BLACK);
+                        txt1.setElegantTextHeight(true);
+                        txt1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                        txt1.setSingleLine(false);
+                        txt1.setText(marker.getSnippet());
+
+                        info.addView(title);
+                        info.addView(txt1);
+
+                        return info;
+                    }
+                });
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+        }
 
         if (currentLocation != null) {
             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
@@ -324,6 +263,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        assert vectorDrawable != null;
         vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -365,29 +305,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    /*@Override
-    public void onInfoWindowClick(Marker marker) {
-
-    }*/
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
-        switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        fetchLocation();
-                        Toast.makeText(this, "Thank You", Toast.LENGTH_SHORT).show();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Toast.makeText(this, "Fuck You", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        break;
-                }
-                break;
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    fetchLocation();
+                    Toast.makeText(this, "Thank You", Toast.LENGTH_SHORT).show();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Toast.makeText(this, "Fuck You", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -448,6 +381,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         } else {
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 1);
+            assert dialog != null;
             dialog.show();
         }
     }
@@ -455,7 +389,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
+    public void checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -466,34 +400,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
             }
-            return false;
         } else {
-            return true;
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
 
-                        if (mGoogleApiClient == null) {
-                            buildGoogleAPIClient();
-                        }
-                        mMap.setMyLocationEnabled(true);
+                    if (mGoogleApiClient == null) {
+                        buildGoogleAPIClient();
                     }
-
-                } else {
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                    mMap.setMyLocationEnabled(true);
                 }
-                return;
-            }
 
+            } else {
+                Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

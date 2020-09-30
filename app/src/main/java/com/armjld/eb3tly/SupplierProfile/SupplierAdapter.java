@@ -1,6 +1,5 @@
 package com.armjld.eb3tly.SupplierProfile;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Vibrator;
 import android.util.Log;
@@ -17,13 +15,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -37,18 +33,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.armjld.eb3tly.Block.BlockManeger;
 import com.armjld.eb3tly.Chat.chatListclass;
+import com.armjld.eb3tly.DatabaseClasses.requestsandacceptc;
 import com.armjld.eb3tly.Home.HomeActivity;
-import com.armjld.eb3tly.Orders.AddOrders;
 import com.armjld.eb3tly.Orders.EditOrders;
+import com.armjld.eb3tly.Orders.OrderInfo;
 import com.armjld.eb3tly.R;
 import com.armjld.eb3tly.DatabaseClasses.Ratings;
 import Model.UserInFormation;
 import com.armjld.eb3tly.DatabaseClasses.caculateTime;
 import com.armjld.eb3tly.Chat.Messages;
 import com.google.android.play.core.review.ReviewInfo;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
-import com.google.android.play.core.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,38 +61,28 @@ import Model.notiData;
 import Model.rateData;
 import Model.reportData;
 import Model.requestsData;
+import Model.userData;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
-public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyViewHolder> implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyViewHolder>{
 
     Context context;
-    ArrayList<Data>filtersData;
+    private ArrayList<Data>filtersData;
+
     private DatabaseReference mDatabase;
     private DatabaseReference rDatabase;
     private DatabaseReference uDatabase;
     private DatabaseReference nDatabase;
+
     int requestNumber = 0;
     private DatabaseReference reportDatabase;
-    private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
     private String TAG = "Supplier Adapter";
     String uId = UserInFormation.getId();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
-    private static final int PHONE_CALL_CODE = 100;
-    private BlockManeger block = new BlockManeger();
     public static caculateTime _cacu = new caculateTime();
-    ReviewInfo reviewInfo;
 
-
-    public void addItem(int position , Data data){
-        int size = filtersData.size();
-        if(size > position && size != 0) {
-            filtersData.set(position,data);
-            notifyItemChanged(position);
-            Log.i(TAG, "Filter Data Statue : " + data.getStatue());
-        }
-    }
     
     public SupplierAdapter(Context context, ArrayList<Data> filtersData) {
         this.context = context;
@@ -136,7 +120,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         holder.setFee(data.getGGet());
         holder.setPostDate(startDate);
         holder.setAccepted();
-        holder.setStatue(data.getStatue(), data.getuAccepted(), data.getDDate(), data.getId(), position);
+        holder.setStatue(data.getStatue(), data.getDDate(), data.getId(), position);
         holder.setDilveredButton(data.getStatue());
         holder.setRateButton(data.getDrated(), data.getStatue());
         holder.setType(data.getIsCar(), data.getIsMotor(), data.getIsMetro(), data.getIsTrans());
@@ -275,6 +259,14 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             Messages.cameFrom = "Profile";
         });
 
+        holder.btnInfo.setOnClickListener(v-> {
+            Intent intent = new Intent(context, OrderInfo.class);
+            intent.putExtra("orderID", orderID);
+            intent.putExtra("owner", UserInFormation.getId());
+            ((Activity) context).startActivityForResult(intent, 1);
+            OrderInfo.cameFrom = "Profile";
+        });
+
         holder.btnOrderBack.setOnClickListener(v-> {
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل استلمت المرتجع من الكابتن ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
 
@@ -292,9 +284,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 _ch.supplierchat(data.getuAccepted());
 
                 dialogInterface.dismiss();
-            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
-                dialogInterface.dismiss();
-            }).build();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss()).build();
             mBottomSheetDialog.show();
         });
 
@@ -304,6 +294,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             vibe.vibrate(20);
 
             BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder((Activity) context).setMessage("هل قام الندوب باستلام الشحنة منك ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                filtersData.get(position).setStatue("recived");
+                holder.setDilveredButton("recived");
+
                 mDatabase.child(orderID).child("statue").setValue("recived");
                 mDatabase.child(orderID).child("recivedTime").setValue(datee);
 
@@ -311,15 +304,10 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                 notiData Noti = new notiData(uId,data.getuAccepted() , orderID,message,datee,"false", "profile", UserInFormation.getUserName(), UserInFormation.getUserURL());
                 nDatabase.child(data.getuAccepted()).push().setValue(Noti);
 
-                filtersData.get(position).setStatue("recived");
-                holder.setDilveredButton("recived");
-
                 Toast.makeText(context, "في انتظار تأكيد المندوب باستلامة الشحنة", Toast.LENGTH_LONG).show();
 
                 dialogInterface.dismiss();
-            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
-                dialogInterface.dismiss();
-            }).build();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss()).build();
             mBottomSheetDialog.show();
 
             });
@@ -427,23 +415,6 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         return position;
     }
 
-    public void checkPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions((Activity) context, new String[] { permission }, requestCode);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ((HomeActivity)context).onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PHONE_CALL_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(context, "Phone Permission Granted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Phone Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myview;
@@ -451,7 +422,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
         public TextView txtRate,txtGetStat,txtgGet, txtgMoney,txtDate,txtUserName, txtOrderFrom, txtOrderTo,txtPostDate,pickDate;
         public LinearLayout linerDate,linerAll;
         public RatingBar drStar;
-        public ImageView icnCar,icnMotor,icnMetro,icnTrans,icnArrowDown;
+        public ImageView icnCar,icnMotor,icnMetro,icnTrans,icnArrowDown, btnInfo;
         public ImageButton mImageButton;
         RecyclerView requestRecycler;
         
@@ -484,8 +455,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             mImageButton = myview.findViewById(R.id.imageButton);
             requestRecycler = myview.findViewById(R.id.requestRecycler);
             btnOrderBack = myview.findViewById(R.id.btnOrderBack);
-
-
+            btnInfo = myview.findViewById(R.id.btnInfo);
             icnArrowDown = myview.findViewById(R.id.icnArrowDown);
         }
 
@@ -495,7 +465,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
 
 
         @SuppressLint("ResourceAsColor")
-        public void setStatue(final String getStatue, final String uAccepted, String ddate, String orderID, int position){
+        public void setStatue(String getStatue, String ddate, String orderID, int position){
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date yesterday = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24));
             Date strDate = null;
@@ -538,16 +508,14 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                     mDatabase.child(orderID).child("requests").addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            int count =0;
                                             if(snapshot.exists()) {
                                                 for(DataSnapshot ds : snapshot.getChildren()) {
                                                     requestsData rData = ds.getValue(requestsData.class);
                                                     if(ds.child("statue").exists()) {
                                                         assert rData != null;
                                                         if(rData.getStatue().equals("N/A")) { // Get only the not decliend requests
-                                                            mm.add(count, rData);
-                                                            count++;
-                                                            RequestsAdapter req = new RequestsAdapter(context, mm, count, orderID, filtersData.get(position));
+                                                            mm.add(rData);
+                                                            RequestsAdapter req = new RequestsAdapter(context, mm, orderID, position);
                                                             requestRecycler.setAdapter(req);
                                                         }
                                                     }
@@ -556,9 +524,7 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
                                         }
 
                                         @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
+                                        public void onCancelled(@NonNull DatabaseError error) { }
                                     });
 
                                 }

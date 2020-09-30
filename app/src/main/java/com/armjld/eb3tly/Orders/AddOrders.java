@@ -49,6 +49,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
+
 import Model.Data;
 import Model.notiData;
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
@@ -73,7 +75,7 @@ public class AddOrders extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
-    String dropVar;
+    String dropVar = "";
     String strDropGov = "";
     String strDropCity = "";
     ArrayAdapter<String> dropCityAda;
@@ -292,42 +294,6 @@ public class AddOrders extends AppCompatActivity {
             dpd.show();
         });
 
-        /*GGet.setOnFocusChangeListener((v, event) -> {
-            if(!TextUtils.isEmpty(GMoney.getText().toString()) && GGet.isFocused()) {
-                int min;
-                int max;
-                boolean isLess = false;
-
-                int cash = Integer.parseInt(GMoney.getText().toString());
-                String from = pickGov;
-                String to = strDropCity;
-
-                if (cash <= 499) {
-                    isLess = true;
-                    min = 30;
-                } else if (cash <= 1000) {
-                    min = (int) (cash * 0.06);
-                } else if (cash <= 1999) {
-                    min = (int) (cash * 0.05);
-                } else {
-                    min = (int) (cash * 0.03);
-                }
-
-                if (!from.equals(to)) {
-                    if ((!from.equals("الجيزة") || !to.equals("القاهرة")) && (!from.equals("القاهرة") || !to.equals("الجيزة"))) {
-                        if(isLess) {min = min + 15;}
-                        Double factor = checkFactor(from,to);
-                        min = (int) (min * factor);
-                    }
-                }
-                max = (int) (min * 1.4);
-                int Med = (int) (((Math.round(min/5.0)*5) + (Math.round(max/5.0)*5)) / 2);
-                GGet.setText(Med);
-            } else if(TextUtils.isEmpty(GMoney.getText().toString())) {
-                tlGMoney.setError("ضع مقدم الاوردر اولا حتي نتمكن من اقتراح سعر الشحن");
-            }
-        });*/
-
         // ----------------- Save the Order --------------------//
         btnsave.setOnClickListener(v -> {
             if(!check()) {
@@ -419,6 +385,12 @@ public class AddOrders extends AppCompatActivity {
             return false;
         }
 
+        if (!isNumb(mDPhone)) {
+            tlDPhone.setError("الرجاء ادخال رقم هاتف صحيح");
+            DPhone.requestFocus();
+            return false;
+        }
+
         if (TextUtils.isEmpty(mDDate)) {
             tlDDate.setError("الرجاء ادخال تاريخ التسليم");
             return false;
@@ -447,6 +419,12 @@ public class AddOrders extends AppCompatActivity {
             return false;
         }
 
+        if (!isNumb(weight)) {
+            tlWeight.setError("الرجاء ادخال وزن الشحنة بالكيلو");
+            txtWeight.requestFocus();
+            return false;
+        }
+
         if(TextUtils.isEmpty(type)) {
             tlType.setError("الرجاء توضيح محتوي الشحنة");
             txtType.requestFocus();
@@ -458,7 +436,20 @@ public class AddOrders extends AppCompatActivity {
             GMoney.requestFocus();
             return false;
         }
+
+        if (!isNumb(mGMoney)) {
+            tlGMoney.setError("الرجاء تحديد سعر الشحنة");
+            GMoney.requestFocus();
+            return false;
+        }
+
         if (TextUtils.isEmpty(mGGet)) {
+            tlGGet.setError("الرجاء تحديد سعر الشحن");
+            GGet.requestFocus();
+            return false;
+        }
+
+        if (!isNumb(mGGet)) {
             tlGGet.setError("الرجاء تحديد سعر الشحن");
             GGet.requestFocus();
             return false;
@@ -500,14 +491,13 @@ public class AddOrders extends AppCompatActivity {
 
          String owner = UserInFormation.getUserName();
          // Send order to Data Base using the DATA MODEL
-         Data data = new Data(pickGov, pickCity, pickAdd, "", strDropGov, strDropCity, mDAddress, mDDate, mDPhone, mDName, mGMoney, mGGet, datee, id, uId, "", "", "", "", states, uAccepted, srate, srateid, drate, drateid, "", "", "","Bid",owner, strPickDate, weight, strType);
+         Data data = new Data(pickGov, pickCity, pickAdd, "", strDropGov, strDropCity, mDAddress, mDDate, mDPhone, mDName, mGMoney, mGGet, datee, id, uId, "", "", "", "", states, uAccepted, srate, srateid, drate, drateid, "", "", "","Bid",owner, strPickDate, weight, strType, lat, _long);
          assert id != null;
+
          mDatabase.child(id).setValue(data);
          HomeActivity.supList.add(data);
 
          mDatabase.child(id).child("lastedit").setValue(datee);
-         mDatabase.child(id).child("lat").setValue(lat);
-         mDatabase.child(id).child("long").setValue(_long);
          sendNotiState(pickGov, pickCity, id);
 
          mdialog.dismiss();
@@ -628,5 +618,9 @@ public class AddOrders extends AppCompatActivity {
             ex.printStackTrace();
         }
         return date != null;
+    }
+
+    public boolean isNumb (String value) {
+        return !Pattern.matches("[a-zA-Z]+", value);
     }
 }

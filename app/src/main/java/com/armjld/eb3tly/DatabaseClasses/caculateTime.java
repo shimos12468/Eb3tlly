@@ -34,11 +34,13 @@ public class caculateTime {
 
         String finalDate = "";
         if (dS < 60) {
-            if(dS ==1) {
+            if(dS < 1) {
+                finalDate = "الأن";
+            } else if(dS ==1) {
                 finalDate = "منذ ثانية";
             } else if(dS == 2) {
                 finalDate = "منذ ثانتين";
-            } else if (dS > 2 && dS <= 9) {
+            } else if (dS <= 9) {
                 finalDate = "منذ " + dS + " ثواني";
             } else {
                 finalDate = "منذ " + dS + " ثانية";

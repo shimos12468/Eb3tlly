@@ -64,16 +64,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
      String datee = sdf.format(new Date());
 
-    public void addItem(int position , Data data){
-        int size = filtersData.size();
-        if(size > position && size != 0) {
-
-            filtersData.set(position,data);
-            notifyItemChanged(position);
-            Log.i(TAG, "Filter Data Statue : " + data.getStatue());
-        }
-    }
-
     public MyAdapter(Context context, ArrayList<Data> filtersData) {
         MyAdapter.context = context;
         this.filtersData =filtersData;

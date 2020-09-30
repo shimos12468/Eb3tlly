@@ -1,28 +1,29 @@
-package com.armjld.eb3tly.Utilites.FragmentsAdapters;
+package com.armjld.eb3tly.Utilites;
 
 import android.content.Context;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-
 import com.armjld.eb3tly.CaptinProfile.capAcceptedTab;
 import com.armjld.eb3tly.CaptinProfile.capDelvTab;
 import com.armjld.eb3tly.CaptinProfile.captinRecived;
 import com.armjld.eb3tly.R;
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+public class dilvPageAdapter extends FragmentPagerAdapter {
 
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_6,R.string.tab_text_2};
     private final Context mContext;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public dilvPageAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
        Fragment fragment = null;
@@ -37,7 +38,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                fragment = new capDelvTab();
                break;
        }
-       return fragment;
+        assert fragment != null;
+        return fragment;
     }
 
     @Nullable

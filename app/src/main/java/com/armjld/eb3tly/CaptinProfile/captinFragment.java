@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Handler;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.armjld.eb3tly.Home.HomeFragment;
-import com.armjld.eb3tly.Utilites.FragmentsAdapters.SectionsPagerAdapter;
+import com.armjld.eb3tly.Utilites.dilvPageAdapter;
 import com.armjld.eb3tly.Notifications.Notifications;
 import com.armjld.eb3tly.R;
 import Model.UserInFormation;
 import com.armjld.eb3tly.Home.HomeActivity;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -85,7 +83,6 @@ public class captinFragment extends Fragment {
         txtNotiCount = view.findViewById(R.id.txtNotiCount);
         rbProfile = view.findViewById(R.id.rbProfile);
         imgVerf = view.findViewById(R.id.imgVerf);
-        ViewPager viewPager = view.findViewById(R.id.view_pager);
         txtNotiCount.setVisibility(View.GONE);
         usType = view.findViewById(R.id.txtUserType);
 
@@ -108,7 +105,8 @@ public class captinFragment extends Fragment {
         uName.setText(UserInFormation.getUserName());
         Picasso.get().load(Uri.parse(UserInFormation.getUserURL())).into(imgSetPP);
 
-        viewPager.setAdapter(new SectionsPagerAdapter(getActivity(), getChildFragmentManager()));
+        ViewPager viewPager = view.findViewById(R.id.view_pager);
+        viewPager.setAdapter(new dilvPageAdapter(getActivity(), getChildFragmentManager()));
         TabLayout tabs = view.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 

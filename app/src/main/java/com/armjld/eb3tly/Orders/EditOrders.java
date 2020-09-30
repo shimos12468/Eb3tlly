@@ -674,7 +674,7 @@ public class EditOrders extends AppCompatActivity {
                                 }
 
                                 Data data = new Data(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), mPAddress, mPShop, spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                        mDPhone, mDName, mGMoney, mGGet, orderDate, orderID, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, acceptedTime, "", mNote,type, UserInFormation.getUserName(), "", "", "");
+                                        mDPhone, mDName, mGMoney, mGGet, orderDate, orderID, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, acceptedTime, "", mNote,type, UserInFormation.getUserName(), "", "", "", "", "");
                                 mDatabase.child(orderID).setValue(data);
                                 mDatabase.child(orderID).child("lastedit").setValue(datee);
 

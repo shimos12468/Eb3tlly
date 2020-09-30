@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Comparator;
-
 public class Data {
 
     // Pick up Data
@@ -22,15 +20,6 @@ public class Data {
     // Money Data
     private String GMoney;
     private String owner = " ";
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     private String GGet;
     // Transportation
     private String isTrans;
@@ -41,21 +30,13 @@ public class Data {
     private String uAccepted;
     private String srated;
     private String srateid;
-
     private String pDate = "";
     private String type = "Normal";
     public static String removed = "false";
     private String packType = "";
     private String packWeight = "";
-
-    public String getRemoved() {
-        return removed;
-    }
-
-    public void setRemoved(String removed) {
-        this.removed = removed;
-    }
-
+    private String lat = "";
+    private String _long = "";
     private String drated;
     private String drateid;
     private String dilverTime;
@@ -63,42 +44,11 @@ public class Data {
     private String lastedit;
     private String notes;
 
-    public Data(){
-
-    }
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getpDate() { return pDate;
-    }
-
-    public void setpDate(String pDate) { this.pDate = pDate;
-    }
-
-    public String getPackType() {
-        return packType;
-    }
-
-    public void setPackType(String packType) {
-        this.packType = packType;
-    }
-
-    public String getPackWeight() {
-        return packWeight;
-    }
-
-    public void setPackWeight(String packWeight) {
-        this.packWeight = packWeight;
-    }
+    public Data(){ }
 
     public Data(String txtPState, String mPRegion, String mPAddress, String mPShop, String txtDState, String mDRegion, String DAddress, String DDate, String DPhone, String DName,
                 String GMoney, String GGet, String date, String id, String uId, String isTrans, String isMetro, String isMotor, String isCar, String statue, String uAccepted, String srated,
-                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type , String owner, String pDate, String packWeight, String packType) {
+                String srateid, String drated, String drateid, String acceptedTime, String dilverTime, String notes, String type , String owner, String pDate, String packWeight, String packType, String lat, String _long) {
 
         //PICK
         this.txtPState = txtPState;
@@ -143,8 +93,47 @@ public class Data {
         this.drated = drated;
         this.drateid = drateid;
         this.type = type;
+        this.lat = lat;
+        this._long = _long;
     }
 
+    public String getLat() { return lat; }
+    public void setLat(String lat) { this.lat = lat; }
+    public String get_long() { return _long; }
+    public void set_long(String _long) { this._long = _long; }
+
+    public String getRemoved() {
+        return removed;
+    }
+    public void setRemoved(String removed) {
+        Data.removed = removed;
+    }
+    public String getOwner() {
+        return owner;
+    }
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+    public String getpDate() { return pDate; }
+    public void setpDate(String pDate) { this.pDate = pDate; }
+    public String getPackType() {
+        return packType;
+    }
+    public void setPackType(String packType) {
+        this.packType = packType;
+    }
+    public String getPackWeight() {
+        return packWeight;
+    }
+    public void setPackWeight(String packWeight) {
+        this.packWeight = packWeight;
+    }
     public String getTxtPState() {
         return txtPState;
     }

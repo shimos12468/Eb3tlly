@@ -113,12 +113,12 @@ public class Notifications extends AppCompatActivity {
             MaterialDialog materialDialog = new MaterialDialog.Builder(this).setMessage("هل تريد الغاء كل الاشعارات ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_delete_white, (dialogInterface, which) -> {
                 nDatabase.child(uId).removeValue();
                 getNoti();
+                txtNoOrders.setVisibility(View.VISIBLE);
                 dialogInterface.dismiss();
             }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> {
                 dialogInterface.dismiss();
             }).build();
             materialDialog.show();
-
         });
 
         refresh.setRefreshing(true);

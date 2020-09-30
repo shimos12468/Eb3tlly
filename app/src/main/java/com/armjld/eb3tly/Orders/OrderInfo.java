@@ -62,7 +62,7 @@ public class OrderInfo extends AppCompatActivity {
     TextView date3, date, orderto, OrderFrom,txtPack,txtWeight,ordercash2,fees2,txtPostDate2;
     TextView dsUsername,txtTitle,ddCount,txtNoddComments;
     TextView dsPAddress,dsDAddress,txtCallCustomer;
-    ImageView ppStar,imgVerf,supPP;
+    ImageView ppStar,imgVerf,supPP,btnOrderMap;
     private ArrayList<String> mArraylistSectionLessons = new ArrayList<>();
     RatingBar rbUser;
     ImageView btnBlock, btnClose;
@@ -81,6 +81,8 @@ public class OrderInfo extends AppCompatActivity {
     String dName = "";
     String ownerName = "";
     String dPhone = "";
+    String strPickLat = "";
+    String strPickLong = "";
 
     private void getBack() {
         if(cameFrom.equals("Home Activity")) {
@@ -129,6 +131,8 @@ public class OrderInfo extends AppCompatActivity {
         btnBid = findViewById(R.id.btnBid);
         btnMore = findViewById(R.id.btnMore);
         txtCallCustomer = findViewById(R.id.txtCallCustomer);
+        txtCallCustomer.setVisibility(View.GONE);
+        btnOrderMap = findViewById(R.id.btnOrderMap);
 
         date3 = findViewById(R.id.date3);
         date = findViewById(R.id.date);
@@ -153,6 +157,14 @@ public class OrderInfo extends AppCompatActivity {
         if(UserInFormation.getId().equals(owner)) {
             btnBlock.setVisibility(View.GONE);
         }
+
+        btnOrderMap.setVisibility(View.GONE);
+        btnOrderMap.setOnClickListener(v -> {
+            Intent map = new Intent(this, MapOneOrder.class);
+            map.putExtra("pickLat", strPickLat);
+            map.putExtra("pickLong", strPickLong);
+            startActivity(map);
+        });
 
         btnDelete.setOnClickListener(v -> {
             Intent deleteAct = new Intent(this, Delete_Reaon_Delv.class);
@@ -207,9 +219,15 @@ public class OrderInfo extends AppCompatActivity {
                 String pDate = orderData.getpDate();
                 String dDate = orderData.getDDate();
                 String pack = "محتوي الرساله : " + orderData.getPackType();
-                String weight = "وزن الرسالة : " + orderData.getPackWeight() + " كيلؤ";
+                String weight = "وزن الرساله : " + orderData.getPackWeight() + " كيلو";
                 String from = orderData.reStateP();
                 String to = orderData.reStateD();
+
+                if(snapshot.child("lat").exists() && snapshot.child("_long").exists()) {
+                    strPickLat = snapshot.child("lat").getValue().toString();
+                    strPickLong  = snapshot.child("_long").getValue().toString();
+                    btnOrderMap.setVisibility(View.VISIBLE);
+                }
 
                 if (PAddress.trim().equals("")) {
                     dsPAddress.setVisibility(View.GONE);
@@ -236,6 +254,9 @@ public class OrderInfo extends AppCompatActivity {
                 txtCallCustomer.setText("رقم هاتف العميل : " + dPhone);
                 txtCallCustomer.setPaintFlags(txtCallCustomer.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
+                if(owner.equals(UserInFormation.getId())) {
+                    txtCallCustomer.setVisibility(View.VISIBLE);
+                }
                 if (orderState.equals("placed")) {
                     btnBid.setVisibility(View.VISIBLE);
                     btnDelete.setVisibility(View.GONE);
@@ -250,8 +271,7 @@ public class OrderInfo extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
 
         mDatabase.child(orderID).child("requests").child(UserInFormation.getId()).addListenerForSingleValueEvent(new ValueEventListener() {

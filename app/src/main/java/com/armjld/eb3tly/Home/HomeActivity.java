@@ -1,11 +1,13 @@
 package com.armjld.eb3tly.Home;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.armjld.eb3tly.Block.BlockManeger;
@@ -38,6 +40,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import Model.Data;
 
@@ -107,12 +110,12 @@ public class HomeActivity extends AppCompatActivity  {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("orders");
         bottomNavigationView = findViewById(R.id.bottomNav);
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomNavMethod);
-        makeChecks();
 
         if(UserInFormation.getAccountType().equals("Supplier")) {
             getSupOrders();
         } else {
             getDeliveryOrders();
+            makeChecks();
         }
 
         getOrdersByLatest();
@@ -249,23 +252,19 @@ public class HomeActivity extends AppCompatActivity  {
     };
 
 
-
     public static void getSupOrders() {
-        supList.clear();
-        supList.trimToSize();
-        delvList.clear();
-        delvList.trimToSize();
-
-        Log.i(TAG, "Getting Supplier Orders From Database");
-
         mDatabase.orderByChild("uId").equalTo(UserInFormation.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                supList.clear();
+                supList.trimToSize();
                 for(DataSnapshot ds : snapshot.getChildren()) {
                     Data orderData = ds.getValue(Data.class);
                     assert orderData != null;
                     supList.add(orderData);
                 }
+
                 placedTab.getOrders();
                 acceptedTab.getOrders();
                 dilveredTab.getOrders();
@@ -277,14 +276,11 @@ public class HomeActivity extends AppCompatActivity  {
     }
 
     public static void getDeliveryOrders() {
-        supList.clear();
-        supList.trimToSize();
-        delvList.clear();
-        delvList.trimToSize();
-        Log.i(TAG, "Getting Captain Orders From Database");
         mDatabase.orderByChild("uAccepted").equalTo(UserInFormation.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                delvList.clear();
+                delvList.trimToSize();
                 for(DataSnapshot ds : snapshot.getChildren()) {
                     Data orderData = ds.getValue(Data.class);
                     assert orderData != null;
@@ -301,13 +297,11 @@ public class HomeActivity extends AppCompatActivity  {
     }
 
     public static void getOrdersByLatest() {
-        mm.clear();
-        mm.trimToSize();
-        Log.i(TAG, "Getting All Orders From Database");
-
         mDatabase.orderByChild("statue").equalTo("placed").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mm.clear();
+                mm.trimToSize();
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Data orderData = ds.getValue(Data.class);
