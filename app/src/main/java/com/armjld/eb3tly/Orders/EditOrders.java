@@ -10,11 +10,14 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -24,23 +27,35 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.armjld.eb3tly.FilterAdapter;
 import com.armjld.eb3tly.Home.StartUp;
 import com.armjld.eb3tly.Home.HomeActivity;
+import com.armjld.eb3tly.LocationSpinnerAdapter;
 import com.armjld.eb3tly.Login.MainActivity;
 import com.armjld.eb3tly.Login.LoginManager;
 import com.armjld.eb3tly.R;
+
+import Model.LocationDataType;
 import Model.UserInFormation;
+
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 
+import java.sql.Array;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import Model.Data;
 
@@ -49,29 +64,41 @@ import static com.google.firebase.database.FirebaseDatabase.getInstance;
 public class EditOrders extends AppCompatActivity {
 
     private static final String TAG = "Edit Orders";
-    private EditText PAddress, PShop, DAddress, DDate, DPhone, DName, GMoney, GGet, txtNotes;
-    private CheckBox chkMetro, chkTrans, chkCar, chkMotor,chkBid;
-    private Spinner spPState, spPRegion, spDState, spDRegion;
-    private FirebaseAuth mAuth;
-    private Button btnsave;
-    private String uID;
-    private ProgressDialog mdialog;
-    private DatabaseReference uDatabase, mDatabase, rDatabase, nDatabase, vDatabase;
-    private ImageView btnClose, imgHelpMoney, imgHelpGet;
-    String statee, acceptedID;
-    String srate, srateid,drate,drateid,orderDate,acceptedTime;
-    String uId = UserInFormation.getId();
+    private EditText DAddress, DDate, DPhone, DName, GMoney, GGet,txtPickDate, txtWeight, txtType;
+    private TextInputLayout tlDAddress, tlDDate, tlDPhone, tlDName, tlGMoney, tlGGet,tlPickDate, tlWeight, tlType, tlDropCity;
 
+    private AutoCompleteTextView txtDropCity;
+    private Spinner spnMyLocations;
+    private ProgressDialog mdialog;
+    private DatabaseReference mDatabase;
+    String orderID;
 
     DatePickerDialog dpd;
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.ENGLISH);
     String datee = sdf.format(new Date());
 
+    String dropVar = "";
+    String strDropGov = "";
+    String strDropCity = "";
+    ArrayAdapter<String> dropCityAda;
+
+    String pickGov = "";
+    String pickCity = "";
+    String pickAdd = "";
+    String lat = "";
+    String _long = "";
+    String ownerID, ownerName, strStatue, strUAccepted;
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+    
     @Override
     protected void onResume() {
         super.onResume();
-        if(!LoginManager.dataset) {
+        if (!LoginManager.dataset) {
             finish();
             startActivity(new Intent(this, StartUp.class));
         }
@@ -82,58 +109,111 @@ public class EditOrders extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_orders);
 
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
-            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Firebasee
+        mDatabase = getInstance().getReference("Pickly").child("orders");
+        DatabaseReference uDatabase = getInstance().getReference().child("Pickly").child("users");
 
-        String orderID = getIntent().getStringExtra("orderid");
+        orderID = getIntent().getStringExtra("orderID");
+        ownerID = getIntent().getStringExtra("ownerID");
 
         // Toolbar
         TextView toolbar_title = findViewById(R.id.toolbar_title);
-        toolbar_title.setText("تعديل بيانات الاوردر");
+        toolbar_title.setText("تعديل الاوردر");
 
         // Texts
-        PAddress = findViewById(R.id.txtPAddress);
-        PShop = findViewById(R.id.txtPShop);
         DAddress = findViewById(R.id.txtDAddress);
         DDate = findViewById(R.id.txtDDate);
         DPhone = findViewById(R.id.txtDPhone);
         DName = findViewById(R.id.txtDName);
         GMoney = findViewById(R.id.txtGMoney);
         GGet = findViewById(R.id.txtGGet);
-        txtNotes = findViewById(R.id.txtNotes);
 
-        //Check Boxes
-        chkMetro = findViewById(R.id.chkMetro);
-        chkCar = findViewById(R.id.chkCar);
-        chkMotor = findViewById(R.id.chkMotor);
-        chkTrans = findViewById(R.id.chkTrans);
-        chkBid = findViewById(R.id.chkBid);
+        txtPickDate = findViewById(R.id.txtPickDate);
+        txtWeight = findViewById(R.id.txtWeight);
+        txtType = findViewById(R.id.txtType);
 
-        //Spinners
-        spPState = findViewById(R.id.txtPState);
-        spPRegion = findViewById(R.id.txtPRegion);
-        spDState = findViewById(R.id.txtDState);
-        spDRegion = findViewById(R.id.txtDRegion);
-        imgHelpMoney = findViewById(R.id.imgHelpMoney);
-        imgHelpGet = findViewById(R.id.imgHelpGet);
+        spnMyLocations = findViewById(R.id.spnMyLocations);
+        txtDropCity = findViewById(R.id.txtDropCity);
 
-        btnClose = findViewById(R.id.btnClose);
-        btnClose.setVisibility(View.GONE);
+        ImageView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v-> finish());
 
-        btnsave = findViewById(R.id.btnSave);
+
+        ImageView imgHelpMoney = findViewById(R.id.imgHelpMoney);
+        ImageView imgHelpGet = findViewById(R.id.imgHelpGet);
+
+        Button btnsave = findViewById(R.id.btnSave);
         mdialog = new ProgressDialog(this);
 
-        // Firebasee
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = getInstance().getReference("Pickly").child("orders");
-        uDatabase = getInstance().getReference().child("Pickly").child("users");
-        rDatabase = getInstance().getReference().child("Pickly").child("comments");
-        vDatabase = getInstance().getReference().child("Pickly").child("values");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
+        tlDAddress = findViewById(R.id.tlDAddress);
+        tlDDate = findViewById(R.id.tlDDate);
+        tlDPhone = findViewById(R.id.tlDPhone);
+        tlDName = findViewById(R.id.tlDName);
+        tlGMoney = findViewById(R.id.tlGMoney);
+        tlGGet = findViewById(R.id.tlGGet);
+        tlPickDate = findViewById(R.id.tlPickDate);
+        tlWeight = findViewById(R.id.tlWeight);
+        tlType = findViewById(R.id.tlType);
+        tlDropCity = findViewById(R.id.tlDropCity);
+
+
+
+        // ----------- Set Auto Complete for Cities ----------------- //
+        String[] cities = getResources().getStringArray(R.array.arrayCities);
+        dropCityAda = new FilterAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, cities);
+        txtDropCity.setAdapter(dropCityAda);
+
+        txtDropCity.setOnItemClickListener((parent, view, position, id) -> {
+            dropVar = Objects.requireNonNull(dropCityAda.getItem(position)).trim();
+            String [] sep = dropVar.split(", ");
+            strDropGov = sep[0].trim();
+            strDropCity = sep[1].trim();
+        });
+
+
+        // ----------- Get Locations to Spinner --------------------- //
+        uDatabase.child(ownerID).child("locations").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<LocationDataType> listLoc = new ArrayList<>();
+                if(snapshot.exists()) {
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        LocationDataType locData = ds.getValue(LocationDataType.class);
+                        listLoc.add(locData);
+                        LocationSpinnerAdapter adapter = new LocationSpinnerAdapter(listLoc, EditOrders.this);
+                        spnMyLocations.setAdapter(adapter);
+
+                        assert locData != null;
+                        if(locData.getAddress().equals(pickAdd)) {
+                            LocationDataType locData2 = ds.getValue(LocationDataType.class);
+                            spnMyLocations.setSelection(listLoc.indexOf(locData2));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+
+
+        // ------------ Get the location data from the Spinners ----------------- //
+        spnMyLocations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                LocationDataType choosen = (LocationDataType) spnMyLocations.getItemAtPosition(i);
+                lat = String.valueOf(choosen.getLattude());
+                _long = String.valueOf(choosen.getLontude());
+                pickAdd = choosen.getAddress();
+                pickCity = choosen.getState();
+                pickGov = choosen.getRegion();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+
 
         // ---------------- Help Buttons----------------------//
         imgHelpGet.setOnClickListener(v -> {
@@ -150,564 +230,302 @@ public class EditOrders extends AppCompatActivity {
             alertDialog.show();
         });
 
-        // ------------------- Set the Order Data -------------------- //
-        assert orderID != null;
-        mDatabase.child(Objects.requireNonNull(orderID)).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Data orderData = dataSnapshot.getValue(Data.class);
-                assert orderData != null;
 
-                srate = orderData.getSrated();
-                srateid = orderData.getSrateid();
-                drate = orderData.getDrated();
-                drateid = orderData.getDrateid();
-                orderDate = orderData.getDate();
-                acceptedTime = orderData.getAcceptedTime();
-                acceptedID = orderData.getuAccepted();
-                statee = orderData.getStatue();
-                uID = orderData.getuId();
-                PAddress.setText(orderData.getmPAddress().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                PShop.setText(orderData.getmPShop().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DAddress.setText(orderData.getDAddress().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DDate.setText(orderData.getDDate().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DPhone.setText(orderData.getDPhone().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                DName.setText(orderData.getDName().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                GMoney.setText(orderData.getGMoney().replaceAll("(^\\h*)|(\\h*$)","").trim());
-                GGet.setText(orderData.getGGet().replaceAll("(^\\h*)|(\\h*$)","").trim());
-
-                if(orderData.getType() == null) {
-                    chkBid.setChecked(false);
-                } else {
-                    if(!orderData.getType().equals("Normal")) {
-                        chkBid.setChecked(true);
-                    } else {
-                        chkBid.setChecked(false);
-                    }
-                }
-
-                txtNotes.setText(orderData.getNotes());
-
-                if(!orderData.getIsMetro().equals("")) {
-                    chkMetro.setChecked(true);
-                }
-                if(!orderData.getIsCar().equals("")) {
-                    chkCar.setChecked(true);
-                }
-                if(!orderData.getIsMotor().equals("")) {
-                    chkMotor.setChecked(true);
-                }
-                if(!orderData.getIsTrans().equals("")) {
-                    chkTrans.setChecked(true);
-                }
-
-                // ---------------------------- Pick up Government Spinner ----------------------------------------//
-                ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtStates, R.layout.color_spinner_layout);
-                adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spPState.setPrompt("اختار المحافظة");
-                spPState.setAdapter(adapter2);
-                spPState.setSelection(getIndex(spPState, orderData.getTxtPState()));
-
-                // --------------------------- Drop Government Spinner -------------------------------------------//
-                spPState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        int itemSelected = spPState.getSelectedItemPosition();
-                        if (itemSelected == 0) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtCairoRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة القاهرة");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 1) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtGizaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الجيزة");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 2) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAlexRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الاسكندرية");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 3) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMetroRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار محطة المترو");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 4) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtQalyobiaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة القليوبية");
-                            spPRegion.setAdapter(adapter4);
-                        }else if (itemSelected == 5) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSharqyaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الشرقية");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 6) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtDqhlyaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الدقهليه");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 7) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAsyutRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة اسيوط");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 8) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAswanRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة اسوان");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 9) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMenofyaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة المنوفية");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 10) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtIsmaliaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الاسماعيليه");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 11) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAqsorRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الاقصر");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 12) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtBeheraRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة البحيرة");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 13) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtBaniSwefRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة بين سويف");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 14) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtPortSaidRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة بور سعيد");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 15) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtRedSeaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة البحر الاحمر");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 16) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSouthSeniaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة جنوب سيناء");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 17) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtDomyatRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة دمياط");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 18) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSohagRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة سوهاج");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 19) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSuezRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة السويس");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 20) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtGarbyaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الغربية");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 21) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtFayoumRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الفييوم");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 22) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtQenaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة قنا");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 23) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtKafrRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة كفر الشيخ");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 24) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtNorthSenia, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة شمال سيناْء");
-                            spPRegion.setAdapter(adapter4);
-                        }  else if (itemSelected == 25) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMatrohRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة مطروح");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 26) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMeiaRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة المنيا");
-                            spPRegion.setAdapter(adapter4);
-                        } else if (itemSelected == 27) {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtNewWadiRegion, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("اختار منطقة محافظة الوادي الجديد");
-                            spPRegion.setAdapter(adapter4);
-                        } else {
-                            ArrayAdapter<CharSequence> adapter4 = ArrayAdapter.createFromResource(EditOrders.this, R.array.justAll, R.layout.color_spinner_layout);
-                            adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spPRegion.setPrompt("سيتم اضافه مناطق المحافظة في اصدارات جديدة");
-                            spPRegion.setAdapter(adapter4);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) { }
-                });
-
-                // --------------------------- Drop Government Spinner -------------------------------------------//
-                ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtStates, R.layout.color_spinner_layout);
-                adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spDState.setPrompt("اختار المحافظة");
-                spDState.setAdapter(adapter3);
-                spDState.setSelection(getIndex(spDState, orderData.getTxtDState()));
-
-                // ---------------------------- Drop Region Spinner -------------------------------------------//
-                spDState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        int itemSelected = spDState.getSelectedItemPosition();
-                        if (itemSelected == 0) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtCairoRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة القاهرة");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 1) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtGizaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الجيزة");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 2) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAlexRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الاسكندرية");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 3) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMetroRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار محطة المترو");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 4) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtQalyobiaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة القليوبية");
-                            spDRegion.setAdapter(adapter5);
-                        }else if (itemSelected == 5) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSharqyaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الشرقية");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 6) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtDqhlyaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الدقهليه");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 7) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAsyutRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة اسيوط");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 8) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAswanRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة اسوان");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 9) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMenofyaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة المنوفية");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 10) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtIsmaliaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الاسماعيليه");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 11) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtAqsorRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الاقصر");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 12) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtBeheraRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة البحيرة");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 13) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtBaniSwefRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة بين سويف");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 14) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtPortSaidRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة بور سعيد");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 15) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtRedSeaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة البحر الاحمر");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 16) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSouthSeniaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة جنوب سيناء");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 17) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtDomyatRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة دمياط");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 18) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSohagRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة سوهاج");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 19) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtSuezRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة السويس");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 20) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtGarbyaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الغربية");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 21) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtFayoumRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الفييوم");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 22) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtQenaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة قنا");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 23) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtKafrRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة كفر الشيخ");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 24) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtNorthSenia, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة شمال سيناْء");
-                            spDRegion.setAdapter(adapter5);
-                        }  else if (itemSelected == 25) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMatrohRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة مطروح");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 26) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtMeiaRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة المنيا");
-                            spDRegion.setAdapter(adapter5);
-                        } else if (itemSelected == 27) {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.txtNewWadiRegion, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("اختار منطقة محافظة الوادي الجديد");
-                            spDRegion.setAdapter(adapter5);
-                        } else {
-                            ArrayAdapter<CharSequence> adapter5 = ArrayAdapter.createFromResource(EditOrders.this, R.array.justAll, R.layout.color_spinner_layout);
-                            adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spDRegion.setPrompt("سيتم اضافه مناطق المحافظة في اصدارات جديدة");
-                            spDRegion.setAdapter(adapter5);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) { }
-                });
-
-                if(spDRegion.getAdapter() != null && spPRegion.getAdapter() != null) {
-                    spDRegion.setSelection(getIndex(spDRegion, orderData.getmDRegion()));
-                    spPRegion.setSelection(getIndex(spPRegion, orderData.getmPRegion()));
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
-
-
-        // ---------------------------------- Date Picker --------------------------------- //
-        final Calendar myCalendar = Calendar.getInstance();
-        final DatePickerDialog.OnDateSetListener pdate = new DatePickerDialog.OnDateSetListener() {
+        // ---------------- set Drop Date --------------------- //
+        final DatePickerDialog.OnDateSetListener ddate = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker dateView, int year, int monthOfYear, int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(Calendar.YEAR, year);
+                newDate.set(Calendar.MONTH, monthOfYear);
+                newDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(newDate);
             }
 
-            private void updateLabel() {
+            private void updateLabel(Calendar newDate) {
                 String dFormat = "yyyy-MM-dd";
                 SimpleDateFormat sDF = new SimpleDateFormat(dFormat, Locale.ENGLISH);
-                DDate.setText(sDF.format(myCalendar.getTime()));
+                DDate.setText(sDF.format(newDate.getTime()));
             }
         };
 
-        DDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dpd = new DatePickerDialog(EditOrders.this, pdate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                DatePicker dp = dpd.getDatePicker();
-                dp.setMinDate(myCalendar.getTimeInMillis() - 100); // disable all the previos dates
-                dpd.show();
-            }
+        DDate.setOnClickListener(v -> {
+            dpd = new DatePickerDialog(EditOrders.this, ddate, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            DatePicker dp = dpd.getDatePicker();
+            long now = Calendar.getInstance().getTimeInMillis() - 100;
+            dp.setMinDate(now);
+            dp.setMaxDate((now + (1000*60*60*24*7)));// disable all the previos dates
+            dpd.show();
         });
 
-        // ----------------- Save the Order --------------------//
-        btnsave.setOnClickListener(new View.OnClickListener() {
+        // ------------------ Set Pick Date --------------------- //
+
+        final DatePickerDialog.OnDateSetListener pdate = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(View v) {
-                // Txt Fields Strings
-                final String mPAddress = PAddress.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mNote = txtNotes.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mPShop = PShop.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mDAddress = DAddress.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mDDate = DDate.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mDPhone = DPhone.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mDName = DName.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mGMoney = GMoney.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-                final String mGGet = GGet.getText().toString().replaceAll("(^\\h*)|(\\h*$)","").trim();
-
-                // Checkboxes Strings
-                String isTrans = "";
-                String isMotor = "";
-                String isMetro = "";
-                String isCar = "";
-
-                //DEFULT ORDER States ON ADD
-                final String states = statee;
-                final String uAccepted = acceptedID;
-
-                // Check if Empty
-                if (TextUtils.isEmpty(mPAddress) && !spPState.getSelectedItem().toString().equals("مترو")) {
-                    PAddress.setError("الرجاء ادخال البيانات");
-                    PAddress.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mDAddress) && !spDState.getSelectedItem().toString().equals("مترو")) {
-                    DAddress.setError("الرجاء ادخال البيانات");
-                    DAddress.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mDDate)) {
-                    DDate.setError("الرجاء ادخال البيانات");
-                    Toast.makeText(EditOrders.this, "ادخل تاريخ تسليم الاوردر", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(mDPhone.length() != 11) {
-                    DPhone.setError("الرجاء ادخال البيانات");
-                    DPhone.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mDName)) {
-                    DName.setError("الرجاء ادخال البيانات");
-                    DName.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mGMoney)) {
-                    GMoney.setError("الرجاء ادخال البيانات");
-                    GMoney.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(mGGet)) {
-                    GGet.setError("الرجاء ادخال البيانات");
-                    GGet.requestFocus();
-                    return;
-                }
-
-                // Check the way of transportation
-                if (chkTrans.isChecked()) {
-                    isTrans = "مواصلات";
-                } else {
-                    isTrans = "";
-                }
-                if (chkMetro.isChecked()) {
-                    isMetro = "مترو";
-                } else {
-                    isMetro = "";
-                }
-                if (chkCar.isChecked()) {
-                    isCar = "سياره";
-                } else {
-                    isCar = "";
-                }
-                if (chkMotor.isChecked()) {
-                    isMotor = "موتسكل";
-                } else {
-                    isMotor = "";
-                }
-
-                final String finalIsMetro = isMetro;
-                final String finalIsTrans = isTrans;
-                final String finalIsMotor = isMotor;
-                final String finalIsCar = isCar;
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface confirmDailog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                mdialog.setMessage("جاري اضافة الاوردر");
-                                mdialog.show();
-
-                                String type;
-
-                                if(chkBid.isChecked()) {
-                                    type = "Bid";
-                                } else {
-                                    type = "Normal";
-                                }
-
-                                Data data = new Data(spPState.getSelectedItem().toString(), spPRegion.getSelectedItem().toString(), mPAddress, mPShop, spDState.getSelectedItem().toString(), spDRegion.getSelectedItem().toString(), mDAddress, mDDate,
-                                        mDPhone, mDName, mGMoney, mGGet, orderDate, orderID, uID, finalIsTrans, finalIsMetro, finalIsMotor, finalIsCar, states, uAccepted, srate, srateid, drate, drateid, acceptedTime, "", mNote,type, UserInFormation.getUserName(), "", "", "", "", "");
-                                mDatabase.child(orderID).setValue(data);
-                                mDatabase.child(orderID).child("lastedit").setValue(datee);
-
-                                mdialog.dismiss();
-                                if(UserInFormation.getAccountType().equals("Admin")) {
-                                    HomeActivity.whichFrag = "Home";
-                                    startActivity(new Intent(EditOrders.this, HomeActivity.class));
-                                } else {
-                                    HomeActivity.whichFrag = "Profile";
-                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                                }
-                                Toast.makeText(EditOrders.this, "تم تعديل الاوردر الخاص بك", Toast.LENGTH_LONG).show();
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                mdialog.dismiss();
-                                break;
-                        }
-                    }
-                };
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditOrders.this);
-                builder.setMessage("هل انت متاكد من صحه البيانات و انك تريد تعديل الاوردر ؟").setPositiveButton("نعم", dialogClickListener).setNegativeButton("لا", dialogClickListener).show();
+            public void onDateSet(DatePicker dateView, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(Calendar.YEAR, year);
+                newDate.set(Calendar.MONTH, monthOfYear);
+                newDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(newDate);
             }
+
+            private void updateLabel(Calendar newDate) {
+                String dFormat = "yyyy-MM-dd";
+                SimpleDateFormat sDF = new SimpleDateFormat(dFormat, Locale.ENGLISH);
+                txtPickDate.setText(sDF.format(newDate.getTime()));
+            }
+        };
+
+        txtPickDate.setOnClickListener(v -> {
+            dpd = new DatePickerDialog(EditOrders.this, pdate, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            DatePicker dp = dpd.getDatePicker();
+            long now = Calendar.getInstance().getTimeInMillis() - 100;
+            dp.setMinDate(now);
+            dp.setMaxDate((now + (1000*60*60*24*2)));
+            dpd.show();
+        });
+
+        setData();
+
+        btnsave.setOnClickListener(v -> {
+            if(!check()) {
+                return;
+            }
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(EditOrders.this).setMessage("هل انت متأكد من البيانات المعدله ؟").setCancelable(true).setPositiveButton("نعم", R.drawable.ic_tick_green, (dialogInterface, which) -> {
+                editOrder();
+                finish();
+                dialogInterface.dismiss();
+            }).setNegativeButton("لا", R.drawable.ic_close, (dialogInterface, which) -> dialogInterface.dismiss()).build();
+            mBottomSheetDialog.show();
+        });
+
+    }
+
+    private void editOrder () {
+        mdialog.setMessage("جاري اضافة الاوردر");
+        mdialog.show();
+
+        String mDAddress = DAddress.getText().toString().trim();
+        String mDDate = DDate.getText().toString().trim();
+        String mDPhone = DPhone.getText().toString().trim();
+        String mDName = DName.getText().toString().trim();
+        String mGMoney = GMoney.getText().toString().trim();
+        String mGGet = GGet.getText().toString().trim();
+        String weight = txtWeight.getText().toString().trim();
+        String strType = txtType.getText().toString().trim();
+        String strPickDate = txtPickDate.getText().toString().trim();
+
+        String srate = "false";
+        String srateid = "";
+        String drate = "false";
+        String drateid = "";
+
+        // Send order to Data Base using the DATA MODEL
+        Data data = new Data(pickGov, pickCity, pickAdd, "", strDropGov, strDropCity, mDAddress, mDDate, mDPhone, mDName, mGMoney, mGGet, datee,orderID , ownerID, "", "", "", "", strStatue, strUAccepted, srate, srateid, drate, drateid, "", "", "","Bid",ownerName, strPickDate, weight, strType, lat, _long);
+
+        mDatabase.child(orderID).setValue(data);
+        mDatabase.child(orderID).child("lastedit").setValue(datee);
+
+        mdialog.dismiss();
+
+        finish();
+        HomeActivity.whichFrag = "Home";
+        startActivity(new Intent(this, HomeActivity.class));
+
+        Toast.makeText(EditOrders.this, "تم تعديل بيانات الشحنة", Toast.LENGTH_LONG).show();
+    }
+
+    private void setData() {
+        mDatabase.child(orderID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Data orderData = snapshot.getValue(Data.class);
+                assert orderData != null;
+
+                DAddress.setText(orderData.getDAddress());
+                DDate.setText(orderData.getDDate());
+                DPhone.setText(orderData.getDPhone());
+                DName.setText(orderData.getDName());
+                GMoney.setText(orderData.getGMoney());
+                GGet.setText(orderData.getGGet());
+                txtPickDate.setText(orderData.getpDate());
+                txtWeight.setText(orderData.getPackWeight());
+                txtType.setText(orderData.getPackType());
+
+                // -------------- Set Drop Location ---------------- //
+                txtDropCity.setText(getGov(orderData.getTxtDState(), orderData.getmDRegion()));
+
+                // ----------- Set Pick Location --------------- //
+                /*pickGov = orderData.getmPRegion();
+                pickCity = orderData.getTxtPState();
+                pickAdd = orderData.getmPAddress();
+                lat = orderData.getLat();
+                _long = orderData.get_long();*/
+
+                // ----------- Set Strings -------------- //
+                ownerName = orderData.getOwner();
+                strStatue = orderData.getStatue();
+                strUAccepted = orderData.getuAccepted();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
-    private int getIndex(Spinner spinner, String value) {
-        Log.i(TAG, "Value : " + value);
-        for(int i=0;i <spinner.getCount(); i++) {
-            Log.i(TAG, "List : " + spinner.getItemAtPosition(i).toString());
-            if(spinner.getItemAtPosition(i).toString().equals(value)) {
-                return i;
-            }
+    private boolean check () {
+        String mDAddress = DAddress.getText().toString().trim();
+        String mDDate = DDate.getText().toString().trim();
+        String mDPhone = DPhone.getText().toString().trim();
+        String mDName = DName.getText().toString().trim();
+        String mGMoney = GMoney.getText().toString().trim();
+        String mGGet = GGet.getText().toString().trim();
+
+        String weight = txtWeight.getText().toString();
+        String type = txtType.getText().toString();
+        String pickDate = txtPickDate.getText().toString();
+
+        int intget;
+
+        if(_long.isEmpty() || lat.isEmpty() || pickGov.isEmpty() || pickCity.isEmpty() || pickAdd.isEmpty()) {
+            Toast.makeText(this, "Pick Address is Empty", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        return 0;
+
+        if(TextUtils.isEmpty(pickDate)) {
+            tlPickDate.setError("الرجاء ادخال تاريخ الاستلام");
+            return false;
+        }
+
+        if(!isValidFormat("yyyy-MM-dd", pickDate)) {
+            tlPickDate.setError("الرجاء ادخال تاريخ الاستلام");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(mDName)) {
+            tlDName.setError("الرجاء ادخال اسم السمتلم");
+            DName.requestFocus();
+            return false;
+        }
+
+        if(mDPhone.length() != 11) {
+            tlDPhone.setError("الرجاء ادخال رقم هاتف صحيح");
+            DPhone.requestFocus();
+            return false;
+        }
+
+        if (!isNumb(mDPhone)) {
+            tlDPhone.setError("الرجاء ادخال رقم هاتف صحيح");
+            DPhone.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(mDDate)) {
+            tlDDate.setError("الرجاء ادخال تاريخ التسليم");
+            return false;
+        }
+
+        if(!isValidFormat("yyyy-MM-dd", mDDate)) {
+            tlDDate.setError("الرجاء ادخال تاريخ التسليم");
+            return false;
+        }
+
+        String [] City = getResources().getStringArray(R.array.arrayCities);
+        ArrayList listCity = new ArrayList(Arrays.asList(City));
+        if(!listCity.contains(txtDropCity.getText().toString())) {
+            tlDropCity.setError("الرجاء اختيار مدينة من المدن المتاحة");
+            txtDropCity.requestFocus();
+            return false;
+        }
+
+        dropVar = txtDropCity.getText().toString().trim();
+        String [] sep = dropVar.split(", ");
+        strDropGov = sep[0].trim();
+        strDropCity = sep[1].trim();
+
+        if (TextUtils.isEmpty(mDAddress)) {
+            tlDAddress.setError("الرجاء ادخال عنوان التسلم بالتفصيل");
+            DAddress.requestFocus();
+            return false;
+        }
+
+        if(TextUtils.isEmpty(weight)) {
+            tlWeight.setError("الرجاء ادخال وزن الشحنة بالكيلو");
+            txtWeight.requestFocus();
+            return false;
+        }
+
+        if (!isNumb(weight)) {
+            tlWeight.setError("الرجاء ادخال وزن الشحنة بالكيلو");
+            txtWeight.requestFocus();
+            return false;
+        }
+
+        if(TextUtils.isEmpty(type)) {
+            tlType.setError("الرجاء توضيح محتوي الشحنة");
+            txtType.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(mGMoney)) {
+            tlGMoney.setError("الرجاء تحديد سعر الشحنة");
+            GMoney.requestFocus();
+            return false;
+        }
+
+        if (!isNumb(mGMoney)) {
+            tlGMoney.setError("الرجاء تحديد سعر الشحنة");
+            GMoney.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(mGGet)) {
+            tlGGet.setError("الرجاء تحديد سعر الشحن");
+            GGet.requestFocus();
+            return false;
+        }
+
+        if (!isNumb(mGGet)) {
+            tlGGet.setError("الرجاء تحديد سعر الشحن");
+            GGet.requestFocus();
+            return false;
+        }
+
+        intget = Integer.parseInt(mGGet);
+
+        if(intget == 0) {
+            tlGGet.setError("الرجاء وضع سعر للشحن");
+            GGet.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    private String getGov(String state, String region) {
+        dropVar = state + ", " + region;
+        strDropGov = state;
+        strDropGov = region;
+        return state + ", " + region;
+    }
+
+
+    public boolean isValidFormat(String format, String value) {
+        Date date = null;
+        try {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            assert date != null;
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return date != null;
+    }
+
+    public boolean isNumb (String value) {
+        return !Pattern.matches("[a-zA-Z]+", value);
     }
 }

@@ -12,6 +12,7 @@ import com.armjld.eb3tly.DatabaseClasses.Ratings;
 import com.armjld.eb3tly.Home.HomeActivity;
 import com.armjld.eb3tly.Login.Login_Options;
 import com.armjld.eb3tly.admin.Admin;
+import com.armjld.eb3tly.admin.PaymentPanel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -102,6 +103,9 @@ public class LoginManager {
                                 break;
                             case "Admin":
                                 mContext.startActivity(new Intent(mContext, Admin.class));
+                                break;
+                            case "input":
+                                mContext.startActivity(new Intent(mContext, PaymentPanel.class));
                                 break;
                         }
 

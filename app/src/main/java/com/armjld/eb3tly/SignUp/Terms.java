@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +17,11 @@ import com.armjld.eb3tly.Login.MainActivity;
 public class Terms extends AppCompatActivity {
     private TextView txtTerms;
     private String privcyCode;
-    private Button btnCont;
+    private ImageView btnBack;
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +29,9 @@ public class Terms extends AppCompatActivity {
         setContentView(R.layout.activity_terms);
 
         txtTerms = findViewById(R.id.txtTerms);
-        btnCont = findViewById(R.id.btnSend);
+        btnBack = findViewById(R.id.btnBack);
         txtTerms.setMovementMethod(new ScrollingMovementMethod());
-
+        btnBack.setOnClickListener(v-> finish());
         privcyCode = "<p>سياسة الخصوصية</p>\n" +
                 "<p><br></p>\n" +
                 "التعامل علي الابكيشن علي مسؤليتك الخاصه\n" +
@@ -109,11 +110,5 @@ public class Terms extends AppCompatActivity {
         // Tool Bar Title
         TextView toolbar_title = findViewById(R.id.toolbar_title);
         toolbar_title.setText("الشروط و الاحكام");
-
-        // go to the signup activity
-        btnCont.setOnClickListener(v -> {
-            finish();
-            startActivity(new Intent(getApplicationContext(), New_SignUp.class));
-        });
     }
 }

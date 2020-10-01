@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
+        <activity android:name=".admin.PaymentPanel"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -55,7 +56,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Settings.AddLocation"
             android:label="@string/title_activity_my_location" />

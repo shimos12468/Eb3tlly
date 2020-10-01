@@ -374,7 +374,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.MyView
             assert vibe != null;
             vibe.vibrate(20);
             Intent editInt = new Intent(context, EditOrders.class);
-            editInt.putExtra("orderid", data.getId());
+            editInt.putExtra("orderID", filtersData.get(position).getId());
+            editInt.putExtra("ownerID", filtersData.get(position).getuId());
             context.startActivity(editInt);
         });
 

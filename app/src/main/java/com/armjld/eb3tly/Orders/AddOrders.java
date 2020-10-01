@@ -101,10 +101,6 @@ public class AddOrders extends AppCompatActivity {
         }
     }
 
-    private void whichProfile() {
-        finish();
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

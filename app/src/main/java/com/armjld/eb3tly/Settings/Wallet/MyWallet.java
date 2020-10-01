@@ -42,14 +42,7 @@ public class MyWallet extends AppCompatActivity {
     ArrayList<Data> mm;
     private WalletAdapter walletAdapter;
     RecyclerView walletRecycler;
-    LinearLayout linerPay;
-    int Final;
-    float precnt = (float) 0.2;
     ArrayList<Data> orderList = new ArrayList<>();
-    String myFawryCode = UserInFormation.getFawrycode();
-    String QuickerCode = "5050";
-
-
 
     @Override
     public void onBackPressed() {
@@ -92,12 +85,6 @@ public class MyWallet extends AppCompatActivity {
 
 
         btnPay.setOnClickListener(v-> {
-            if(myFawryCode.equals("none")) {
-                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(this).setTitle("لم يتم اصدار كود الدفع الخاص بك").setMessage("يتم اصدار كود الدفع الخاص بك بعد 24 ساعه من تسجيلك لحساب جديد, حاول الدفع لاحقا ..").setCancelable(true).build();
-                mBottomSheetDialog.show();
-                return;
-            }
-
             AlertDialog.Builder myDialogMore = new AlertDialog.Builder(this);
             LayoutInflater inflater = LayoutInflater.from(this);
             View pay = inflater.inflate(R.layout.payment, null);
@@ -106,7 +93,6 @@ public class MyWallet extends AppCompatActivity {
             dialog.show();
 
             TextView txtQuickerCode = pay.findViewById(R.id.txtQuickerCode);
-            TextView txtUserCode = pay.findViewById(R.id.txtUserCode);
             ImageView btnBack = pay.findViewById(R.id.btnBack);
             TextView tbTitle2 = pay.findViewById(R.id.toolbar_title);
             tbTitle2.setText("خطوات الدفع");
@@ -114,8 +100,8 @@ public class MyWallet extends AppCompatActivity {
             btnBack.setOnClickListener(v1-> {
                 dialog.dismiss();
             });
-            txtQuickerCode.setText(QuickerCode);
-            txtUserCode.setText(myFawryCode);
+
+            txtQuickerCode.setText("010136249624");
         });
 
         if(UserInFormation.getCurrentdate().equals("none")) {

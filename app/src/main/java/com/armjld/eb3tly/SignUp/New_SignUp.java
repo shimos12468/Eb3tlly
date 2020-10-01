@@ -43,6 +43,7 @@ import Model.UserInFormation;
 import com.armjld.eb3tly.Login.Login_Options;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthCredential;
@@ -59,6 +60,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.mukesh.OnOtpCompletionListener;
+import com.mukesh.OtpView;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
@@ -78,18 +81,19 @@ public class New_SignUp extends AppCompatActivity {
     private ViewFlipper viewFlipper;
     FloatingActionButton btnNext,btnPrev;
     EditText txtFirstName, txtLastName, txtEmail, txtPass1, txtPass2, txtPhone;
-    EditText txtCode;
+    OtpView txtCode;
     ImageView btnBack,btnDelivery, btnSupplier;
     SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
     String acDate = sdf2.format(new Date());
     RadioButton rdMotor, rdTruck, rdCar, rdTrans;
     String phoneNumb;
+    TextView txtPrivacy;
 
     public String mVerificationId = "";
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private Bitmap bitmap;
     private FirebaseAuth mAuth;
-    private DatabaseReference uDatabase, nDatabase;
+    private DatabaseReference uDatabase;
     private String TAG = "SignUp";
     private TextView txtCCode;
     public static String defultPP = "https://firebasestorage.googleapis.com/v0/b/pickly-ed2f4.appspot.com/o/ppUsers%2Fdefult.jpg?alt=media&token=a1b6b5cc-6f03-41fa-acf2-0c14e601935f";
@@ -115,6 +119,7 @@ public class New_SignUp extends AppCompatActivity {
 
     Button btnCar,btnTruck,btnMotor,btnTrans;
     Spinner spnGov, spnCity;
+    TextInputLayout tlFirstName, tlLastName, tlPass1, tlPass2, tlEmail;
 
     public static AuthCredential googleCred;
     public static AuthCredential faceCred;
@@ -134,7 +139,6 @@ public class New_SignUp extends AppCompatActivity {
         mdialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         uDatabase = FirebaseDatabase.getInstance().getReference().child("Pickly").child("users");
-        nDatabase = getInstance().getReference().child("Pickly").child("notificationRequests");
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText("حساب جديد");
 
@@ -142,6 +146,7 @@ public class New_SignUp extends AppCompatActivity {
         btnPrev = findViewById(R.id.btnPrev);
         btnBack = findViewById(R.id.btnBack);
         txtCCode = findViewById(R.id.txtCCode);
+        txtPrivacy = findViewById(R.id.txtPrivacy);
 
         btnDelivery = findViewById(R.id.btnDelivery);
         btnSupplier = findViewById(R.id.btnSupplier);
@@ -169,6 +174,12 @@ public class New_SignUp extends AppCompatActivity {
 
         txtCode = findViewById(R.id.txtCode);
 
+        tlFirstName = findViewById(R.id.tlFirstName);
+        tlLastName = findViewById(R.id.tlLastName);
+        tlPass1 = findViewById(R.id.tlPass1);
+        tlPass2 = findViewById(R.id.tlPass2);
+        tlEmail = findViewById(R.id.tlEmail);
+
 
         btnNext.setVisibility(View.GONE);
         btnPrev.setVisibility(View.GONE);
@@ -186,7 +197,16 @@ public class New_SignUp extends AppCompatActivity {
             txtEmail.setKeyListener(null);
         }
 
+        txtCode.setOtpCompletionListener(new OnOtpCompletionListener() {
+            @Override
+            public void onOtpCompleted(String otp) {
+                verifyPhoneNumberWithCode(mVerificationId, otp);
+            }
+        });
+
         btnBack.setOnClickListener(v-> showPrev());
+
+        txtPrivacy.setOnClickListener(v-> startActivity(new Intent(this, Terms.class)));
 
         btnCar.setOnClickListener(v-> {
             isCar = "true";
@@ -516,44 +536,54 @@ public class New_SignUp extends AppCompatActivity {
             case 2 : {
                 String phone = txtPhone.getText().toString();
                 if(txtFirstName.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "الرجاء ادخال الاسم الاول", Toast.LENGTH_SHORT).show();
+                    tlFirstName.setError("الرجاء ادخال الاسم الاول");
+                    txtFirstName.requestFocus();
                     return;
                 }
 
                 if(txtLastName.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "الرجاء ادخال الاسم الاخير", Toast.LENGTH_SHORT).show();
+                    tlLastName.setError("الرجاء ادخال الاسم الاخير");
+                    txtLastName.requestFocus();
                     return;
                 }
+
                 if(txtEmail.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "ارجاء ادخال البريد الالكتروني", Toast.LENGTH_SHORT).show();
+                    tlEmail.setError("الرجاء ادخال البريد الالكتروني");
+                    txtEmail.requestFocus();
                     return;
                 }
+
                 if(txtPhone.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "الرجاء ادخال رقم الهاتف", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(txtPass1.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "الرجاء ادخال كلمه السر", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(txtPass1.getText().toString().length() < 6) {
-                    Toast.makeText(this, "الرجاء ادخال كلمه سر من 6 ارقام علي الاقل", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(!txtPass1.getText().toString().equals(txtPass2.getText().toString())) {
-                    Toast.makeText(this, "تاكد من تطابق كلمة السر", Toast.LENGTH_SHORT).show();
+                    txtPhone.setError("الرجاء ادخال رقم الهاتف");
+                    txtPhone.requestFocus();
                     return;
                 }
 
                 if(phone.charAt(0) == '1' && phone.length() != 10) {
-                    Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Returned First");
+                    txtPhone.setError("رقم الهاتف غير صحيح");
+                    txtPhone.requestFocus();
                     return;
                 }
 
                 if(phone.charAt(0) == '0' && phone.length() != 11) {
-                    Toast.makeText(this, "رقم الهاتف غير صحيح", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Returned Second");
+                    txtPhone.setError("رقم الهاتف غير صحيح");
+                    txtPhone.requestFocus();
+                    return;
+                }
+
+                if(txtPass1.getText().toString().isEmpty()) {
+                    tlPass1.setError("الرجاء ادخال كلمه السر");
+                    txtPass1.requestFocus();
+                    return;
+                }
+                if(txtPass1.getText().toString().length() < 6) {
+                    tlPass1.setError("الرجاء ادخال كلمه سر من 6 ارقام علي الاقل");
+                    txtPass1.requestFocus();
+                    return;
+                }
+                if(!txtPass1.getText().toString().equals(txtPass2.getText().toString())) {
+                    tlPass2.setError("تاكد من تطابق كلمة السر");
+                    txtPass2.requestFocus();
                     return;
                 }
 
@@ -595,7 +625,7 @@ public class New_SignUp extends AppCompatActivity {
             }
 
             case 3 : {
-                if(txtCode.getText().toString().length() != 6) {
+                if(Objects.requireNonNull(txtCode.getText()).toString().length() != 6) {
                     Toast.makeText(this, "الكود الذي ادخلته خطأ", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -603,7 +633,6 @@ public class New_SignUp extends AppCompatActivity {
                 mdialog.setMessage("جاري التأكد من الرمز ..");
                 mdialog.show();
                 verifyPhoneNumberWithCode(mVerificationId, txtCode.getText().toString().trim());
-                Log.i(TAG, "Gonne Send Verfiy : " + mVerificationId);
                 break;
             }
 
@@ -635,7 +664,7 @@ public class New_SignUp extends AppCompatActivity {
         Log.i(TAG, "verifyPhoneNumberWithCode : " + verificationId);
         mdialog.setMessage("جاري التاكد من الكود ..");
         if(verificationId.equals("")) {
-            Toast.makeText(this, "We Are Sorry", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "حدث خطأ في لتاكد من الرمز الرجاء الابلاغ عنه", Toast.LENGTH_LONG).show();
             mdialog.dismiss();
             return;
         }
@@ -663,6 +692,14 @@ public class New_SignUp extends AppCompatActivity {
         uDatabase.child(id).child("profit").setValue("0");
         uDatabase.child(id).child("active").setValue("true");
         uDatabase.child(id).child("isConfirmed").setValue("false");
+
+        SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        String userDate = sdf0.format(new Date());
+
+        DatabaseReference newUser = FirebaseDatabase.getInstance().getReference().child("Pickly").child("userByDay").child(userDate).child(id);
+        newUser.child("phone").setValue(mPhone);
+        newUser.child("name").setValue(muser);
+        newUser.child("id").setValue(id);
 
         if(newType.equals("Delivery Worker")) {
             uDatabase.child(id).child("isCar").setValue(isCar);
@@ -770,24 +807,15 @@ public class New_SignUp extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
                 txtCode.setText(credential.getSmsCode());
-                mdialog.setMessage("جاري التأكد من الرمز ..");
-                mdialog.show();
-                if(provider.equals("Google")) {
-                    linkGoogle(credential);
-                } else if(provider.equals("facebook")) {
-                    linkFace(credential);
-                } else {
-                    signUp(credential);
-                }
             }
 
             @Override
-            public void onVerificationFailed(FirebaseException e) {
+            public void onVerificationFailed(@NonNull FirebaseException e) {
                 mdialog.dismiss();
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     Toast.makeText(New_SignUp.this, "رقم هاتف غير صحيح", Toast.LENGTH_SHORT).show();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
-                    Snackbar.make(findViewById(android.R.id.content), "لقد حاولت كثيراو حاول بعد قليلي", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "لقد تخطيت عدد المحاولات المسموح به, حاول لاحقا", Snackbar.LENGTH_LONG).show();
                 }
             }
 

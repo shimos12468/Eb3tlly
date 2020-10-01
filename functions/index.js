@@ -48,17 +48,22 @@ admin.initializeApp(functions.config().firebase);
 
 exports.fawrypayment = functions.database.ref('Pickly/fawrypayments/{payment_id}').onCreate((snap, context)=>{
     console.log('Money added');   
-    const fawrycode = context.params.payment_id;
+    const payment_id = context.params.payment_id;
+	
+	const paymentphone = snap.child("phone").val();
     const fawrymony = snap.child("money").val();
-    console.log(fawrycode);   
+	
     var ref = admin.database().ref("Pickly/users");
-    ref.orderByChild('fawrycode').equalTo(fawrycode).once("value", function(snapshot) {
+    ref.orderByChild('phone').equalTo(paymentphone).once("value", function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
+		
         let uid = childSnapshot.key;
         var money = childSnapshot.child("walletmoney").val();
-        var lastmoney = fawrymony + money;
+		
+        var lastmoney = Number(fawrymony) + Number(money);
+		
 		var lref = admin.database().ref('Pickly/users');
-        if(lastmoney >= 0){
+		if(Number(lastmoney) >= 0){
 			lref.child(uid).update({
 			  'walletmoney': lastmoney,
 			  'currentDate':'none'

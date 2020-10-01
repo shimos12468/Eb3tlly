@@ -54,25 +54,6 @@
             android:textSize="24sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:text="رقم الدفع الخاص بك"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/txtUserCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp" />
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -87,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="1 - التوجه الي اقرب ماكينة فوري"
+            android:text="1 - تأكد من عمل حساب فودافون كاش برقمك المسجل في البرنامج"
             android:textColor="@color/colorAccent"
             android:textSize="18sp" />
 
@@ -96,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="2 - ادخال كود Quicker"
+            android:text="2 - تحويل المبلغ المراد تحويلة الي رقم Quicker"
             android:textColor="@color/colorAccent"
             android:textSize="18sp" />
 
@@ -105,16 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="3- ادخال الكود الخاص بيك"
-            android:textColor="@color/colorAccent"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="4 - دفع مبلغ الفاتورة الخاصة بك"
+            android:text="3 - انتظار اشعار بتسجيل تحويلك"
             android:textColor="@color/colorAccent"
             android:textSize="18sp" />
 

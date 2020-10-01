@@ -40,6 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar_home">
 
         <LinearLayout
+            android:id="@+id/chooseType"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -110,6 +111,7 @@
         </LinearLayout>
 
         <ScrollView
+            android:id="@+id/captinExtra"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -341,6 +343,7 @@
         </ScrollView>
 
         <ScrollView
+            android:id="@+id/putInfo"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -378,8 +381,8 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center"
-                        app:cardCornerRadius="50dp"
                         android:foregroundGravity="center"
+                        app:cardCornerRadius="50dp"
                         app:layout_constraintBottom_toBottomOf="@+id/cardView"
                         app:layout_constraintStart_toStartOf="parent">
 
@@ -395,6 +398,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlFirstName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -403,8 +407,8 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="15dp"
                     android:hint="الاسم الاول"
-                    app:errorIconDrawable="@null"
-                    app:endIconMode="none">
+                    app:endIconMode="none"
+                    app:errorIconDrawable="@null">
 
                     <EditText
                         android:id="@+id/txtFirstName"
@@ -417,6 +421,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlLastName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -424,8 +429,8 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="15dp"
                     android:hint="الاسم الاخير"
-                    app:errorIconDrawable="@null"
 
+                    app:errorIconDrawable="@null"
                     app:errorTextAppearance="@style/error"
                     app:hintTextColor="@color/colorAccent"
                     tools:ignore="HardcodedText">
@@ -442,6 +447,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlEmail"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -449,8 +455,8 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="15dp"
                     android:hint="البريد الالكتروني"
-                    app:errorIconDrawable="@null"
 
+                    app:errorIconDrawable="@null"
                     app:errorTextAppearance="@style/error"
                     app:hintTextColor="@color/colorAccent">
 
@@ -526,6 +532,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlPass1"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -552,12 +559,13 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlPass2"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="5dp"
                     android:hint="اعد ادخال كلمة المرور"
                     app:errorIconDrawable="@null"
                     app:errorTextAppearance="@style/error"
@@ -581,18 +589,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
                     android:layout_marginRight="20dp"
                     android:text="يجب ان يكون الرقم السري 6 ارقام علي الاقل" />
+
+                <TextView
+                    android:id="@+id/txtPrivacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="50dp"
+                    android:text="بأنشائي حساب جديد, فانا اوافق عل كافة الشروط و الاحكام."
+                    android:textAlignment="center" />
 
 
             </LinearLayout>
         </ScrollView>
 
         <LinearLayout
+            android:id="@+id/code"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="right|top"
+            android:gravity="center|top"
             android:orientation="vertical">
 
             <include
@@ -605,30 +624,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
                 android:text="ادخل الكود الذي ارسل اليك"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp" />
 
-            <EditText
+            <com.mukesh.OtpView
                 android:id="@+id/txtCode"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="0dp"
-                android:drawableRight="@drawable/ic_add_key"
-                android:ems="10"
-                android:hint="******"
+                android:layout_marginTop="30dp"
                 android:inputType="number"
-                android:textAlignment="textStart"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:textSize="24sp"
-                tools:ignore="MissingConstraints" />
+                android:itemBackground="@color/colorBack"
+                android:textColor="@color/colorAccent"
+                app:OtpItemCount="6"
+                app:OtpLineColor="@color/colorPrimary"
+                app:OtpViewType="line" />
 
         </LinearLayout>
 

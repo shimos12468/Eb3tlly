@@ -259,6 +259,7 @@ public class HomeActivity extends AppCompatActivity  {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 supList.clear();
                 supList.trimToSize();
+
                 for(DataSnapshot ds : snapshot.getChildren()) {
                     Data orderData = ds.getValue(Data.class);
                     assert orderData != null;

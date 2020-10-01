@@ -146,6 +146,8 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        switchNotiCity.setEnabled(false);
+
         switchNotiCity.setOnCheckedChangeListener((compoundButton, b) -> {
             if(b) {
                 uDatabase.child(uId).child("sendOrderNotiCity").setValue("true");

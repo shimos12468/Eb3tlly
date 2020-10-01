@@ -7,10 +7,11 @@
     android:layoutDirection="ltr"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
-    tools:context=".Orders.EditOrders">
+    tools:context="com.armjld.eb3tly.Orders.EditOrders">
 
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,124 +22,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textView23"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/colorAccent"
-                android:backgroundTint="@color/colorAccent"
+                android:layout_gravity="right"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="بياناتك"
-                android:textColor="#FDFAFA"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:textSize="24sp" />
+                android:text="اختار عنوانك :"
+                android:textAlignment="viewEnd"
+                android:textSize="18sp"
+                tools:ignore="RtlCompat" />
 
-            <EditText
-                android:id="@+id/txtPShop"
+            <Spinner
+                android:id="@+id/spnMyLocations"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_height="47dp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
-                android:ems="10"
-                android:drawableRight="@drawable/ic_add_shop"
-                android:gravity="right"
-                android:hint="اسم المحل (اذا وجد)"
-                android:inputType="textPersonName"
-                android:textAlignment="gravity"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp">
-
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="80dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="المحافظة :"
-                    android:textAlignment="viewEnd"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat" />
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/txtPState"
-                    android:layout_width="0dp"
-                    android:layout_height="47dp"
-                    android:layout_marginEnd="10dp"
-                    android:spinnerMode="dialog"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/textView23"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp">
-
-                <TextView
-                    android:id="@+id/textView24"
-                    android:layout_width="80dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="المنطقة :"
-                    android:textAlignment="viewEnd"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat" />
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/txtPRegion"
-                    android:layout_width="0dp"
-                    android:layout_height="47dp"
-                    android:layout_marginEnd="10dp"
-                    android:spinnerMode="dialog"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/textView24"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <EditText
-                android:id="@+id/txtPAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:ems="10"
-                android:drawableRight="@drawable/ic_add_address"
-                android:gravity="right"
-                android:hint="العنوان"
-                android:inputType="textPersonName"
-                android:textAlignment="gravity"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light" />
+                android:spinnerMode="dialog"
+                android:textAlignment="viewStart" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -146,202 +55,260 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/colorAccent"
-                android:backgroundTint="@color/colorAccent"
+                android:background="@color/ic_profile_background"
+                android:backgroundTint="@color/ic_profile_background"
                 android:gravity="center"
-                android:text="بيانات العميل"
-                android:textColor="#FDFAFA"
+                android:text="بيانات الشحنة"
+                android:textColor="@color/colorAccent"
                 android:textColorHint="@android:color/tertiary_text_light"
                 android:textSize="24sp" />
 
-            <EditText
-                android:id="@+id/txtDName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="20dp"
-                android:drawableRight="@drawable/ic_add_person"
-                android:layout_marginRight="20dp"
-                android:ems="10"
-                android:gravity="right"
-                android:hint="اسم العميل"
-                android:inputType="textPersonName"
-                android:textAlignment="gravity"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light" />
-
-            <EditText
-                android:id="@+id/txtDPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:drawableRight="@drawable/ic_add_phone"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:ems="10"
-                android:gravity="right"
-                android:hint="رقم هاتف العميل"
-                android:inputType="number|phone"
-                android:textAlignment="gravity"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light" />
-
-            <EditText
-                android:id="@+id/txtDDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:clickable="true"
-                android:drawableRight="@drawable/ic_add_date"
-                android:ems="10"
-                android:focusable="false"
-                android:gravity="right"
-                android:hint="تاريخ تسليم الاوردر"
-                android:inputType="none"
-                android:textAlignment="gravity"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlPickDate"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp">
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/txtDState"
-                    android:layout_width="0dp"
-                    android:layout_height="47dp"
-                    android:layout_gravity="left"
-                    android:layout_marginEnd="10dp"
-                    android:ems="10"
-                    android:spinnerMode="dialog"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/textView15"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat" />
-
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="80dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center|center_vertical"
-                    android:text="المحافظة : "
-                    android:textAlignment="viewEnd"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp">
-
-                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                    android:id="@+id/txtDRegion"
-                    android:layout_width="0dp"
-                    android:layout_height="47dp"
-                    android:layout_marginEnd="10dp"
-                    android:spinnerMode="dialog"
-                    android:textAlignment="viewStart"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/textView277"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView277"
-                    android:layout_width="80dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center|center_vertical"
-                    android:text="المنطقة :"
-                    android:textAlignment="viewEnd"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <EditText
-                android:id="@+id/txtDAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:ems="10"
-                android:drawableRight="@drawable/ic_add_address"
-                android:gravity="right"
-                android:hint="العنوان بالتفصيل"
-                android:inputType="textPersonName"
-                android:textAlignment="gravity"
-                android:textColor="#000000"
-                android:textColorHint="@android:color/tertiary_text_light" />
-
-            <EditText
-                android:id="@+id/txtNotes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginBottom="5dp"
-                android:drawableRight="@drawable/ic_add_notes"
-                android:ems="10"
-                android:gravity="right"
-                android:hint="ملاحظات : محتوي الاوردر, وزنة,معاد تسليمه .."
-                android:inputType="textLongMessage"
-                android:textAlignment="gravity"
-                android:textColor="#000000"
-                android:textColorHint="#9A9A9A" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/colorAccent"
-                android:backgroundTint="@color/colorAccent"
-                android:gravity="center"
-                android:text="مبلغ التحصيل"
-                android:textColor="#FDFAFA"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:textSize="24sp" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_weight="1"
+                android:hint="تاريخ الاستلام"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
 
                 <EditText
-                    android:id="@+id/txtGMoney"
+                    android:id="@+id/txtPickDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_add_date"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:textAlignment="gravity"
+                    android:textColor="#000000" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDName"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="اسم العميل"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
+
+                <EditText
+                    android:id="@+id/txtDName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_add_person"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:textColor="#000000" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDPhone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:hint="رقم هاتف العميل"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
+
+                <EditText
+                    android:id="@+id/txtDPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_add_phone"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:inputType="number|phone"
+                    android:textColor="#000000" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDDate"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:hint="تاريخ تسليم الاوردر"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
+
+                <EditText
+                    android:id="@+id/txtDDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_add_date"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:textAlignment="gravity"
+                    android:textColor="#000000" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDropCity"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="مدينة التسليم"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
+
+                <AutoCompleteTextView
+                    android:id="@+id/txtDropCity"
+                    style="@style/Base.Widget.MaterialComponents.AutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:completionThreshold="1"
+                    android:drawableRight="@drawable/ic_add_location"
+                    android:drawablePadding="10dp"
+                    android:inputType="textShortMessage"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"
+                    tools:ignore="RtlHardcoded" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlDAddress"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:hint="العنوان بالتفصيل"
+                android:textColorHint="@color/colorPrimary"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
+
+                <EditText
+                    android:id="@+id/txtDAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_add_address"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:textColor="#000000" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlWeight"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="وزن الشحنة بالكيلو"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
+
+                <EditText
+                    android:id="@+id/txtWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_weight"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textColor="#000000" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlType"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="محتوي الشحنة"
+                app:endIconMode="none"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/error">
+
+                <EditText
+                    android:id="@+id/txtType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_package"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:textColor="#000000" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/ic_profile_background"
+                android:backgroundTint="@color/ic_profile_background"
+                android:gravity="center"
+                android:text="مبلغ التحصيل"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@android:color/tertiary_text_light"
+                android:textSize="24sp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlGMoney"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
                     android:layout_marginStart="20dp"
-                    android:drawableRight="@drawable/ic_add_money"
-                    android:ems="10"
-                    android:gravity="right"
                     android:hint="مقدم الاوردر"
-                    android:inputType="number"
-                    android:textAlignment="gravity"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/tertiary_text_light"
+                    app:endIconMode="none"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/error"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imgHelpMoney"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <EditText
+                        android:id="@+id/txtGMoney"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_add_money"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/imgHelpMoney"
@@ -357,26 +324,32 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/txtGGet"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tlGGet"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
                     android:layout_marginStart="20dp"
-                    android:drawableRight="@drawable/ic_add_money"
-                    android:ems="10"
-                    android:gravity="right"
                     android:hint="مصاريف الشحن"
-                    android:inputType="number"
-                    android:textAlignment="gravity"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/tertiary_text_light"
+                    app:endIconMode="none"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/error"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imgHelpGet"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <EditText
+                        android:id="@+id/txtGGet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_add_money"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:textColor="#000000" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/imgHelpGet"
@@ -390,121 +363,25 @@
                     app:srcCompat="@drawable/ic_baseline_help_24" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSave"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/colorAccent"
-                android:backgroundTint="@color/colorAccent"
-                android:gravity="center"
-                android:text="طرق التوصيل التي تفضلها ؟"
-                android:textColor="#FDFAFA"
-                android:textSize="24sp" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="5dp">
-
-                <CheckBox
-                    android:id="@+id/chkTrans"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:buttonTint="#000000"
-                    android:text="مواصلات"
-                    android:textColor="#000000"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/chkMotor"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <CheckBox
-                    android:id="@+id/chkMetro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:buttonTint="#000000"
-                    android:text="مترو"
-                    android:textColor="#000000"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/chkTrans"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <CheckBox
-                    android:id="@+id/chkCar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="#000000"
-                    android:text="سيارة"
-                    android:textColor="#000000"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <CheckBox
-                    android:id="@+id/chkMotor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:buttonTint="#000000"
-                    android:text="موتوسيكل"
-                    android:textColor="#000000"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/chkCar"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <CheckBox
-                android:id="@+id/chkBid"
-                android:gravity="right|center"
-                android:layoutDirection="rtl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="38dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:buttonTint="#000000"
-                android:checked="true"
-                android:text="قبول اقتراحات المندوبين"
-                android:textColor="#000000" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="20dp">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnSave"
-                    android:layout_width="150dp"
-                    android:layout_height="38dp"
-                    android:background="@drawable/btn_defult"
-                    android:text="تعديل الاوردر"
-                    android:textColor="#FFFFFF"
-                    android:theme="@style/Widget.AppCompat.Button"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginBottom="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_defult"
+                android:text="حفظ التعديلات"
+                android:textColor="@color/colorAccent"
+                android:theme="@style/Widget.AppCompat.Button" />
 
         </LinearLayout>
     </ScrollView>
 
     <include
         android:id="@+id/addToolbar"
-        layout="@layout/toolbar"
+        layout="@layout/toolbar_white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -513,14 +390,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/btnClose"
+        android:id="@+id/btnBack"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/addToolbar"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="@+id/addToolbar"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close" />
+        app:srcCompat="@drawable/ic_arrow_back_white" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
